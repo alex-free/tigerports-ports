@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran pvanlaake CFtime 1.7.2
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Use CF-compliant calendars with climate projection data
+long_description    {*}${description}
+homepage            https://github.com/pvanlaake/CFtime
+checksums           rmd160  90893461250406ad43a4a6130cef2ec0f436edbf \
+                    sha256  ac4c0e5eb287200340e42aca990adc6b2d412c6050928b0616e6a3ccbf70b264 \
+                    size    405366
+supported_archs     noarch
+
+depends_lib-append  port:R-R6
+
+depends_test-append port:R-rmarkdown \
+                    port:R-stringr \
+                    port:R-testthat
+
+# FIXME: https://github.com/pvanlaake/CFtime/issues/5
+# https://github.com/Unidata/netcdf-c/issues/1481
+test.run            no

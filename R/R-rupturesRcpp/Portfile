@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github edelweiss611428 rupturesRcpp f325c886eeaef4ce71017e266f83d59b7c47e6ef
+version             0.1.0
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Semi-modular object-oriented interface for change-point detection
+long_description    {*}${description}
+checksums           rmd160  9fdedfdbc7a4c208cf8ba6f504a941574a68eb5f \
+                    sha256  6c8634ea26dbb35c5ea2e72f0f7b0f7aa7bf561845166be9395b73bfef15974a \
+                    size    45002
+github.tarball_from archive
+
+depends_lib-append  port:R-ggplot2 \
+                    port:R-patchwork \
+                    port:R-R6 \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-binsegRcpp \
+                    port:R-reticulate \
+                    port:R-testthat
+
+test.run            yes

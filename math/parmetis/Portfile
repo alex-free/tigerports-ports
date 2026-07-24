@@ -1,0 +1,40 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           active_variants 1.1
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+PortGroup           mpi 1.0
+
+github.setup        KarypisLab ParMETIS 7436de671433c248e4203e1640a65b778845e6fc
+name                parmetis
+version             20260607
+revision            0
+categories          math
+maintainers         nomaintainer
+# Included license is for "evaluation purposes" only (whatever that means) if
+# you're not a non-profit or US government agency.
+license             Restrictive
+
+description         ParMETIS – parallel graph partitioning
+long_description    {*}${description}
+
+checksums           rmd160  ddba57a909ff62271e877e8ac5f0279cd4b05883 \
+                    sha256  55a83a8a90639b5b787e343804de1699973f9b43cfd3bf0f5eac6ff9e3009a21 \
+                    size    5312358
+github.tarball_from archive
+
+compilers.choose    cc cxx
+
+mpi.setup           require
+
+depends_lib         port:metis
+
+configure.args-append \
+                    -DGKLIB_PATH=${prefix} \
+                    -DMETIS_PATH=${prefix} \
+                    -DSHARED=ON
+
+# TODO: perhaps force a local build, it uses native opts.
+
+github.livecheck.branch main

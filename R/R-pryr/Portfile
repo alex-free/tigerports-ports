@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github hadley pryr 0.1.6 v
+revision            5
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2
+description         Pry open the covers of R
+long_description    Useful tools to pry back the covers of R and understand the language at a deeper level.
+checksums           rmd160  ac7488f4e7cf02c438976836adcd0f59df92b1e4 \
+                    sha256  e53e5db26846f40061ce9b8a3957ab05832db05c0beb47a02e0ad8a4ac973020 \
+                    size    67744
+github.tarball_from archive
+
+depends_lib-append  port:R-lobstr \
+                    port:R-Rcpp \
+                    port:R-stringr
+
+# https://github.com/hadley/pryr/issues/75
+patchfiles          0001-Fix-big-endian-for-PowerPC.patch
+
+# https://github.com/hadley/pryr/issues/78
+patchfiles-append   patch-r46.diff
+
+depends_test-append port:R-testthat
+
+test.run            yes

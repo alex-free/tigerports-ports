@@ -1,0 +1,18 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github atheriel rsyslog 1.0.3 v
+revision            1
+categories-append   sysutils
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2
+description         Interface to the syslog system logger
+long_description    {*}${description}
+checksums           rmd160  7836677bc4f363cbc7596d40fce2804b375e0ab4 \
+                    sha256  612cfd3ffd97dfc3eb9611067c75ddbd4b67dc2b29a5d808776b491e80ef42ae \
+                    size    5968
+github.tarball_from archive
+
+test.run            yes

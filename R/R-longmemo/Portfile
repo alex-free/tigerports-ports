@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran maechler longmemo 1.1-4
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Statistics for long-memory processes
+long_description    {*}${description}
+checksums           rmd160  32facecce187d8bb8c17bc11805a5d9a1d43a43f \
+                    sha256  390849c9c3ff648a9fb6f7b3610d58fc9081aadf5ca7793359678efc8934a0f9 \
+                    size    163943
+supported_archs     noarch
+
+depends_test-append port:R-fracdiff \
+                    port:R-sfsmisc
+
+test.run            yes

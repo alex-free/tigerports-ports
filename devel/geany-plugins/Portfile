@@ -1,0 +1,69 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:filetype=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+
+github.setup        geany geany-plugins 2.1
+revision            1
+license             GPL-2+
+categories          devel
+maintainers         {ctreleaven @ctreleaven} openmaintainer
+
+description         Plugins to extend the geany IDE
+long_description    Collection of plugins for the geany integrated development environment \
+                    including version control integration, specialized editing ehancements, \
+                    scripting, macros and much more.
+
+checksums           rmd160  51147a9f573e1a08a92076bcb1924524bccbfaf4 \
+                    sha256  b6654f0e61004353a7a1b98318b350841603b0698ba2263a51b4d41a17b04fa0 \
+                    size    5513418
+github.tarball_from archive
+
+# soup-message.h:18: error: redefinition of typedef 'SoupMessage'
+compiler.c_standard 2011
+
+use_autoreconf      yes
+
+autoreconf.cmd      ./autogen.sh
+
+autoreconf.args     ${configure.pre_args} \
+                    --disable-geanygendoc \
+                    --disable-geanypg \
+                    --disable-markdown \
+                    --disable-webhelper \
+                    --disable-year2038 \
+                    --enable-all-plugins \
+                    CC=${configure.cc}
+
+# geanypg - build errors
+
+depends_build-append \
+                    port:autoconf \
+                    port:automake \
+                    port:gettext \
+                    port:intltool \
+                    port:libtool \
+                    path:bin/pkg-config:pkgconfig
+
+set lua_v           51
+
+depends_lib         port:cppcheck \
+                    port:enchant2 \
+                    port:geany \
+                    port:gettext-runtime \
+                    path:lib/pkgconfig/glib-2.0.pc:glib2 \
+                    port:gpgme \
+                    path:lib/pkgconfig/gtk+-3.0.pc:gtk3 \
+                    port:gtkspell3 \
+                    port:json-glib \
+                    path:lib/pkgconfig/libgit2.pc:libgit2 \
+                    port:libgpg-error \
+                    port:libiconv \
+                    path:lib/pkgconfig/libsoup-3.0.pc:libsoup \
+                    port:libxml2 \
+                    port:lua${lua_v} \
+                    port:vte
+
+use_configure       no
+
+build.env-append    V=1

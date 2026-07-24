@@ -1,0 +1,46 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+
+# NOTE: When updating this port, check whether the dylib name and/or version
+# changes. If so, all dependents will need to be rev-bumped.
+
+set realname        geos
+name                ${realname}-R
+version             3.14.1
+revision            1
+categories          R science math gis
+license             LGPL-2.1
+maintainers         {@barracuda156 macos-powerpc.org:barracuda}
+description         GEOS Geometry Engine – Open Source
+long_description    {*}${description}. Dedicated port to use with R packages.
+homepage            https://libgeos.org
+master_sites        https://download.osgeo.org/geos/
+use_bzip2           yes
+distname            ${realname}-${version}
+checksums           rmd160  3cb6514e8e5c32e0477c037114b46fe9ba2e8fd3 \
+                    sha256  3c20919cda9a505db07b5216baa980bacdaa0702da715b43f176fb07eff7e716 \
+                    size    7013834
+
+# DO NOT SET C++ STANDARD.
+# We need it to use the new C++ ABI, regardless of the runtime in use.
+
+compiler.blacklist-append {clang < 1205} *gcc-4.*
+
+# Install in a dedicated subprefix:
+cmake.install_prefix \
+                    ${prefix}/libexec/R/${realname}
+
+post-destroot {
+    set docdir ${cmake.install_prefix}/share/doc/${realname}
+    xinstall -d ${destroot}${docdir}
+    xinstall -m 644 -W ${worksrcpath} AUTHORS COPYING NEWS.md \
+        ${destroot}${docdir}
+}
+
+test.run            yes
+test.cmd            make
+test.target         check
+
+livecheck.regex     {geos-(\d+(?:\.\d+)*)\.[tz]}

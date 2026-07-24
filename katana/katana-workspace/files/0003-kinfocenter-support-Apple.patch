@@ -1,0 +1,224 @@
+From 01c2278de2c606716f7c16fbc50ecbb7c79f1e3d Mon Sep 17 00:00:00 2001
+From: Sergey Fedorov <barracuda@macos-powerpc.org>
+Date: Wed, 25 Jun 2025 00:23:53 +0800
+Subject: [PATCH] kinfocenter: support Apple
+
+---
+ kinfocenter/Modules/base/info_osx.cpp     | 75 ++++++++++++++++++++
+ kinfocenter/Modules/base/os_current.cpp   |  2 +
+ kinfocenter/Modules/memory/memory.cpp     |  2 +
+ kinfocenter/Modules/memory/memory_osx.cpp | 95 ++++++++++++++++++++++++++
+ 4 files changed, 174 insertions(+)
+ create mode 100644 kinfocenter/Modules/base/info_osx.cpp
+ create mode 100644 kinfocenter/Modules/memory/memory_osx.cpp
+
+diff --git a/kinfocenter/Modules/base/info_osx.cpp b/kinfocenter/Modules/base/info_osx.cpp
+new file mode 100644
+index 00000000..1866f352
+--- /dev/null
++++ b/kinfocenter/Modules/base/info_osx.cpp
+@@ -0,0 +1,75 @@
++/*
++ *  Copyright (c) 2003 Benjamin Reed <ranger@befunk.com>
++ *
++ *  info_osx.cpp is part of the KDE program kcminfo.  Copied wholesale
++ *  from info_fbsd.cpp =)
++ *
++ *  This program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License as published by
++ *  the Free Software Foundation; either version 2 of the License, or
++ *  (at your option) any later version.
++ *
++ *  This program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *  GNU General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with this program; if not, write to the Free Software
++ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
++ */
++
++/*
++ * all following functions should return true, when the Information
++ * was filled into the lBox-Widget. Returning false indicates that
++ * information was not available.
++ */
++
++#include <sys/types.h>
++#include <sys/sysctl.h>
++
++#include <fstab.h>
++#include <stdio.h>
++#include <stdlib.h>
++
++#include <iostream>
++
++#include <QFile>
++#include <QFontMetrics>
++
++#include <QTextStream>
++
++#include <kdebug.h>
++
++#include <mach/mach.h>
++#include <mach-o/arch.h>
++
++#include <machine/limits.h>
++
++bool GetInfo_IRQ(QTreeWidget*) {
++    return false;
++}
++
++bool GetInfo_DMA(QTreeWidget*) {
++    return false;
++}
++
++bool GetInfo_PCI(QTreeWidget*) {
++    return false;
++}
++
++bool GetInfo_IO_Ports(QTreeWidget*) {
++    return false;
++}
++
++bool GetInfo_SCSI(QTreeWidget*) {
++    return false;
++}
++
++bool GetInfo_XServer_and_Video(QTreeWidget* tree) {
++#if HAVE_X11
++    return GetInfo_XServer_Generic(tree);
++#else
++    return false;
++#endif
++}
+diff --git a/kinfocenter/Modules/base/os_current.cpp b/kinfocenter/Modules/base/os_current.cpp
+index 3213153d..d0bf01ca 100644
+--- a/kinfocenter/Modules/base/os_current.cpp
++++ b/kinfocenter/Modules/base/os_current.cpp
+@@ -34,6 +34,8 @@
+     #include "info_openbsd.cpp"
+ #elif defined(Q_OS_SOLARIS)
+     #include "info_solaris.cpp"
++#elif defined(__APPLE__)
++    #include "info_osx.cpp"
+ #else
+     #include "info_generic.cpp" /* Default for unsupported systems.... */
+ #endif
+diff --git a/kinfocenter/Modules/memory/memory.cpp b/kinfocenter/Modules/memory/memory.cpp
+index 1d43be6d..23b68f63 100644
+--- a/kinfocenter/Modules/memory/memory.cpp
++++ b/kinfocenter/Modules/memory/memory.cpp
+@@ -297,6 +297,8 @@ void KCMMemory::updateMemoryGraphics() {
+
+ #ifdef Q_OS_LINUX
+ #include "memory_linux.cpp"
++#elif defined(__APPLE__)
++#include "memory_osx.cpp"
+ #elif defined(Q_OS_SOLARIS)
+ #include "memory_solaris.cpp"
+ #elif defined(Q_OS_FREEBSD) || defined(Q_OS_DRAGONFLY)
+diff --git a/kinfocenter/Modules/memory/memory_osx.cpp b/kinfocenter/Modules/memory/memory_osx.cpp
+new file mode 100644
+index 00000000..f5f434c8
+--- /dev/null
++++ b/kinfocenter/Modules/memory/memory_osx.cpp
+@@ -0,0 +1,95 @@
++
++/*
++ *  Copyright (c) 2003 Benjamin Reed <ranger@befunk.com>
++ *
++ *  memory_osx.cpp is part of the KDE program kcminfo.  Copied wholesale
++ *  from memory_fbsd.cpp =)
++ *
++ *  This program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License as published by
++ *  the Free Software Foundation; either version 2 of the License, or
++ *  (at your option) any later version.
++ *
++ *  This program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *  GNU General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with this program; if not, write to the Free Software
++ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
++ */
++
++#include <unistd.h>
++#include <stdlib.h>
++
++#include <QFile>
++
++#include <mach/mach_init.h>
++#include <mach/mach_host.h>
++#include <mach/host_info.h>
++#include <sys/stat.h>
++#include <dirent.h>
++#include <kdebug.h>
++
++void KCMMemory::fetchValues()
++{
++
++    vm_statistics_data_t vm_info;
++    mach_msg_type_number_t info_count;
++    DIR *dirp;
++    struct dirent *dp;
++    t_memsize total;
++
++    info_count = HOST_VM_INFO_COUNT;
++    if (host_statistics(mach_host_self (), HOST_VM_INFO, (host_info_t)&vm_info, &info_count)) {
++        kDebug() << "could not get memory statistics";
++        return;
++    }
++
++    memoryInfos[TOTAL_MEM]    = MEMORY(vm_info.active_count + vm_info.inactive_count +
++        vm_info.free_count + vm_info.wire_count) * vm_page_size;
++    memoryInfos[FREE_MEM]     = MEMORY(vm_info.free_count) * vm_page_size;
++    memoryInfos[SHARED_MEM]   = NO_MEMORY_INFO;
++    memoryInfos[BUFFER_MEM]   = NO_MEMORY_INFO;
++    memoryInfos[CACHED_MEM]   = NO_MEMORY_INFO;
++
++    dirp = opendir("/private/var/vm");
++    if (!dirp) {
++        kDebug() << "unable to open /private/var/vm";
++        return;
++    }
++
++    total = 0;
++
++    while ((dp = readdir (dirp)) != NULL) {
++        struct stat sb;
++        char fname [MAXNAMLEN];
++
++        if (strncmp (dp->d_name, "swapfile", 8))
++            continue;
++
++        strcpy (fname, "/private/var/vm/");
++        strcat (fname, dp->d_name);
++        if (stat (fname, &sb) < 0)
++            continue;
++
++        total += sb.st_size;
++    }
++    closedir (dirp);
++
++    info_count = HOST_VM_INFO_COUNT;
++    if (host_statistics (mach_host_self (), HOST_VM_INFO,
++        (host_info_t) &vm_info, &info_count)) {
++            kDebug() << "unable to get VM info";
++    }
++
++    memoryInfos[SWAP_MEM]     = total;
++    // off_t used = (vm_info.pageouts - vm_info.pageins) * vm_page_size;
++    memoryInfos[FREESWAP_MEM] = NO_MEMORY_INFO;
++
++    /* free = MEMORY(vm_info.free_count) * vm_page_size;
++       used = MEMORY(vm_info.active_count) * vm_page_size;
++       total = MEMORY(vm_info.active_count + vm_info.inactive_count +
++        vm_info.free_count + vm_info.wire_count) * vm_page_size; */
++}
+--
+2.39.2

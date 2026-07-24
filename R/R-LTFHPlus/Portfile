@@ -1,0 +1,39 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran EmilMiP LTFHPlus 2.1.4 v
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-3
+description         Implementation of LT-FH++
+long_description    {*}${description}, an extension of the liability-threshold \
+                    family history (LT-FH) model.
+homepage            https://emilmip.github.io/LTFHPlus
+checksums           rmd160  3035e372025b5837d68ab947ca847f01d1089966 \
+                    sha256  e888fbde0c5b05a7c70f020a98d3642051d9d273d97c9780edb3a2a0255b7c01 \
+                    size    72957
+
+depends_lib-append  port:R-batchmeans \
+                    port:R-dplyr \
+                    port:R-future \
+                    port:R-future.apply \
+                    port:R-igraph \
+                    port:R-purrr \
+                    port:R-Rcpp \
+                    port:R-rlang \
+                    port:R-stringr \
+                    port:R-tibble \
+                    port:R-tidyr \
+                    port:R-tidyselect \
+                    port:R-tmvtnorm \
+                    port:R-xgboost
+
+depends_test-append port:R-kinship2 \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

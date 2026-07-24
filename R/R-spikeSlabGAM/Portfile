@@ -1,0 +1,37 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran fabian-s spikeSlabGAM 1.1-20
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             MIT
+description         Bayesian variable selection and model choice for generalized additive mixed models
+long_description    {*}${description}
+homepage            https://github.com/fabian-s/spikeSlabGAM
+checksums           rmd160  9a5be7de2be0a7c250df8f8a10978e38b83c1b2f \
+                    sha256  6e03efafdb73be94949dfe3995a033286c70d7a0b1d1b637ff15ecd8ce561682 \
+                    size    724308
+
+depends_lib-append  port:R-coda \
+                    port:R-ggplot2 \
+                    port:R-gridExtra \
+                    port:R-interp \
+                    port:R-MCMCpack \
+                    port:R-mvtnorm \
+                    port:R-R2WinBUGS \
+                    port:R-reshape \
+                    port:R-scales
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-gtable \
+                    port:R-knitr \
+                    port:R-mboost \
+                    port:R-mlbench \
+                    port:R-rmarkdown
+
+test.run            yes

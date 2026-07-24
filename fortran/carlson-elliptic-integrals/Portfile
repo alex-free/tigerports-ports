@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           fortran 1.0
+
+github.setup        jacobwilliams carlson-elliptic-integrals 1.1.0
+revision            0
+categories-append   math
+license             BSD
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+description         Carlson symmetric forms of elliptic integrals
+long_description    This is a modern Fortran implementation of the Carlson symmetric forms \
+                    of elliptic integrals code from the SLATEC library. It has been extensively refactored.
+checksums           rmd160  e2f94994d5aa0994ff8fa21e677e25d20b8cb17f \
+                    sha256  38bf450781ba3d142bfa95b41ce26daa2188bb2bb62b4210406f47e3d035aabb \
+                    size    86942
+github.tarball_from archive
+
+post-destroot {
+    set docdir ${prefix}/share/doc/${name}
+    xinstall -d ${destroot}${docdir}
+    xinstall -m 0644 -W ${worksrcpath} LICENSE README.md ${destroot}${docdir}
+}
+
+test.run            yes

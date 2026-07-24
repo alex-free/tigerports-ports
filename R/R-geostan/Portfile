@@ -1,0 +1,38 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran ConnorDonegan geostan 0.8.2 v
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3+
+description         Bayesian spatial analysis
+long_description    {*}${description}
+homepage            https://connordonegan.github.io/geostan
+checksums           rmd160  f55b804eaa70b32c46db5ecbe16ef99e32006734 \
+                    sha256  844aa108f482e9b45abe9a7739ba47dac8e32989222bdc0f1d4247df99d1165b \
+                    size    1432357
+
+depends_lib-append  port:R-BH \
+                    port:R-ggplot2 \
+                    port:R-gridExtra \
+                    port:R-Rcpp \
+                    port:R-RcppEigen \
+                    port:R-RcppParallel \
+                    port:R-rstan \
+                    port:R-rstantools \
+                    port:R-sf \
+                    port:R-spdep \
+                    port:R-signs \
+                    port:R-StanHeaders \
+                    port:R-truncnorm
+
+depends_test-append port:R-bayesplot \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

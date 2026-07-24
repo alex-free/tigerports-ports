@@ -1,0 +1,34 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran guangchuangyu scatterpie 0.2.6
+revision            1
+categories-append   graphics
+platforms           {darwin any}
+maintainers         nomaintainer
+license             Artistic-2
+description         Scatterpie plots
+long_description    {*}${description}
+checksums           rmd160  e644f1bede15bcba28d432547b5467ba3410da5d \
+                    sha256  bbb93441b98dc8c2af0131c1ed578be4b89563c12e14a7643c411e82a018d994 \
+                    size    119012
+supported_archs     noarch
+
+depends_lib-append  port:R-dplyr \
+                    port:R-ggforce \
+                    port:R-ggfun \
+                    port:R-ggplot2 \
+                    port:R-rlang \
+                    port:R-tidyr \
+                    port:R-yulab.utils
+
+depends_test-append port:R-cli \
+                    port:R-knitr \
+                    port:R-maps \
+                    port:R-prettydoc \
+                    port:R-rmarkdown \
+                    port:R-scales
+
+test.run            yes

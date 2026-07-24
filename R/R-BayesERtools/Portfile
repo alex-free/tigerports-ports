@@ -1,0 +1,50 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github genentech BayesERtools 0.2.3 v
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             Apache-2
+description         Bayesian Exposure-Response Analysis Tools
+long_description    {*}${description}
+homepage            https://genentech.github.io/BayesERbook
+checksums           rmd160  1bd87d6e26699e1f629b78e127895c180511ef04 \
+                    sha256  1508b8288fb1f2a73f09e1614a23898b92cef06a846ff5fbe1ebb76bde7176eb \
+                    size    1183824
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-cli \
+                    port:R-dplyr \
+                    port:R-ggplot2 \
+                    port:R-gt \
+                    port:R-loo \
+                    port:R-posterior \
+                    port:R-purrr \
+                    port:R-rlang \
+                    port:R-rstanarm \
+                    port:R-rstanemax \
+                    port:R-tidybayes \
+                    port:R-tidyr
+
+depends_test-append port:R-bayestestR \
+                    port:R-covr \
+                    port:R-digest \
+                    port:R-ggforce \
+                    port:R-htmltools \
+                    port:R-knitr \
+                    port:R-patchwork \
+                    port:R-projpred \
+                    port:R-readr \
+                    port:R-rmarkdown \
+                    port:R-rsample \
+                    port:R-rstan \
+                    port:R-scales \
+                    port:R-testthat \
+                    port:R-xgxr \
+                    port:R-yardstick
+
+test.run            yes

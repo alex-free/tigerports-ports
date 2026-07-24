@@ -1,0 +1,33 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is outdated.
+R.setup             cran LyzandeR tableHTML 2.1.2 v
+revision            1
+categories-append   www
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Tool to create HTML tables
+long_description    {*}${description}
+homepage            https://github.com/LyzandeR/tableHTML
+checksums           rmd160  e4a89a586bc80abb8d01b6f82ba3dd1f074586bf \
+                    sha256  fcaa0e052b7ffdadac13ea5b07f0b00183c16c6e5449017db2cacfd62cc00675 \
+                    size    2405165
+supported_archs     noarch
+
+depends_lib-append  port:R-htmltools \
+                    port:R-jpeg \
+                    port:R-magrittr \
+                    port:R-png \
+                    port:R-shiny \
+                    port:R-webshot
+
+depends_test-append port:R-knitr \
+                    port:R-RColorBrewer \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

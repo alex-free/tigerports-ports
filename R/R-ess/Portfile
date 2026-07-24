@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran mlindsk ess 1.1.2.1
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-3
+description         Efficient step-wise selection in decomposable models
+long_description    {*}${description}
+homepage            https://github.com/mlindsk/ess
+checksums           rmd160  ed382df51a825d25794482a075cb3c32a5d4108f \
+                    sha256  457e6bc2fc291241b92f1963cc738d9525736606c6d67883baa331c2337c570e \
+                    size    91453
+
+depends_lib-append  port:R-igraph \
+                    port:R-Rcpp
+
+depends_test-append port:R-tinytest
+
+test.run            yes

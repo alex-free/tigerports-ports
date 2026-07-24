@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran hadley reshape 0.8.10
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Flexibly reshape data
+long_description    {*}${description}
+homepage            http://had.co.nz/reshape
+checksums           rmd160  7b735030b00f3c323e0329663f3dca4f499f0f7e \
+                    sha256  35ef6e8956520279f44d538c613ff9605bc594fed46133200d61937828fc6b64 \
+                    size    42889
+supported_archs     noarch
+
+depends_lib-append  port:R-plyr
+
+test.run            yes

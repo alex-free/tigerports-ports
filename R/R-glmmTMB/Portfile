@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is old.
+R.setup             cran glmmTMB glmmTMB 1.1.14
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             AGPL-3
+description         Generalized Linear Mixed Models using Template Model Builder
+long_description    {*}${description}
+homepage            https://github.com/glmmTMB/glmmTMB
+checksums           rmd160  0fb2bba7bf9fec005ca7e1bf1f1948b24e589732 \
+                    sha256  623c81cfe4b3c6825db15d44781eccf7a357cf15b423fe9f00459f52beeffbbd \
+                    size    5347998
+
+depends_lib-append  port:R-lme4 \
+                    port:R-numDeriv \
+                    port:R-pbkrtest \
+                    port:R-RcppEigen \
+                    port:R-reformulas \
+                    port:R-sandwich \
+                    port:R-TMB

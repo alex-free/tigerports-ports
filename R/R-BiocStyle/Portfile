@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             bioconductor Bioconductor BiocStyle 2.36.0
+revision            1
+categories-append   bioconductor
+platforms           {darwin any}
+maintainers         nomaintainer
+license             Artistic-2
+description         Provides standard formatting styles for Bioconductor \
+                    PDF and HTML documents
+long_description    {*}${description}
+checksums           rmd160  f74f45d70c2920a1b3bc827208847c434107de2a \
+                    sha256  d4ba63f39b30785a6840f6e71dd8467822a8bcd50392b21f8bcfa015b33528e0 \
+                    size    905719
+supported_archs     noarch
+
+depends_lib-append  port:R-BiocManager \
+                    port:R-bookdown \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-yaml
+
+depends_test-append port:R-BiocGenerics \
+                    port:R-htmltools \
+                    port:R-RUnit
+
+test.run            yes

@@ -1,0 +1,60 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+
+github.setup        google shaderc 2026.1 v
+revision            0
+categories          graphics devel
+license             Apache-2
+maintainers         {christophecvr @christophecvr} openmaintainer
+
+description         A collection of tools, libraries and tests for shader compilation.
+long_description    At the moment it includes: \
+                    glslc, a command line compiler for GLSL/HLSL to SPIR-V, and \
+                    libshaderc, a library API for accessing glslc functionality.
+
+github.tarball_from archive
+
+checksums           rmd160  8cde135e3fb2f60058c56f1ad179d722ac5301f4 \
+                    sha256  245002feccbe7f8361b223545a5654cea69780745886872d7efff50a38d96c66 \
+                    size    229148
+
+set py_ver          3.13
+set py_ver_nodot    [string map {. {}} ${py_ver}]
+
+compiler.cxx_standard   2017
+
+# Need to use MacPorts libc++ on macOS 10.14 Mojave and older, because
+# Apple Clang only added support for the C++17 <filesystem> library
+# starting in Xcode 11 (clang-1100) for macOS 10.15+.
+# References:
+# * https://stackoverflow.com/a/55353263
+# * https://developer.apple.com/documentation/xcode-release-notes/xcode-11-release-notes
+legacysupport.newest_darwin_requires_legacy 18
+legacysupport.use_mp_libcxx yes
+
+# Patching source to use already installed SPIRV-Tools.
+patchfiles              use-installed-spirv-tools.patch \
+                        use-external-glslang.patch
+
+# FIXME: do we actually need these libraries, and then fix glslang port?
+# ld: library not found for -lMachineIndependent etc.
+patchfiles-append       patch-no-MachineIndependent-GenericCodeGen.diff
+
+depends_build-append    port:asciidoctor \
+                        port:glslang \
+                        path:bin/pkg-config:pkgconfig \
+                        port:spirv-headers \
+                        port:spirv-tools
+
+depends_build-append    port:python${py_ver_nodot}
+configure.python        ${prefix}/bin/python${py_ver}
+
+configure.args-append   -Dglslang_SOURCE_DIR:PATH=${prefix}/include/glslang \
+                        -DPYTHON_EXECUTABLE:FILEPATH=${configure.python} \
+                        -DSHADERC_ENABLE_WERROR_COMPILE=OFF \
+                        -DSHADERC_SKIP_TESTS=ON \
+                        -DUSE_EXTERNAL_SPIRV_TOOLS=ON

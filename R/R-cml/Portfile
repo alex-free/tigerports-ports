@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran atbui cml 0.3.1
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Conditional Manifold Learning
+long_description    Finds a low-dimensional embedding of high-dimensional data, \
+                    conditioning on available manifold information.
+checksums           rmd160  cdfed9c845c007b5cb90258ca306a9ce673f0fa6 \
+                    sha256  d17f53600cbae293898881f01825c9ea80bae6e4e2e9fcbccf00e2c6919d520a \
+                    size    9167
+supported_archs     noarch
+
+depends_lib-append  port:R-vegan
+
+test.run            yes

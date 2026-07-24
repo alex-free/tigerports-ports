@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran PhDMeiwp semEffect 1.2.3
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Structural equation model effect analysis and visualization
+long_description    {*}${description}
+homepage            https://github.com/PhDMeiwp/semEffect
+checksums           rmd160  8d10bf1c6c012ffda3fa8abc524706f10e165125 \
+                    sha256  5e24893c326d525be7e1304c02f92ce8ecf80df22054617113c292634e150f2f \
+                    size    6499
+supported_archs     noarch
+
+depends_lib-append  port:R-checkmate \
+                    port:R-dplyr \
+                    port:R-ggplot2 \
+                    port:R-lavaan \
+                    port:R-piecewiseSEM \
+                    port:R-plspm \
+                    port:R-RColorBrewer \
+                    port:R-tidyr
+
+depends_test-append port:R-testthat
+
+test.run            yes

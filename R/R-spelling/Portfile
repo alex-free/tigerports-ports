@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran ropensci spelling 2.3.2
+revision            1
+categories-append   sysutils
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Tools for spell-checking in R
+long_description    {*}${description}
+homepage            https://docs.ropensci.org/spelling
+checksums           rmd160  60c475205e1c33d27f8e5e43c0dbaca7de177dbe \
+                    sha256  7571e54d7fd5e83f83948e6f7469abde94b379f5763862551ecc6e0ae4eb024b \
+                    size    11800
+supported_archs     noarch
+
+depends_lib-append  port:R-commonmark \
+                    port:R-hunspell \
+                    port:R-knitr \
+                    port:R-xml2
+
+depends_test-append port:R-pdftools
+
+test.run            yes

@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           gitlab 1.0
+
+name                xgc
+gitlab.instance     https://gitlab.freedesktop.org/xorg
+gitlab.setup        app ${name} 1.0.6 ${name}-
+revision            0
+categories          x11 graphics
+license             X11
+maintainers         {jeremyhu @jeremyhu} openmaintainer
+description         ${name} demonstrates various features of the X11 graphics primitives
+long_description    ${description}
+
+homepage            https://www.x.org
+use_bzip2           yes
+
+checksums           rmd160  9f52a350d9f0d603db1a14bb7520bdbdf9fb5f91 \
+                    sha256  b26802dc7afd91b93c55217429895cd453ee917229068bc0e86c285289f5c509 \
+                    size    36192
+
+use_autoreconf      yes
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig \
+                    port:xorg-util-macros
+
+depends_lib         port:xorg-libXaw

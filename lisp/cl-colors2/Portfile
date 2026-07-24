@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           codeberg 1.0
+PortGroup           common_lisp 1.0
+
+codeberg.setup      cage cl-colors2 0.7.1 v
+revision            0
+
+checksums           rmd160  b9093503b071d371fce3b22be1e8d8910a26f89c \
+                    sha256  f566d65faf1182912923ebdbdab79f708d745904dbcce28e7099f1c6822947a0 \
+                    size    39213
+
+categories-append   devel
+maintainers         nomaintainer
+license             Boost-1
+
+description         Simple color library for Common Lisp
+long_description    {*}${description}
+
+depends_lib-append  port:cl-alexandria \
+                    port:cl-clunit2 \
+                    port:cl-parse-number \
+                    port:cl-ppcre

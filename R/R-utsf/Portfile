@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran franciscomartinezdelrio utsf 1.3.0 v
+revision            1
+categories-append   finance
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Univariate Time Series Forecasting
+long_description    {*}${description}
+checksums           rmd160  7a54019285f94922c544d806943040e103f83d4f \
+                    sha256  5f3d5c2ecc033deea76358414c868674b1b464c90a9202d10f848bb438e97711 \
+                    size    90583
+# github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-Cubist \
+                    port:R-FNN \
+                    port:R-forecast \
+                    port:R-generics \
+                    port:R-ggplot2 \
+                    port:R-ipred \
+                    port:R-ranger \
+                    port:R-rpart \
+                    port:R-vctsfr
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

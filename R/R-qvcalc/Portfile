@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran davidfirth qvcalc 1.0.4
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             {GPL-2 GPL-3}
+description         Quasi-variances for factor effects in statistical models
+long_description    {*}${description}
+homepage            https://davidfirth.github.io/qvcalc
+checksums           rmd160  d57286f00c761acce9623071ac032f59d2e80344 \
+                    sha256  90403cada56e82a6bbd067f397fab20c721850b50874345a6322619165dafb59 \
+                    size    13982
+supported_archs     noarch
+
+depends_test-append port:R-psychotools \
+                    port:R-relimp \
+                    port:R-testthat
+
+test.run            yes

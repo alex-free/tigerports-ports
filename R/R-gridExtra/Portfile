@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran baptiste.auguie gridExtra 2.3.1
+revision            0
+categories-append   graphics
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Miscellaneous functions for grid graphics
+long_description    {*}${description}
+checksums           rmd160  500704488ab7c249013cc394e1bf0139dc8ca28d \
+                    sha256  de42e501ac2c6a70bd0ffc18d7703e9b0e6b878c610df09756183c3e52445c82 \
+                    size    480742
+supported_archs     noarch
+
+depends_lib-append  port:R-gtable
+
+depends_test-append port:R-egg \
+                    port:R-ggplot2 \
+                    port:R-knitr \
+                    port:R-testthat
+
+test.run            yes

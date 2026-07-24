@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-zxcvbn
+version             4.5.0
+revision            0
+categories-append   security
+platforms           {darwin any}
+license             MIT
+supported_archs     noarch
+maintainers         nomaintainer
+
+description         Implementation of Dropbox’s realistic password \
+                    strength estimator
+long_description    {*}${description}
+homepage            https://github.com/dwolfhub/zxcvbn-python
+
+checksums           rmd160  5eada385378d2f0b968c8307dedfc5cd5022716b \
+                    sha256  70392c0fff39459d7f55d0211151401e79e76fcc6e2c22b61add62900359c7c1 \
+                    size    411249
+
+python.versions     310 311 312 313 314

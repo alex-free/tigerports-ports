@@ -1,0 +1,34 @@
+From 54d66c9d3b6f08fd2917eb22afe7cc0fa8ced5a7 Mon Sep 17 00:00:00 2001
+From: barracuda156 <vital.had@gmail.com>
+Date: Mon, 21 Nov 2022 00:35:47 +0800
+Subject: [PATCH] crc_stubs.c: abort instead of error on unsupported platforms
+
+---
+ src/crc_stubs.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/src/crc_stubs.c b/src/crc_stubs.c
+index 70aa270..9477adb 100644
+--- src/crc_stubs.c
++++ src/crc_stubs.c
+@@ -38,9 +38,17 @@
+ 
+ #else
+ 
+-#error "Target not supported"
+-uint64_t crc64(uint64_t initial, uint64_t data);
+-uint32_t crc32(uint32_t initial, uint32_t data);
++#ifdef ARCH_SIXTYFOUR
++uint64_t crc64(uint64_t initial, uint64_t data)
++{
++  abort();
++}
++#else
++uint32_t crc32(uint32_t initial, uint32_t data)
++{
++  abort();
++}
++#endif // ARCH_SIXTYFOUR
+ 
+ #endif
+ 

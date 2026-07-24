@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           fortran 1.0
+
+github.setup        interkosmos fortran-lua53 19a2922f8398e76d9b286b35e29f176acad2706e
+version             0.2.0
+revision            1
+categories-append   devel
+license             ISC
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+description         Fortran 2008 interface bindings to Lua 5.3
+long_description    {*}${description}
+checksums           rmd160  3acb6ef6370473e64d75c87fa0483b3baca5d889 \
+                    sha256  1b36214f1860e08968be4d346fc9c2613bc48948ed50923cf7204f6a0c6f1c24 \
+                    size    11584
+github.tarball_from archive
+
+depends_lib-append  port:lua53
+
+build.cmd-append    --link-flag="-L${prefix}/lib -llua.5.3"
+
+post-destroot {
+    set docdir ${prefix}/share/doc/${name}
+    xinstall -d ${destroot}${docdir}
+    xinstall -m 0644 -W ${worksrcpath} LICENCE README.md ${destroot}${docdir}
+}

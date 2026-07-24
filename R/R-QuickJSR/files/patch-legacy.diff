@@ -1,0 +1,10 @@
+--- src/Makevars
++++ src/Makevars	2026-01-27 03:58:42.000000000 +0800
+@@ -1,5 +1,5 @@
+-PKG_CPPFLAGS = -I"include" -I"quickjs" -D_GNU_SOURCE
+-PKG_LIBS = libquickjs.o
++PKG_CPPFLAGS = -I"include" -I"quickjs" -D_GNU_SOURCE -isystem@PREFIX@/include/LegacySupport
++PKG_LIBS = libquickjs.o -L@PREFIX@/lib -lMacportsLegacySupport
+ 
+ ifeq ($(OS),Windows_NT)
+ 	DLL := .dll

@@ -1,0 +1,39 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran bouchra.nasri GenHMM1d 0.2.6
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Goodness-of-Fit for Zero-Inflated Univariate Hidden Markov Models
+long_description    {*}${description}
+checksums           rmd160  9158e49d5149d4d3ee2c00f9f0e8b1b5b97e1c05 \
+                    sha256  8191410a8f092a908174a52a7234ff1cb595e2cfa0b78ea4fdf937a2a9beea3c \
+                    size    44288
+supported_archs     noarch
+
+depends_lib-append  port:R-actuar \
+                    port:R-doParallel \
+                    port:R-EnvStats \
+                    port:R-extraDistr \
+                    port:R-foreach \
+                    port:R-gamlss.dist \
+                    port:R-GeneralizedHyperbolic \
+                    port:R-ggplot2 \
+                    port:R-GLDEX \
+                    port:R-matrixcalc \
+                    port:R-reshape2 \
+                    port:R-rmutil \
+                    port:R-sgt \
+                    port:R-skewt \
+                    port:R-sn \
+                    port:R-ssdtools \
+                    port:R-stabledist \
+                    port:R-VaRES \
+                    port:R-VGAM
+
+test.run            yes

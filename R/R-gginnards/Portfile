@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran aphalo gginnards 0.2.0-2
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Explore the innards of R-ggplot2 objects
+long_description    {*}${description}
+homepage            https://github.com/aphalo/gginnards
+checksums           rmd160  f0d5688ad9215de3f01b76c3cd16b1985225be6c \
+                    sha256  96036b7167460a0e4b01904bfbcdf1f901f85de85062d0de5764b586f3c8d8f0 \
+                    size    221392
+supported_archs     noarch
+
+depends_lib-append  port:R-ggplot2 \
+                    port:R-magrittr \
+                    port:R-rlang \
+                    port:R-stringr \
+                    port:R-tibble
+
+depends_test-append port:R-knitr \
+                    port:R-lobstr \
+                    port:R-pryr \
+                    port:R-rmarkdown \
+                    port:R-S7 \
+                    port:R-sf
+
+test.run            yes

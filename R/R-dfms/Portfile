@@ -1,0 +1,33 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran SebKrantz dfms 1.0.0
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Dynamic Factor Models
+long_description    {*}${description}
+homepage            https://sebkrantz.github.io/dfms
+checksums           rmd160  bcac29b61fa1ff0d2bb4542a6cb69373e5794c6d \
+                    sha256  8414bae89f514af939a848e03c10723f8a5b76a6aefa3d0aaab20d1ed32d7d98 \
+                    size    2158722
+
+depends_lib-append  port:R-collapse \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-covr \
+                    port:R-knitr \
+                    port:R-magrittr \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-vars \
+                    port:R-xts
+
+test.run            yes

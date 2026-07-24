@@ -1,0 +1,33 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran posit-dev shinychat 0.2.0 v
+revision            1
+categories-append   llm
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Chat UI component for R-shiny
+long_description    {*}${description}
+homepage            https://posit-dev.github.io/shinychat
+checksums           rmd160  924d35b2d0a72ab3a0a44cfdb873cb62301247e4 \
+                    sha256  70b5d8adf5700b442817cdb3219bcb65f4ad3e133cfd9dcdc2a69d701c84bce1 \
+                    size    500000
+supported_archs     noarch
+
+depends_lib-append  port:R-bslib \
+                    port:R-coro \
+                    port:R-ellmer \
+                    port:R-fastmap \
+                    port:R-htmltools \
+                    port:R-jsonlite \
+                    port:R-promises \
+                    port:R-rlang \
+                    port:R-shiny
+
+depends_test-append port:R-later \
+                    port:R-R-testthat
+
+test.run            yes

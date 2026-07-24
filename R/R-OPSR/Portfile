@@ -1,0 +1,36 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github dheimgartner OPSR 1.0.0 v
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3+
+description         Ordered Probit Switching Regression
+long_description    {*}${description}
+checksums           rmd160  b8256f9ba75316601e1afb4515b2dffe9c7e3c8e \
+                    sha256  3c4f6d07f1efdfe0a62f556ea31a4dcca14fddedcc1b5216cd48466016e6806a \
+                    size    55136544
+github.tarball_from archive
+
+depends_lib-append  port:R-car \
+                    port:R-Formula \
+                    port:R-maxLik \
+                    port:R-mvtnorm \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-Rdpack \
+                    port:R-sandwich \
+                    port:R-texreg
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-gridExtra \
+                    port:R-gridGraphics \
+                    port:R-sampleSelection \
+                    port:R-scales \
+                    port:R-testthat
+
+test.run            yes

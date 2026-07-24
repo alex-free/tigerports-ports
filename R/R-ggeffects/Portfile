@@ -1,0 +1,95 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran strengejacke ggeffects 2.3.2 v
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Create tidy data frames of marginal effects \
+                    for R-ggplot from model outputs
+long_description    {*}${description}
+homepage            https://strengejacke.github.io/ggeffects
+checksums           rmd160  b1e7c7767567c0408a57c2f0c07343ac16620118 \
+                    sha256  a387ff9aa3e44f813edb39933dd9545c2307258f53bf7ea86a9a3e84d7dbaac8 \
+                    size    375322
+# github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-datawizard \
+                    port:R-insight
+
+depends_test-append port:R-AER \
+                    port:R-afex \
+                    port:R-aod \
+                    port:R-bayestestR \
+                    port:R-betareg \
+                    port:R-brglm \
+                    port:R-brglm2 \
+                    port:R-brms \
+                    port:R-broom \
+                    port:R-car \
+                    port:R-carData \
+                    port:R-clubSandwich \
+                    port:R-dfidx \
+                    port:R-effects \
+                    port:R-emmeans \
+                    port:R-fixest \
+                    port:R-gam \
+                    port:R-gamlss \
+                    port:R-gamm4 \
+                    port:R-gee \
+                    port:R-geepack \
+                    port:R-ggplot2 \
+                    port:R-ggrepel \
+                    port:R-GLMMadaptive \
+                    port:R-glmmTMB \
+                    port:R-gridExtra \
+                    port:R-gt \
+                    port:R-haven \
+                    port:R-htmltools \
+                    port:R-httr2 \
+                    port:R-jsonlite \
+                    port:R-knitr \
+                    port:R-lme4 \
+                    port:R-logistf \
+                    port:R-logitr \
+                    port:R-magrittr \
+                    port:R-marginaleffects \
+                    port:R-mclogit \
+                    port:R-MCMCglmm \
+                    port:R-mice \
+                    port:R-mlogit \
+                    port:R-modelbased \
+                    port:R-MuMIn \
+                    port:R-nestedLogit \
+                    port:R-ordinal \
+                    port:R-parameters \
+                    port:R-parsnip \
+                    port:R-patchwork \
+                    port:R-plm \
+                    port:R-pscl \
+                    port:R-quantreg \
+                    port:R-rmarkdown \
+                    port:R-rms \
+                    port:R-robustbase \
+                    port:R-rstanarm \
+                    port:R-rstantools \
+                    port:R-sandwich \
+                    port:R-sdmTMB \
+                    port:R-see \
+                    port:R-sjlabelled \
+                    port:R-sjstats \
+                    port:R-speedglm \
+                    port:R-survey \
+                    port:R-testthat \
+                    port:R-tibble \
+                    port:R-tinytable \
+                    port:R-vdiffr \
+                    port:R-withr \
+                    port:R-VGAM
+
+test.run            yes

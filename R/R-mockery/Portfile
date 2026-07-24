@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github r-lib mockery 0.4.5 v
+revision            1
+categories-append   devel
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Mocking library
+long_description    {*}${description} for R.
+checksums           rmd160  e36be0489774a6b124734e3b3bbfbb613111e0f2 \
+                    sha256  ef84c855d6712ed327a11b06765ea68acf7c57fa066a733826ccfe3748a22a8d \
+                    size    16165
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-testthat
+
+depends_test-append port:R-knitr \
+                    port:R-R6 \
+                    port:R-rmarkdown
+
+test.run            yes

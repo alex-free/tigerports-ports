@@ -1,0 +1,44 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran r-lib pkgload 1.5.3 v
+revision            0
+categories-append   devel
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Simulate package installation
+long_description    ${name} simulates the process of installing \
+                    a package and then attaching it.
+homepage            https://pkgload.r-lib.org
+checksums           rmd160  69e2e788cfe3b5e32c5e5a2d021d24d1bae5eff9 \
+                    sha256  5e539f91ca36b8ed80933101baf2a57462b9342c68556f5d4dcb86c01639df28 \
+                    size    89069
+# github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-cli \
+                    port:R-desc \
+                    port:R-fs \
+                    port:R-glue \
+                    port:R-lifecycle \
+                    port:R-pkgbuild \
+                    port:R-processx \
+                    port:R-rlang \
+                    port:R-rprojroot
+
+depends_test-append port:R-bitops \
+                    port:R-jsonlite \
+                    port:R-mathjaxr \
+                    port:R-pak \
+                    port:R-Rcpp \
+                    port:R-remotes \
+                    port:R-rstudioapi \
+                    port:R-testthat \
+                    port:R-usethis \
+                    port:R-withr
+
+test.run            yes

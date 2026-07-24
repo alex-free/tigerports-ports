@@ -1,0 +1,36 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                linode-cli
+python.rootname     linode_cli
+version             5.61.0
+revision            0
+categories-prepend  www sysutils
+platforms           {darwin any}
+license             BSD
+maintainers         nomaintainer
+description         The official command-line interface for interacting with the Linode API
+long_description    {*}${description}.
+homepage            https://github.com/linode/linode-cli
+checksums           rmd160  e22e719ddde1b12704e4a399e063f68b9d9cbc51 \
+                    sha256  702ebcd91b7035c705113edf4e04646028719794cb82b423ad6ed953e3fd8ff3 \
+                    size    195507
+supported_archs     noarch
+
+# Must be in sync with linode-metadata
+python.default_version  312
+
+depends_build-append \
+                    port:py${python.version}-wheel
+
+depends_lib-append  port:libyaml \
+                    port:linode-metadata \
+                    port:py${python.version}-boto3 \
+                    port:py${python.version}-openapi3 \
+                    port:py${python.version}-packaging \
+                    port:py${python.version}-requests \
+                    port:py${python.version}-rich \
+                    port:py${python.version}-urllib3 \
+                    port:py${python.version}-yaml

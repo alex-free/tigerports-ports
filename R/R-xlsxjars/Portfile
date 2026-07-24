@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           active_variants 1.1
+PortGroup           R 1.0
+
+R.setup             cran cole.arendt xlsxjars 0.9.0
+revision            1
+categories-append   java
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Package required POI jars for the R-xlsx package
+long_description    {*}${description}
+checksums           rmd160  42d47a9ef748bb4632440faf771daa3c1cfb28d3 \
+                    sha256  4840093e9faf78b60540153ca9284a55e325bd0c7842aa66b6572af423eeebc0 \
+                    size    10264548
+supported_archs     noarch
+
+require_active_variants R java
+
+if {${configure.build_arch} in [list ppc ppc64]} {
+    depends_run-append \
+                    port:openjdk8
+} else {
+    PortGroup       java 1.0
+
+}
+
+depends_lib-append  port:R-rJava
+
+test.run            yes

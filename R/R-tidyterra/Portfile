@@ -1,0 +1,45 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github dieghernan tidyterra 1.0.0 v
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         R-tidyverse methods and R-ggplot2 helpers \
+                    for R-terra objects
+long_description    {*}${description}
+homepage            https://dieghernan.github.io/tidyterra
+checksums           rmd160  2aba84e9aa94249b4e33b7562e7c35206e92de8a \
+                    sha256  23ba3b8a6399a29d62949481c0c379e79b9565361b2a2bbff3080e970f38abd5 \
+                    size    42400206
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-cli \
+                    port:R-data.table \
+                    port:R-dplyr \
+                    port:R-generics \
+                    port:R-ggplot2 \
+                    port:R-magrittr \
+                    port:R-rlang \
+                    port:R-scales \
+                    port:R-sf \
+                    port:R-terra \
+                    port:R-tibble \
+                    port:R-tidyr
+
+depends_test-append port:R-hexbin \
+                    port:R-isoband \
+                    port:R-knitr \
+                    port:R-lifecycle \
+                    port:R-maptiles \
+                    port:R-rmarkdown \
+                    port:R-s2 \
+                    port:R-testthat \
+                    port:R-vctrs
+
+test.run            yes

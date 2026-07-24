@@ -1,0 +1,38 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran restriktor.org restriktor 0.6-30
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Restricted statistical estimation and inference \
+                    for linear models
+long_description    {*}${description}
+checksums           rmd160  2038159912c844d6d77e750e2c99f09f1d268415 \
+                    sha256  d44c13fd1fbee53ec705529c6f626a595b6fbde1136f200fc9d30493e97cfcb7 \
+                    size    1425221
+supported_archs     noarch
+
+depends_lib-append  port:R-future \
+                    port:R-future.apply \
+                    port:R-ggplot2 \
+                    port:R-gridExtra \
+                    port:R-lavaan \
+                    port:R-mvtnorm \
+                    port:R-norm \
+                    port:R-progressr \
+                    port:R-quadprog \
+                    port:R-scales \
+                    port:R-tmvtnorm
+
+depends_test-append port:R-bain \
+                    port:R-knitr \
+                    port:R-metadat \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

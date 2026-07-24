@@ -1,0 +1,45 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+PortGroup           muniversal 1.0
+PortGroup           openssl 1.0
+
+# Version must match libre port
+github.setup        baresip baresip 4.4.0 v
+revision            1
+categories          net
+maintainers         {db.org:aeh @alfredh}
+license             BSD
+description         Portable and modular SIP User-Agent \
+                    with audio and video support
+long_description    ${name} is a ${description}.
+
+checksums           rmd160  f5a7a721290855a4f8291acca70094aeed19803a \
+                    sha256  3e4694833e81e306cd3df9b45ad17bfdf046d964825e121b5fb44d6df5730ba8 \
+                    size    1186041
+github.tarball_from archive
+
+patchfiles-append   patch-drop-broken-avcapture.diff
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+
+# MacPorts switched to ffmpeg8: https://github.com/macports/macports-ports/commit/cc7a98c2c4a702b1699b0bbbc950dd4ccdcacec2
+# Keep at 7 for now, to decrease a zoo of installed ffmpegs.
+set ffmpeg_ver      7
+
+depends_lib-append  port:codec2 \
+                    port:ffmpeg${ffmpeg_ver} \
+                    port:libgsm \
+                    port:libre \
+                    port:libsdl2 \
+                    port:portaudio \
+                    port:spandsp-devel
+
+# No builtin or libatomic support
+compiler.c_standard 2011
+
+configure.pkg_config_path \
+                    ${prefix}/libexec/ffmpeg${ffmpeg_ver}/lib/pkgconfig

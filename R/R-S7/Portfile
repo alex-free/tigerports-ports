@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github rconsortium S7 0.2.2 v
+revision            0
+categories-append   devel
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Object-oriented system meant to become a successor to S3 and S4
+long_description    {*}${description}
+homepage            https://rconsortium.github.io/S7
+checksums           rmd160  f6467a8e18627cc9846c8c62e6bdbf0c9acb6df7 \
+                    sha256  3028945a9d1fa0e802070147f7da718fbc3f4084d5abc9f0d561b49672d51904 \
+                    size    180599
+github.tarball_from archive
+
+depends_test-append port:R-bench \
+                    port:R-callr \
+                    port:R-covr \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-tibble
+
+test.run            yes

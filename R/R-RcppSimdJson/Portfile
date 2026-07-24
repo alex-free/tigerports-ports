@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran eddelbuettel RcppSimdJson 0.1.15
+revision            1
+categories-append   devel
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Rcpp bindings for the simdjson header-only library \
+                    for JSON parsing
+long_description    {*}${description}
+homepage            https://github.com/eddelbuettel/rcppsimdjson
+checksums           rmd160  898b4f6c0743c40d2e3dbcf70b46a1c2de5b88ba \
+                    sha256  b82dc811c4de204f6352cadeb5073557cb75a9a9efb7e70c2d62cf8b79907072 \
+                    size    2333308
+
+depends_lib-append  port:R-Rcpp
+
+depends_test-append port:R-bit64 \
+                    port:R-tinytest
+
+# test_fparse_fload exhibits a few failures on ppc: Error: 12 out of 2969 tests failed.
+test.run            yes

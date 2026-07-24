@@ -1,0 +1,16 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran rbaranowski wbs 1.4.1
+revision            1
+maintainers         nomaintainer
+license             GPL-2
+description         Wild binary segmentation for multiple change-point detection
+long_description    {*}${description}
+checksums           rmd160  ce5bd66a1a7ce9630f942908d28ee4b87c1cad3e \
+                    sha256  d4a64f694bedbd8826a1c0bd3ec492d50763e4d7a9378b480d31efdc438133f7 \
+                    size    14929
+
+test.run            yes

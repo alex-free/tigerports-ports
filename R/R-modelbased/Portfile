@@ -1,0 +1,78 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github easystats modelbased 0.13.1 v
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Methods for correlation analysis
+long_description    {*}${description}
+homepage            https://easystats.github.io/modelbased
+checksums           rmd160  4d3ffa9c5f9d18fc3b2ef5b840cac2037e057959 \
+                    sha256  cd925156b77e63eee96173c845fce3c9915d560ce53c126347297832010e6e55 \
+                    size    1293888
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-bayestestR \
+                    port:R-datawizard \
+                    port:R-insight \
+                    port:R-parameters
+
+# R-nanoparquet is dropped for now due to being broken on BE platforms.
+depends_test-append port:R-afex \
+                    port:R-betareg \
+                    port:R-BH \
+                    port:R-bootES \
+                    port:R-brglm2 \
+                    port:R-brms \
+                    port:R-coda \
+                    port:R-collapse \
+                    port:R-correlation \
+                    port:R-coxme \
+                    port:R-curl \
+                    port:R-discovr \
+                    port:R-easystats \
+                    port:R-effectsize \
+                    port:R-emmeans \
+                    port:R-Formula \
+                    port:R-gamm4 \
+                    port:R-gganimate \
+                    port:R-ggplot2 \
+                    port:R-glmmTMB \
+                    port:R-httr2 \
+                    port:R-knitr \
+                    port:R-lme4 \
+                    port:R-lmerTest \
+                    port:R-logspline \
+                    port:R-marginaleffects \
+                    port:R-MatchIt \
+                    port:R-mice \
+                    port:R-mvtnorm \
+                    port:R-ordinal \
+                    port:R-palmerpenguins \
+                    port:R-patchwork \
+                    port:R-pbkrtest \
+                    port:R-performance \
+                    port:R-poorman \
+                    port:R-pscl \
+                    port:R-Rdatasets \
+                    port:R-RcppEigen \
+                    port:R-report \
+                    port:R-rmarkdown \
+                    port:R-rstanarm \
+                    port:R-rtdists \
+                    port:R-RWiener \
+                    port:R-sandwich \
+                    port:R-see \
+                    port:R-testthat \
+                    port:R-tinyplot \
+                    port:R-tinytable \
+                    port:R-vdiffr \
+                    port:R-withr
+
+test.run            yes

@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran r-project xtable 1.8-8
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Export tables to LaTeX or HTML
+long_description    {*}${description}
+homepage            http://xtable.r-forge.r-project.org
+checksums           rmd160  42de0bc985e9d3a28ab61045744fb332bace200f \
+                    sha256  b999c031b91255fb92134b0e70e5f84c5609e9312c0518393b9d0a4aaf6b2510 \
+                    size    618708
+supported_archs     noarch
+
+depends_test-append port:R-glue \
+                    port:R-knitr \
+                    port:R-tinytex \
+                    port:R-zoo
+
+test.run            yes

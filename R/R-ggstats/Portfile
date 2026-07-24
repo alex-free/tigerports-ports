@@ -1,0 +1,50 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github larmarange ggstats 0.10.0 v
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Extension to ggplot2 for plotting stats
+long_description    {*}${description}
+homepage            https://larmarange.github.io/ggstats
+checksums           rmd160  d831f88877a6487048572bc9acbf7cf4f39f95a7 \
+                    sha256  b25c874ade8b66f9ecb43c889577506f03fd576ec556aab872fff9f23deb6075 \
+                    size    295842
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-cli \
+                    port:R-dplyr \
+                    port:R-forcats \
+                    port:R-ggplot2 \
+                    port:R-lifecycle \
+                    port:R-magrittr \
+                    port:R-patchwork \
+                    port:R-purrr \
+                    port:R-rlang \
+                    port:R-scales \
+                    port:R-stringr \
+                    port:R-tidyr
+
+depends_test-append port:R-betareg \
+                    port:R-broom \
+                    port:R-broom.helpers \
+                    port:R-emmeans \
+                    port:R-glue \
+                    port:R-gtsummary \
+                    port:R-knitr \
+                    port:R-labelled \
+                    port:R-reshape \
+                    port:R-rmarkdown \
+                    port:R-parameters \
+                    port:R-pscl \
+                    port:R-testthat \
+                    port:R-spelling \
+                    port:R-survey \
+                    port:R-vdiffr
+
+test.run            yes

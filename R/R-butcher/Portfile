@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran tidymodels butcher 0.3.6 v
+revision            1
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Set of S3 generics to axe components of fitted model objects \
+                    and help reduce the size of model objects saved to disk.
+long_description    {*}${description}
+homepage            https://butcher.tidymodels.org
+checksums           rmd160  96e4857ce792b473385ba5f3b4303bbcec4939e8 \
+                    sha256  a6e025c1f4562f57f6f0d6285c7e5c7192141eade22917a6600178cb437ad16e \
+                    size    133319
+supported_archs     noarch
+
+depends_lib-append  port:R-cli \
+                    port:R-lobstr \
+                    port:R-purrr \
+                    port:R-rlang \
+                    port:R-tibble \
+                    port:R-vctrs

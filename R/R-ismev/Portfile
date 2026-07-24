@@ -1,0 +1,19 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran eric.gilleland ismev 1.43
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         An Introduction to Statistical Modeling of Extreme Values
+long_description    {*}${description}
+checksums           rmd160  d2f81b205bdb3c11096f76187ff51584c34aa1db \
+                    sha256  b2b7ddaed7994a4efd92a215ba90da7bdb63ccdcc3ebd26ffd4f476211e9c336 \
+                    size    90296
+supported_archs     noarch
+
+test.run            yes

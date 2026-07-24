@@ -1,0 +1,26 @@
+From fe24249d63e876d5ae48411704c9d360cf9e17ed Mon Sep 17 00:00:00 2001
+From: Sergey Fedorov <barracuda@macos-powerpc.org>
+Date: Wed, 28 May 2025 12:13:56 +0800
+Subject: [PATCH 2/2] getentropy: add missing header for macOS
+
+---
+ src/lib/entropy/getentropy/getentropy.cpp | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git src/lib/entropy/getentropy/getentropy.cpp src/lib/entropy/getentropy/getentropy.cpp
+index 8cb36d319..be0d81992 100644
+--- src/lib/entropy/getentropy/getentropy.cpp
++++ src/lib/entropy/getentropy/getentropy.cpp
+@@ -10,6 +10,12 @@
+ #include <botan/rng.h>
+ #include <unistd.h>
+ 
++// Some versions of macOS require sys/types.h to be included
++// prior to sys/random.h.
++#if __has_include(<sys/types.h>)
++   #include <sys/types.h>
++#endif
++
+ // macOS and Android include it in sys/random.h instead
+ #if __has_include(<sys/random.h>)
+    #include <sys/random.h>

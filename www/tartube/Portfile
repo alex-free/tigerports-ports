@@ -1,0 +1,52 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                tartube
+version             2.5.177
+revision            0
+categories-prepend  www multimedia
+platforms           any
+license             LGPL-2.1
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+description         GUI front-end for youtube-dl, partly based on youtube-dl-gui
+long_description    {*}${description} and written in Python 3 / Gtk 3.
+homepage            https://tartube.sourceforge.io
+checksums           rmd160  e79f67936070411154b53e146155af8741d67fe5 \
+                    sha256  db0b3cf913fcfd9d179843de68e390487a630c01014be2d036d5322145bd6f08 \
+                    size    11574852
+supported_archs     noarch
+
+python.default_version  313
+
+configure.python    ${prefix}/bin/python${python.version}
+
+patchfiles          patch-mainapp.py.diff patch-mainwin.py.diff patch-setup.py.diff
+
+post-patch {
+    reinplace "s|@PREFIX@|${prefix}|g" \
+                    ${worksrcpath}/tartube/mainapp.py
+    reinplace "s|@PYROOT@|${python.pkgd}|g" \
+                    ${worksrcpath}/setup.py ${worksrcpath}/tartube/mainwin.py
+
+    fs-traverse f ${worksrcpath} {
+        if {[string match *.py ${f}]} {
+            reinplace "s|/usr/bin/env python3|${configure.python}|" ${f}
+        }
+    }
+}
+
+depends_run-append  port:aria2 \
+                    path:bin/AtomicParsley:AtomicParsley \
+                    path:bin/ffmpeg:ffmpeg \
+                    path:lib/pkgconfig/glib-2.0.pc:glib2 \
+                    path:lib/pkgconfig/gobject-introspection-1.0.pc:gobject-introspection \
+                    path:lib/pkgconfig/gtk+-3.0.pc:gtk3 \
+                    port:py${python.version}-feedparser \
+                    port:py${python.version}-gobject3 \
+                    port:py${python.version}-requests \
+                    port:python${python.version} \
+                    port:yt-dlp
+
+build.env-append    TARTUBE_PKG_STRICT=1

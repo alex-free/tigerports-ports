@@ -1,0 +1,64 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran bcgov ssdtools 2.4.0 v
+revision            1
+maintainers         nomaintainer
+license             Apache-2
+description         Species Sensitivity Distributions
+long_description    {*}${description}
+homepage            https://bcgov.github.io/ssdtools
+checksums           rmd160  0c8233401c4595e246d3e4e339b80eddd4d6b5b4 \
+                    sha256  70d5488116fe5ed9509635db17cd450ff54bdfec8a295aa7a780f5ee390a3800 \
+                    size    1787117
+# github.tarball_from archive
+
+depends_lib-append  port:R-abind \
+                    port:R-chk \
+                    port:R-furrr \
+                    port:R-generics \
+                    port:R-ggplot2 \
+                    port:R-ggtext \
+                    port:R-glue \
+                    port:R-goftest \
+                    port:R-lifecycle \
+                    port:R-plyr \
+                    port:R-purrr \
+                    port:R-Rcpp \
+                    port:R-RcppEigen \
+                    port:R-rlang \
+                    port:R-scales \
+                    port:R-ssddata \
+                    port:R-stringr \
+                    port:R-tibble \
+                    port:R-TMB \
+                    port:R-universals
+
+depends_test-append port:R-actuar \
+                    port:R-covr \
+                    port:R-doFuture \
+                    port:R-dplyr \
+                    port:R-EnvStats \
+                    port:R-extraDistr \
+                    port:R-fitdistrplus \
+                    port:R-foreach \
+                    port:R-future \
+                    port:R-knitr \
+                    port:R-latex2exp \
+                    port:R-magrittr \
+                    port:R-mle.tools \
+                    port:R-patchwork \
+                    port:R-readr \
+                    port:R-reshape2 \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-tidyr \
+                    port:R-tidyselect \
+                    port:R-tinytex \
+                    port:R-VGAM \
+                    port:R-withr
+
+test.run            yes

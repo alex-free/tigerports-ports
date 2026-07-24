@@ -1,0 +1,20 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran chong gss 2.2-10
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-2+
+description         General Smoothing Splines
+long_description    A comprehensive package for structural multivariate function \
+                    estimation using smoothing splines.
+checksums           rmd160  5c9900755d0eb152238245eda071ee06e75c5348 \
+                    sha256  11c4c91caf162a4077b2c2611cedfd7fbcfeae679f4438dcb7349c90aa2e7d07 \
+                    size    545241
+
+compilers.setup     require_fortran
+
+test.run            yes

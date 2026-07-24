@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github brodieG diffobj 0.3.5 v
+revision            4
+categories-append   devel
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             {GPL-2 GPL-3}
+description         Diffs for R objects
+long_description    {*}${description}
+checksums           rmd160  85ef773edab06b128d855a7e06e6338b4a1dcb8b \
+                    sha256  33984e6d8d61fefd6c0e0624e273ab8b4d0a1b6d856a0c4ccdd8b59be0971751 \
+                    size    1123473
+github.tarball_from archive
+
+depends_lib-append  port:R-crayon
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown
+
+test.run            yes

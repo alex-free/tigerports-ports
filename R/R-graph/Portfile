@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             bioconductor Bioconductor graph 1.90.0
+revision            0
+categories-append   bioconductor graphics math
+maintainers         nomaintainer
+license             Artistic-2
+description         Package that implements some simple graph-handling capabilities
+long_description    {*}${description}
+checksums           rmd160  56528dafdd9126353dfa9fd7dee8ea635726d05c \
+                    sha256  de41cff51894e0e3029bfb0c47832e74fe324f2cd20f559cbeba05d391148de7 \
+                    size    1498679
+
+depends_lib-append  port:R-BiocGenerics
+
+depends_test-append port:R-BiocStyle \
+                    port:R-knitr \
+                    port:R-RBGL \
+                    port:R-Rgraphviz \
+                    port:R-RUnit \
+                    port:R-SparseM \
+                    port:R-XML
+
+test.run            yes

@@ -1,0 +1,55 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran francois spaMM 4.6.1
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             CeCILL-2
+description         Mixed-effect models, with or without spatial random effects
+long_description    {*}${description}
+homepage            https://gitlab.mbb.univ-montp2.fr/francois/spamm-ref
+checksums           rmd160  bd5cb9f6bdcd536b46e8956c3bd33033dc86fa41 \
+                    sha256  abf4017dccc13e560c4791d0dd53360d017027c615fa1f0cfd9848fde3a0e4d9 \
+                    size    1607695
+
+depends_lib-append  port:gsl \
+                    port:R-backports \
+                    port:R-cli \
+                    port:R-crayon \
+                    port:R-geometry \
+                    port:R-gmp \
+                    port:R-minqa \
+                    port:R-nloptr \
+                    port:R-numDeriv \
+                    port:R-pbapply \
+                    port:R-proxy \
+                    port:R-Rcpp \
+                    port:R-RcppEigen \
+                    port:R-reformulas \
+                    port:R-ROI
+
+# Some optional deps are omitted.
+depends_test-append port:R-agridat \
+                    port:R-blackbox \
+                    port:R-emmeans \
+                    port:R-fmesher \
+                    port:R-foreach \
+                    port:R-future \
+                    port:R-future.apply \
+                    port:R-lme4 \
+                    port:R-lmerTest \
+                    port:R-maps \
+                    port:R-multcomp \
+                    port:R-multilevel \
+                    port:R-RANN \
+                    port:R-rcdd \
+                    port:R-RLRsim \
+                    port:R-ROI.plugin.glpk \
+                    port:R-rsae \
+                    port:R-RSpectra \
+                    port:R-testthat
+
+test.run            yes

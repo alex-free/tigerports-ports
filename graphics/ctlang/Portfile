@@ -1,0 +1,40 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+PortGroup               cmake 1.1
+PortGroup               github 1.0
+
+name                    ctlang
+github.setup            ampas CTL 1.5.5 ctl-
+revision                0
+categories              graphics lang
+# The license is a GPL-incompatible BSD variant
+# see https://fedoraproject.org/wiki/Licensing:BSD?rd=Licensing/BSD
+license                 AMPAS
+maintainers             {mcalhoun @MarcusCalhoun-Lopez} openmaintainer
+description             Programming language for digital color management
+long_description        The Color Transformation Language, or CTL, \
+                        is a programming language for digital color management.
+
+checksums               rmd160  691a12acd92878ad9670be00ff3bf4678e8be375 \
+                        sha256  b6a36ac31e0a79224216e4fc41b56982939cec7a1afd4e80165cec3f1c37d265 \
+                        size    3082078
+github.tarball_from     archive
+
+compiler.cxx_standard   2011
+
+depends_build-append    \
+    path:bin/pkg-config:pkgconfig
+depends_lib-append      \
+    port:aces_container \
+    port:imath          \
+    port:openexr        \
+    port:tiff
+
+configure.pre_args-replace \
+                        -DCMAKE_BUILD_WITH_INSTALL_RPATH:BOOL=ON \
+                        -DCMAKE_BUILD_WITH_INSTALL_RPATH:BOOL=OFF
+
+configure.args-append   -DBUILD_SHARED_LIBS=ON
+
+test.run                yes

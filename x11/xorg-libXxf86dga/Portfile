@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem      1.0
+
+name            xorg-libXxf86dga
+version         1.1.7
+revision        0
+categories      x11 devel
+license         X11
+maintainers     {jeremyhu @jeremyhu} openmaintainer
+description     X.org libXxf86dga
+long_description \
+                {*}${description}
+homepage        https://www.x.org
+platforms       darwin macosx
+master_sites    xorg:individual/lib/
+
+distname        libXxf86dga-${version}
+
+checksums       rmd160  55718c82a496ce4b2cc6fda9e757743bfe5ee5c3 \
+                sha256  fd76cc930b85394fc12e52a01b3fb33b626731ac0084b3576b1e0095156683f7 \
+                size    413851
+
+depends_build   path:bin/pkg-config:pkgconfig
+
+depends_lib     port:xorg-libXext \
+                port:xorg-xorgproto
+
+livecheck.type  regex
+livecheck.url   https://xorg.freedesktop.org/archive/individual/lib/?C=M&O=D
+livecheck.regex libXxf86dga-(\\d+(?:\\.\\d+)*)

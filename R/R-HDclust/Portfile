@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran jiali HDclust 1.0.4
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-2+
+description         Clustering high-dimensional data with Hidden Markov model \
+                    on variable blocks
+long_description    {*}${description}
+checksums           rmd160  e7402f2ddd864668fee6d25c75252a884e95abc1 \
+                    sha256  e1b96d9a3021c4a698100fb9ae72a7bfc1e1c6cd96f6525107b8539b5c4718ed \
+                    size    926874
+
+depends_lib-append  port:R-Rcpp \
+                    port:R-RcppProgress \
+                    port:R-Rtsne
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown
+
+test.run            yes

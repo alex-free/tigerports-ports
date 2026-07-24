@@ -1,0 +1,52 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           conflicts_build 1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran hypertidy vapour 0.15.0 v
+revision            1
+categories-append   gis
+maintainers         nomaintainer
+license             GPL-3
+description         Access to the Geospatial Data Abstraction Library (GDAL)
+long_description    {*}${description}
+homepage            https://hypertidy.github.io/vapour
+checksums           rmd160  fe34b2123ae13218694f9134c66c79788d7fbff9 \
+                    sha256  bd63a32bb47e654531a0b101f95d1a9406b4b51175293d80394cef089d5b0f40 \
+                    size    1729105
+# github.tarball_from archive
+
+# The build may opportunistically pick wrong libs, in violation of configure args.
+conflicts_build     gdal geos
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+
+set deproot         ${prefix}/libexec/R
+
+depends_lib-append  port:gdal-R \
+                    port:proj-R \
+                    port:R-jsonlite \
+                    port:R-nanoarrow \
+                    port:R-Rcpp \
+                    port:R-wk
+
+# configure fails to do its job: https://github.com/r-spatial/sf/issues/2292
+build.env-append    CPPFLAGS=-I${deproot}/proj/include \
+                    DYLD_LIBRARY_PATH=${prefix}/lib/libgcc:${deproot}/proj/lib \
+                    PKG_CONFIG_PATH=${deproot}/proj/lib/pkgconfig
+
+build.args-append   --configure-args="--with-gdal-config=${deproot}/gdal/bin/gdal-config \
+                        --with-proj-include=${deproot}/proj/include \
+                        --with-proj-lib=${deproot}/proj/lib \
+                        --with-proj-share=${deproot}/proj/share/proj"
+
+depends_test-append port:R-knitr \
+                    port:R-markdown \
+                    port:R-rmarkdown \
+                    port:R-spelling \
+                    port:R-testthat
+
+test.run            no

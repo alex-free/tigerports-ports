@@ -1,0 +1,49 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           compilers 1.0
+PortGroup           github 1.0
+
+name                silo
+github.setup        llnl Silo 4.12.0
+revision            2
+categories          science
+license             BSD
+maintainers         nomaintainer
+
+description         Mesh and field I/O library and scientific database
+long_description    ${description}. Select a Fortran compiler variant to enable Fortran support.
+homepage            https://wci.llnl.gov/simulation/computer-codes/silo
+distname            ${name}-${version}-bsd
+checksums           rmd160  ca73f61ed1dbd7b2a82be6624217c2d87240f422 \
+                    sha256  5251816e43b08c19c925480b2daf85cc9b75e494b91df37df0eacc092279cfd0 \
+                    size    99198889
+github.tarball_from archive
+
+compilers.choose    fc f77 f90
+compilers.setup     require_fortran
+compilers.allow_arguments_mismatch  yes
+
+configure.ccache    no
+
+depends_lib         port:zlib
+
+configure.args      --enable-fortran \
+                    --enable-optimization \
+                    --enable-install-lite-headers \
+                    --enable-shared \
+                    --enable-browser=no \
+                    --enable-silex=no \
+                    --with-zlib
+
+variant hdf5 description "Enable HDF5 support (recommended)" {
+    depends_lib-append      port:hdf5
+    configure.args-append   --with-hdf5=${prefix}
+    # note: this does not work if hdf5 is installed with an MPI variant
+    # TODO: if really so, it should be prohibited via active_variants.
+}
+
+test.run            yes
+test.target         check
+
+default_variants-append +hdf5

@@ -1,0 +1,48 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran mlflow mlflow 3.9.0
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             Apache-2
+description         Open-source platform for the machine learning lifecycle
+long_description    {*}${description}
+homepage            https://mlflow.org
+checksums           rmd160  adc2f96323dec5eef95bdb70f0fb47ddacce7f76 \
+                    sha256  2544c8e71a0d0ac01ad520cab1f56273ea337d83c1713d7d19acc2fe80bdc7f2 \
+                    size    639571
+supported_archs     noarch
+
+depends_lib-append  port:R-base64enc \
+                    port:R-fs \
+                    port:R-git2r \
+                    port:R-glue \
+                    port:R-httpuv \
+                    port:R-httr \
+                    port:R-ini \
+                    port:R-jsonlite \
+                    port:R-openssl \
+                    port:R-processx \
+                    port:R-purrr \
+                    port:R-rlang \
+                    port:R-swagger \
+                    port:R-tibble \
+                    port:R-withr \
+                    port:R-yaml \
+                    port:R-zeallot
+
+# Some optional deps are omitted.
+depends_test-append port:R-carrier \
+                    port:R-covr \
+                    port:R-h2o \
+                    port:R-lintr \
+                    port:R-reticulate \
+                    port:R-sparklyr \
+                    port:R-stringi \
+                    port:R-testthat \
+                    port:R-xgboost
+
+test.run            yes

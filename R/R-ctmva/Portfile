@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran paul.biplab497 ctmva 1.6.0
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Continuous-Time Multivariate Analysis
+long_description    {*}${description}
+checksums           rmd160  4782391ea8ea8728e3b22d370a8ca6c44b7c39f0 \
+                    sha256  898d32c73ffe36147b5ac2a957f28a86fe3efe073a806c811673cac38dea0a9b \
+                    size    32162
+supported_archs     noarch
+
+depends_lib-append  port:R-fda \
+                    port:R-ggplot2 \
+                    port:R-polynom \
+                    port:R-rlang \
+                    port:R-vegan \
+                    port:R-viridisLite

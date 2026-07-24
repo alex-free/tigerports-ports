@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran ulrike.groemping DoE.wrapper 0.13
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Wrapper package for design of experiments functionality
+long_description    {*}${description}
+checksums           rmd160  47a647596a939bbfb9d9fa63e4d2b8447cd77324 \
+                    sha256  b3ae8a40553d374f991ac2ba917ca906bce525adae4bf970b9f2f167f379625d \
+                    size    47184
+supported_archs     noarch
+
+depends_lib-append  port:R-AlgDesign \
+                    port:R-DiceDesign \
+                    port:R-DoE.base \
+                    port:R-FrF2 \
+                    port:R-lhs \
+                    port:R-rsm

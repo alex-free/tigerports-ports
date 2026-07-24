@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran aitap RCurl 1.98-1.19
+revision            0
+categories-append   devel net
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             BSD
+description         General network client interface for R
+long_description    {*}${description}
+homepage            https://codeberg.org/aitap/${R.package}
+checksums           rmd160  95b3de895195bf2ad61d1f47050a6c3d490d5cd7 \
+                    sha256  57300322f0da21deef5094f12b4a7a94834e60262859e5afb5ff16ac7d431205 \
+                    size    718117
+
+depends_lib-append  port:curl \
+                    port:libxml2 \
+                    port:R-bitops
+
+depends_test-append port:R-XML
+
+patchfiles          patch-src-makevars.diff
+
+test.run            yes

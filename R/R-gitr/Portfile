@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github stufield gitr 0.0.2 v
+revision            1
+categories-append   devel
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Lightweight API for Git
+long_description    {*}${description}
+homepage            https://stufield.github.io/gitr
+checksums           rmd160  c0af56f5bb7eea5b01b7dc7c634b49c383bf8e5f \
+                    sha256  e125202fe0dabcaa9023868b8701c44d96828fe1a1b4bc46b8aa89d269219440 \
+                    size    58546
+github.tarball_from archive
+supported_archs     noarch
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-spelling \
+                    port:R-testthat \
+                    port:R-withr
+
+test.run            yes

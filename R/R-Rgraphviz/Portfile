@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             bioconductor kasperdanielhansen Rgraphviz 2.52.0
+revision            1
+categories-append   bioconductor graphics
+maintainers         nomaintainer
+license             EPL
+description         Interfaces R with graphviz library for plotting R graph objects
+long_description    {*}${description}
+homepage            https://github.com/kasperdanielhansen/Rgraphviz
+checksums           rmd160  9802090ed95959045a3331f777de8d5b1f89fedf \
+                    sha256  5fb51037c66ff0c539906167c0082bb4da41d39d0add161d4533efaf48bc8a91 \
+                    size    7664125
+
+# Not using MacPorts Graphviz due to: https://github.com/kasperdanielhansen/Rgraphviz/issues/19
+depends_lib-append  port:R-graph
+
+compiler.c_standard 2017
+
+depends_test-append port:R-BiocGenerics \
+                    port:R-RUnit \
+                    port:R-XML
+
+test.run            yes

@@ -1,0 +1,65 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim: fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           boost 1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+PortGroup           openssl 1.0
+
+boost.version       1.81
+# clock_gettime
+legacysupport.newest_darwin_requires_legacy 16
+
+github.setup        facebook mvfst 2025.12.15.00 v
+revision            0
+categories          devel net security
+license             MIT
+maintainers         {@barracuda156 macos-powerpc.org:barracuda}
+
+description         Implementation of the QUIC transport protocol
+long_description    {*}${description}
+
+checksums           rmd160  49bcf5d007cee4638eb98b882b0bb2acbbae95ae \
+                    sha256  acbb76ffdf9a2c38fff0a80efbb04422c2c7ba4934bdc0630626d8bb2db9f144 \
+                    size    2142206
+github.tarball_from archive
+
+set libfmt_v        11
+cmake.prefix_path-append \
+                    ${prefix}/lib/libfmt${libfmt_v}/cmake
+depends_lib-append  port:bzip2 \
+                    port:double-conversion \
+                    port:fizz \
+                    port:folly \
+                    port:gflags \
+                    port:google-glog \
+                    port:libevent \
+                    port:libfmt${libfmt_v} \
+                    port:libsodium \
+                    port:lz4 \
+                    port:snappy \
+                    port:zlib \
+                    port:zstd
+
+compiler.blacklist-append \
+                    {clang < 1200}
+# As of 2025.08.04.00, still uses C++17:
+compiler.cxx_standard   2017
+
+cmake.generator     Ninja
+
+# Dynamic libs fail to link: https://github.com/facebook/mvfst/issues/326
+configure.args-append \
+                    -DBUILD_TESTS=OFF \
+                    -DBUILD_SHARED_LIBS=OFF
+
+if {[string match *clang* ${configure.compiler}]} {
+    # Don’t use libcxx with gcc.
+    legacysupport.use_mp_libcxx yes
+}
+
+if {[string match *gcc* ${configure.compiler}] && ${configure.build_arch} in [list arm i386 ppc]} {
+    configure.ldflags-append \
+                    -latomic
+}

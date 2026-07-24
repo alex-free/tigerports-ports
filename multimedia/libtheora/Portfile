@@ -1,0 +1,79 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem      1.0
+PortGroup       xcodeversion 1.0
+
+name            libtheora
+epoch           1
+version         1.2.0
+revision        0
+
+categories      multimedia
+license         BSD
+maintainers     nomaintainer
+description     Xiph.org Foundation's open video codec
+
+long_description \
+    Theora is an open video codec being developed by the Xiph.org \
+    Foundation as part of their Ogg project (It is a project \
+    that aims to integrate On2's VP3 video codec, Ogg Vorbis \
+    audio codec and Ogg multimedia container formats into a multimedia \
+    solution that can compete with MPEG-4 format).
+
+homepage        https://www.theora.org
+master_sites    https://ftp.osuosl.org/pub/xiph/releases/theora/
+checksums       rmd160  a1311dfc47daa2ae9ed19b13c80c600ec7d45681 \
+                sha256  279327339903b544c28a92aeada7d0dcfd0397b59c2f368cc698ac56f515906e \
+                size    2535283
+
+use_autoreconf  yes
+
+depends_build-append \
+                path:bin/pkg-config:pkgconfig
+
+depends_lib     port:libogg \
+                port:libvorbis \
+                port:tiff
+
+configure.env   HAVE_BIBTEX=no \
+                HAVE_DOXYGEN=no \
+                HAVE_PDFLATEX=no \
+                HAVE_TRANSFIG=no \
+                SDL_CONFIG=/usr/bin/false
+
+configure.args-append \
+                --disable-asm \
+                --disable-examples \
+                --disable-gcc-sanitizers \
+                --disable-oggtest \
+                --disable-silent-rules \
+                --disable-spec \
+                --disable-telemetry \
+                --disable-vorbistest
+
+minimum_xcodeversions   {8 2.5}
+
+# huffdec.c:281: error: 'best_nbits' may be used uninitialized in this function
+compiler.blacklist-append \
+                *gcc-4.0 *gcc-4.2
+
+post-destroot {
+    set docdir ${prefix}/share/doc/${name}
+    xinstall -m 0644 -W ${worksrcpath} AUTHORS CHANGES COPYING LICENSE README.md \
+        ${destroot}${docdir}
+}
+
+test.run        yes
+test.target     check
+
+platform darwin powerpc {
+    # http://trac.macports.org/ticket/13033
+    # http://trac.macports.org/ticket/20141
+    configure.args-delete   --disable-asm
+    # https://trac.macports.org/ticket/64607
+    configure.args-append   --build=powerpc-apple-darwin${os.major}
+}
+
+livecheck.type  regex
+livecheck.url   [lindex ${master_sites} 0]
+livecheck.regex "${name}-(\\d+(?:\\.\\d+)*)${extract.suffix}"

@@ -1,0 +1,36 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran friendly matlib 1.0.1
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Matrix functions for teaching and learning linear algebra \
+                    and multivariate statistics
+homepage            http://friendly.github.io/matlib
+long_description    {*}${description}
+checksums           rmd160  09619e9f1f88f490aea5df793ab8b30bf8707467 \
+                    sha256  7efb4f9683627bdbec3e8fdf385b317805ec492a8ea200678b2e7f1d799d4a58 \
+                    size    817459
+supported_archs     noarch
+
+depends_lib-append  port:R-car \
+                    port:R-dplyr \
+                    port:R-knitr \
+                    port:R-rgl \
+                    port:R-rmarkdown \
+                    port:R-rstudioapi \
+                    port:R-xtable
+
+# Optional dep on R-webshot2 is dropped.
+depends_test-append port:R-bookdown \
+                    port:R-carData \
+                    port:R-clipr \
+                    port:R-markdown
+
+test.run            yes

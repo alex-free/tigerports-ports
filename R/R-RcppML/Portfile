@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran zdebruine RcppML 0.3.7.1
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Rcpp Machine Learning library
+long_description    Fast machine learning algorithms including matrix factorization \
+                    and divisive clustering for large sparse and dense matrices.
+checksums           rmd160  3cd5863ff2de275ef0e7eb18d0139c3fe1f8672e \
+                    sha256  9a2e2556b436504b270ac29b31d7a72c07fe5f34d48562e5930366fb228aae4b \
+                    size    45810
+
+depends_lib-append  port:R-Rcpp \
+                    port:R-RcppEigen
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

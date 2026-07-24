@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran HenrikBengtsson parallelly 1.48.0
+revision            0
+categories-append   parallel
+maintainers         nomaintainer
+license             LGPL-2.1+
+description         Enhancing the parallel package
+long_description    {*}${description}
+homepage            https://parallelly.futureverse.org
+checksums           rmd160  c3f2beb4eb9a803bee650d199a0586a846c21474 \
+                    sha256  58fe71ccee8e4dc95591958c5428c5000350937024373b99b258a76da0927636 \
+                    size    351615
+# github.tarball_from archive
+
+depends_test-append port:R-base64enc \
+                    port:R-commonmark
+
+test.run            yes

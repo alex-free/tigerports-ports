@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran matteo.fasiolo qgam 2.0.0
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Smooth additive quantile regression models
+long_description    {*}${description}
+checksums           rmd160  b95b5098b8aec9a723ee7121b2ceaa3f7d8e654f \
+                    sha256  4e1a4845dfbda675e32ae4f9a6dfc6f7b8f20f56036272951135642aa579ace8 \
+                    size    4106144
+
+depends_lib-append  port:R-doParallel \
+                    port:R-plyr \
+                    port:R-shiny
+
+depends_test-append port:R-knitr \
+                    port:R-RhpcBLASctl \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github rpkgs rtrend 0.1.5 v
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             MIT
+description         Trend Estimating Tools
+long_description    The traditional linear regression trend, Modified Mann–Kendall (MK) \
+                    non-parameter trend and bootstrap trend are included in this package.
+checksums           rmd160  256d9a8155bb4a372e2e09c35305e46327f3bd64 \
+                    sha256  52566ad84e3d725a3e54c7ac715d3f27e7a2bfa0742cba487a58cbc117bf28bc \
+                    size    604506
+github.tarball_from archive
+
+depends_lib-append  port:R-fftwtools \
+                    port:R-lubridate \
+                    port:R-magrittr \
+                    port:R-matrixStats \
+                    port:R-plyr \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-terra
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-covr \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

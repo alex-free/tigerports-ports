@@ -1,0 +1,17 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran s-u uuid 1.2-2
+revision            1
+maintainers         nomaintainer
+license             MIT
+description         Tools for generating and handling of UUIDs
+long_description    {*}${description}
+homepage            https://github.com/s-u/uuid
+checksums           rmd160  4e2add18f0b3a5cb7f4166af335a2299d23e5e6b \
+                    sha256  b1b73b87180d7b15095e6b33092ccf9dbd7ed3177791682711b8151ebbe9025f \
+                    size    81189
+
+test.run            yes

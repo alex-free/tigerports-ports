@@ -1,0 +1,45 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran IsadoreNabi EconCausal 1.0.2
+revision            1
+categories-append   economics
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Causal Analysis for Macroeconomic Time Series
+long_description    {*}${description} (ECM-MARS, BSTS, Bayesian GLM-AR(1)).
+homepage            https://github.com/IsadoreNabi/EconCausal
+checksums           rmd160  3ebb8d20f413a741e0a4d6842028c54e699d681a \
+                    sha256  ea08cfccbd95977476f3d73f73c02961fad9395aee1a6acc2cef3d1fcc8a1e74 \
+                    size    140667
+supported_archs     noarch
+
+depends_lib-append  port:R-BoomSpikeSlab \
+                    port:R-brms \
+                    port:R-bsts \
+                    port:R-dplyr \
+                    port:R-future.apply \
+                    port:R-magrittr \
+                    port:R-progressr \
+                    port:R-purrr \
+                    port:R-readxl \
+                    port:R-rlang \
+                    port:R-tibble \
+                    port:R-tidyr \
+                    port:R-tseries \
+                    port:R-urca \
+                    port:R-vars
+
+depends_test-append port:R-cmdstanr \
+                    port:R-future \
+                    port:R-knitr \
+                    port:R-RhpcBLASctl \
+                    port:R-rmarkdown \
+                    port:R-rstan \
+                    port:R-testthat
+
+test.run            yes

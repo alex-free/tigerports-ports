@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran bernhard QRM 0.4-35
+revision            1
+categories-append   math finance
+maintainers         nomaintainer
+license             GPL-2+
+description         Quantitative Risk Management: Concepts, Techniques and Tools
+long_description    {*}${description}
+checksums           rmd160  074011b3d4efe8b7a43b7b9031a98af6415dc59d \
+                    sha256  327ff1acb478c0a47554c930ffd5c44ab9150e1617aea00b99f8b450c8956415 \
+                    size    861150
+
+depends_lib-append  port:R-gsl \
+                    port:R-mvtnorm \
+                    port:R-numDeriv \
+                    port:R-Rcpp \
+                    port:R-timeDate \
+                    port:R-timeSeries
+
+test.run            yes

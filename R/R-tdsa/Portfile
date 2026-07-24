@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github weehaong tdsa 1.1-1 v
+revision            1
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Time-Dependent Sensitivity Analysis
+long_description    {*}${description}
+checksums           rmd160  a85bd5f6b8a0bfd6235ed8af43769be57d3b36b1 \
+                    sha256  e57892fcd09102b429a4491e4e354e94cf4637d4edf34855e75d02ed18b993c7 \
+                    size    1135492
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-deSolve \
+                    port:R-mathjaxr \
+                    port:R-numDeriv
+
+depends_test-append port:R-knitr \
+                    port:R-tinytest
+
+test.run            yes

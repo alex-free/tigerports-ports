@@ -1,0 +1,48 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran mllg batchtools 0.9.18
+revision            1
+categories-append   parallel
+maintainers         nomaintainer
+license             LGPL-3
+description         Tools for computation on batch systems
+long_description    {*}${description}
+homepage            https://markfairbanks.github.io/tidytable
+checksums           rmd160  51b20802fb70ff729909ec2b89ffa2fdeace7120 \
+                    sha256  47ffd7be8f4e06d89207f58aa7fdf49343e2af5578b539447ca2338fc0e7f0cf \
+                    size    720338
+
+depends_lib-append  port:R-backports \
+                    port:R-base64url \
+                    port:R-brew \
+                    port:R-checkmate \
+                    port:R-data.table \
+                    port:R-digest \
+                    port:R-fs \
+                    port:R-progress \
+                    port:R-R6 \
+                    port:R-rappdirs \
+                    port:R-stringi \
+                    port:R-withr
+
+depends_test-append port:R-debugme \
+                    port:R-doMPI \
+                    port:R-doParallel \
+                    port:R-e1071 \
+                    port:R-foreach \
+                    port:R-future \
+                    port:R-future.batchtools \
+                    port:R-knitr \
+                    port:R-parallelMap \
+                    port:R-ranger \
+                    port:R-rmarkdown \
+                    port:R-snow \
+                    port:R-testthat \
+                    port:R-tibble
+
+# Tests may freeze.
+test.run            yes

@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran RobinHankin cmvnorm 1.1-1
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2
+description         Complex multivariate Gaussian distribution
+long_description    {*}${description}
+checksums           rmd160  09e790546c1c702cca3733931de2ba0bd386ff79 \
+                    sha256  3c4738efb90cbb7c7b22ea271ba003c2c7d73f949991f24c91926d9cdd36920b \
+                    size    208363
+supported_archs     noarch
+
+depends_lib-append  port:R-elliptic \
+                    port:R-emulator \
+                    port:R-quadform
+
+depends_test-append port:R-knitr \
+                    port:R-mvtnorm \
+                    port:R-testthat
+
+test.run            yes

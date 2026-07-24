@@ -1,0 +1,64 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+PortGroup               cmake 1.1
+PortGroup               conflicts_build 1.0
+PortGroup               github 1.0
+PortGroup               legacysupport 1.1
+PortGroup               muniversal 1.0
+
+# This is for wrappers:
+legacysupport.newest_darwin_requires_legacy 0
+# TigerVNC Viewer(54086,0xa00d4620) malloc: *** error for object 0xa00a6754: pointer being freed was not allocated
+legacysupport.redirect_bins vncviewer
+
+github.setup            TigerVNC tigervnc 1.16.2 v
+revision                0
+conflicts               vnc tightvnc
+categories              x11 vnc
+maintainers             {ryandesign @ryandesign} openmaintainer
+license                 GPL-2+
+description             Advanced VNC implementation
+long_description        TigerVNC is an advanced VNC implementation. \
+                        It is based on the fourth generation of VNC. TigerVNC \
+                        also includes features from the TightVNC and TurboVNC \
+                        projects. This includes accelerated JPEG compression. \
+                        TigerVNC supports the latest X.Org X server.
+homepage                https://tigervnc.org
+checksums               rmd160  51dcf4b463891b94dc838c41b9e011b1d669d404 \
+                        sha256  b107c0c8b8a962594281690366c24186e95c2ea4a169acbc0076aa62ed01f467 \
+                        size    2222162
+github.tarball_from     archive
+
+# https://github.com/macos-powerpc/powerpc-ports/issues/128
+# https://github.com/TigerVNC/tigervnc/pull/2111
+patchfiles-append       0001-cocoa.mm-fix-availability-macros-usage.patch \
+                        0002-cocoa.mm-unbreak-build-on-10.5.patch \
+                        0003-KeyboardMacOS.mm-fix-for-10.5.patch
+
+depends_build-append    port:gettext
+
+depends_lib-append      path:lib/libfltk.dylib:fltk \
+                        port:gettext-runtime \
+                        path:lib/pkgconfig/gnutls.pc:gnutls \
+                        port:libiconv \
+                        path:include/turbojpeg.h:libjpeg-turbo \
+                        path:lib/pkgconfig/pixman-1.pc:libpixman \
+                        port:zlib
+
+post-patch {
+    reinplace "s|FL_MINOR_VERSION != 3|FL_MINOR_VERSION != 4|" ${worksrcpath}/CMakeLists.txt
+}
+
+compiler.c_standard     1999
+compiler.cxx_standard   2011
+
+configure.args-append   -DENABLE_H264=OFF
+
+# ivtools' OS/os.h shadows tigervnc's os/os.h on case-insensitive filesystems.
+if {[file exists ${prefix}/include/os/os.h]} {
+    conflicts_build-append ivtools
+}
+
+# Skip x.x.9x beta versions.
+github.livecheck.regex {((\d+.)+([0-8]?\d))}

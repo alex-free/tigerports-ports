@@ -1,0 +1,45 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran davebernstein1 sfa 1.0.4
+revision            1
+categories-append   economics
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Stochastic Frontier Analysis
+long_description    {*}${description}
+checksums           rmd160  672212cb1a8d4c9c9ed7fa4d4ac87ba71cb5a31f \
+                    sha256  697ef9a7a1dec3a5f348b37fa76eb5313828c994a9fccf38a6010d3391a5a873 \
+                    size    488848
+supported_archs     noarch
+
+depends_lib-append  port:R-cubature \
+                    port:R-devtools \
+                    port:R-fdrtool \
+                    port:R-Formula \
+                    port:R-frontier \
+                    port:R-gsl \
+                    port:R-haven \
+                    port:R-Hmisc \
+                    port:R-Jmisc \
+                    port:R-matrixStats \
+                    port:R-minqa \
+                    port:R-mnormt \
+                    port:R-moments \
+                    port:R-numDeriv \
+                    port:R-plm \
+                    port:R-pso \
+                    port:R-randtoolbox \
+                    port:R-readxl \
+                    port:R-tmvtnorm \
+                    port:R-truncnorm
+
+depends_test-append port:R-knitr \
+                    port:R-pracma \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

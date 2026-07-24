@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran agalecki nlmeU 0.71.6
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Datasets and utility functions enhancing functionality \
+                    of R-nlme package
+long_description    {*}${description}
+checksums           rmd160  cab9eed3ae01f728bb3d3e34ee0eaaee0339086d \
+                    sha256  dcdf04249e25271e0bdae94a6815e03d01cfce4e2a53fc22a80d79ef5f5f1b53 \
+                    size    353130
+supported_archs     noarch
+
+depends_test-append port:R-ellipse \
+                    port:R-reshape \
+                    port:R-roxygen2 \
+                    port:R-testthat \
+                    port:R-WWGbook
+
+test.run            yes

@@ -1,0 +1,52 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+PortGroup           makefile 1.0
+
+# O_CLOEXEC
+legacysupport.newest_darwin_requires_legacy 10
+
+github.setup        aristocratos btop 1.4.7 v
+revision            1
+epoch               2
+categories          sysutils
+license             Apache-2
+maintainers         {samasaur.com:sam @samasaur1} openmaintainer
+description         A monitor of resources
+long_description    Resource monitor that shows usage and stats for processor, \
+                    memory, disks, network and processes.
+checksums           rmd160  e5baa8b91dcb505cce5146dd753603b468f57543 \
+                    sha256  933de2e4d1b2211a638be463eb6e8616891bfba73aef5d38060bd8319baeefc6 \
+                    size    1280005
+github.tarball_from archive
+
+depends_build-append \
+                    path:libexec/coreutils/libstdbuf.so:coreutils \
+                    port:gmake
+
+depends_run-append  port:desktop-file-utils
+
+# btop(37553) malloc: *** error for object 0xa04da754: pointer being freed was not allocated
+legacysupport.redirect_bins ${name}
+
+makefile.override-append \
+                    PREFIX
+
+# https://github.com/aristocratos/btop/pull/1154
+patchfiles-append   0001-btop_shared.hpp-fix-headers-for-Apple.patch \
+                    0002-btop_collect.cpp-no-RUSAGE_INFO_CURRENT-on-10.9.patch \
+                    0003-btop_collect.cpp-fix-vm_statistics.patch \
+                    0004-smc-disable-for-PowerPC.patch
+
+# https://github.com/aristocratos/btop/issues/1641
+patchfiles-append   0005-do-not-force-GPU_SUPPORT.patch
+
+compiler.cxx_standard   2023
+compiler.blacklist-append {clang < 1600} {*clang-[3-9]*} \
+    *clang-10 *clang-11 *clang-12 *clang-13 *clang-14 *clang-15
+
+post-activate {
+    system "${prefix}/bin/update-desktop-database ${prefix}/share/applications"
+}

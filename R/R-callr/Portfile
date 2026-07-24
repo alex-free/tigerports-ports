@@ -1,0 +1,36 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github r-lib callr 3.8.0 v
+revision            0
+categories-append   devel
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Call R from R
+long_description    {*}${description}
+homepage            https://callr.r-lib.org
+checksums           rmd160  a411ef1572cd0524a9d5b1d73b01fdee24bbc4db \
+                    sha256  cad2a00d83b769324ff0a4a5de1bd6333af91b78556ce780f612600ef421d9ee \
+                    size    119290
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-otel \
+                    port:R-processx \
+                    port:R-R6
+
+# R-asciicast and R-otelsdk are dropped.
+depends_test-append port:R-carrier \
+                    port:R-cli \
+                    port:R-mockery \
+                    port:R-ps \
+                    port:R-rprojroot \
+                    port:R-spelling \
+                    port:R-testthat \
+                    port:R-withr
+
+# There may be a few failures in tests: https://github.com/r-lib/callr/issues/263
+test.run            yes

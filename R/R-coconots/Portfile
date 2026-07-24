@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran manuel.huth coconots 2.0.2
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Convolution-closed models for count time series
+long_description    {*}${description}
+checksums           rmd160  23b731d9c349efafd09e5316ca78e72e00d81819 \
+                    sha256  21426186520db77e667ec829e0909afba4504a7d7a60935cb70e00723e9329de \
+                    size    786134
+
+depends_lib-append  port:R-forecast \
+                    port:R-ggplot2 \
+                    port:R-HMMpa \
+                    port:R-JuliaConnectoR \
+                    port:R-matrixStats \
+                    port:R-numDeriv \
+                    port:R-Rcpp
+
+depends_test-append port:R-testthat
+
+test.run            yes

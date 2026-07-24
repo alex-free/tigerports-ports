@@ -1,0 +1,43 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran HenrikBengtsson progressr 1.0.0
+revision            0
+categories-append   devel
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Inclusive, unifying API for progress updates
+long_description    {*}${description}
+homepage            https://progressr.futureverse.org
+checksums           rmd160  8a682a57426c4ab39284c55c97c6a5baa0f0b95e \
+                    sha256  00907ab12441583e59e910690a335c6a0e9bea9d1c0280a84fbe3459323f02a7 \
+                    size    547929
+# github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-digest
+
+# R-ntfy is dropped for now.
+depends_test-append port:R-base64enc \
+                    port:R-beepr \
+                    port:R-cli \
+                    port:R-commonmark \
+                    port:R-crayon \
+                    port:R-doFuture \
+                    port:R-foreach \
+                    port:R-furrr \
+                    port:R-future \
+                    port:R-future.apply \
+                    port:R-pbmcapply \
+                    port:R-plyr \
+                    port:R-progress \
+                    port:R-purrr \
+                    port:R-RPushbullet \
+                    port:R-rstudioapi \
+                    port:R-shiny
+
+test.run            yes

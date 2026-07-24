@@ -1,0 +1,36 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran xliao csurvey 1.14
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Constrained regression for survey data
+long_description    Domain mean estimation with monotonicity \
+                    or block monotone constraints.
+checksums           rmd160  22d0739e4336f4d8e99cff7655374610dd584534 \
+                    sha256  eaf5cb156aecb2afeb52f6ebde56de91a089d446c857bcf8caf22c8ec881d204 \
+                    size    494646
+supported_archs     noarch
+
+depends_lib-append  port:R-cgam \
+                    port:R-coneproj \
+                    port:R-data.table \
+                    port:R-dplyr \
+                    port:R-ggplot2 \
+                    port:R-igraph \
+                    port:R-purrr \
+                    port:R-survey \
+                    port:R-tibble \
+                    port:R-zeallot
+
+depends_test-append port:R-knitr \
+                    port:R-NHANES \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

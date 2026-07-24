@@ -1,0 +1,36 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran phillipbvetter ctsmTMB 1.0.0
+revision            1
+categories-append   devel
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Continuous Time Stochastic Modelling using Template Model Builder
+long_description    {*}${description}
+homepage            https://github.com/phillipbvetter/ctsmTMB
+checksums           rmd160  3ccbfc94da3ec126c0fef5e2be135273e753ab4d \
+                    sha256  a52b42671cf05b33f5ea31308816d88f84660eadda121b2e4232f3c132174dd8 \
+                    size    1357540
+
+depends_lib-append  port:R-Deriv \
+                    port:R-deSolve \
+                    port:R-ggfortify \
+                    port:R-ggplot2 \
+                    port:R-patchwork \
+                    port:R-R6 \
+                    port:R-Rcpp \
+                    port:R-RcppEigen \
+                    port:R-RcppXPtrUtils \
+                    port:R-RcppZiggurat \
+                    port:R-RTMB \
+                    port:R-stringr \
+                    port:R-TMB
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

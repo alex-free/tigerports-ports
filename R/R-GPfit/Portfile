@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran hugh.chipman GPfit 1.0-9
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2
+description         Gaussian Processes modelling
+long_description    {*}${description}
+checksums           rmd160  04f859e3f46711ef74ccf4f44e3f6993f31d5971 \
+                    sha256  6307704410bee389336dfead0c2f777942b35c042c0d6c6bd8cd3cff27a5683c \
+                    size    24153
+supported_archs     noarch
+
+depends_lib-append  port:R-lhs
+
+depends_test-append port:R-testthat
+
+test.run            yes

@@ -1,0 +1,41 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           ocaml 1.1
+
+github.setup        mirage ocaml-ipaddr 5.6.2 v
+revision            1
+categories          ocaml crypto
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             ISC
+description         Library for manipulation of IP (and MAC) address representations
+long_description    {*}${description}
+use_bzip2           yes
+extract.suffix      .tbz
+distname            ipaddr-${version}
+checksums           rmd160  f46b0b3c386d6c37396c145ea296cfc19a9b15c0 \
+                    sha256  08a3fa6e6411490b6661e5b10229ea9ec6b8c3738e9f6b255859b13f145be136 \
+                    size    33953
+github.tarball_from releases
+
+if {${subport} eq ${name}} {
+    depends_lib-append \
+                    port:ocaml-domain-name \
+                    port:ocaml-macaddr
+}
+
+ocaml.build_type    dune
+
+subport ${name}-sexp {
+    description     Library for manipulation of IP address representations using sexp
+
+    depends_lib-append \
+                    port:ocaml-ipaddr \
+                    port:ocaml-ppx_sexp_conv \
+                    port:ocaml-sexplib0
+}
+
+subport ocaml-macaddr {
+    description     Library for manipulation of MAC address representations
+}

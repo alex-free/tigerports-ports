@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran rolfturner kanova 0.3-20
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Quasi-analysis of variance for k-functions
+long_description    {*}${description}
+checksums           rmd160  da7d0f84247fd8fa1fcd61626ac016448a8f980b \
+                    sha256  89c94368ef91dd78d193414a9aab6f8b485f49c976fee1755c2d5c9afe11258f \
+                    size    749997
+supported_archs     noarch
+
+depends_lib-append  port:R-spatstat.explore \
+                    port:R-spatstat.geom \
+                    port:R-spatstat.random
+depends_test-append port:R-Devore7 \
+                    port:R-R.rsp
+
+test.run            yes

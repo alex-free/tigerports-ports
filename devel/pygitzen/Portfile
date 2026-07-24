@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           python 1.0
+
+github.setup        SunnyTamang pygitzen 0.2.7 v
+revision            0
+categories          devel
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Python-native Terminal-Based Git Client
+long_description    {*}${description}
+checksums           rmd160  2e0c5c06fad9b8fd370837467f4c4d28e27bb45e \
+                    sha256  30ac0f1d66ad5c045c1058e63468d9f960655a41ed996e0ceaafd3029671b14b \
+                    size    158025
+github.tarball_from archive
+
+python.default_version  313
+
+compiler.c_standard 2011
+
+depends_build-append \
+                    port:py${python.version}-cython
+depends_lib-append  port:py${python.version}-dulwich \
+                    port:py${python.version}-rich \
+                    port:py${python.version}-textual
+depends_run-append  path:bin/git:git

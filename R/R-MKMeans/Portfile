@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran Yi.YA_yaya MKMeans 3.4.4
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2
+description         Modern K-Means (MKMeans) clustering algorithm
+long_description    {*}${description}
+checksums           rmd160  833d674c1ca9b573ea9cc9d0adeee54c52fb5b1e \
+                    sha256  5984869d7fe6734fb829c30c666cbb061877f76cdb846949baf246a17a5ec0b7 \
+                    size    5029
+supported_archs     noarch
+
+depends_lib-append  port:R-gtools
+
+test.run            yes

@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran r-lib processx 3.9.0
+revision            0
+categories-append   sysutils
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Execute and control system processes
+long_description    Tools to run system processes in the background. It can check \
+                    if a background process is running, wait on a background process to finish, \
+                    get the exit status of finished processes, kill background processes. \
+                    It can read the standard output and error of the processes, using non-blocking connections. 
+homepage            https://processx.r-lib.org
+checksums           rmd160  96a5017f9c1c67ca29eb40fe9c3d7f4cdcea149a \
+                    sha256  cdfef9035405891d8b104b258a40f62656f215aba7dcdc9f3226203c4c8fb354 \
+                    size    195281
+
+depends_lib-append  port:R-ps \
+                    port:R-R6
+
+depends_test-append port:R-callr \
+                    port:R-cli \
+                    port:R-covr \
+                    port:R-curl \
+                    port:R-debugme \
+                    port:R-rlang \
+                    port:R-testthat \
+                    port:R-webfakes \
+                    port:R-withr
+
+test.run            yes

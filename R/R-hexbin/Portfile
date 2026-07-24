@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran edzer hexbin 1.28.5
+revision            1
+maintainers         nomaintainer
+license             GPL-2
+description         Hexagonal binning routines and plotting methods
+long_description    {*}${description}
+homepage            https://github.com/edzer/hexbin
+checksums           rmd160  c191f6f6bd82a24cca0aca0feb372044e31dc184 \
+                    sha256  2ed087d6399f247d44e555b69d785b48362445c4c8c77330bbd57d282b49d3e6 \
+                    size    1195234
+
+patchfiles          patch-no-affy.diff
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-Biobase \
+                    port:R-knitr \
+                    port:R-limma \
+                    port:R-marray
+
+# On ppc there is a warning in one test:
+# https://github.com/edzer/hexbin/issues/24
+test.run            yes

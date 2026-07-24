@@ -1,0 +1,29 @@
+Remove code that looks for default Fink and MacPorts prefixes.
+Patch in a placeholder for the applications directory which will be replaced
+with the real value by the Portfile.
+
+https://github.com/gpac/gpac/pull/2822
+--- configure	2026-02-05 21:26:28.000000000 +0800
++++ configure	2026-05-10 07:46:14.000000000 +0800
+@@ -993,20 +993,8 @@
+             LDFLAGS="$LDFLAGS -L$prefix/$libdir"
+         fi
+ 
+-        if test "$is_em" != "yes" ; then
+-            if test -d /sw/bin ; then
+-                alt_macosx_dir="/sw"
+-            elif test -d /opt/local/bin ; then
+-                alt_macosx_dir="/opt/local"
+-            fi
+-            if test "$alt_macosx_dir" != "" ; then
+-                CFLAGS_DIR="$CFLAGS_DIR -I$alt_macosx_dir -I$alt_macosx_dir/include"
+-                LDFLAGS="$LDFLAGS -L$alt_macosx_dir -L$alt_macosx_dir/lib"
+-            fi
+-        fi
+-
+         CFLAGS="$CFLAGS_DIR $CFLAGS"
+-        Mac_Applications="/Applications"
++        Mac_Applications="@APPLICATIONS_DIR@"
+         SHFLAGS="-dynamiclib"
+         DYN_LIB_SUFFIX=".dylib"
+         extralibs=""

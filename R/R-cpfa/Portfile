@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran mattgress cpfa 1.2-5
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Classification with Parallel Factor Analysis
+long_description    {*}${description}
+checksums           rmd160  d8506ef7d5e6b82993f7d6d575720b9be36ce268 \
+                    sha256  8bcf3157e51b415d4adac1f3c1f139e25c7e62ecdacd1aefed0c38e092f14959 \
+                    size    319501
+supported_archs     noarch
+
+depends_lib-append  port:R-doParallel \
+                    port:R-doRNG \
+                    port:R-e1071 \
+                    port:R-foreach \
+                    port:R-glmnet \
+                    port:R-multiway \
+                    port:R-randomForest \
+                    port:R-rda \
+                    port:R-xgboost
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown
+
+test.run            yes

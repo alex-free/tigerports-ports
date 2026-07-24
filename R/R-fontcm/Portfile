@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github wch fontcm 1.1 v
+revision            1
+categories-append   fonts
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2
+description         Computer Modern font for use with extrafont package
+long_description    {*}${description}
+checksums           rmd160  1dfa4e609492753f59e62ec2f3c7b72e2a9520c6 \
+                    sha256  fd45ecd1a866ee6dbf68180a7397d418588015c0acf575cfa32e827730876cc4 \
+                    size    5060726
+github.tarball_from archive
+supported_archs     noarch
+
+depends_test-append port:R-extrafont
+
+test.run            yes

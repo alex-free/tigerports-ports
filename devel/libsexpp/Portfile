@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+PortGroup               cmake 1.1
+PortGroup               github 1.0
+
+name                    libsexpp
+github.setup            rnpgp sexpp 0.9.2 v
+revision                0
+categories              devel
+maintainers             {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license                 MIT
+description             C++ Library for SEXP (S-expressions)
+long_description        S-Expressions parser and generator library in C++ (SEXP in C++).
+checksums               rmd160  439f852b1db2111591332de6c90252e67bd6e662 \
+                        sha256  00c47b56a4dd5e80aba6b15df4e86d276a2a369737c6b467be1f51a9c29af31e \
+                        size    71858
+github.tarball_from     archive
+
+compiler.cxx_standard   2011
+
+configure.args-append   -DBUILD_SHARED_LIBS=ON \
+                        -DDOWNLOAD_GTEST=OFF \
+                        -DWITH_ABI_TEST=OFF \
+                        -DWITH_COVERAGE=OFF \
+                        -DWITH_SANITIZERS=OFF \
+                        -DWITH_SEXP_TESTS=OFF \
+                        -DWITH_SEXP_CLI=ON

@@ -1,0 +1,43 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran loelschlaeger RprobitB 1.2.0
+revision            1
+categories-append   economics
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Bayesian Probit choice modelling
+long_description    {*}${description}
+homepage            https://loelschlaeger.de/RprobitB
+checksums           rmd160  01c8d2ee6fbaaad16f42c6ab25459a3c3bf242bc \
+                    sha256  d1cc795ebef92a4112720d69b649893118dbfc6f06356e95b409a0482429e57a \
+                    size    858780
+
+depends_lib-append  port:R-checkmate \
+                    port:R-cli \
+                    port:R-crayon \
+                    port:R-doSNOW \
+                    port:R-foreach \
+                    port:R-ggplot2 \
+                    port:R-gridExtra \
+                    port:R-mixtools \
+                    port:R-mvtnorm \
+                    port:R-oeli \
+                    port:R-plotROC \
+                    port:R-progress \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-Rdpack \
+                    port:R-rlang \
+                    port:R-testthat \
+                    port:R-viridis
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-knitr \
+                    port:R-mlogit \
+                    port:R-xml2
+
+test.run            yes

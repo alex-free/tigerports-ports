@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran lrberge stringmagic 1.2.0
+revision            1
+categories-append   devel
+maintainers         nomaintainer
+license             GPL-2+
+description         Character string operations and interpolation
+long_description    {*}${description}, magic edition.
+homepage            https://lrberge.github.io/stringmagic
+checksums           rmd160  22ebdb43f1d4e0858902c05c55b94abd731c82ee \
+                    sha256  a60281ff987d0db25c87f32303a7aa5ba3733d4e1915c877ca92d0f552fd13a0 \
+                    size    3362930
+
+depends_lib-append  port:R-Rcpp
+
+depends_test-append port:R-data.table \
+                    port:R-knitr \
+                    port:R-rmarkdown
+
+test.run            yes

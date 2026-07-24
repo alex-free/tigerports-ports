@@ -1,0 +1,20 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran HughParsonage hutils 2.0.0
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Miscellaneous R functions and aliases
+long_description    {*}${description}
+checksums           rmd160  accec93b6e18146c1ffeb44b6121243d6846218b \
+                    sha256  3ce012fb10da5f6fa6382396f7c88ef7fdf4412dfb4cc3a9b8d0c8a45a30f51b \
+                    size    125752
+supported_archs     noarch
+
+depends_lib-append  port:R-data.table \
+                    port:R-fastmatch \
+                    port:R-magrittr

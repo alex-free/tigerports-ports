@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran cbergmeir RSNNS 0.4-18
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             LGPL-2+
+description         Neural networks using the Stuttgart Neural Network Simulator (SNNS)
+long_description    {*}${description}
+homepage            https://github.com/cbergmeir/RSNNS
+checksums           rmd160  256a59b3711cdfeea3515995eb223063cb2d08f0 \
+                    sha256  08a9fa31d89e2048aa71b2cfad20e12097411dfb2f9b405e94fc8b9ec4859d91 \
+                    size    971162
+
+depends_lib-append  port:R-Rcpp
+
+depends_test-append port:R-NeuralNetTools \
+                    port:R-plot3D \
+                    port:R-scatterplot3d
+
+test.run            yes

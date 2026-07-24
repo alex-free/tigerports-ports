@@ -1,0 +1,48 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+PortGroup               github 1.0
+PortGroup               ocaml 1.1
+
+github.setup            fraidev tornado 144eac963a549f2324963f2a417c3acd9c9f9d6a
+version                 2025.11.14
+revision                1
+categories              net p2p ocaml
+maintainers             {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license                 MIT
+description             Tornado is a BitTorrent client
+long_description        {*}${description} written entirely in OCaml. Experimental port.
+checksums               rmd160  019388d99dc5e080e2668b92605311b087ded376 \
+                        sha256  bf7c5355d591256eb146723abd1ee109cb007908898bc17120c1c56569932a6e \
+                        size    69056
+github.tarball_from     archive
+
+patch.pre_args-replace  -p0 -p1
+
+patchfiles-append       patch-01-multifile-torrents.patch \
+                        patch-02-resume-pause.patch \
+                        patch-03-udp-tracker.patch \
+                        patch-04-basic-seeding.patch \
+                        patch-05-improved-help.patch \
+                        patch-06-configurable-timeouts.patch \
+                        patch-07-tui-display.patch \
+                        patch-08-http-download.patch
+
+if {${configure.build_arch} in [list arm i386 ppc]} {
+    patchfiles-append   patch-09-32bit-sha1-fix.patch \
+                        patch-10-http-streaming-32bit.patch
+}
+
+depends_lib-append      port:ocaml-bencode \
+                        port:ocaml-cohttp-lwt-unix \
+                        port:ocaml-fmt \
+                        port:ocaml-ipaddr \
+                        port:ocaml-lwt \
+                        port:ocaml-lwt_ppx \
+                        port:ocaml-notty \
+                        port:ocaml-ppx_deriving \
+                        port:ocaml-progress \
+                        port:ocaml-stdint \
+                        port:ocaml-uri
+
+ocaml.build_type        dune

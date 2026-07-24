@@ -1,0 +1,59 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran privefl bigsnpr 1.12.21
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-3
+description         Analysis of massive SNP arrays
+long_description    {*}${description}
+homepage            https://privefl.github.io/bigsnpr
+checksums           rmd160  773715bf6d7a2d90bb7e46a14d844bfde1956c1c \
+                    sha256  074c55d5342c96d93a8299cd94b2e8561903ab6ff326c65a14bbbee02dc02821 \
+                    size    1064689
+
+depends_lib-append  port:R-bigassertr \
+                    port:R-bigparallelr \
+                    port:R-bigreadr \
+                    port:R-bigsparser \
+                    port:R-bigstatsr \
+                    port:R-bigutilsr \
+                    port:R-data.table \
+                    port:R-doRNG \
+                    port:R-foreach \
+                    port:R-ggplot2 \
+                    port:R-magrittr \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-rmio \
+                    port:R-roptim \
+                    port:R-runonce \
+                    port:R-vctrs
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-bindata \
+                    port:R-covr \
+                    port:R-dbplyr \
+                    port:R-dplyr \
+                    port:R-gaston \
+                    port:R-glue \
+                    port:R-Hmisc \
+                    port:R-microbenchmark \
+                    port:R-pcadapt \
+                    port:R-quadprog \
+                    port:R-R.utils \
+                    port:R-RhpcBLASctl \
+                    port:R-rmutil \
+                    port:R-RSpectra \
+                    port:R-RSQLite \
+                    port:R-spelling \
+                    port:R-testthat \
+                    port:R-tibble \
+                    port:R-xgboost
+
+# FIXME: https://github.com/privefl/bigsnpr/issues/515
+test.run            yes

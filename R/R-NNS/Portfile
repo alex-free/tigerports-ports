@@ -1,0 +1,36 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran OVVO-Financial NNS 11.6.4
+revision            1
+categories-append   math finance
+maintainers         nomaintainer
+license             GPL-3
+description         Non-linear Non-parametric Statistics
+long_description    {*}${description} using partial moments.
+homepage            https://github.com/OVVO-Financial/NNS
+checksums           rmd160  b8d23a08a8bf3926a9e2fade5dc1d1f3f9bcc8a5 \
+                    sha256  724cc3260ce8c0401608d2f8b6c3434193fe7295c497b5748cad55e38975324d \
+                    size    2032349
+
+# TODO: https://github.com/OVVO-Financial/NNS/issues/12
+depends_lib-append  port:R-data.table \
+                    port:R-doParallel \
+                    port:R-foreach \
+                    port:R-quantmod \
+                    port:R-Rcpp \
+                    port:R-RcppParallel \
+                    port:R-Rfast \
+                    port:R-rgl \
+                    port:R-xts \
+                    port:R-zoo
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+# Tests may fail to run due to: https://trac.macports.org/ticket/67059
+# Code from vignettes runs fine.
+test.run            yes

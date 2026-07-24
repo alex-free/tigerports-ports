@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           gitlab 1.0
+
+name                xinput
+gitlab.instance     https://gitlab.freedesktop.org/xorg
+gitlab.setup        app ${name} 1.6.4 ${name}-
+revision            0
+categories          x11
+license             X11
+maintainers         {jeremyhu @jeremyhu} openmaintainer
+description         Utility to configure and test XInput devices
+long_description    ${description}
+
+homepage            https://www.x.org
+use_bzip2           yes
+
+checksums           rmd160  bd921365a2ff9b610b89513d690041daa6bc86f1 \
+                    sha256  b5963efb29f4b8469e5cb3336986a651e6de8df2f67e88b0edb32d685a04e711 \
+                    size    25174
+
+use_autoreconf      yes
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig \
+                    port:xorg-util-macros
+
+depends_lib         port:xorg-libXi \
+                    port:xorg-libXinerama \
+                    port:xorg-libXrandr

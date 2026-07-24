@@ -1,0 +1,62 @@
+--- src/ctools.F	2026-06-29 10:50:42.000000000 +0800
++++ src/ctools.F	2026-07-01 19:44:55.000000000 +0800
+@@ -11,6 +11,9 @@
+ C  (see doc/CeCILL-C_V1-en.txt, doc/CeCILL-C_V1-fr.txt, and
+ C  https://cecill.info/licences/Licence_CeCILL-C_V1-en.html)
+ C
++
++#define NO_64BIT_ADDRESSES_IN_C
++
+       SUBROUTINE CMUMPS_COMPRESS_LU(SIZE_INPLACE,
+      &MYID,N,IOLDPS,TYPE,IW, LIW, A, LA,
+      &POSFAC, LRLU, LRLUS, IWPOS, PTRAST, PTRFAC, STEP, KEEP,KEEP8,
+
+--- src/dtools.F	2026-06-29 10:50:42.000000000 +0800
++++ src/dtools.F	2026-07-01 19:43:55.000000000 +0800
+@@ -11,6 +11,9 @@
+ C  (see doc/CeCILL-C_V1-en.txt, doc/CeCILL-C_V1-fr.txt, and
+ C  https://cecill.info/licences/Licence_CeCILL-C_V1-en.html)
+ C
++
++#define NO_64BIT_ADDRESSES_IN_C
++
+       SUBROUTINE DMUMPS_COMPRESS_LU(SIZE_INPLACE,
+      &MYID,N,IOLDPS,TYPE,IW, LIW, A, LA,
+      &POSFAC, LRLU, LRLUS, IWPOS, PTRAST, PTRFAC, STEP, KEEP,KEEP8,
+
+--- src/stools.F	2026-06-29 10:50:42.000000000 +0800
++++ src/stools.F	2026-07-01 19:45:15.000000000 +0800
+@@ -11,6 +11,9 @@
+ C  (see doc/CeCILL-C_V1-en.txt, doc/CeCILL-C_V1-fr.txt, and
+ C  https://cecill.info/licences/Licence_CeCILL-C_V1-en.html)
+ C
++
++#define NO_64BIT_ADDRESSES_IN_C
++
+       SUBROUTINE SMUMPS_COMPRESS_LU(SIZE_INPLACE,
+      &MYID,N,IOLDPS,TYPE,IW, LIW, A, LA,
+      &POSFAC, LRLU, LRLUS, IWPOS, PTRAST, PTRFAC, STEP, KEEP,KEEP8,
+
+--- src/ztools.F	2026-06-29 10:50:42.000000000 +0800
++++ src/ztools.F	2026-07-01 19:47:00.000000000 +0800
+@@ -11,6 +11,9 @@
+ C  (see doc/CeCILL-C_V1-en.txt, doc/CeCILL-C_V1-fr.txt, and
+ C  https://cecill.info/licences/Licence_CeCILL-C_V1-en.html)
+ C
++
++#define NO_64BIT_ADDRESSES_IN_C
++
+       SUBROUTINE ZMUMPS_COMPRESS_LU(SIZE_INPLACE,
+      &MYID,N,IOLDPS,TYPE,IW, LIW, A, LA,
+      &POSFAC, LRLU, LRLUS, IWPOS, PTRAST, PTRFAC, STEP, KEEP,KEEP8,
+
+--- src/tools_common.F	2026-04-28 21:06:05.000000000 +0800
++++ src/tools_common.F	2026-07-01 22:30:08.000000000 +0800
+@@ -110,7 +110,6 @@
+       INTEGER    :: INFO(80), KEEP(500), ICNTL(60), MYID
+       INTEGER(8) :: KEEP8(150)
+       INTEGER :: ICNTL50
+-        CALL MUMPS_GETVAL_ADDR_C(ICNTL50, KEEP8(83))
+       IF (ICNTL50 .eq. 1) THEN
+         INFO(1)=-80
+         INFO(2)=MYID

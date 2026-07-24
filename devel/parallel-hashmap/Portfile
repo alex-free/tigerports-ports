@@ -1,0 +1,46 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+PortGroup               cmake 1.1
+PortGroup               github 1.0
+
+github.setup            greg7mdp parallel-hashmap 2.0.0 v
+revision                1
+categories              devel
+license                 Apache-2
+# Do not set is as noarch until this issue is fixed:
+# https://trac.macports.org/ticket/69317
+# platforms               any
+# supported_archs         noarch
+maintainers             {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+description             A family of header-only, very fast and memory-friendly hashmap \
+                        and btree containers
+long_description        {*}${description}
+homepage                https://greg7mdp.github.io/parallel-hashmap
+checksums               rmd160  a37046afe248c835966a3b66e5d242b5f3b8dd30 \
+                        sha256  4f462f51a3468166ea4cf87c80e001dc1999093264cf55cbda3492ca39a7730b \
+                        size    2059086
+github.tarball_from     archive
+
+# https://github.com/greg7mdp/parallel-hashmap/pull/288
+patchfiles              0001-CMakeLists.txt-use-external-gtest-fallback-to-fetchi.patch
+
+# https://github.com/google/googletest/issues/4860
+# https://github.com/greg7mdp/parallel-hashmap/issues/287
+depends_build-append    port:gtest
+
+compiler.cxx_standard   2017
+compiler.thread_local_storage yes
+
+# TODO: next update will require an extra flag in order to use our gtest.
+configure.args-append   -DPHMAP_BUILD_EXAMPLES=OFF \
+                        -DPHMAP_BUILD_TESTS=ON \
+                        -DPHMAP_INSTALL=ON
+
+# https://github.com/greg7mdp/parallel-hashmap/issues/191
+configure.cppflags-append \
+                         -I${worksrcpath}
+
+# As of 2.0.0_1, all tests pass on powerpc:
+# 100% tests passed, 0 tests failed out of 17
+test.run                 yes

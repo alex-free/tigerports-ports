@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             bioconductor Bioconductor SparseArray 1.8.1
+revision            1
+categories-append   bioconductor devel
+maintainers         nomaintainer
+license             Artistic-2
+description         Efficient in-memory representation \
+                    of multi-dimensional sparse arrays
+long_description    {*}${description}
+checksums           rmd160  3384b06d60b573bf93143e5bce4df85267c3a792 \
+                    sha256  1cdd21923e37337ba1e4631ace70c4db1fb45609e6de8156334d657b2c566c42 \
+                    size    467238
+
+depends_lib-append  port:R-BiocGenerics \
+                    port:R-IRanges \
+                    port:R-MatrixGenerics \
+                    port:R-matrixStats \
+                    port:R-S4Arrays \
+                    port:R-S4Vectors \
+                    port:R-XVector
+
+depends_test-append port:R-BiocStyle \
+                    port:R-DelayedArray \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

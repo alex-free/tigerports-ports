@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           gitlab 1.0
+
+name                xload
+gitlab.instance     https://gitlab.freedesktop.org/xorg
+gitlab.setup        app ${name} 1.2.0 ${name}-
+revision            0
+categories          x11
+license             X11
+maintainers         {jeremyhu @jeremyhu} openmaintainer
+description         System load average display for X11
+long_description    ${description}
+
+homepage            https://www.x.org
+use_bzip2           yes
+
+checksums           rmd160  f9da9f23a54b9398eb5da1bef70b610aabb88757 \
+                    sha256  44d1ceeecbab072d8d797fdc058766f4df19d48475b362d499b39e1ad7c0b124 \
+                    size    15390
+
+use_autoreconf      yes
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig \
+                    port:xorg-util-macros
+
+depends_lib         port:xorg-libXaw

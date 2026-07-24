@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran analythium deps 0.4.1
+revision            1
+categories-append   devel
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Dependency management with roxygen-style comments
+long_description    {*}${description}
+homepage            https://hub.analythium.io/deps
+checksums           rmd160  3f4889143d5b47a9d54fc9aa9eac75e92bd358cc \
+                    sha256  5f35c0d44b95126de2a10a5c8fc7783a48d77e64c8bbf195fc335b338a48b429 \
+                    size    11512
+supported_archs     noarch
+
+depends_lib-append  port:R-jsonlite \
+                    port:R-remotes \
+                    port:R-renv
+
+test.run            yes

@@ -1,0 +1,39 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is outdated.
+R.setup             cran rstudio sortable 0.5.0 v
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Drag-and-Drop in R-shiny apps with SortableJS
+long_description    {*}${description}
+homepage            https://rstudio.github.io/sortable
+checksums           rmd160  7573dd37b5e7dbd8ac3273235db33f7b8ddc6d3d \
+                    sha256  4cd047d989fc115aca992fd1fd8bb8f78113963ac0fea58e1453442599a4ccf8 \
+                    size    1952875
+supported_archs     noarch
+
+depends_lib-append  port:R-assertthat \
+                    port:R-ellipsis \
+                    port:R-htmltools \
+                    port:R-htmlwidgets \
+                    port:R-jsonlite \
+                    port:R-learnr \
+                    port:R-rlang \
+                    port:R-shiny
+
+depends_test-append port:R-base64enc \
+                    port:R-covr \
+                    port:R-knitr \
+                    port:R-magrittr \
+                    port:R-rmarkdown \
+                    port:R-spelling \
+                    port:R-testthat \
+                    port:R-webshot \
+                    port:R-withr
+
+test.run            yes

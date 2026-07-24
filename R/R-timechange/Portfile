@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran vspinu timechange 0.4.0
+revision            1
+maintainers         nomaintainer
+license             GPL-3+
+description         Efficient Manipulation of Date–Times
+long_description    {*}${description}
+homepage            https://github.com/vspinu/timechange
+checksums           rmd160  d285c193b3a36934ece93080a6fe2ecd9b1fa740 \
+                    sha256  6dc8ff9d339d3c4cff7ddf3800383f3e94f41c021f6c7bacccf971e187f73feb \
+                    size    103966
+
+depends_lib-append  port:R-cpp11
+
+depends_test-append port:R-knitr \
+                    port:R-testthat
+
+test.run            yes

@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran koheiw wordvector 0.5.1
+revision            1
+categories-append   textproc
+maintainers         nomaintainer
+license             Apache-2
+description         Word and Document Vector Models
+long_description    {*}${description}
+homepage            https://github.com/koheiw/wordvector
+checksums           rmd160  048302574a177cc27e2056cb1fb407d2c8ff87a9 \
+                    sha256  5bddfc8d7e31b22691fd1421a8f7034310dd72c4ff1b0537d180c2b871c3d113 \
+                    size    2875673
+
+depends_lib-append  port:R-irlba \
+                    port:R-proxyC \
+                    port:R-quanteda \
+                    port:R-Rcpp \
+                    port:R-RSpectra \
+                    port:R-rsvd \
+                    port:R-stringi
+
+depends_test-append port:R-spelling \
+                    port:R-testthat \
+                    port:R-word2vec
+
+test.run            yes

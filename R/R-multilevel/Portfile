@@ -1,0 +1,19 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran pdbliese multilevel 2.7.1
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Multilevel functions
+long_description    Tools used by organizational researchers \
+                    for the analysis of multilevel data.
+checksums           rmd160  902de46832ab53813019ff1abe72ffde3a218c86 \
+                    sha256  317c894bdb21571d3ed396057f2eaf588b5bfae82610d6329dc1dcafee16f91f \
+                    size    306394
+supported_archs     noarch
+
+test.run            yes

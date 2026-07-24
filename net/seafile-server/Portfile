@@ -1,0 +1,80 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           fuse 1.0
+PortGroup           github 1.0
+PortGroup           openssl 1.0
+
+github.setup        haiwen seafile-server 13.0.24 v -server
+revision            0
+categories          net www
+license             GPL-3
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+description         Open Source Cloud Storage (Server)
+long_description    {*}${description}
+checksums           rmd160  fdf2dbd16fc4f5c7b8e55de3b41e49123fb39de5 \
+                    sha256  abb2dd039530910c3a9003d423642f70f7a3c616226e5341e8495b0a366c76e8 \
+                    size    521042
+github.tarball_from archive
+
+# https://github.com/haiwen/seafile-server/pull/785
+# https://github.com/haiwen/seafile-server/pull/786
+patchfiles          0001-fsck.c.patch \
+                    0002-user-mgr.c.patch
+
+patchfiles-append   0003-evhtp.patch
+
+# obj-cache.c:73:1: error: conflicting types for 'objcache_new'; have 'ObjCache *(GKeyFile *)' {aka 'ObjCache *(struct _GKeyFile *)'}
+patchfiles-append   0004-unbreak-obj-cache.c.patch
+
+set python.version  314
+set python.branch   [string index ${python.version} 0].[string range ${python.version} 1 end]
+set python.prefix   ${frameworks_dir}/Python.framework/Versions/${python.branch}
+set python.bin      ${python.prefix}/bin/python${python.branch}
+set urllib_path     ${python.prefix}/lib/python${python.branch}/site-packages/urllib3
+
+post-patch {
+    reinplace "s|\"python3\"|\"${python.bin}\"|" ${worksrcpath}/controller/seafile-controller.c
+}
+
+use_autoreconf      yes
+
+depends_build-append \
+                    port:gettext \
+                    path:bin/pkg-config:pkgconfig \
+                    port:python${python.version} \
+                    path:bin/vala:vala
+
+depends_lib-append  port:argon2 \
+                    port:curl \
+                    port:gettext-runtime \
+                    path:lib/pkgconfig/glib-2.0.pc:glib2 \
+                    port:hiredis \
+                    port:jansson \
+                    port:libarchive \
+                    port:libevent \
+                    port:libevhtp \
+                    port:libiconv \
+                    path:lib/pkgconfig/libjwt.pc:libjwt2 \
+                    port:libsearpc \
+                    port:libuuid \
+                    path:lib/libldap.dylib:openldap \
+                    port:sqlite3 \
+                    port:zlib
+
+depends_run-append  bin:bash:bash \
+                    path:${urllib_path}/__init__.py:py${python.version}-urllib3
+
+# seafile-session.h:16: error: redefinition of typedef ‘SeafileSession’
+compiler.c_standard 2011
+
+configure.env-append \
+                    PYTHON=${python.bin}
+
+configure.args-append \
+                    --enable-console \
+                    --enable-fuse \
+                    --enable-httpserver \
+                    --enable-ldap \
+                    --enable-python \
+                    --with-python_prefix=${python.prefix}

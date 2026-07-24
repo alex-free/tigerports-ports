@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           makefile 1.0
+
+name                libasap
+version             8.0.0
+revision            0
+categories          audio
+license             GPL-2
+maintainers         nomaintainer
+description         Another Slight Atari Player library
+long_description    {*}${description}
+homepage            https://sourceforge.net/projects/asap
+master_sites        sourceforge:asap
+distname            asap-${version}
+checksums           rmd160  a436c9b5fac03caee2a32cc4caf6e21b594dabcc \
+                    sha256  062d7db2a0747bf9200560141452f8fa2289909b147ac40a5bb5b60d5275a14f \
+                    size    3735822
+
+post-patch {
+    reinplace "s|CFLAGS = |CFLAGS += |" ${worksrcpath}/Makefile
+    reinplace "s|LDFLAGS =|LDFLAGS +=|" ${worksrcpath}/Makefile
+}
+
+# redefinition of typedef ‘ASAPFileLoader’
+compiler.c_standard 2011
+
+build.args          prefix=${prefix} V=1
+destroot.args       prefix=${prefix}

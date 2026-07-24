@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran eddelbuettel tidyCpp 0.0.11
+revision            0
+categories-append   devel
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Tidy C++ header-only definitions for parts of the C API of R
+long_description    {*}${description}
+homepage            https://dirk.eddelbuettel.com/code/tidycpp.html
+checksums           rmd160  126767958fe3e215c3790489afa3e7c591d1ef70 \
+                    sha256  9173d5e434f4880aca9736197505636a1c86430f03e4f492dda755c0c7f4f35d \
+                    size    46777
+supported_archs     noarch
+
+depends_test-append port:R-Rcpp \
+                    port:R-RcppSpdlog \
+                    port:R-simplermarkdown
+
+test.run            yes

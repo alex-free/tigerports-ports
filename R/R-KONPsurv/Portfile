@@ -1,0 +1,20 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran matan.schles KONPsurv 1.0.4
+revision            1
+maintainers         nomaintainer
+license             GPL-2+
+description         KONP Tests
+long_description    {*}\: powerful k-sample tests for right-censored data
+checksums           rmd160  502bb3e07a053cc0010edd98ac416f705c0451b3 \
+                    sha256  b1f2a9b07740d205e4874555ec457a1a21ee2bcb2c00f10daacdff4c0027e223 \
+                    size    23328
+
+depends_lib-append  port:R-Rcpp
+
+depends_test-append port:R-testthat
+
+test.run            yes

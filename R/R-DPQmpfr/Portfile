@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             r-forge r-project DPQmpfr 0.3-4
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         DPQ (density, probability, quantile) distribution \
+                    computations using MPFR
+long_description    {*}${description}
+checksums           rmd160  55d976c4a2675d603793f4b69f08d70ab1b265af \
+                    sha256  b0eaf1d23b57b02aa1386a65642338409a6c93bbb2010bc6682f318ee4af8358 \
+                    size    66547
+supported_archs     noarch
+
+depends_lib-append  port:R-DPQ \
+                    port:R-gmp \
+                    port:R-Rmpfr \
+                    port:R-sfsmisc
+
+test.run            yes

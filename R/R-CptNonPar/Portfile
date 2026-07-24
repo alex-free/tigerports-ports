@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran EuanMcGonigle CptNonPar 0.3.2
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3+
+description         Non-parametric change point detection for multivariate time series
+long_description    {*}${description}
+homepage            https://github.com/EuanMcGonigle/CptNonPar
+checksums           rmd160  b675055ecb7805917b278f0d6efa17c36a296fe2 \
+                    sha256  783063ca9c188a3a346d3a96ad061b0b11f6949e9d175024a7ebafc3e175a066 \
+                    size    21877
+
+depends_lib-append  port:R-doParallel \
+                    port:R-foreach \
+                    port:R-iterators \
+                    port:R-parallelly \
+                    port:R-Rcpp \
+                    port:R-Rfast
+
+depends_test-append port:R-covr \
+                    port:R-testthat
+
+test.run            yes

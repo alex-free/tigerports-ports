@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-xmod
+version             1.9.0
+revision            0
+categories-append   devel
+platforms           any
+license             MIT
+maintainers         nomaintainer
+description         Turn any object into a module
+long_description    {*}${description}
+homepage            https://github.com/rec/xmod
+checksums           rmd160  98180ce98213d3dbcb48c2188afa5e110771a845 \
+                    sha256  98b2e7e8e659c51b635f4e98faf3fa1f3f96dab2805f19ddd6e352bbb4d23991 \
+                    size    3501
+supported_archs     noarch
+
+python.versions         310 311 312 313 314
+python.pep517_backend   poetry
+
+# https://github.com/rec/xmod/issues/9
+if {${subport} ne ${name}} {
+    patchfiles      patch-poetry.diff
+}

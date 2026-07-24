@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github HenrikBengtsson future.batchtools 0.20.0
+revision            1
+categories-append   parallel
+platforms           {darwin any}
+maintainers         nomaintainer
+license             LGPL-2.1+
+description         Future API for parallel and distributed processing using batchtools
+long_description    {*}${description}
+homepage            https://future.batchtools.futureverse.org
+checksums           rmd160  94b50bdfaab95f41e058b14da48064638fd3626d \
+                    sha256  992b5e98d4d10d8aa29eb34b35126def24badceccf4a4b1df1d745096a7a6ea6 \
+                    size    120723
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-batchtools \
+                    port:R-future \
+                    port:R-parallelly
+
+depends_test-append port:R-future.apply \
+                    port:R-globals \
+                    port:R-listenv \
+                    port:R-markdown \
+                    port:R-R.rsp
+
+test.run            yes

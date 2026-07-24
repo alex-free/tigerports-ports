@@ -1,0 +1,20 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran r-project png 0.1-9
+revision            0
+categories-append   graphics
+maintainers         nomaintainer
+license             {GPL-2 GPL-3}
+description         Read and write PNG images
+long_description    {*}${description}
+homepage            https://www.rforge.net/png
+checksums           rmd160  bf1f1c72cf9262a196a1f4097f9823dfdb3cb9bf \
+                    sha256  0b8502363c6f5c73cf284dee4fd1416f5adf4115b6ae9a1e09531c143b978589 \
+                    size    24939
+
+depends_lib-append  port:libpng
+
+test.run            yes

@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+
+name                libtfmx
+github.setup        mschwendt libtfmxaudiodecoder 1.0.7
+revision            0
+epoch               1
+categories          audio
+license             GPL-2
+maintainers         nomaintainer
+description         library for TFMX audio decoding
+long_description    C language wrapper {*}${description}.
+checksums           rmd160  eb0bee8668e2553c5692d2a1f3a78bfb5c2e857b \
+                    sha256  eb6271574d13563f8c49887e8c851e5757d8901436633ef148f300fed70eeb21 \
+                    size    226264
+github.tarball_from archive
+
+use_autoreconf      yes
+
+compiler.c_standard     2011
+compiler.cxx_standard   2011
+
+# https://github.com/mschwendt/libtfmxaudiodecoder/issues/20
+compiler.blacklist-append \
+                        {clang < 1300}
+
+post-destroot {
+    ln -s ${prefix}/lib/libtfmxaudiodecoder.dylib ${destroot}${prefix}/lib/libtfmx.dylib
+}

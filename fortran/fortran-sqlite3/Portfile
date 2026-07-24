@@ -1,0 +1,46 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           compilers 1.0
+PortGroup           github 1.0
+PortGroup           makefile 1.0
+
+github.setup        interkosmos fortran-sqlite3 0.3.0
+revision            0
+categories          fortran databases
+license             ISC
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+description         Fortran 2018 interface bindings to SQLite 3
+long_description    {*}${description}
+checksums           rmd160  d7c68c8b0a829436ea48e23781c34090a8f72ead \
+                    sha256  3c251b9c07e6fd3fca32f809db3cba08afe8a0eede8bee9950656d0b1db4dd2b \
+                    size    16210
+github.tarball_from archive
+
+depends_lib-append  port:sqlite3
+
+makefile.override   CC FC CFLAGS FFLAGS LDFLAGS PREFIX
+
+compilers.setup     require_fortran
+compiler.blacklist-append *gcc-4.* {clang < 500}
+
+use_parallel_build  no
+build.target        all test
+
+destroot {
+    xinstall -d ${destroot}${prefix}/include/${name}
+    copy ${worksrcpath}/libfortran-sqlite3.a ${destroot}${prefix}/lib/
+    foreach mod {callbacks.mod sqlite3.mod sqlite3_util.mod} {
+        copy ${worksrcpath}/${mod} ${destroot}${prefix}/include/${name}/
+    }
+}
+
+post-destroot {
+    set docdir ${prefix}/share/doc/${name}
+    xinstall -d ${destroot}${docdir}
+    xinstall -m 0644 -W ${worksrcpath} LICENCE README.md ${destroot}${docdir}
+}
+
+test.run            yes
+test.cmd            ./test_sqlite3
+test.target

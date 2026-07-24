@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran partchev irtoys 0.2.2
+revision            1
+maintainers         nomaintainer
+license             GPL-2+
+description         Collection of functions related to Item Response Theory (IRT)
+long_description    {*}${description}
+checksums           rmd160  30121f2f2fd56dd86116b1ca17aa2ddf22fa543f \
+                    sha256  4b200d11d884e2ad7c70d35d1bf3cc5cea5ef6e73a7683eb28ee4dff99f950e3 \
+                    size    625960
+
+depends_lib-append  port:R-ltm \
+                    port:R-sm
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown
+
+test.run            yes

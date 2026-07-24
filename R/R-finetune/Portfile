@@ -1,0 +1,49 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran tidymodels finetune 1.2.1 v
+revision            1
+categories-append   economics math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Additional functions for model tuning
+long_description    {*}${description}
+homepage            https://finetune.tidymodels.org
+checksums           rmd160  eba3abc927f8158568ed8a53e2aaab42d5d299d6 \
+                    sha256  81ac2a446f16d72e885d6d0fde93c9f4c43a42a18d65697287f3a3cd45c76c1f \
+                    size    130894
+supported_archs     noarch
+
+depends_lib-append  port:R-cli \
+                    port:R-dials \
+                    port:R-dplyr \
+                    port:R-ggplot2 \
+                    port:R-parsnip \
+                    port:R-purrr \
+                    port:R-rlang \
+                    port:R-tibble \
+                    port:R-tidyr \
+                    port:R-tidyselect \
+                    port:R-tune \
+                    port:R-vctrs \
+                    port:R-workflows
+
+depends_test-append port:R-BradleyTerry2 \
+                    port:R-covr \
+                    port:R-discrim \
+                    port:R-kknn \
+                    port:R-klaR \
+                    port:R-lme4 \
+                    port:R-modeldata \
+                    port:R-ranger \
+                    port:R-recipes \
+                    port:R-rsample \
+                    port:R-spelling \
+                    port:R-testthat \
+                    port:R-yardstick
+
+test.run            yes

@@ -1,0 +1,41 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+PortGroup           openssl 1.0
+
+# clock_gettime
+legacysupport.newest_darwin_requires_legacy 15
+
+github.setup        private-octopus picoquic d4c442531c7696ce9fcdf5eafa58ff21869b8589
+version             2026.05.26
+revision            0
+categories          devel net crypto
+license             MIT
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+description         Minimalist implementation of the QUIC protocol
+long_description    {*}${description}
+checksums           rmd160  92b164be9890575da109fe294c7462fa761d753e \
+                    sha256  208b3b6291cab744d77d059651ad1dc3f56a5cf8525c85c31d90a4b60083a6d3 \
+                    size    1399501
+github.tarball_from archive
+
+compiler.c_standard     2011
+compiler.cxx_standard   2011
+
+depends_build-append    port:picotls
+
+# TODO: add a variant with mbedtls
+configure.args-append   -DBUILD_HTTP=ON \
+                        -DBUILD_LOGLIB=ON \
+                        -DBUILD_LOGREADER=ON \
+                        -DCMAKE_INSTALL_INCLUDEDIR=${prefix}/include/${name} \
+                        -DDISABLE_DEBUG_PRINTF=OFF \
+                        -DENABLE_ASAN=OFF \
+                        -DENABLE_UBSAN=OFF \
+                        -DWITH_MBEDTLS=OFF \
+                        -DWITH_OPENSSL=ON
+
+test.run            yes

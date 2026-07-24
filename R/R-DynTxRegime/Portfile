@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran shannon.t.holloway DynTxRegime 4.3
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2
+description         Methods for estimating optimal dynamic treatment regimes
+long_description    {*}${description}
+checksums           rmd160  a335aea72393a8920ea94e6cb33ddc71798b0746 \
+                    sha256  39fe9194522c11d4a6bdbde53b4938c68263c3d2fcee8ad93041b30c4cf144d1 \
+                    size    203255
+supported_archs     noarch
+
+depends_lib-append  port:R-dfoptim \
+                    port:R-kernlab \
+                    port:R-modelObj \
+                    port:R-rgenoud
+
+test.run            yes

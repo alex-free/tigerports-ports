@@ -1,0 +1,20 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran sukanta.iasri bdf3 0.1.1
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Efficient block designs for 3-level factorial experiments in block size 3
+long_description    {*}${description}
+checksums           rmd160  e2d53e74685bf86710a2b0ff3274ebdba002d0b0 \
+                    sha256  725cf3678262b9dcfbd92bac6b34ce1525bb853de69832ead6b2f9b7d5a5ba22 \
+                    size    5114
+supported_archs     noarch
+
+depends_lib-append  port:R-dplyr
+
+test.run            yes

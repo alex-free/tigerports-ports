@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is old.
+R.setup             cran ropensci writexl 1.5.4 v
+revision            1
+maintainers         nomaintainer
+license             BSD
+description         Export data frames to Excel xlsx format
+long_description    Portable, light-weight data frame to xlsx exporter for R.
+homepage            https://docs.ropensci.org/writexl
+checksums           rmd160  a411bbe48f7be12802bf945b64ab1657db9ec6cb \
+                    sha256  d0574a29ea22bd78785f50c7cd23c6e10036f65321e26d55a694e931467660d3 \
+                    size    278312
+
+depends_lib-append  port:zlib
+
+depends_test-append port:R-bit64 \
+                    port:R-nycflights13 \
+                    port:R-readxl \
+                    port:R-spelling \
+                    port:R-testthat
+
+test.run            yes

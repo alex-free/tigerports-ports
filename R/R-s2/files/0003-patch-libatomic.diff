@@ -1,0 +1,9 @@
+--- a/src/Makevars.in	2026-05-29 00:05:55.000000000 +0800
++++ b/src/Makevars.in	2026-06-26 23:41:44.000000000 +0800
+@@ -1,5 +1,5 @@
+ PKG_CPPFLAGS = -I../src -DSTRICT_R_HEADERS -DRCPP_NO_MASK_RF_ERROR
+-PKG_LIBS = -Ls2 -ls2static @libs@
++PKG_LIBS = -Ls2 -ls2static @libs@ -latomic
+ PKG_CXXFLAGS = @cflags@ -pthread
+ 
+ CXX_STD = CXX17

@@ -1,0 +1,62 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github dmphillippo multinma 0.8.1 v
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Bayesian network meta-analysis of individual and aggregate data
+long_description    {*}${description}
+homepage            https://dmphillippo.github.io/multinma
+checksums           rmd160  03f844d63c7f57379b090a9a4754b913ff3c02a8 \
+                    sha256  be61a9d5d85319027215712061a337d237b79e8d1a77d59939decd312c80d485 \
+                    size    3732579
+github.tarball_from archive
+
+depends_lib-append  port:R-bayesplot \
+                    port:R-BH \
+                    port:R-copula \
+                    port:R-dplyr \
+                    port:R-forcats \
+                    port:R-ggdist \
+                    port:R-ggraph \
+                    port:R-glue \
+                    port:R-ggplot2 \
+                    port:R-igraph \
+                    port:R-purrr \
+                    port:R-randtoolbox \
+                    port:R-Rcpp \
+                    port:R-RcppEigen \
+                    port:R-RcppParallel \
+                    port:R-Rdpack \
+                    port:R-rlang \
+                    port:R-rstan \
+                    port:R-rstantools \
+                    port:R-StanHeaders \
+                    port:R-stringr \
+                    port:R-tibble \
+                    port:R-tidyr \
+                    port:R-truncdist
+
+depends_test-append port:R-crayon \
+                    port:R-flexsurv \
+                    port:R-knitr \
+                    port:R-logitnorm \
+                    port:R-loo \
+                    port:R-pkgdown \
+                    port:R-R.rsp \
+                    port:R-rmarkdown \
+                    port:R-rprojroot \
+                    port:R-rstpm2 \
+                    port:R-splines2 \
+                    port:R-testthat \
+                    port:R-tidygraph \
+                    port:R-vdiffr \
+                    port:R-withr
+
+# Tests pass with a single warning:
+# https://github.com/dmphillippo/multinma/issues/39
+test.run            yes

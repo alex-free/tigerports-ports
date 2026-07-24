@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is outdated.
+R.setup             cran TReynkens ReIns 1.0.15
+revision            1
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Functions from Reinsurance: Actuarial and Statistical Aspects (2017)
+long_description    {*}${description}
+homepage            https://github.com/TReynkens/ReIns
+checksums           rmd160  603314e71e6f0d7ff20dc4775ca369fd61c33f5f \
+                    sha256  cfd08e41178f63107d1228093f1e9d50170e098a5e17c67b2dc2fd977c38c60f \
+                    size    519998
+
+depends_lib-append  port:R-doParallel \
+                    port:R-foreach \
+                    port:R-Rcpp
+
+depends_test-append port:R-Icens \
+                    port:R-interval \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

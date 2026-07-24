@@ -1,0 +1,61 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- vim:fenc=utf-8:ft=tcl:et:sw=2:ts=2:sts=2
+
+PortSystem              1.0
+PortGroup               cmake 1.1
+PortGroup               github 1.0
+PortGroup               legacysupport 1.1
+
+github.setup            directvt vtm 2026.01.13 v
+revision                0
+
+categories              sysutils
+license                 MIT
+maintainers             nomaintainer
+
+description             Monotty Desktopio – text-based desktop environment \
+                        inside your terminal
+long_description        ${name} is a terminal multiplexer with window manager \
+                        and session sharing.
+
+checksums               rmd160  513318b3a44ea882812195445d8f12d9dd474ce1 \
+                        sha256  c4c4c39c0284c1480ed94bb409de3385338564a4090c1d5a2d33099a0ec5a7e4 \
+                        size    2177530
+github.tarball_from     archive
+
+# Requires a compiler with full C++20 support
+compiler.cxx_standard   2020
+
+# Avoid Xcode Clang, due to build issues; likely fixable, but needs more investigation
+compiler.blacklist-append \
+                        {clang}
+
+depends_lib-append      path:lib/pkgconfig/freetype2.pc:freetype \
+                        path:lib/pkgconfig/harfbuzz.pc:harfbuzz \
+                        port:lua54
+
+# Requires lua54+: https://github.com/directvt/vtm/issues/862
+configure.args-append   -DLUA_INCLUDE_DIR=${prefix}/include/lua5.4 \
+                        -DLUA_LIBRARIES=${prefix}/lib/liblua5.4.dylib
+
+# Needed for std::filesystem and std::atomic_notify_all
+legacysupport.newest_darwin_requires_legacy 19
+legacysupport.use_mp_libcxx yes
+
+# vtm(29298,0xa0260620) malloc: *** error for object 0xd2eaa8: pointer being freed was not allocated
+legacysupport.redirect_bins vtm
+
+if {[variant_isset debug]} {
+    cmake.build_type    Debug
+    configure.optflags  -O0
+} else {
+    # For non-debug, let project dictate optimization level
+    # RelWithDebInfo uses O2; avoid Release, which enables O3
+    cmake.build_type    RelWithDebInfo
+    configure.optflags
+}
+
+# Upd. As of v. 2025.07.28, it does not work in old Apple Terminal.
+notes "
+Recommended to use it in a terminal with mouse\
+and True Color support: mlterm(-minimal) works, for example.
+"

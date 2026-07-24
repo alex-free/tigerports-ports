@@ -1,0 +1,45 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+PortGroup           openssl 1.0
+
+github.setup        awslabs aws-c-event-stream 0.7.1 v
+revision            0
+categories          devel
+license             Apache-2
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+description         C99 implementation of the vnd.amazon.eventstream content-type
+long_description    {*}${description}
+checksums           rmd160  072b52fedf0246e22b9de9e1524a169e3ed3b25a \
+                    sha256  334b2abfe0cb5c68d79d52525598fdd5f6052b93a17a78a4b1ada7fa1be252c0 \
+                    size    104143
+github.tarball_from archive
+
+# Disable tests that hang (or take forever):
+patchfiles          patch-tests.diff
+
+depends_lib-append  port:aws-c-cal \
+                    port:aws-c-common \
+                    port:aws-c-io \
+                    port:aws-checksums \
+                    port:s2n-tls
+
+compiler.c_standard 1999
+# ___builtin_add_overflow, ___builtin_mul_overflow
+compiler.blacklist-append \
+                    *gcc-4.* {clang < 421}
+
+configure.args-append \
+                    -DBUILD_SHARED_LIBS=ON \
+                    -DBUILD_TESTING=ON
+
+# For tests:
+configure.pre_args-replace \
+                    -DCMAKE_BUILD_WITH_INSTALL_RPATH:BOOL=ON \
+                    -DCMAKE_BUILD_WITH_INSTALL_RPATH:BOOL=OFF
+
+# FIXME: this port is pretty broken. After disabling a few freezing tests:
+# 60% tests passed, 17 tests failed out of 42.
+test.run            yes

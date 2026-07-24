@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran mlr-org bbotk 1.9.0 v
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             LGPL-3
+description         Black-Box Optimization Toolkit
+long_description    {*}${description}
+homepage            https://bbotk.mlr-org.com
+checksums           rmd160  bf6a2308c8f1e58283d6153355432229b81da0b5 \
+                    sha256  03714661caa0ce2f517afbd7208076483de23c9fb4478741a5193b44acc1c304 \
+                    size    167304
+
+depends_lib-append  port:R-checkmate \
+                    port:R-cli \
+                    port:R-data.table \
+                    port:R-lgr \
+                    port:R-mlr3misc \
+                    port:R-paradox \
+                    port:R-R6

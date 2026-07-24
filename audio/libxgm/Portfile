@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+
+set modname         xgm
+name                lib${modname}
+github.setup        TTK-qmmp qmmp-${modname} 05fd938eeba1feb6151da3cc9fd2221f1fc24951
+version             20260506
+revision            0
+categories          audio
+license             GPL-3
+maintainers         nomaintainer
+description         Input plugin for qmmp to play MSX files
+long_description    {*}${description}
+checksums           rmd160  ba7dcb02be003fa4eb4e5e788522ecff061b1937 \
+                    sha256  36730a21cc58dcaaee1929dfe126ae473996ef2577a5bdf85833db2f1bc67eb4 \
+                    size    354173
+github.tarball_from archive
+
+worksrcdir          ${worksrcpath}/${name}
+
+# jaytrax.c:1312: error: ‘for’ loop initial declaration used outside C99 mode
+# dc_filter.h:14: error: redefinition of typedef ‘DCF’
+compiler.c_standard 2011

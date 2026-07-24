@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           active_variants 1.1
+PortGroup           R 1.0
+
+R.setup             cran beast-dev BeastJar 10.5.1
+revision            1
+categories-append   java
+platforms           {darwin any}
+maintainers         nomaintainer
+license             Apache-2
+description         JAR dependency for MCMC using BEAST
+long_description    {*}${description}
+homepage            https://github.com/beast-dev/BeastJar
+checksums           rmd160  8b9039db7c2dac04f531874e1c1ff0d5f511c8fa \
+                    sha256  d4b22d7fd2defd8ec0cbc44a47e06ff3179deebc0877de2f72ff717e9232f987 \
+                    size    8079771
+supported_archs     noarch
+
+require_active_variants R java
+
+if {${configure.build_arch} in [list ppc ppc64]} {
+    depends_run-append \
+                    port:openjdk8
+} else {
+    PortGroup       java 1.0
+
+}
+
+depends_lib-append  port:R-rJava
+
+depends_test-append port:R-testthat
+
+test.run            yes

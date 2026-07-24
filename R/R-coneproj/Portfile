@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran xliao coneproj 1.23
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Primal or dual cone projections with routines for constrained regression
+long_description    {*}${description}
+checksums           rmd160  fc998170c2e65b475ea986a41567ad4698a9bbed \
+                    sha256  56157511547ddb2e0df5ae8b1c1b05a2868af797ef2d170020a16238c5866d99 \
+                    size    33523
+
+depends_lib-append  port:R-Rcpp \
+                    port:R-RcppArmadillo
+
+compilers.setup     require_fortran
+
+test.run            yes

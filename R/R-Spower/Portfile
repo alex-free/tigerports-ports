@@ -1,0 +1,37 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran philchalmers Spower 0.4.0
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3+
+description         Power analyses using Monte Carlo simulations
+long_description    {*}${description}
+homepage            https://github.com/philchalmers/Spower
+checksums           rmd160  37eb3fa1027b84b7276bbd20971b0529deb15eca \
+                    sha256  33f901b8569043055088c724bdd41818f10e900967b907d58a0c3ecf3356ab2a \
+                    size    2058168
+supported_archs     noarch
+
+depends_lib-append  port:R-car \
+                    port:R-cocor \
+                    port:R-EnvStats \
+                    port:R-ggplot2 \
+                    port:R-lavaan \
+                    port:R-parallelly \
+                    port:R-plotly \
+                    port:R-polycor \
+                    port:R-SimDesign
+
+depends_test-append port:R-bookdown \
+                    port:R-copula \
+                    port:R-knitr \
+                    port:R-pwr \
+                    port:R-rmarkdown \
+                    port:R-VGAM
+
+test.run            yes

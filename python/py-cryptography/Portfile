@@ -1,0 +1,74 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           python 1.0
+
+# Rust-free version.
+# TODO: see if we can fix a later one.
+github.setup        pyca cryptography 3.4.8
+name                py-${github.project}
+revision            0
+epoch               1
+categories-append   devel
+license             BSD
+
+maintainers         {stromnov @stromnov} openmaintainer
+
+description         ${name} is a package designed to expose \
+                    cryptographic primitives and recipes
+long_description    {*}${description} to Python developers.
+
+checksums           ${distname}${extract.suffix} \
+                    rmd160  01ea4549ac0dc751bf7a81bfeb4b3c942303f254 \
+                    sha256  cce7ee0b1082753df56c6bbbbe3c4122daba3b821b0d2129537d058624e67198 \
+                    size    35736917
+github.tarball_from tarball
+
+python.versions     27 310 311 312 313 314
+python.pep517       yes
+
+if {${subport} ne ${name}} {
+    PortGroup       openssl 1.0
+
+    depends_build-append \
+                    port:py${python.version}-setuptools
+
+    depends_lib-append \
+                    port:py${python.version}-cffi
+
+    if {${python.version} eq 27} {
+        # Needs the same OpenSSL version as Python itself was built with.
+        openssl.branch      1.1
+
+        github.setup        pyca cryptography 3.3.2
+        revision            0
+        checksums           rmd160  13380349b4a5559153c1e8a328fd4629b81e134d \
+                            sha256  2c8af64316fa1c09162c6e99dba9c23c76a07c3466dbbf62db8df970b45f935f \
+                            size    35729139
+        github.tarball_from tarball
+
+        depends_lib-append  port:py${python.version}-enum34 \
+                            port:py${python.version}-ipaddress
+    } else {
+        # CRYPTOGRAPHY_DONT_BUILD_RUST is not respected by the build.
+        # So just remove Rust stuff from setup.py, it is optional in 3.4.x.
+        patchfiles-append   patch-build-no-rust.diff
+        # We do not want a build conflict with OpenSSL 3 here.
+        # Thise version is easily fixable to build against it.
+        patchfiles-append   patch-openssl3.diff
+    }
+
+    python.pep517           no
+
+    if {${os.platform} eq "darwin" && ${os.major} < 11} {
+        # https://trac.macports.org/ticket/54519
+        patchfiles-append   patch-src__cffi_src_build_openssl.py.diff
+    }
+
+    compiler.cpath-prepend  [openssl::include_dir]
+
+    depends_lib-append      port:py${python.version}-six
+
+    livecheck.type          none
+}

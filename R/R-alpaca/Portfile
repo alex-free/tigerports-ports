@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran amrei-stammann alpaca 0.3.5
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Fit GLMs with high-dimensional k-way fixed effects
+long_description    {*}${description}
+checksums           rmd160  da234927ed8fc21a3f8bf659f3d360da99050a76 \
+                    sha256  f3723317db5e307ae0043ac2954926b620f6ecfcb2ba34cc84704b9571fe2c2b \
+                    size    80200
+
+depends_lib-append  port:R-data.table \
+                    port:R-Formula \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-bife \
+                    port:R-car \
+                    port:R-knitr \
+                    port:R-lfe \
+                    port:R-rmarkdown
+
+test.run            yes

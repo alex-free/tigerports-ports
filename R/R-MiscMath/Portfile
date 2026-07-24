@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran john.braun MiscMath 1.1
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-2+
+description         Miscellaneous Mathematical Tools
+long_description    {*}${description}
+checksums           rmd160  d07b0dc1c94020d97b61bcaa4564b31be369dd1d \
+                    sha256  a88b41d92ce81c9c7ce39b0cebbaaa317374f4b9c706b7440e8da286ca87ad71 \
+                    size    10161
+
+depends_lib-append  port:R-numbers \
+                    port:R-randomForest
+
+compilers.setup     require_fortran
+
+test.run            yes

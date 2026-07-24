@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github const-ae ggsignif 0.6.4
+revision            4
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Significance brackets for R-ggplot2
+long_description    {*}${description}
+homepage            https://const-ae.github.io/ggsignif
+checksums           rmd160  a83ebc8e9e5297a7d53556524680c177c4e130ca \
+                    sha256  b93bd882a16912845cfaf45a131774ed0d43e832c6836994bc04c939d0e1a510 \
+                    size    1057405
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-ggplot2
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-vdiffr
+
+test.run            yes

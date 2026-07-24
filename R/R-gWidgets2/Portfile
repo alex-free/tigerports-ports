@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran gWidgets3 gWidgets2 1.0-10
+revision            1
+categories-append   graphics
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3+
+description         Rewrite of gWidgets API for simplified GUI construction
+long_description    {*}${description}
+homepage            https://github.com/gWidgets3/gWidgets2
+checksums           rmd160  9f50efce932bc75ebf8c64cf2600fcab18b2b189 \
+                    sha256  66979027be333b3c10bbcc336d69546c5f586bd65b1854064000497ea6f79813 \
+                    size    424151
+supported_archs     noarch
+
+depends_lib-append  port:R-digest
+
+test.run            yes

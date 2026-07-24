@@ -1,0 +1,11 @@
+--- meson.build	2025-03-24 15:48:10.000000000 +0800
++++ meson.build	2026-01-10 15:35:27.000000000 +0800
+@@ -49,7 +49,7 @@
+ is_host_windows = host_machine.system() == 'windows'
+ 
+ # Use the Python installation that Meson uses. Its version is >= 3.7.
+-python3 = import('python').find_installation()
++python3 = find_program('@@PYTHON@@', version: '>=3.7')
+ 
+ # Do we build from a git repository?
+ # Suppose we do if and only if the meson.build file is tracked by git.

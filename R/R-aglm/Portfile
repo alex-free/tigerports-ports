@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran kkondo1981 aglm 0.4.1 v
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2
+description         Accurate Generalized Linear Model
+long_description    {*}${description}
+checksums           rmd160  747616a67cd23e128e5aa6cb497893566bf17012 \
+                    sha256  ec9267fe085f338ceff84e829c693f63d39d2e6e552550261ea1bf7a14de5901 \
+                    size    44907
+# github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-assertthat \
+                    port:R-glmnet \
+                    port:R-mathjaxr
+
+depends_test-append port:R-faraway \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

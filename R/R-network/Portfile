@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran buttsc network 1.20.0
+revision            1
+maintainers         nomaintainer
+license             GPL-2+
+description         Classes for relational data
+long_description    {*}${description}
+checksums           rmd160  fb1a80aed51d2cc940331c49c7bfa7f3c2e9ad58 \
+                    sha256  55d956be5b4e0f56931fdf1f44ca66c7f1aaafd2b859a01901c2ff248cec851f \
+                    size    515766
+
+depends_lib-append  port:R-magrittr \
+                    port:R-statnet.common \
+                    port:R-tibble
+
+depends_test-append port:R-covr \
+                    port:R-sna \
+                    port:R-testthat
+
+test.run            yes

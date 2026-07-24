@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran jqveenstra arfima 1.8-2
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Fractional ARIMA (and other long memory) time series modelling
+long_description    {*}${description}
+checksums           rmd160  233c1e90be21cd6ddf6b77ed7fc01112963777af \
+                    sha256  a9b458142296c6654d31bb0c3e5cca931aa066feaf234eca40b1a900d5603d15 \
+                    size    85109
+
+depends_lib-append  port:R-ltsa
+
+compilers.setup     require_fortran
+
+test.run            yes

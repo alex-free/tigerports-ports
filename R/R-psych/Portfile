@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran revelle psych 2.6.1
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Procedures for psychological, psychometric \
+                    and personality research
+long_description    {*}${description}
+homepage            https://personality-project.org/r/psych
+checksums           rmd160  71e23955e5efaeb64a6e9bdef7299709b6a99a65 \
+                    sha256  d0629626f01baa705beffbfd55e14229a16c4875b21b6992d787bb560e9e11f8 \
+                    size    1175052
+supported_archs     noarch
+
+depends_lib-append  port:R-GPArotation \
+                    port:R-mnormt
+
+depends_test-append port:R-graph \
+                    port:R-knitr \
+                    port:R-lavaan \
+                    port:R-lme4 \
+                    port:R-psychTools \
+                    port:R-Rcsdp \
+                    port:R-Rgraphviz
+
+test.run            yes

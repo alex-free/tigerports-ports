@@ -1,0 +1,19 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran statmanrobin Stat2Data 2.0.0
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Datasets for Stat2
+long_description    {*}${description}
+homepage            https://github.com/statmanrobin/Stat2Data
+checksums           rmd160  765334e3e20ae391c1fd683cc37a5a0177f7eb07 \
+                    sha256  137c114ed62df7bc4909705d3ad8f91c5cbc7723d2dfc9932a21f533c91af7ba \
+                    size    753936
+supported_archs     noarch
+
+test.run            yes

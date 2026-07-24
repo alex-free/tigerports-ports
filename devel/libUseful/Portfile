@@ -1,0 +1,33 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem                  1.0
+PortGroup                   github 1.0
+PortGroup                   legacysupport 1.1
+PortGroup                   openssl 1.0
+
+# posix_memalign
+legacysupport.newest_darwin_requires_legacy 9
+
+github.setup                ColumPaget libUseful 5.76 v
+revision                    0
+categories                  devel net
+license                     GPL-3
+maintainers                 {@barracuda156 macos-powerpc.org:barracuda}
+description                 C library of useful functions
+long_description            {*}${description}.
+checksums                   rmd160  52882781cc44d75c8545ba30d7627238dec9310f \
+                            sha256  2df95e10375019370d3807ffdff7d38b152c9572170862d7379c4907101f74ec \
+                            size    454892
+github.tarball_from         archive
+
+# See discussion in https://github.com/ColumPaget/libUseful/issues/20
+patchfiles-append           patch-fix-ln.diff
+
+depends_lib-append          port:zlib
+
+configure.args-append       --disable-simd \
+                            --enable-ip6 \
+                            --enable-soname \
+                            --enable-ssl \
+                            --enable-zlib \
+                            --sysconfdir=${prefix}/etc/${name}

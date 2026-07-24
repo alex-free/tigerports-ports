@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran alexios Rsolnp 2.0.1
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-2
+description         General non-linear optimization
+long_description    {*}${description}
+checksums           rmd160  9bce73d12a2c377fe656bf6390b0d019872c326c \
+                    sha256  3b221100abdd1dd5b8d2df9325cc4e28b2ad2a6bd5069594c83f04f331c36792 \
+                    size    107710
+
+depends_lib-append  port:R-future.apply \
+                    port:R-numDeriv \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-truncnorm
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown
+
+test.run            yes

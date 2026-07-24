@@ -1,0 +1,39 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github r-lib gmailr 3.0.0 v
+revision            1
+categories-append   devel net
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Access the Gmail RESTful API
+long_description    {*}${description}
+checksums           rmd160  f140e124d245131fabc383c058db5bbf8cd0d711 \
+                    sha256  9f9ae77599c94cc61980794af943f936ae5dbd8a7822dd82afb014d54a0c17ea \
+                    size    7470142
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-base64enc \
+                    port:R-cli \
+                    port:R-crayon \
+                    port:R-gargle \
+                    port:R-glue \
+                    port:R-httr \
+                    port:R-jsonlite \
+                    port:R-lifecycle \
+                    port:R-mime \
+                    port:R-rappdirs \
+                    port:R-rematch2 \
+                    port:R-rlang
+
+depends_test-append port:R-covr \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-withr
+
+test.run            yes

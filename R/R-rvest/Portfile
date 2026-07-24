@@ -1,0 +1,45 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github tidyverse rvest 1.0.5 v
+revision            1
+categories-append   www
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Easily harvest (scrape) web pages
+long_description    {*}${description}
+homepage            https://rvest.tidyverse.org
+checksums           rmd160  e31d54a3b6d8bbd33d695e89be65edb17e148146 \
+                    sha256  7ac0f7415241d3308ac034d2f0598992ab6fac9b4f6bc2409c150b58cc0a618b \
+                    size    995733
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-cli \
+                    port:R-glue \
+                    port:R-httr \
+                    port:R-lifecycle \
+                    port:R-magrittr \
+                    port:R-rlang \
+                    port:R-selectr \
+                    port:R-tibble \
+                    port:R-xml2
+
+# Test dep on R-chromote is dropped.
+depends_test-append port:R-covr \
+                    port:R-knitr \
+                    port:R-purrr \
+                    port:R-R6 \
+                    port:R-readr \
+                    port:R-repurrrsive \
+                    port:R-rmarkdown \
+                    port:R-spelling \
+                    port:R-stringi \
+                    port:R-testthat \
+                    port:R-tidyr \
+                    port:R-webfakes
+
+test.run            yes

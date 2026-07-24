@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran 2005m kit 0.0.21 v
+revision            1
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Data manipulation functions implemented in C
+long_description    {*}${description}
+checksums           rmd160  3ef45b8d72bcdc498a2aef4efc496941d4588bf6 \
+                    sha256  bfe4ffbb87e11cb7d87207b96f82cbae8381c5fb445c05f6a8653fab99424fca \
+                    size    87305
+# github.tarball_from archive
+
+compiler.openmp_version 3.0
+
+post-patch {
+    # https://github.com/2005m/kit/issues/36
+    if {[string match macports-clang* ${configure.compiler}]} {
+        reinplace "s,-Xpreprocessor -fopenmp,-Xpreprocessor -I${prefix}/include/libomp -fopenmp," ${worksrcpath}/configure
+        reinplace "s,-lomp,-L${prefix}/lib/libomp -lomp,g" ${worksrcpath}/configure
+    }
+}
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown
+
+test.run            yes

@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran r-project gamm4 0.2-7
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Generalized Additive Mixed Models
+long_description    {*}${description} using R-mgcv and R-lme4.
+checksums           rmd160  d4160545d92306cc1b7966adae15e7bf80195575 \
+                    sha256  bacc343c19395f54e45f2a5344a2ee2dd2d8e8ce022eaf2b5eff6ea1e4acaedf \
+                    size    15321
+supported_archs     noarch
+
+depends_lib-append  port:R-lme4
+
+test.run            yes

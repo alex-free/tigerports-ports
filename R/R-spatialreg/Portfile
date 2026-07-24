@@ -1,0 +1,39 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran r-spatial spatialreg 1.4-2
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2
+description         Spatial regression analysis
+long_description    {*}${description}
+homepage            https://r-spatial.github.io/spatialreg
+checksums           rmd160  d75ec98febc7e0b3db4355b5d7e9434e96127c94 \
+                    sha256  368d6d5fb67621248256e23603b752d35f5c15b625053e798ad9687aa5aad39f \
+                    size    1424748
+
+depends_lib-append  port:R-coda \
+                    port:R-LearnBayes \
+                    port:R-multcomp \
+                    port:R-sf \
+                    port:R-spData \
+                    port:R-spdep
+
+compilers.setup     require_fortran
+
+# R-tmap is omitted for now.
+depends_test-append port:R-codingMatrices \
+                    port:R-expm \
+                    port:R-igraph \
+                    port:R-knitr \
+                    port:R-lmtest \
+                    port:R-rmarkdown \
+                    port:R-RSpectra \
+                    port:R-sandwich \
+                    port:R-spam \
+                    port:R-tinytest
+
+test.run            yes

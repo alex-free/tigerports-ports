@@ -1,0 +1,19 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran cran GLDEX 2.0.0.9.4
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-3+
+description         Fitting single and mixture of generalised Lambda distributions
+long_description    {*}${description}
+checksums           rmd160  ca84d1448387ba8af1ad700e169204b8f6795027 \
+                    sha256  93608d179cba2636d3ca317b6cdc77c07f01101b6071b586d9a25b9c3c5daac5 \
+                    size    91542
+
+depends_lib-append  port:R-spacefillr
+
+test.run            yes

@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           tree_sitter 1.0
+
+github.setup        tree-sitter-grammars tree-sitter-lua 0.4.1 v
+revision            0
+epoch               1
+categories          devel
+license             MIT
+maintainers         {amake @amake} openmaintainer
+description         A tree-sitter parser for Lua
+long_description    {*}${description}
+checksums           rmd160  b0b9cb3284234a5f7cb989cf9a290100299ea9a9 \
+                    sha256  cef44b8773bde69d427b5e50ca95e417c86c0be91caa37a6782c90d6f529da70 \
+                    size    65878
+github.tarball_from archive
+
+worksrcdir          ${worksrcdir}/src
+
+# parser.c:1939: error: ‘for’ loop initial declaration used outside C99 mode
+# Upstream uses -std=c11, but it builds fine with C99.
+configure.cflags-append -std=c99

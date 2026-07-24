@@ -1,0 +1,46 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is archaic.
+R.setup             cran davidbolin rSPDE 2.5.2
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3+
+description         Rational approximations of fractional stochastic partial differential equations
+long_description    {*}${description}
+homepage            https://davidbolin.github.io/rSPDE
+checksums           rmd160  8127da77d95b7c5d9de58eb283828698175af44c \
+                    sha256  87c9fc5175ab31841c95cabcc2169e9015e8628b0b438d26641e597582ccb34a \
+                    size    3661163
+supported_archs     noarch
+
+depends_lib-append  port:R-broom \
+                    port:R-fmesher \
+                    port:R-lifecycle
+
+# Dependency on INLA is dropped until it gets a port.
+depends_test-append port:R-doParallel \
+                    port:R-dplyr \
+                    port:R-foreach \
+                    port:R-GeneralizedHyperbolic \
+                    port:R-ggplot2 \
+                    port:R-gridExtra \
+                    port:R-knitr \
+                    port:R-MetricGraph \
+                    port:R-numDeriv \
+                    port:R-optimParallel \
+                    port:R-rmarkdown \
+                    port:R-RSpectra \
+                    port:R-scoringRules \
+                    port:R-sf \
+                    port:R-sn \
+                    port:R-splancs \
+                    port:R-testthat \
+                    port:R-tidyr \
+                    port:R-viridis
+
+test.run            yes

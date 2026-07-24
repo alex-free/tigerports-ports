@@ -1,0 +1,41 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github insightsengineering rtables 0.6.15 v
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             Apache-2
+description         Reporting tables with R
+long_description    {*}${description}
+homepage            https://insightsengineering.github.io/rtables
+checksums           rmd160  7bf8ca115347324cf169097f4b9562eb3f598d59 \
+                    sha256  09646ff322ef878627930514755343ad4fa64185b9d6781e63e28aea8f053b65 \
+                    size    12818927
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-checkmate \
+                    port:R-formatters \
+                    port:R-htmltools \
+                    port:R-lifecycle \
+                    port:R-magrittr \
+                    port:R-stringi
+
+depends_test-append port:R-broom \
+                    port:R-car \
+                    port:R-dplyr \
+                    port:R-flextable \
+                    port:R-knitr \
+                    port:R-officer \
+                    port:R-r2rtf \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-tibble \
+                    port:R-tidyr \
+                    port:R-withr \
+                    port:R-xml2
+
+test.run            yes

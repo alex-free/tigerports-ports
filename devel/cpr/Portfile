@@ -1,0 +1,52 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+PortGroup           openssl 1.0
+
+github.setup        libcpr cpr 1.14.2
+revision            1
+categories          devel net
+license             MIT
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+description         C++ Requests: Curl for People
+long_description    C++ Requests is a simple wrapper around libcurl.
+homepage            https://docs.libcpr.org
+checksums           rmd160  fa7aa1520755c7c9f5a15f24fd0828e811d6df03 \
+                    sha256  b9b529b47083bfe80bba855ca5308d12d767ae7c7b629aef5ef018c4343cf62b \
+                    size    156989
+github.tarball_from archive
+
+depends_lib-append  port:curl \
+                    port:gtest
+
+compiler.cxx_standard   2017
+
+configure.args-append \
+                    -DBUILD_SHARED_LIBS=ON \
+                    -DCPR_BUILD_TESTS=ON \
+                    -DCPR_ENABLE_CPPCHECK=OFF \
+                    -DCPR_ENABLE_LINTING=OFF \
+                    -DCPR_ENABLE_SSL=ON \
+                    -DCPR_FORCE_OPENSSL_BACKEND=ON \
+                    -DCPR_GENERATE_COVERAGE=OFF \
+                    -DCPR_USE_BOOST_FILESYSTEM=OFF \
+                    -DCPR_USE_SYSTEM_CURL=ON \
+                    -DCPR_USE_SYSTEM_GTEST=ON
+
+# https://github.com/libcpr/cpr/issues/1238
+configure.cxxflags-append \
+                    -Wno-error=deprecated-declarations
+
+configure.pre_args-replace \
+                    -DCMAKE_BUILD_WITH_INSTALL_RPATH:BOOL=ON \
+                    -DCMAKE_BUILD_WITH_INSTALL_RPATH:BOOL=OFF
+
+platform darwin 8 {
+    configure.cflags-append -Wno-error=incompatible-pointer-types
+}
+
+# FIXME: some test cases fail on powerpc:
+# https://github.com/libcpr/cpr/issues/1088
+test.run            yes

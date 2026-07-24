@@ -1,0 +1,33 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             bioconductor tatami-inc beachmat 2.24.0
+revision            1
+categories-append   bioconductor
+maintainers         nomaintainer
+license             GPL-3
+description         Compiling Bioconductor to handle each matrix type
+long_description    {*}${description}
+homepage            https://github.com/tatami-inc/beachmat
+checksums           rmd160  2f3142b2810d93c945160297f208e144d7dd5e6e \
+                    sha256  c5a0f6fcb334c8690bda4798ef22bfd2b3a94e708b01ee6b1414b25f69e8c141 \
+                    size    377291
+
+depends_lib-append  port:R-assorthead \
+                    port:R-BiocGenerics \
+                    port:R-DelayedArray \
+                    port:R-Rcpp \
+                    port:R-SparseArray
+
+# Test dep on R-beachmat.hdf5 is omitted.
+depends_test-append port:R-BiocStyle \
+                    port:R-BiocParallel \
+                    port:R-HDF5Array \
+                    port:R-knitr \
+                    port:R-rcmdcheck \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

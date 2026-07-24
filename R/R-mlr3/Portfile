@@ -1,0 +1,48 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran mlr-org mlr3 1.2.0 v
+revision            1
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             LGPL-3
+description         Machine Learning in R
+long_description    {*}${description} – next generation.
+homepage            https://mlr3.mlr-org.com
+checksums           rmd160  d76a87870db14d8884f8fde5a7e949c4b005ef26 \
+                    sha256  50ad8415bad130822ee1784e836f98cb1304f1031c406c3b7cad267eb2935f88 \
+                    size    990195
+# github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-backports \
+                    port:R-checkmate \
+                    port:R-cli \
+                    port:R-data.table \
+                    port:R-evaluate \
+                    port:R-future \
+                    port:R-future.apply \
+                    port:R-lgr \
+                    port:R-mirai \
+                    port:R-mlbench \
+                    port:R-mlr3measures \
+                    port:R-mlr3misc \
+                    port:R-parallelly \
+                    port:R-palmerpenguins \
+                    port:R-paradox \
+                    port:R-R6 \
+                    port:R-uuid
+
+depends_test-append port:R-callr \
+                    port:R-future.callr \
+                    port:R-mlr3data \
+                    port:R-progressr \
+                    port:R-remotes \
+                    port:R-RhpcBLASctl \
+                    port:R-testthat
+
+# See: https://github.com/mlr-org/mlr3/issues/1032
+test.run            yes

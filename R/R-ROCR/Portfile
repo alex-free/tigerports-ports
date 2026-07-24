@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran ipa-tys ROCR 1.0-12
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             {GPL-2 GPL-3}
+description         Visualizing the performance of scoring classifiers
+long_description    {*}${description}
+homepage            https://ipa-tys.github.io/ROCR
+checksums           rmd160  e4775d3616147f9b28f04b5343c9bd3de127c0ca \
+                    sha256  21903bd977e2cf6382f016bbef3d14b5a77305b9d0dc2041b0f26a76938c95fb \
+                    size    274214
+supported_archs     noarch
+
+depends_lib-append  port:R-gplots
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

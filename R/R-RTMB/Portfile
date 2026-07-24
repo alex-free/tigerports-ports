@@ -1,0 +1,33 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github kaskr RTMB 1.8 v
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         R bindings for TMB
+long_description    Native R interface to TMB (Template Model Builder), \
+                    so models can be written entirely in R rather than C++.
+checksums           rmd160  d76d97970acb19d14e77dfb8de29ba3b7e14b487 \
+                    sha256  0df2903b6c8d81f98ed427468267bae27678288c51ea9636020ca07e91c3aa40 \
+                    size    491429
+github.tarball_from archive
+
+worksrcdir          ${worksrcpath}/${R.package}
+
+depends_lib-append  port:R-Rcpp \
+                    port:R-RcppEigen \
+                    port:R-TMB
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-igraph \
+                    port:R-knitr \
+                    port:R-numDeriv \
+                    port:R-rmarkdown \
+                    port:R-tinytest
+
+test.run            yes

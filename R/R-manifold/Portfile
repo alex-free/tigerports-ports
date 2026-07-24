@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran xiongtao.dai manifold 0.1.2
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Operations for Riemannian manifolds
+long_description    {*}${description}
+checksums           rmd160  5c359dc52798b528ff4ca95f656b3bda8ee8792f \
+                    sha256  3c10856ea7da1063e34fe523a7c827f9aef16995e9a3d9f95db0536e721e1620 \
+                    size    56007
+
+depends_lib-append  port:R-Rcpp \
+                    port:R-RcppArmadillo
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-testthat
+
+test.run            yes

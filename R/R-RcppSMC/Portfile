@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran rcppsmc RcppSMC 0.2.9
+revision            1
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Rcpp bindings for Sequential Monte Carlo
+long_description    {*}${description}
+homepage            https://dirk.eddelbuettel.com/code/rcpp.smc.html
+checksums           rmd160  f0a737cec4c726e90cc279e7316c073770e84019 \
+                    sha256  73476c2d99c5d3385e10f5d1f0f2f8fc117437a622d7eb94c5f1e46971f93d3a \
+                    size    73459
+
+depends_lib-append  port:R-FKF \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-pkgKitten
+
+test.run            yes

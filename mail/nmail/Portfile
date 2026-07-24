@@ -1,0 +1,71 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+PortGroup           openssl 1.0
+
+# utimensat
+legacysupport.newest_darwin_requires_legacy 16
+legacysupport.redirect_bins nmail
+
+github.setup        d99kris nmail 5.14.12 v
+revision            0
+categories          mail sysutils
+license             MIT
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+description         Terminal-based e-mail client
+long_description    {*}${description} for macOS and Linux.
+checksums           rmd160  65c724846cdab53fa7bcc5b775796432d7cf4581 \
+                    sha256  d089e315bcca1906a2bd12a940ad7ebbc0b62e10ed1d2c12a952f2cf8ad71556 \
+                    size    1863324
+github.tarball_from archive
+
+# https://github.com/d99kris/nmail/issues/169
+patchfiles-append   patch-remove-brewisms.diff
+# Do not use bundled cereal and utfcpp.
+# Also fix linking with openssl: https://github.com/d99kris/nmail/issues/194
+patchfiles-append   patch-CMakeLists.diff
+
+post-patch {
+    reinplace "s|@PREFIX@|${prefix}|" ${worksrcpath}/CMakeLists.txt
+}
+
+depends_build-append \
+                    port:cereal \
+                    path:bin/pkg-config:pkgconfig \
+                    port:utfcpp
+
+depends_lib-append  port:curl \
+                    port:cyrus-sasl2 \
+                    port:expat \
+                    port:libetpan \
+                    port:libiconv \
+                    port:libmagic \
+                    port:ncurses \
+                    port:ossp-uuid \
+                    port:sqlite3 \
+                    port:xapian-core \
+                    port:zlib
+
+compiler.cxx_standard   2017
+
+set py_ver          3.14
+set py_ver_nodot    [string map {. {}} ${py_ver}]
+
+configure.python    ${prefix}/bin/python${py_ver}
+
+depends_run-append  port:python${py_ver_nodot}
+
+post-patch {
+    reinplace "s|/usr/bin/env python3|${configure.python}|" \
+        ${worksrcpath}/src/oauth2nmail
+}
+
+# Without pointing to uuid includes explicitly, the build picks a wrong header, despite finding the right library.
+# CUSTOM_LIBETPAN stands for bundled libetpan, which we do not want.
+configure.args-append \
+                    -DHAS_CUSTOM_LIBETPAN=OFF \
+                    -DHAS_STATIC_EXTLIBS=OFF \
+                    -DLIBUUID_HEADERS=${prefix}/include/ossp

@@ -1,0 +1,51 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran tidyverse dbplyr 2.5.2 v
+revision            1
+categories-append   databases
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         R-dplyr back-end for databases
+long_description    {*}${description}
+homepage            https://dbplyr.tidyverse.org
+checksums           rmd160  d34568b8345d718cb33c5ec4b9187d3c7b1b9d7f \
+                    sha256  215ae869bcdfb55ea9391086a816185fdd7174579437252d5f96ba87ef6d3b89 \
+                    size    553396
+# github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-blob \
+                    port:R-cli \
+                    port:R-DBI \
+                    port:R-dplyr \
+                    port:R-glue \
+                    port:R-lifecycle \
+                    port:R-magrittr \
+                    port:R-pillar \
+                    port:R-purrr \
+                    port:R-R6 \
+                    port:R-rlang \
+                    port:R-tibble \
+                    port:R-tidyr \
+                    port:R-tidyselect \
+                    port:R-vctrs \
+                    port:R-withr
+
+depends_test-append port:R-bit64 \
+                    port:R-covr \
+                    port:R-knitr \
+                    port:R-Lahman \
+                    port:R-nycflights13 \
+                    port:R-odbc \
+                    port:R-RMariaDB \
+                    port:R-rmarkdown \
+                    port:R-RPostgres \
+                    port:R-RPostgreSQL \
+                    port:R-RSQLite \
+                    port:R-testthat
+
+test.run            yes

@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github tidyverse magrittr 2.0.5 v
+revision            0
+maintainers         nomaintainer
+license             MIT
+description         Improve the readability of R code with the pipe.
+long_description    {*}${description}
+homepage            https://magrittr.tidyverse.org
+checksums           rmd160  07c4163c71a16a7a17cd9761cbdbd1dbd12a3faa \
+                    sha256  c7f8ebbe4145f4ecaba4067e3102ae20b346b0fbab77bf8e61b9fa23c237fd19 \
+                    size    349163
+github.tarball_from archive
+
+depends_test-append port:R-covr \
+                    port:R-knitr \
+                    port:R-rlang \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

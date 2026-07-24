@@ -1,0 +1,68 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           compilers 1.0
+PortGroup           github 1.0
+PortGroup           linear_algebra 1.0
+PortGroup           mpi 1.0
+
+github.setup        liuyangzhuan ButterflyPACK 4.1.0 v
+name                bpack
+revision            0
+categories          math science
+license             BSD
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+description         ButterflyPACK is a mathematical software \
+                    for rapidly solving large-scale dense linear systems \
+                    that exhibit off-diagonal rank-deficiency
+long_description    {*}${description}
+homepage            https://portal.nersc.gov/project/sparse/butterflypack
+checksums           rmd160  19ae4bed33fc0a6325cd53bfd9d404c9f5141078 \
+                    sha256  3782840011a28c89339059e02062f4a21ab5b97f95d16cdba6ae0b66c7b5fb33 \
+                    size    385910310
+github.tarball_from archive
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+depends_lib-append  port:scalapack \
+                    port:zfp
+
+mpi.setup           require require_fortran \
+                    -gcc44 -gcc45 -gcc46 -gcc47 -gcc48 -gcc49 -gcc5 -gcc6 \
+                    -clang
+
+# https://github.com/liuyangzhuan/ButterflyPACK/issues/14
+patchfiles          patch-examples.diff \
+                    patch-includes.diff
+# https://github.com/liuyangzhuan/ButterflyPACK/issues/33
+patchfiles-append   patch-CPPWrapper.diff
+
+compiler.cxx_standard   2011
+compiler.openmp_version 4.0
+compilers.allow_arguments_mismatch yes
+
+pre-configure {
+    # Need to set these explicitly: https://github.com/liuyangzhuan/ButterflyPACK/issues/17
+    configure.args-append \
+                    -DMPIEXEC_EXECUTABLE=${prefix}/bin/${mpi.exec} \
+                    -DMPI_C_COMPILER=${prefix}/bin/${mpi.cc} \
+                    -DMPI_Fortran_COMPILER=${prefix}/bin/${mpi.f90}
+    if {[variant_isset openblas]} {
+        configure.args-append  \
+                    -DTPL_BLAS_LIBRARIES=${prefix}/lib/libopenblas.dylib \
+                    -DTPL_LAPACK_LIBRARIES=${prefix}/lib/libopenblas.dylib
+    } elseif {[variant_isset accelerate]} {
+        # See also: https://github.com/liuyangzhuan/ButterflyPACK/issues/18
+        configure.args-append  \
+                    -DTPL_BLAS_LIBRARIES=vecLibFort \
+                    -DTPL_LAPACK_LIBRARIES=vecLibFort
+    }
+}
+
+configure.args-append \
+                    -DBUILD_SHARED_LIBS=ON \
+                    -Denable_doc=OFF \
+                    -Denable_mpi=ON \
+                    -Denable_openmp=ON \
+                    -DCMAKE_INSTALL_INCLUDEDIR=include/${name}

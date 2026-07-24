@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran mark.clements inteq 1.0
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Numerical solution of integral equations
+long_description    {*}${description}
+checksums           rmd160  6b08bc644ba374b48d695c640d0a4f3432dea7d8 \
+                    sha256  e490940b402849fb6d89f36b1f7ff24895eadcc5571789930fe64fadf3c64999 \
+                    size    457329
+supported_archs     noarch
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

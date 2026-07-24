@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github ludvigolsen rearrr 0.3.5 v
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Rearrrange data by a set of methods
+long_description    {*}${description}
+checksums           rmd160  01896da765d6aab4cc763647b05bbbe25ec07854 \
+                    sha256  104b7fa2d812087233fde456ed2f7e200dc81c5907988dd435d6a808abc97a98 \
+                    size    1352585
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-checkmate \
+                    port:R-dplyr \
+                    port:R-lifecycle \
+                    port:R-plyr \
+                    port:R-purrr \
+                    port:R-R6 \
+                    port:R-rlang \
+                    port:R-tibble
+
+depends_test-append port:R-covr \
+                    port:R-ggplot2 \
+                    port:R-knitr \
+                    port:R-testthat \
+                    port:R-tidyr \
+                    port:R-xpectr
+
+test.run            yes

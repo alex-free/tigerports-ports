@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran kunfa mixedBayes 0.2.0
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2
+description         Bayesian Longitudinal Regularized Quantile Mixed Model
+long_description    {*}${description}
+homepage            https://github.com/kunfa/mixedBayes
+checksums           rmd160  f5ecac5a6ff99ccd0ebdd3a5c63ea4695edb395f \
+                    sha256  ce5fc7229fa60ed4307a72114cf30aca28ad4f759d129143906682108374e9c4 \
+                    size    56207
+
+depends_lib-append  port:R-Rcpp \
+                    port:R-RcppArmadillo
+
+compilers.setup     require_fortran
+
+test.run            yes

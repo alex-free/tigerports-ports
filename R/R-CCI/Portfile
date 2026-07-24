@@ -1,0 +1,36 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# There is a mismatch between versioning on CRAN and GitHub,
+# for now use CRAN tarball.
+R.setup             cran khliland CCI 0.3.1
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Computational Test for Conditional Independence
+long_description    {*}${description}
+homepage            https://github.com/khliland/CCI
+checksums           rmd160  72c9635a1dc5ecc4f8cbca0d30836e0b092c54f6 \
+                    sha256  f04758176b2b1c04e8a17a41bf10f73f6316bbae25a42b328f1b63d613498b6f \
+                    size    44592
+supported_archs     noarch
+
+depends_lib-append  port:R-caret \
+                    port:R-data.table \
+                    port:R-dplyr \
+                    port:R-e1071 \
+                    port:R-ggplot2 \
+                    port:R-progress \
+                    port:R-ranger \
+                    port:R-rlang \
+                    port:R-xgboost
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

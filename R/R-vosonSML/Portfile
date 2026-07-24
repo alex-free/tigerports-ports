@@ -1,0 +1,48 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran vosonlab vosonSML 0.35.1 v
+revision            1
+categories-append   www
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3+
+description         Collecting social media data and generating networks for analysis
+long_description    A suite of easy to use functions for collecting social media data and generating networks \
+                    for analysis. Supports Twitter, YouTube, Reddit and web site data sources.
+homepage            https://vosonlab.github.io/vosonSML
+checksums           rmd160  91039bc5de58bf93e5f7a41892d44a10ac8b24c8 \
+                    sha256  a4df9a9343b4f10c3b9cd16547fab0d7b5deea21ed53e254646b821337b92401 \
+                    size    641326
+# github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-data.table \
+                    port:R-dplyr \
+                    port:R-httr2 \
+                    port:R-jsonlite \
+                    port:R-lubridate \
+                    port:R-purrr \
+                    port:R-rlang \
+                    port:R-stringr \
+                    port:R-textutils \
+                    port:R-tidyr \
+                    port:R-tibble
+
+# Some optional deps are omitted.
+depends_test-append port:R-glue \
+                    port:R-igraph \
+                    port:R-knitr \
+                    port:R-readr \
+                    port:R-rmarkdown \
+                    port:R-rvest \
+                    port:R-stringi \
+                    port:R-testthat \
+                    port:R-urltools \
+                    port:R-vctrs \
+                    port:R-xml2
+
+test.run            yes

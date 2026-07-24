@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran raybaistat MBSP 5.0
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Multivariate Bayesian model with shrinkage priors
+long_description    {*}${description}
+checksums           rmd160  75d9546f95e33152a98dd9dad93c87ad2bdb0231 \
+                    sha256  5d4d6c4d0c26257c35e6f0ff4edeebcf2e3efd6961b0024dd1545b4e79eb21ad \
+                    size    9120
+supported_archs     noarch
+
+depends_lib-append  port:R-GIGrvg \
+                    port:R-MCMCpack \
+                    port:R-mvtnorm
+
+test.run            yes

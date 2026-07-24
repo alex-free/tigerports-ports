@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+
+name                cppoptlib
+github.setup        PatWie CppNumericalSolvers 6abaf99de47a1c58f3d517b12fb319c95e52fcd4
+version             2026.01.09
+revision            0
+categories          math
+license             MIT
+platforms           any
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+description         Header-only C++17 optimization library
+long_description    ${name} is light-weight header-only C++17 library \
+                    of numerical optimization methods for non-linear \
+                    functions based on Eigen.
+checksums           rmd160  5123498cd3178a1e89cc52baf3fdc69fcbe988fa \
+                    sha256  5758ab0c581c569270f8b67a861bc56d1327e97e8e39f4a7a79192fe2410b9ee \
+                    size    44855
+github.tarball_from archive
+supported_archs     noarch
+
+depends_run-append  path:share/pkgconfig/eigen3.pc:eigen3
+
+compiler.cxx_standard   2017
+
+use_configure       no
+
+build               { }
+
+destroot {
+    delete ${worksrcpath}/include/${name}/BUILD
+    copy ${worksrcpath}/include/${name} ${destroot}${prefix}/include
+}

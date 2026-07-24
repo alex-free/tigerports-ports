@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran inla geostatsp 2.0.8
+revision            1
+categories-append   gis
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL
+description         Geostatistical modelling with likelihood and Bayes
+long_description    {*}${description}
+checksums           rmd160  44babaa18921070aa0cccd4c43b698387e6d572d \
+                    sha256  80d3bcb0f52a5791eda74473120ed551484d52bd2be182f386b7e800f8bcab56 \
+                    size    2822847
+
+depends_lib-append  port:R-abind \
+                    port:R-numDeriv \
+                    port:R-terra
+
+patchfiles          patch-no-mapmisc.diff
+
+compilers.setup     require_fortran
+
+# R-RandomFields temporarily removed, since the current version fails to build.
+depends_test-append port:R-ellipse \
+                    port:R-geoR \
+                    port:R-knitr \
+                    port:R-mvtnorm \
+                    port:R-pracma
+
+test.run            yes

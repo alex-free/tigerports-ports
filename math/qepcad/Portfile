@@ -1,0 +1,40 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+
+github.setup        PetterS qepcad 23b1e7e4ccca7e2ebe470b1d4a70f2844d77590a
+version             2025.06.07
+revision            0
+categories          math
+license             Restrictive
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+description         Quantifier Elimination by Partial Cylindrical Algebraic Decomposition
+long_description    {*}${description}
+checksums           rmd160  eda7ba25fee1cc47fe7d23a90a9559edad959725 \
+                    sha256  c98d3c562a9a9daecea77664241276aad08f92a5df3338c3321a50d83eb4aa08 \
+                    size    4542199
+github.tarball_from archive
+
+compiler.blacklist-append *gcc-4.* {clang < 421}
+
+# https://github.com/PetterS/qepcad/issues/11
+configure.cflags-append \
+                    -Wno-error=implicit-function-declaration
+if {[string match *clang* ${configure.compiler}]} {
+    configure.cflags-append \
+                    -Wno-error=return-type
+} elseif {[string match *gcc* ${configure.compiler}]} {
+    configure.cflags-append \
+                    -Wno-error=return-mismatch
+}
+
+destroot {
+    move ${cmake.build_dir}/bin/${name} ${destroot}${prefix}/bin
+    xinstall -d ${destroot}${prefix}/lib/${name}
+    move {*}[glob ${cmake.build_dir}/lib/*.a ${destroot}${prefix}/lib/${name}]
+}
+
+test.run            yes
+test.cmd            ctest

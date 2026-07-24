@@ -1,0 +1,49 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran tidymodels tidymodels 1.4.1
+revision            1
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Easily install and load the Tidymodels packages
+long_description    {*}${description}
+homepage            https://tidymodels.tidymodels.org
+checksums           rmd160  9eb587743573ed2c032b6a2887677c568d6b6c89 \
+                    sha256  aea6df3c32b31dd79776c529c87fe16fb9dcc5b157b993b449b41dd3a57657f6 \
+                    size    47692
+supported_archs     noarch
+
+depends_lib-append  port:R-broom \
+                    port:R-cli \
+                    port:R-conflicted \
+                    port:R-dials \
+                    port:R-dplyr \
+                    port:R-ggplot2 \
+                    port:R-hardhat \
+                    port:R-infer \
+                    port:R-modeldata \
+                    port:R-parsnip \
+                    port:R-purrr \
+                    port:R-recipes \
+                    port:R-rlang \
+                    port:R-rsample \
+                    port:R-rstudioapi \
+                    port:R-tailor \
+                    port:R-tidyr \
+                    port:R-tune \
+                    port:R-workflows \
+                    port:R-workflowsets \
+                    port:R-yardstick
+
+depends_test-append port:R-covr \
+                    port:R-glue \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-xml2
+
+test.run            yes

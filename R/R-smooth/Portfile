@@ -1,0 +1,39 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran config-i1 smooth 4.4.0
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             LGPL-2.1
+description         Forecasting using state space models
+long_description    {*}${description}
+homepage            https://github.com/config-i1/smooth
+checksums           rmd160  b288d8e5c43788b0e0e86586d6acc8993c712538 \
+                    sha256  872e24e0ad125c1f42b0347eb36edd0d708d2dda642f75e5840135ba2cb8f497 \
+                    size    3318256
+
+depends_lib-append  port:R-generics \
+                    port:R-greybox \
+                    port:R-nloptr \
+                    port:R-pracma \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-statmod \
+                    port:R-xtable \
+                    port:R-zoo
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-doMC \
+                    port:R-doParallel \
+                    port:R-foreach \
+                    port:R-knitr \
+                    port:R-legion \
+                    port:R-numDeriv \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

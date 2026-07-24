@@ -1,0 +1,37 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran duxbury netmediate 1.1.1
+revision            1
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Micro-macro analysis for social networks
+long_description    {*}${description}
+checksums           rmd160  e4de505a5d081e4530ec31b34023d71b253a8496 \
+                    sha256  26677ea1535c408bae927a15e860c2baaf5fc7e4d7bd4de2a45b785a8edeb8d5 \
+                    size    55586
+supported_archs     noarch
+
+depends_lib-append  port:R-btergm \
+                    port:R-ergm \
+                    port:R-ergMargins \
+                    port:R-gam \
+                    port:R-intergraph \
+                    port:R-lme4 \
+                    port:R-network \
+                    port:R-plm \
+                    port:R-plyr \
+                    port:R-RSiena \
+                    port:R-sna \
+                    port:R-tergm \
+                    port:R-VGAM
+
+depends_test-append port:R-igraph \
+                    port:R-relevent \
+                    port:R-statnet \
+                    port:R-statnet.common
+
+test.run            yes

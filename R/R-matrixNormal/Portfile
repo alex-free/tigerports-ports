@@ -1,0 +1,33 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran phargarten2 matrixNormal 0.1.2
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Matrix normal distribution
+long_description    {*}${description}
+checksums           rmd160  06384bc50c9672fa2832cb0869c3edb2de1574f9 \
+                    sha256  a03396298644dc707888a5382ba1926d5140ea70f330282fa3d694d12b814f7d \
+                    size    36441
+supported_archs     noarch
+
+depends_lib-append  port:R-mvtnorm
+
+depends_test-append port:R-formatR \
+                    port:R-knitr \
+                    port:R-LaplacesDemon \
+                    port:R-matrixcalc \
+                    port:R-matrixsampling \
+                    port:R-MBSP \
+                    port:R-rmarkdown \
+                    port:R-roxygen2 \
+                    port:R-sessioninfo \
+                    port:R-spelling \
+                    port:R-testthat
+
+test.run            yes

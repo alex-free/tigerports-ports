@@ -1,0 +1,65 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran business-science timetk 2.9.1
+revision            1
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3+
+description         Tool-kit for working with time series
+long_description    {*}${description} in R.
+homepage            https://business-science.github.io/timetk
+checksums           rmd160  663f5847088cc0fecb170f7f9448a281a2a7a0ee \
+                    sha256  c72bc9a1022a43f324ee5b2d5470481359c7de7489e76032dc0aee69cfa830ee \
+                    size    3958088
+supported_archs     noarch
+
+depends_lib-append  port:R-assertthat \
+                    port:R-dplyr \
+                    port:R-forcats \
+                    port:R-forecast \
+                    port:R-generics \
+                    port:R-ggplot2 \
+                    port:R-hms \
+                    port:R-lubridate \
+                    port:R-padr \
+                    port:R-plotly \
+                    port:R-purrr \
+                    port:R-readr \
+                    port:R-recipes \
+                    port:R-rlang \
+                    port:R-rsample \
+                    port:R-slider \
+                    port:R-stringi \
+                    port:R-stringr \
+                    port:R-tibble \
+                    port:R-tidymodels \
+                    port:R-tidyr \
+                    port:R-tidyselect \
+                    port:R-timeDate \
+                    port:R-timeSeries \
+                    port:R-tsfeatures \
+                    port:R-xts \
+                    port:R-zoo
+
+depends_test-append port:R-broom \
+                    port:R-covr \
+                    port:R-fracdiff \
+                    port:R-knitr \
+                    port:R-modeltime \
+                    port:R-parsnip \
+                    port:R-rmarkdown \
+                    port:R-roxygen2 \
+                    port:R-scales \
+                    port:R-testthat \
+                    port:R-trelliscopejs \
+                    port:R-tseries \
+                    port:R-tune \
+                    port:R-workflows \
+                    port:R-yardstick
+
+# test-rsample-time_series_cv.R fails on ppc at plotting, likely due to a known margins error.
+test.run            yes

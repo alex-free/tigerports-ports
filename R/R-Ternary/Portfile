@@ -1,0 +1,37 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github ms609 Ternary 2.3.6
+revision            1
+categories-append   graphics
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Create Ternary and Holdridge plots
+long_description    {*}${description}
+homepage            https://ms609.github.io/Ternary
+checksums           rmd160  edf7a5e51f60ec927f4609d67cb61cd65a87b4c9 \
+                    sha256  b0b5291efe819d50c1ef8349e8140c9bf5cfffc36d9c97ffbcb397519203cf4d \
+                    size    782239
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-PlotTools \
+                    port:R-shiny \
+                    port:R-sp \
+                    port:R-TreeDist
+
+# FIXME: one test fails:
+# https://github.com/ms609/Ternary/issues/87
+depends_test-append port:R-colourpicker \
+                    port:R-knitr \
+                    port:R-readxl \
+                    port:R-rmarkdown \
+                    port:R-shinyjs \
+                    port:R-spelling \
+                    port:R-testthat \
+                    port:R-vdiffr
+
+test.run            yes

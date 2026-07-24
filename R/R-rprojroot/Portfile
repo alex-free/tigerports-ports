@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github r-lib rprojroot 2.1.0 v
+revision            1
+categories-append   devel
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Finding files in project subdirectories
+long_description    {*}${description}
+homepage            https://rprojroot.r-lib.org
+checksums           rmd160  d591d1dc3cdd24ae9f3b089810a750e5a66e0c07 \
+                    sha256  31dcb4588b633f208b01da1a64b624f5d6859bbc8b471647f1f3eb5586c54469 \
+                    size    67692
+github.tarball_from archive
+supported_archs     noarch
+
+depends_test-append port:R-covr \
+                    port:R-knitr \
+                    port:R-lifecycle \
+                    port:R-rlang \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-withr
+
+test.run            yes

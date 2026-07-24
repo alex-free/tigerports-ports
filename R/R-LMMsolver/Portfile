@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github Biometris LMMsolver 1.0.11 v.
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL
+description         Linear Mixed Model Solver
+long_description    An efficient and flexible system \
+                    to solve sparse mixed model equations.
+homepage            https://biometris.github.io/LMMsolver/index.html
+checksums           rmd160  15d0fa99617640b4d9be7b9e5191f208c8c4a869 \
+                    sha256  70c0b6a16d2c6790c2da563ff1ec9af239a06fc115c2959663f43d1aa9fdf7e8 \
+                    size    6525661
+github.tarball_from archive
+
+depends_lib-append  port:R-Rcpp \
+                    port:R-spam
+
+depends_test-append port:R-agridat \
+                    port:R-ggplot2 \
+                    port:R-knitr \
+                    port:R-maps \
+                    port:R-rmarkdown \
+                    port:R-sf \
+                    port:R-tidyr \
+                    port:R-tinytest
+
+test.run            yes

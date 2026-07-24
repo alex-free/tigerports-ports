@@ -1,0 +1,42 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran StevenDeKeyser98 VecDep 0.1.3
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Measure copula-based dependence between random vectors
+long_description    {*}${description}
+homepage            https://github.com/StevenDeKeyser98/VecDep
+checksums           rmd160  b16cb3c5fb5f399faa14606dd20aeea4f72f9070 \
+                    sha256  1b701d18810f883e8cfb0bee69cd86516e20f3eb47514b49ecb8c04a45cca1fe \
+                    size    79052
+supported_archs     noarch
+
+depends_lib-append  port:R-ElliptCopulas \
+                    port:R-expm \
+                    port:R-covglasso \
+                    port:R-gtools \
+                    port:R-HAC \
+                    port:R-hash \
+                    port:R-magic \
+                    port:R-pbapply \
+                    port:R-reticulate \
+                    port:R-Rmpfr \
+                    port:R-sets
+
+depends_test-append port:R-copula \
+                    port:R-dendextend \
+                    port:R-extraDistr \
+                    port:R-fossil \
+                    port:R-ggplot2 \
+                    port:R-knitr \
+                    port:R-mvtnorm \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

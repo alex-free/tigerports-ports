@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           ocaml 1.1
+
+name                ocaml-logs
+version             0.10.0
+revision            2
+categories          ocaml devel
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             ISC
+description         Logging infrastructure for OCaml
+long_description    {*}${description}
+homepage            https://erratique.ch/software/logs
+master_sites        ${homepage}/releases/
+use_bzip2           yes
+extract.suffix      .tbz
+distname            logs-${version}
+checksums           rmd160  8245656a7c90a2b4471b0df9ad0beb7a458d8be5 \
+                    sha256  760ec291c128d75b74826091337764f925b5ca414b02e2d336a0b37bf30df4ea \
+                    size    20044
+
+depends_lib-append  port:ocaml-cmdliner \
+                    port:ocaml-fmt \
+                    port:ocaml-js_of_ocaml-compiler \
+                    port:ocaml-lwt
+
+ocaml.build_type    topkg
+
+livecheck.type      regex
+livecheck.regex     logs-(\[0-9\.]+).tbz

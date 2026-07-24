@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is archaic.
+R.setup             cran stephenSRMMartin MIRES 0.1.1 v
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Measurement invariance assessment using random effects models and shrinkage
+long_description    {*}${description}
+checksums           rmd160  b7d479557b7551f8112ce33189511362957f9111 \
+                    sha256  a380dd7eca02a0ff7a06d59abfa82d33386c6fca5a74921d7322eb7587d16e40 \
+                    size    192085
+
+depends_lib-append  port:R-BH \
+                    port:R-cubature \
+                    port:R-dirichletprocess \
+                    port:R-Formula \
+                    port:R-HDInterval \
+                    port:R-logspline \
+                    port:R-mvtnorm \
+                    port:R-pracma \
+                    port:R-Rcpp \
+                    port:R-RcppEigen \
+                    port:R-rstan \
+                    port:R-rstantools \
+                    port:R-StanHeaders \
+                    port:R-truncnorm
+
+depends_test-append port:R-testthat
+
+test.run            yes

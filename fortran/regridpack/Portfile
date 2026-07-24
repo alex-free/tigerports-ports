@@ -1,0 +1,33 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           fortran 1.0
+
+github.setup        jacobwilliams regridpack 1.0.1
+revision            1
+categories-append   math
+license             BSD
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+description         Modern Fortran edition of REGRIDPACK
+long_description    This is an updated and modernized version of REGRIDPACK, \
+                    a suite of Fortran routines for interpolating values \
+                    between one-, two-, three- and four-dimensional arrays \
+                    defined on uniform or nonuniform orthogonal grids. \
+                    This operation is commonly referred to as regridding. \
+                    Linear or cubic interpolation can be selected independently \
+                    in each dimension. Extrapolation is not allowed. \
+                    The subroutines in REGRIDPACK cannot be used to transfer values \
+                    on non-orthogonal (randomly scattered) data grids.
+checksums           rmd160  63d0f0162d68428386ecb7b2cd130dc65653baba \
+                    sha256  f3ac35ec6c6dd0c42cf3d9fcb19afea41b5fe7618bac3c60f4d056a8571aa84d \
+                    size    370368
+github.tarball_from archive
+
+post-destroot {
+    set docdir ${prefix}/share/doc/${name}
+    xinstall -d ${destroot}${docdir}
+    xinstall -m 0644 -W ${worksrcpath} LICENSE.txt README.md ${destroot}${docdir}
+}
+
+# No tests yet: https://github.com/jacobwilliams/regridpack/issues/1
+test.run            no

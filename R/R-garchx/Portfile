@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran gsucarrat garchx 1.6
+revision            1
+categories-append   finance
+maintainers         nomaintainer
+license             GPL-2+
+description         Flexible and robust GARCH-X modelling
+long_description    {*}${description}
+homepage            https://github.com/gsucarrat/garchx
+checksums           rmd160  93e5df0176cd310d7fb8ba935b0fe87f4db1f5e1 \
+                    sha256  d7f80d0b2595b5aff7b59e88a32b3e626c216b9f16ddf27453ffb3bd5929f1d5 \
+                    size    22240
+
+depends_lib-append  port:R-zoo
+
+depends_test-append port:R-lgarch \
+                    port:R-tvgarch
+
+test.run            yes

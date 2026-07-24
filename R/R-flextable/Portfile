@@ -1,0 +1,52 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran davidgohel flextable 0.9.10
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Functions for tabular reporting
+long_description    {*}${description}
+homepage            https://davidgohel.github.io/flextable
+checksums           rmd160  821dd0479f0dc35c8667d72b09fa45060d922b52 \
+                    sha256  14badace422635892a76f9bb43709f1cddf33afea1053bc88563c8fd2ee8f850 \
+                    size    1334215
+supported_archs     noarch
+
+depends_lib-append  port:R-data.table \
+                    port:R-gdtools \
+                    port:R-htmltools \
+                    port:R-knitr \
+                    port:R-officer \
+                    port:R-ragg \
+                    port:R-rlang \
+                    port:R-rmarkdown \
+                    port:R-uuid \
+                    port:R-xml2
+
+# Some optional deps are omitted.
+depends_test-append port:R-bookdown \
+                    port:R-broom \
+                    port:R-broom.mixed \
+                    port:R-commonmark \
+                    port:R-doconv \
+                    port:R-ggplot2 \
+                    port:R-lme4 \
+                    port:R-magick \
+                    port:R-officedown \
+                    port:R-pdftools \
+                    port:R-pkgdown \
+                    port:R-scales \
+                    port:R-svglite \
+                    port:R-tables \
+                    port:R-testthat \
+                    port:R-withr \
+                    port:R-xtable
+
+# Two tests fail due to missing Pandoc.
+# [ FAIL 2 | WARN 0 | SKIP 8 | PASS 275 ]
+test.run            no

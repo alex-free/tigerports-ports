@@ -1,0 +1,48 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran statnet ergm 4.12.0
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Fit, simulate and diagnose exponential-family models for networks
+long_description    An integrated set of tools to analyze and simulate networks \
+                    based on exponential-family random graph models (ERGMs).
+checksums           rmd160  d8dcbcc472403d3fa562dd41164dc5af019aa67b \
+                    sha256  eb4aef2dd6fc0fe816f4e25962b13c26eaf6c71bc4c96df43fa090a5f9c363b5 \
+                    size    2104185
+# github.tarball_from archive
+
+depends_lib-append  port:R-cli \
+                    port:R-coda \
+                    port:R-lpSolveAPI \
+                    port:R-magrittr \
+                    port:R-memoise \
+                    port:R-network \
+                    port:R-knitr \
+                    port:R-purrr \
+                    port:R-Rdpack \
+                    port:R-rlang \
+                    port:R-rle \
+                    port:R-robustbase \
+                    port:R-statnet.common \
+                    port:R-stringr \
+                    port:R-tibble \
+                    port:R-trust
+
+depends_test-append port:R-covr \
+                    port:R-ergm.count \
+                    port:R-latticeExtra \
+                    port:R-networkLite \
+                    port:R-Rglpk \
+                    port:R-rmarkdown \
+                    port:R-slam \
+                    port:R-sna \
+                    port:R-testthat \
+                    port:R-withr
+
+test.run            yes

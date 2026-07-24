@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+PortGroup               makefile 1.0
+
+name                    libmaa
+version                 1.5.1
+revision                0
+categories              devel
+license                 MIT
+maintainers             nomaintainer
+
+description             Low-level data structures helpful for writing compilers
+long_description        {*}${description}
+homepage                https://sourceforge.net/projects/dict
+
+master_sites            sourceforge:project/dict/${name}/${name}-${version}
+checksums               rmd160  d1d5a4f3519696e7cfc2519e50ee2ffbe26988fc \
+                        sha256  3a30e25f038e99c4715125545516490d991fe3a505825cc832b1a956e31bf669 \
+                        size    176900
+
+depends_build-append    port:bmake \
+                        port:mk-configure
+
+build.env-append        CC=${configure.cc}
+build.cmd               mkcmake
+build.target
+
+destroot.cmd            ${build.cmd}
+
+livecheck.regex         /${name}-(\\d+(?:\\.\\d+)*)${extract.suffix}

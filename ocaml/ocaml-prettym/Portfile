@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           ocaml 1.1
+
+name                ocaml-prettym
+github.setup        dinosaure prettym 0.0.4
+revision            1
+categories          ocaml devel
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Memory-bounded encoder according to RFC 822
+long_description    {*}${description}
+use_bzip2           yes
+extract.suffix      .tbz
+distname            prettym-${version}
+checksums           rmd160  b68e912b66af05e3e8c5c422fd37017dffd38799 \
+                    sha256  39f461d4dbc0d605486c9077dba3ca0a3307a8fba69f56c128eb3efebb5c35d5 \
+                    size    14622
+github.tarball_from releases
+
+depends_lib-append  port:ocaml-bstr \
+                    port:ocaml-ke
+
+ocaml.build_type    dune

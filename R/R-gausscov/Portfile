@@ -1,0 +1,19 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran pldavies44 gausscov 1.1.8
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-3
+description         Gaussian covariate method for variable selection
+long_description    {*}${description}
+checksums           rmd160  c64cf9d2a28fa11ac40f706b310a1e7596cec33b \
+                    sha256  a151434c0244f8d687dd177bfaff9a0b3a15a4bd415bd670c2ac8b810cffcf33 \
+                    size    2687749
+
+compilers.setup     require_fortran
+
+test.run            yes

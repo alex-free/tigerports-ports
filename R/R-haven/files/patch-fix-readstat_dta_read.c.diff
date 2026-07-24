@@ -1,0 +1,9 @@
+--- src/readstat/stata/readstat_dta_read.c	2025-05-30 20:55:26.000000000 +0800
++++ src/readstat/stata/readstat_dta_read.c	2025-06-03 08:15:20.000000000 +0800
+@@ -1,6 +1,4 @@
+ 
+-#define _XOPEN_SOURCE 700 /* for strnlen */
+-
+ #include <stdlib.h>
+ #include <math.h>
+ #include <time.h>

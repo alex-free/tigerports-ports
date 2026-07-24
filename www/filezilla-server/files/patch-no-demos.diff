@@ -1,0 +1,10 @@
+--- configure.ac	2026-03-13 21:54:09.000000000 +0800
++++ configure.ac	2026-03-19 02:28:12.000000000 +0800
+@@ -486,7 +486,6 @@
+     pkg/mac/Info.plist
+     pkg/mac/server.dist
+     pkg/mac/component.plist
+-    demos/Makefile
+     tests/Makefile
+ ])
+ 

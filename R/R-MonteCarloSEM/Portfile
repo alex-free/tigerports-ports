@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran fatihorcan84 MonteCarloSEM 2.0.0
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3+
+description         Monte Carlo data simulation package
+long_description    {*}${description}
+checksums           rmd160  c467636e4bd09e5454f2e4737813b9ccc177f21a \
+                    sha256  13ab773009ae023931c5bf9dbfc80cd5643a740c30ea27ca9887cec5b30bba76 \
+                    size    14623
+supported_archs     noarch
+
+depends_lib-append  port:R-lavaan
+
+test.run            yes

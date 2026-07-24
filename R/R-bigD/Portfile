@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github rstudio bigD 0.3.1 v
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Flexibly format dates and times to a given locale
+long_description    {*}${description}
+homepage            https://rich-iannone.github.io/bigD
+checksums           rmd160  75d5913f9ec7ae8d2d7b4a4ce56246aaa31bc479 \
+                    sha256  01c02f04e4eddd802e38923cf9268cb36bc6447a7b1ff201891b3b061b72daeb \
+                    size    3087523
+github.tarball_from archive
+supported_archs     noarch
+
+depends_test-append port:R-testthat \
+                    port:R-vctrs
+
+test.run            yes

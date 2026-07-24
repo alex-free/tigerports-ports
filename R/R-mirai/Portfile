@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github shikokuchuo mirai 2.7.1 v
+revision            0
+categories-append   devel
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3+
+description         Minimalist async evaluation framework
+long_description    {*}${description} for R.
+homepage            https://shikokuchuo.net/mirai
+checksums           rmd160  bbb5145b7d98555d88c8fd57b5ab5823802fd489 \
+                    sha256  a512978f7a5c4689583e0afa2a1b6247c52046a7c538ba4aff5cd818cb160304 \
+                    size    525880
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-nanonext
+
+# R-otelsdk omitted until fixed.
+depends_test-append port:R-cli \
+                    port:R-later \
+                    port:R-litedown \
+                    port:R-mori \
+                    port:R-otel \
+                    port:R-promises \
+                    port:R-secretbase
+
+test.run            yes

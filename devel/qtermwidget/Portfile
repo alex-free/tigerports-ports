@@ -1,0 +1,39 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+PortGroup           qt4 1.0
+
+github.setup        lxqt qtermwidget 1.4.0
+revision            0
+categories          devel
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             {BSD GPL-2+ LGPL-2+ public-domain}
+# openssl is linked by QtNetwork only, and qtermwidget does not use QtNetwork
+license_noconflict  openssl
+
+description         The terminal widget for QTerminal
+long_description    QTermWidget is an open-source project originally \
+                    based on the KDE4 Konsole application, but it took \
+                    its own direction later on. The main goal of this \
+                    project is to provide a unicode-enabled, \
+                    embeddable Qt widget for using as a built-in \
+                    console (or terminal emulation widget).
+
+checksums           rmd160  f61e9691ff29d9521d7b82049fb018db3a960d17 \
+                    sha256  e7253065f74fa056843c95f9543e690bcaf7a03647ef5e02379eec4eb162026b \
+                    size    190320
+github.tarball_from releases
+use_xz              yes
+
+patch.pre_args-replace  -p0 -p1
+
+patchfiles          0001-Fix-the-build-with-Qt4.patch \
+                    0002-Fix-build-with-gcc13.patch
+
+depends_build-append \
+                    port:lxqt-build-tools
+
+compiler.cxx_standard \
+                    2017

@@ -1,0 +1,39 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github r-lib cli 3.6.6 v
+revision            0
+categories-append   devel
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Tools for making beautiful & useful command line interfaces
+long_description    A suite of tools to build attractive command line interfaces (CLIs) \
+                    from semantic elements: headings, lists, alerts, paragraphs etc.
+homepage            https://cli.r-lib.org
+checksums           rmd160  9ec1ab323c7b476fc00caab0fc90ce426b9fd406 \
+                    sha256  5264ac744985aac4239f634e27977b2ede22701f84082b7a65e7d93990c9c376 \
+                    size    644105
+github.tarball_from archive
+
+depends_test-append port:R-callr \
+                    port:R-covr \
+                    port:R-crayon \
+                    port:R-digest \
+                    port:R-glue \
+                    port:R-htmltools \
+                    port:R-htmlwidgets \
+                    port:R-knitr \
+                    port:R-processx \
+                    port:R-ps \
+                    port:R-rlang \
+                    port:R-rmarkdown \
+                    port:R-rprojroot \
+                    port:R-rstudioapi \
+                    port:R-testthat \
+                    port:R-tibble \
+                    port:R-whoami \
+                    port:R-withr
+
+test.run            yes

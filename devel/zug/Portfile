@@ -1,0 +1,38 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+
+github.setup        arximboldi zug dd80433152c9fa5b16a710c8b530fb6131749132
+version             2026.01.14
+revision            0
+categories          devel
+platforms           any
+license             Boost-1
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+description         ${name} is a C++ library providing transducers
+long_description    {*}${description}
+homepage            https://sinusoid.es/${name}
+checksums           rmd160  cb5e08fa0fa00d60231198928a12626bdb29b833 \
+                    sha256  d8bc3261218b051a9f30ed9bb14eb0fc6f56cb06d3617d5e0c110493389badfd \
+                    size    105476
+github.tarball_from archive
+supported_archs     noarch
+
+# Library itself is header-only.
+# Tests still rely on archaic catch2
+# depends_build-append \
+                    port:catch2
+
+configure.args-append \
+                    -DDISABLE_WERROR=off \
+                    -DENABLE_COVERAGE=off \
+                    -Dzug_BUILD_DOCS=off \
+                    -Dzug_BUILD_EXAMPLES=off \
+                    -Dzug_BUILD_TESTS=off
+
+compiler.cxx_standard  2014
+
+test.run            no
+test.target         check

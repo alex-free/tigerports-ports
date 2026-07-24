@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran kmfrick sparselu 0.3.0
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-3
+description         Sparse LU Decomposition via SuiteSparse
+long_description    {*}${description}
+checksums           rmd160  3dad414ac053a36d56924945724e845e782db1d5 \
+                    sha256  538187f4fc971b3a897ac160fe0e08cfc9ebabef7ce5d4dc53eb5cbb1389450f \
+                    size    8963
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  port:R-Rcpp \
+                    port:SuiteSparse_config \
+                    port:SuiteSparse_AMD \
+                    port:SuiteSparse_UMFPACK
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-testthat
+
+test.run            yes

@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran timcdlucas disaggregation 0.4.1
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             MIT
+description         Disaggregation regression models using R-TMB
+long_description    {*}${description}
+checksums           rmd160  60aa86e28ccea80f5a980de18b983a61d68c7a1c \
+                    sha256  1ec5e2969ccfc0c955c64ae849baf8ac6dc98ee19651c80d0d44531d46b830a7 \
+                    size    351272
+
+depends_lib-append  port:R-cowplot \
+                    port:R-dplyr \
+                    port:R-fmesher \
+                    port:R-ggplot2 \
+                    port:R-RcppEigen \
+                    port:R-rSPDE \
+                    port:R-sf \
+                    port:R-sp \
+                    port:R-sparseMVN \
+                    port:R-splancs \
+                    port:R-terra \
+                    port:R-tidyterra \
+                    port:R-TMB

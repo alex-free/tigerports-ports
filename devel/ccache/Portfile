@@ -1,0 +1,101 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           conflicts_build 1.0
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+
+# src/third_party/blake3/CMakeLists.txt checks CMAKE_SIZEOF_VOID_P
+PortGroup           muniversal 1.0
+
+legacysupport.newest_darwin_requires_legacy 18
+legacysupport.use_mp_libcxx yes
+
+github.setup        ccache ccache 4.13.6 v
+revision            1
+categories          devel
+platforms           darwin freebsd
+license             GPL-3+
+maintainers         {ryandesign @ryandesign} openmaintainer
+description         Object-file caching compiler wrapper
+long_description \
+    ${name} is a compiler cache. It acts as a caching pre-processor to C/C++ \
+    compilers, using the -E compiler switch and a hash to detect when \
+    a compilation can be satisfied from cache. This often results in a 5 to 10 \
+    times speedup in common compilations.
+
+homepage            https://ccache.dev
+use_xz              yes
+checksums           rmd160  31eeb32ccaca42d943472800efb59138f5ae0f12 \
+                    sha256  a7de667ca08cf67c3c8af9f213f6aa701a1188a2b3163fb74483858ce5e79fbb \
+                    size    538628
+github.tarball_from releases
+
+# We cannot build ccache with ccache after a dependency update, since it is broken in that case.
+conflicts_build     ${name}
+
+compiler.c_standard 1999
+
+compiler.cxx_standard \
+                    2020
+
+depends_build-append \
+                    port:doctest \
+                    path:bin/perl:perl5 \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  port:hiredis \
+                    port:xxhashlib \
+                    port:zstd
+
+# Do not download other required dependencies that couldn't be found.
+configure.args-append \
+                    -DDEPS=LOCAL
+
+configure.args-append \
+                    -DENABLE_DOCUMENTATION=OFF
+
+# Everything besides Tiger:
+if {${os.platform} ne "darwin" || ${os.major} > 8} {
+    set fmt_v       12
+
+    depends_build-append \
+                    port:tl-expected
+    depends_lib-append \
+                    port:blake3 \
+                    port:cpp-httplib \
+                    port:libfmt${fmt_v}
+
+    configure.args-append \
+                    -DFMT_INCLUDE_DIR=${prefix}/include/libfmt${fmt_v} \
+                    -DFMT_LIBRARY=${prefix}/lib/libfmt${fmt_v}/libfmt.dylib
+}
+
+platform darwin 8 {
+    github.setup    ccache ccache 4.11.3 v
+    checksums       rmd160  bf6c3dfce80d0e4c3fc860c08026ceee4dc0f372 \
+                    sha256  d5a340e199977b7b1e89c0add794132c977fdc2ecc7ca5451e03d43627a1b1be \
+                    size    500700
+    patchfiles      tiger-execute.patch \
+                    tiger-hashutil.patch \
+                    patch-ccache-no-posix-tiger.diff
+    configure.args-append \
+                    -DDEP_BLAKE3=BUNDLED \
+                    -DDEP_CPPHTTPLIB=BUNDLED \
+                    -DDEP_FMT=BUNDLED \
+                    -DDEP_NONSTDSPAN=BUNDLED \
+                    -DDEP_TLEXPECTED=BUNDLED
+}
+
+variant doc description "Enable documentation" {
+    configure.args-replace \
+                    -DENABLE_DOCUMENTATION=OFF -DENABLE_DOCUMENTATION=ON
+    depends_build-append \
+                    port:asciidoctor
+    license_noconflict  asciidoctor
+}
+
+default_variants    +doc
+
+test.run            yes

@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:filetype=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           openssl 1.0
+
+github.setup        OpenSC pkcs11-helper 1.31.0 pkcs11-helper-
+revision            0
+
+categories          security
+platforms           darwin freebsd
+license             GPL-2+ BSD
+maintainers         nomaintainer
+
+description         Library that simplifies the interaction with PKCS#11 providers for end-user \
+                    applications using a simple API and optional OpenSSL engine
+long_description    {*}${description}
+
+checksums           rmd160  ef36743c5352d5bb9482ea8355e13a6eafb8e4ff \
+                    sha256  03bcc110f4824ae8337e8271f681c6b4db23a060f10f4ed3b1b3acc4f5268cc9 \
+                    size    125682
+github.tarball_from tarball
+
+depends_build       path:bin/pkg-config:pkgconfig
+depends_lib         path:lib/pkgconfig/gnutls.pc:gnutls
+
+use_autoreconf      yes
+
+patchfiles          patch-nssfix.diff

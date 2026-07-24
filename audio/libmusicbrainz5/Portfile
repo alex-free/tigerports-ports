@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+
+name                libmusicbrainz5
+github.setup        metabrainz libmusicbrainz 4655b571a70d73d41467091f59c518517c956198
+version             2023.10.09
+revision            1
+categories          audio devel
+license             LGPL-2.1
+maintainers         {khindenburg @kurthindenburg} openmaintainer
+description         libmusicbrainz (also known as mb_client or MusicBrainz \
+                    Client Library)
+long_description \
+    The MusicBrainz Client Library (libmusicbrainz), also known as mb_client, \
+    is a development library geared towards developers who wish to add \
+    MusicBrainz lookup capabilities to their applications. \
+    Version 5.x and greater support the latest version of the MusicBrainz \
+    web service and are not backwards compatible with earlier versions.
+
+homepage            http://musicbrainz.org/doc/libmusicbrainz
+
+checksums           rmd160  071d6b0e11f497a43d02e9b3d95e7d24a02cdf79 \
+                    sha256  4ddc2fbfff689a696ff4bb4161e10ea103257b95caff670006c3f449a3f8dee6 \
+                    size    79236
+github.tarball_from archive
+
+depends_build-append    path:bin/pkg-config:pkgconfig
+depends_lib-append      port:libxml2 \
+                        port:neon

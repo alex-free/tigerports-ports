@@ -1,0 +1,42 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is old.
+R.setup             cran Wenchao-Ma GDINA 2.9.12
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Generalized DINA model framework
+long_description    {*}${description}
+homepage            https://wenchao-ma.github.io/GDINA
+checksums           rmd160  5869a94a112aadde2644518fb20d4cd120bbbbb5 \
+                    sha256  a97c3e158f1ab7cb84f6e7b4eb0d0d2ee189d7dd7db29a04ad8aced6b0da1434 \
+                    size    301904
+
+depends_lib-append  port:R-alabama \
+                    port:R-foreach \
+                    port:R-ggplot2 \
+                    port:R-nloptr \
+                    port:R-numDeriv \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-Rsolnp \
+                    port:R-shiny \
+                    port:R-shinydashboard
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-CDM \
+                    port:R-cdmTools \
+                    port:R-doParallel \
+                    port:R-doRNG \
+                    port:R-knitr \
+                    port:R-poLCA \
+                    port:R-rmarkdown \
+                    port:R-stringr \
+                    port:R-testthat
+
+test.run            yes

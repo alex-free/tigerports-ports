@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran juangea qmrparser 0.1.6
+revision            1
+categories-append   devel
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3+
+description         Parser Combinator in R
+long_description    {*}${description}
+checksums           rmd160  e39a81fe725d3e4273a7cb9217d34cc41324cf98 \
+                    sha256  1ef0be3777dfc06bb29833f689765437b0548e941da35f18a4bdb8ff88592734 \
+                    size    525171
+supported_archs     noarch
+
+depends_test-append port:R-RUnit
+
+test.run            yes

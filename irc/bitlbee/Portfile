@@ -1,0 +1,84 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+
+name                bitlbee
+version             3.6
+revision            1
+checksums           rmd160  9a02e95c5fd8c3bd43edf1c6e25dfe4f5bdc0b35 \
+                    sha256  9f15de46f29b46bf1e39fc50bdf4515e71b17f551f3955094c5da792d962107e \
+                    size    534961
+
+categories          irc net
+license             GPL-2
+maintainers         nomaintainer
+description         An IRC to other chat networks gateway
+long_description    bitlbee is an IRC server that can connect to other IM \
+                    networks. Its intention is you \
+                    only have to use one client application for all your \
+                    instant messaging.
+
+homepage            https://www.bitlbee.org
+master_sites        https://get.bitlbee.org/src/
+
+depends_build       port:gettext \
+                    path:bin/pkg-config:pkgconfig
+depends_lib         port:gettext-runtime \
+                    path:lib/pkgconfig/glib-2.0.pc:glib2 \
+                    path:lib/pkgconfig/gnutls.pc:gnutls \
+                    port:libgcrypt \
+                    port:libgpg-error \
+                    port:libiconv
+
+patchfiles          patch-configure.diff \
+                    patch-Makefiles.diff
+
+# Calls ld directly which makes universal hard
+universal_variant   no
+configure.env       ARCHFLAGS=[get_canonical_archflags ld]
+configure.args      --config=${prefix}/var/lib/bitlbee/ \
+                    --jabber=0 \
+                    --otr=0 \
+                    --plugins=0 \
+                    --purple=0 \
+                    --ssl=gnutls \
+                    --twitter=0 \
+                    --verbose=1
+
+configure.universal_args
+
+destroot.target     install install-dev install-etc
+
+post-destroot {
+    destroot.keepdirs ${destroot}${prefix}/var/lib/bitlbee
+    set etcdir ${destroot}${prefix}/etc/bitlbee
+    move ${etcdir}/bitlbee.conf ${etcdir}/bitlbee.conf.sample
+    move ${etcdir}/motd.txt ${etcdir}/motd.txt.sample
+}
+
+variant otr description {Off-the-Record messaging} {
+    configure.args-replace  --otr=0 --otr=1
+    depends_lib-append  port:libotr
+    destroot.target-append  install-plugins
+}
+
+variant plugins conflicts purple description {Support plugins} {
+    configure.args-replace  --jabber=0 --jabber=1 \
+                            --plugins=0 --plugins=1 \
+                            --twitter=0 --twitter=1
+}
+
+variant purple conflicts plugins description {Add libpurple support} {
+    configure.args-replace  --purple=0 --purple=1
+    depends_lib-append  port:libpurple
+}
+
+default_variants    +otr +plugins
+
+notes "To complete installation, run"\
+"`sudo cp ${prefix}/etc/bitlbee/bitlbee.conf.sample ${prefix}/etc/bitlbee/bitlbee.conf`"\
+"and edit ${prefix}/etc/bitlbee/bitlbee.conf to taste"
+
+livecheck.type      regex
+livecheck.url       ${master_sites}
+livecheck.regex     "${name}-(\\d+(?:\\.\\d+)*)${extract.suffix}"

@@ -1,0 +1,20 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran RobinHankin gsl 2.1-9
+revision            1
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Wrapper for the Gnu Scientific Library
+long_description    {*}${description}
+checksums           rmd160  d2f014f53367ccafbad76cd951b7f1482e965475 \
+                    sha256  56dec6105a882c7d976765b879d0832b436f0371c174e34a3e37bc390c56ed80 \
+                    size    232420
+# github.tarball_from archive
+
+depends_lib-append  port:gsl
+
+test.run            yes

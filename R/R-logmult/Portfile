@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github nalimilan logmult 0.7.5 v
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Log-multiplicative models, including association models
+long_description    {*}${description}
+checksums           rmd160  2cbdb8a0afe32e83585f53ca2c59a5ade8deee93 \
+                    sha256  71486bf030335e958ca07cee14fc96b6a7113ac8c0e4f7e15d8d517b17c0dfaa \
+                    size    102393
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-gnm \
+                    port:R-qvcalc
+
+depends_test-append port:R-ellipse \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-survey
+
+test.run            yes

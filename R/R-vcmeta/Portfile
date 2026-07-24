@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is outdated.
+R.setup             cran dgbonett vcmeta 1.5.0
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Varying Coefficient Meta-Analysis
+long_description    {*}${description}
+homepage            https://github.com/dgbonett/vcmeta
+checksums           rmd160  6534ed6cd3b0d80a2512c5c5b336c8ecfe7c212f \
+                    sha256  a348d96b8a07a3f1633f5058ae8c79d09517d3e496b71a64648b5379c41626b0 \
+                    size    248009
+supported_archs     noarch
+
+depends_lib-append  port:R-ggplot2 \
+                    port:R-mathjaxr \
+                    port:R-Rdpack
+
+depends_test-append port:R-testthat
+
+test.run            yes

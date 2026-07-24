@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim: fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-regex
+version             2026.4.4
+revision            0
+categories-append   devel
+license             PSF
+maintainers         {stromnov @stromnov} openmaintainer
+
+description         Alternate regular expression module, to replace re.
+long_description    ${description}
+
+homepage            https://github.com/mrabarnett/mrab-regex
+
+checksums           rmd160  51a9fc0aa89b3785ec30a04f8b465d70770afc35 \
+                    sha256  e08270659717f6973523ce3afbafa53515c4dc5dcad637dc215b6fd50f689423 \
+                    size    416000
+
+python.versions     310 311 312 313 314
+
+# https://trac.macports.org/ticket/73059
+compiler.blacklist-append \
+                    *gcc-4.0 *gcc-4.2

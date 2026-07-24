@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran beatriz.pateiro alphahull 2.5
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             {GPL-2 GPL-3}
+description         Generalization of the convex hull of a sample of points in the plane
+long_description    {*}${description}
+checksums           rmd160  a134fc348a8873e6a4d5bd22bc7808785ffbbafb \
+                    sha256  82104b049b945b62b5b62f1520ff789a77638ab7e91650e50d6eb191373a8012 \
+                    size    492908
+supported_archs     noarch
+
+depends_lib-append  port:R-ggplot2 \
+                    port:R-interp \
+                    port:R-R.utils \
+                    port:R-sgeostat \
+                    port:R-spatstat.geom \
+                    port:R-spatstat.random \
+                    port:R-splancs
+
+test.run            yes

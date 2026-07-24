@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran femiguez nlraa 1.9.10
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Non-linear Regression for Agricultural Applications
+long_description    {*}${description}
+homepage            https://github.com/femiguez/nlraa
+checksums           rmd160  70c43c7de31f34618ea486ec47a84c8af76d585f \
+                    sha256  61c7cecbf7ecfe0a66df5fbb12daf68d892ab01bd7b4da31b13ee7c50d50f5e2 \
+                    size    2825107
+supported_archs     noarch
+
+depends_lib-append  port:R-knitr
+
+depends_test-append port:R-bbmle \
+                    port:R-car \
+                    port:R-emmeans \
+                    port:R-ggplot2 \
+                    port:R-minpack.lm \
+                    port:R-NISTnls \
+                    port:R-nls2 \
+                    port:R-nlstools \
+                    port:R-rmarkdown \
+                    port:R-segmented
+
+test.run            yes

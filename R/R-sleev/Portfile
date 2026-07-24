@@ -1,0 +1,33 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran r.tao sleev 1.1.4
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-2+
+description         Semi-parametric likelihood estimation with errors in variables
+long_description    {*}${description}
+homepage            https://github.com/dragontaoran/sleev
+checksums           rmd160  25065b3d37ec6560250fe020eb73f9d75ba13384 \
+                    sha256  dbf3d6ebda6fc201cd71a1c98b58acbcff4e8b472bb9ee79989e8f3d1f45b04f \
+                    size    550695
+
+depends_lib-append  port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-RcppEigen
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-knitr \
+                    port:R-lme4 \
+                    port:R-quarto \
+                    port:R-R.rsp \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-tibble \
+                    port:R-vctrs
+
+test.run            yes

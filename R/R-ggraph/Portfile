@@ -1,0 +1,48 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran thomasp85 ggraph 2.2.2 v
+revision            1
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Implementation of grammar of graphics for graphs and networks
+long_description    {*}${description}
+homepage            https://ggraph.data-imaginist.com
+checksums           rmd160  5099d6873513d89cda9ef0074450fd23dcf563b1 \
+                    sha256  a9414ba2f359f9263e5e49ccfe42b3fc4682958c17c826037beef3498f2f822c \
+                    size    3532489
+# github.tarball_from archive
+
+depends_lib-append  port:R-cli \
+                    port:R-cpp11 \
+                    port:R-dplyr \
+                    port:R-ggforce \
+                    port:R-ggplot2 \
+                    port:R-ggrepel \
+                    port:R-graphlayouts \
+                    port:R-igraph \
+                    port:R-lifecycle \
+                    port:R-memoise \
+                    port:R-rlang \
+                    port:R-scales \
+                    port:R-tidygraph \
+                    port:R-vctrs \
+                    port:R-viridis \
+                    port:R-withr
+
+depends_test-append port:R-covr \
+                    port:R-deldir \
+                    port:R-gganimate \
+                    port:R-knitr \
+                    port:R-network \
+                    port:R-purrr \
+                    port:R-rmarkdown \
+                    port:R-seriation \
+                    port:R-sf \
+                    port:R-sfnetworks \
+                    port:R-tibble
+
+test.run            yes

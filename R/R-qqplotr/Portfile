@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is outdated.
+R.setup             cran aloy qqplotr 0.0.7 v
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Quantile-quantile plot extensions for R-ggplot2
+long_description    {*}${description}
+homepage            https://github.com/aloy/qqplotr
+checksums           rmd160  3b02b61c5194e334b1c3bc2d51f080b3f169af25 \
+                    sha256  080d1026523443ffab830acb9efc8d7275e571ea4bf47f5f3c6b338306ccfbf2 \
+                    size    963967
+supported_archs     noarch
+
+depends_lib-append  port:R-dplyr \
+                    port:R-ggplot2 \
+                    port:R-opdisDownsampling \
+                    port:R-qqconf \
+                    port:R-robustbase
+
+depends_test-append port:R-devtools \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-shiny \
+                    port:R-shinyBS
+
+test.run            yes

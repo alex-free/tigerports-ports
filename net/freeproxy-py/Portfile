@@ -1,0 +1,37 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           python 1.0
+
+name                freeproxy-py
+github.setup        CharlesPikachu freeproxy e00d937195a73f41afa534424aaa9a6f81303903
+version             2026.04.29
+revision            0
+categories-prepend  net
+platforms           any
+license             Apache-2
+maintainers         nomaintainer
+description         Collecting free proxies from internet
+long_description    {*}${description}
+homepage            https://charlespikachu.github.io/freeproxy
+checksums           rmd160  00cc16acb80045f8b36517f406be7a6983a5cddc \
+                    sha256  dab9162069000657631fd3b5019479f8739da2f8245d2f791f2a3d4f6bdfe40d \
+                    size    13520995
+github.tarball_from archive
+supported_archs     noarch
+
+python.default_version  313
+
+depends_lib-append  port:py${python.version}-beautifulsoup4 \
+                    port:py${python.version}-brotli \
+                    port:py${python.version}-drissionpage \
+                    port:py${python.version}-json-repair \
+                    port:py${python.version}-fake-useragent \
+                    port:py${python.version}-lxml \
+                    port:py${python.version}-platformdirs \
+                    port:py${python.version}-prettytable \
+                    port:py${python.version}-pycountry \
+                    port:py${python.version}-quickjs \
+                    port:py${python.version}-requests \
+                    port:py${python.version}-tqdm

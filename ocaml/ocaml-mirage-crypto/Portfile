@@ -1,0 +1,72 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           ocaml 1.1
+
+name                ocaml-mirage-crypto
+github.setup        mirage mirage-crypto 2.0.3 v
+revision            1
+categories          ocaml crypto devel
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             ISC
+description         Simple symmetric cryptography for the modern age
+long_description    {*}${description}
+use_bzip2           yes
+extract.suffix      .tbz
+checksums           rmd160  2a8b3d2d21ea37a9d275e11c510f43cca1760c62 \
+                    sha256  3919a8bda3635959bb662d4ffa32266eb73c450ecc2a2b66ba5e1ecf88f7ad23 \
+                    size    2782672
+github.tarball_from releases
+
+depends_lib-append  port:ocaml-dune-configurator \
+                    port:ocaml-eqaf
+
+ocaml.build_type    dune
+
+subport ${name}-ec {
+    description     Elliptic Curve Cryptography with primitives taken from Fiat
+
+    depends_lib-append \
+                    port:ocaml-mirage-crypto-rng
+}
+
+subport ${name}-pk {
+    description     Simple public-key cryptography
+
+    depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+
+    depends_lib-append \
+                    port:gmp \
+                    port:ocaml-mirage-crypto \
+                    port:ocaml-mirage-crypto-rng \
+                    port:ocaml-zarith
+}
+
+subport ${name}-rng {
+    PortGroup       legacysupport 1.1
+
+    # getentropy
+    legacysupport.newest_darwin_requires_legacy 15
+
+    description     Cryptographically secure PRNG
+
+    if {${os.platform} eq "darwin" && ${os.major} < 16} {
+        patchfiles-append \
+                    fix-rng.patch
+        post-patch {
+            reinplace "s|@PREFIX@|${prefix}|g" ${worksrcpath}/rng/unix/dune
+        }
+    }
+
+    depends_lib-append \
+                    port:ocaml-duration \
+                    port:ocaml-logs \
+                    port:ocaml-mirage-crypto
+}
+
+if {${subport} ne ${name}} {
+    depends_lib-append \
+                    port:ocaml-digestif
+}

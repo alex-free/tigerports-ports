@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran guangchuangyu wget 0.0.4
+revision            1
+categories-append   sysutils
+platforms           {darwin any}
+maintainers         nomaintainer
+license             Artistic-2
+description         Set download method to `wget`
+long_description    {*}${description}
+checksums           rmd160  206793ab87c8b3dd69075b198cf743520d2e8b1c \
+                    sha256  113037d1dcae365324872d8829683270d1f0ab941d4f1441c872fe452467142f \
+                    size    2649
+supported_archs     noarch
+
+depends_lib-append  port:R-yulab.utils
+
+test.run            yes

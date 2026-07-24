@@ -1,0 +1,19 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran cran Pijavski 1.0.5
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             LGPL-3
+description         Global univariate minimization of Lipschitz functions
+long_description    {*}${description}
+checksums           rmd160  8e40660e0447b4d4e3975c65bb6938057a2a8ef7 \
+                    sha256  5c78adccff4cd2ff4b4ae440517007d715a0e67b0a57eb850ecfeb012d809851 \
+                    size    47639
+
+depends_lib-append  port:R-Rcpp
+
+test.run            yes

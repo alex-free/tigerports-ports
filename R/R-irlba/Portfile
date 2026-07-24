@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran bwlewis irlba 2.3.7
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Fast truncated singular value decompositions
+long_description    Fast truncated singular value decomposition and principal components analysis \
+                    for large dense and sparse matrices.
+homepage            https://github.com/bwlewis/irlba/issues
+checksums           rmd160  91598ec756fa564f4edeed9e0a3f9b6ef9bf5950 \
+                    sha256  33acd384832443df378c2e906440a90a1928f79a57ef324852f0fe846ff66899 \
+                    size    391622
+
+compilers.setup     require_fortran
+
+test.run            yes

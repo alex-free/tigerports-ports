@@ -1,0 +1,33 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran davidgohel gdtools 0.5.1
+revision            0
+categories-append   graphics
+maintainers         nomaintainer
+license             GPL-3
+description         Utilities for graphical rendering and fonts management
+long_description    {*}${description}
+homepage            https://davidgohel.github.io/gdtools
+checksums           rmd160  797db7c68efe6ef8d3a27cbf37623517b4f460d1 \
+                    sha256  94c15014fcfa7a83de863b7d690a98a05a8cb929dcb056af8f304632dc4441e7 \
+                    size    80023
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  path:lib/pkgconfig/cairo.pc:cairo \
+                    path:lib/pkgconfig/fontconfig.pc:fontconfig \
+                    path:lib/pkgconfig/freetype2.pc:freetype \
+                    port:R-fontquiver \
+                    port:R-htmltools \
+                    port:R-Rcpp \
+                    port:R-systemfonts
+
+depends_test-append port:R-curl \
+                    port:R-gfonts \
+                    port:R-testthat
+
+test.run            yes

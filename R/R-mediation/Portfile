@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran tyamam mediation 4.5.1
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Parametric and non-parametric mediation analysis
+long_description    {*}${description}
+homepage            https://imai.princeton.edu/projects/mechanisms.html
+checksums           rmd160  1c6f5e8ff2541e065f3a984a1bd67799780cfeca \
+                    sha256  a18dde0aeb1341798c876abed469e05c40b47f2ab6afa08bb7ed2e4ed1063a5c \
+                    size    1271514
+supported_archs     noarch
+
+depends_lib-append  port:R-Hmisc \
+                    port:R-lme4 \
+                    port:R-lpSolve \
+                    port:R-mvtnorm \
+                    port:R-sandwich
+
+depends_test-append port:R-quantreg \
+                    port:R-speedglm \
+                    port:R-SuppDists \
+                    port:R-testthat \
+                    port:R-VGAM
+
+test.run            yes

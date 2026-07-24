@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github ang-yu cdgd 1.0.0 v
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Causal decomposition of group disparities
+long_description    {*}${description}
+checksums           rmd160  3fe8cef1b7423ede32a159fc1f0af8bb3a3a6e43 \
+                    sha256  74b3d36bcf5294e96ef3f8eb0efe6b9a2f41bc40e52b78bf2ce8e33c0709e077 \
+                    size    48707
+github.tarball_from tarball
+supported_archs     noarch
+
+depends_lib-append  port:R-caret
+
+depends_test-append port:R-gbm \
+                    port:R-ranger
+
+test.run            yes

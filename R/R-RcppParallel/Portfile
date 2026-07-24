@@ -1,0 +1,33 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran RcppCore RcppParallel 5.1.11-2
+revision            0
+categories-append   devel
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3+
+description         High level functions for parallel programming with Rcpp
+long_description    {*}${description}
+homepage            https://rcppcore.github.io/RcppParallel
+checksums           rmd160  7509ec4c0f2c51a4dfab7308f0352d079d2c1abd \
+                    sha256  350d013d62cd80175e1b13fd5bbf973755e331a5d4d4590a163778a24b27980b \
+                    size    1634090
+
+# Use our standalone OneTBB instead of the bundled one,
+# which does not work correctly in some instances.
+# https://github.com/stan-dev/rstan/issues/979
+depends_lib-append  port:onetbb
+
+build.env-append    TBB_INC=${prefix}/libexec/onetbb/include \
+                    TBB_LIB=${prefix}/libexec/onetbb/lib
+
+depends_test-append port:R-knitr \
+                    port:R-Rcpp \
+                    port:R-rmarkdown \
+                    port:R-RUnit
+
+test.run            yes
+test.env-append     TBB_INC=${prefix}/libexec/onetbb/include \
+                    TBB_LIB=${prefix}/libexec/onetbb/lib

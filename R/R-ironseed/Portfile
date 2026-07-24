@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran reedacartwright ironseed 0.2.0
+revision            1
+categories-append   devel
+maintainers         nomaintainer
+license             MIT
+description         Improved Random Number Generator Seeding
+long_description    {*}${description}
+homepage            https://github.com/reedacartwright/ironseed
+checksums           rmd160  6be5bd10086184656aa40d531f5033fffe30f5f0 \
+                    sha256  f59274561e6267dc0c63646b289dc7404136635c616a0d9a63a51a913bff0b47 \
+                    size    44738
+
+depends_test-append port:R-tinytest
+
+test.run            yes
+ 

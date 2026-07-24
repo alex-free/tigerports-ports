@@ -1,0 +1,99 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           legacysupport 1.1
+PortGroup           meson 1.0
+PortGroup           muniversal 1.0
+
+# posix_memalign
+legacysupport.newest_darwin_requires_legacy 9
+
+name                dav1d
+# Please increase the revision of libheif, ffmpeg and ffmpeg-devel whenever
+# dav1d's version is updated.
+
+# On the next update drop incr revision for powerpc below.
+version             1.5.4
+revision            0
+categories          multimedia
+license             BSD
+maintainers         {ctreleaven @ctreleaven} openmaintainer
+
+description         Small and fast AV1 decoder
+long_description    ${name} is an AV1 decoder that is open-source, cross-platform \
+                    and focused on speed, size and correctness.
+
+homepage            https://www.videolan.org/projects/dav1d.html
+master_sites        https://code.videolan.org/videolan/dav1d/-/archive/${version}/
+distname            ${name}_${version}
+use_bzip2           yes
+checksums           rmd160  9fdce10a805209191826e5b23ba64aaee6e5a0a7 \
+                    sha256  258c548481abbdd3a9a0efbe0b1229b8c5fd9a0802e010d1707b676eda375a32 \
+                    size    1230277
+
+# extracted directory contains a hash
+if {[exists extract.rename]} {
+    extract.rename  yes
+}
+
+patch.pre_args-replace      -p0 -p1
+
+# nasm is not needed on arm64 platforms
+if {${configure.build_arch} in [list i386 x86_64]} {
+    depends_build-append    port:nasm
+}
+
+# workaround meson change that causes configure to fail on older OS X versions
+# see https://github.com/mesonbuild/meson/issues/8307
+compiler.blacklist-append   *gcc-4.* {clang < 700} macports-clang-3.*
+
+configure.args-append       -Denable_tests=false
+
+if {${universal_possible} && [variant_isset universal]} {
+    lappend merger_configure_env(i386)  LDFLAGS=-Wl,-read_only_relocs,suppress,-no_compact_unwind
+} elseif {${configure.build_arch} eq "i386"} {
+    configure.env-append                LDFLAGS=-Wl,-read_only_relocs,suppress,-no_compact_unwind
+}
+
+platform powerpc {
+    incr revision
+
+    # TODO: it works now, but still needs further testing.
+    variant altivec description "Build with simd on powerpc" {
+        patchfiles-append       0001-Support-altivec.patch \
+                                0002-PPC-Enable-the-inverse-transform-kernels-on-plain-Al.patch \
+                                0003-PPC-Enable-the-motion-comp-blend-kernels-on-plain-Al.patch \
+                                0004-PPC-Enable-the-loop-filter-kernels-on-plain-AltiVec-.patch
+
+        configure.env-append    LDFLAGS=-Wl,-read_only_relocs,suppress
+    }
+
+    default_variants-append +altivec
+}
+
+variant test description "Enable tests" {
+    configure.args-replace  -Denable_tests=false -Denable_tests=true
+    test.run                yes
+    test.target             test
+}
+
+# developer docs are automatically built if doxygen and dot (graphviz) are present
+# but are not installed
+
+set docdir              ${prefix}/share/doc/${name}
+
+post-destroot {
+    xinstall -m 0755 -d ${destroot}${docdir}
+
+    xinstall -m 0644 -W ${worksrcpath} \
+        CONTRIBUTING.md \
+        COPYING \
+        doc/dav1d_logo.png \
+        NEWS \
+        README.md \
+        THANKS.md \
+        ${destroot}${docdir}
+}
+
+livecheck.url       https://download.videolan.org/pub/videolan/${name}/
+livecheck.regex     {>([0-9.]+)/<}

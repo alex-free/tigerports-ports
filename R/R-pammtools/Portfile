@@ -1,0 +1,40 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran adibender pammtools 0.7.3
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Piece-wise exponential additive mixed modelling tools \
+                    for survival analysis
+long_description    {*}${description}
+homepage            https://adibender.github.io/pammtools
+checksums           rmd160  79cde6752842211f43ef8fdf264aac3df42c31f5 \
+                    sha256  aa58cad6ec8298a4166c449ebf9d66ec0c6044a089bc2bca9a75a4679571ea73 \
+                    size    397333
+supported_archs     noarch
+
+depends_lib-append  port:R-checkmate \
+                    port:R-dplyr \
+                    port:R-ggplot2 \
+                    port:R-Formula \
+                    port:R-lazyeval \
+                    port:R-magrittr \
+                    port:R-mvtnorm \
+                    port:R-pec \
+                    port:R-purrr \
+                    port:R-rlang \
+                    port:R-scam \
+                    port:R-tibble \
+                    port:R-tidyr \
+                    port:R-vctrs
+
+depends_test-append port:R-mstate \
+                    port:R-testthat
+
+test.run            yes

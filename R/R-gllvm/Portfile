@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran JenniNiku gllvm 2.0.5
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-2
+description         Generalized Linear Latent Variable Models
+long_description    {*}${description}
+homepage            https://jenniniku.github.io/gllvm
+checksums           rmd160  f957de7ceb087c3b008efdfed0fea97402a5ad5a \
+                    sha256  d77114375fec2a2e506f05bcf3d5a9b0066235ba552f56dbf9e658b33753502b \
+                    size    3153833
+
+depends_lib-append  port:R-alabama \
+                    port:R-fishMod \
+                    port:R-nloptr \
+                    port:R-RcppEigen \
+                    port:R-TMB
+
+depends_test-append port:R-ape \
+                    port:R-corrplot \
+                    port:R-gclus \
+                    port:R-knitr \
+                    port:R-mvabund \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

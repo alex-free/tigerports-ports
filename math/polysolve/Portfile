@@ -1,0 +1,90 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+PortGroup           mpi 1.0
+
+github.setup        polyfem polysolve 71271fb4e231e42fa2cf764c5bf354c81856b105
+version             2025.04.02
+revision            0
+categories          math
+license             MIT
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+description         Easy-to-use wrapper for linear solver.
+long_description    This library contains a cross-platform Eigen wrapper for many different external linear solvers.
+homepage            https://polyfem.github.io
+checksums           rmd160  7c36aa57016608bf40c7e81036f8afd188830db8 \
+                    sha256  22e5e469c930cf5d9d34c4a851f2173a8ad4f7b6a3a002a99fc0a6dad8beb296 \
+                    size    92743
+github.tarball_from archive
+
+mpi.setup           require
+
+set libfmt_v        11
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  path:share/pkgconfig/eigen3.pc:eigen3 \
+                    port:finite-diff \
+                    port:hypre \
+                    port:JSE \
+                    port:LBFGSpp \
+                    port:libfmt${libfmt_v} \
+                    port:nlohmann-json \
+                    port:spdlog
+
+cmake.prefix_path-append \
+                    ${prefix}/lib/libfmt${libfmt_v}/cmake
+
+# Use Macports libs. Related issue: https://github.com/polyfem/polysolve/issues/37
+patchfiles-append   patch-CMakeLists.diff
+
+post-patch {
+    reinplace "s|jse/jse.h|jse.h|" \
+                    ${worksrcpath}/src/polysolve/linear/Solver.cpp \
+                    ${worksrcpath}/src/polysolve/nonlinear/BoxConstraintSolver.cpp \
+                    ${worksrcpath}/src/polysolve/nonlinear/Solver.cpp
+}
+
+compiler.cxx_standard   2017
+# Match settings in hypre port:
+compiler.openmp_version 3.0
+
+if {[string match *clang* ${configure.compiler}]} {
+    configure.cxxflags-append \
+                    -I${prefix}/include/libomp \
+                    -Wno-c++11-narrowing
+    configure.ldflags-append \
+                    -L${prefix}/lib/libomp -lomp
+}
+
+pre-configure {
+    configure.args-append \
+                    -DMPIEXEC_EXECUTABLE=${prefix}/bin/${mpi.exec}
+}
+
+# Accelerate support is broken at the moment: https://github.com/polyfem/polysolve/issues/38
+configure.args-append \
+                    -DEIGEN_WITH_MKL=OFF \
+                    -DPOLYSOLVE_CODE_COVERAGE=OFF \
+                    -DPOLYSOLVE_LARGE_INDEX=OFF \
+                    -DPOLYSOLVE_WITH_ACCELERATE=OFF \
+                    -DPOLYSOLVE_WITH_AMGCL=OFF \
+                    -DPOLYSOLVE_WITH_CCACHE=OFF \
+                    -DPOLYSOLVE_WITH_CHOLMOD=OFF \
+                    -DPOLYSOLVE_WITH_CUSOLVER=OFF \
+                    -DPOLYSOLVE_WITH_HYPRE=ON \
+                    -DPOLYSOLVE_WITH_MKL=OFF \
+                    -DPOLYSOLVE_WITH_PARDISO=OFF \
+                    -DPOLYSOLVE_WITH_SANITIZERS=OFF \
+                    -DPOLYSOLVE_WITH_SPECTRA=OFF \
+                    -DPOLYSOLVE_WITH_SPQR=OFF \
+                    -DPOLYSOLVE_WITH_SUPERLU=OFF \
+                    -DPOLYSOLVE_WITH_TESTS=OFF \
+                    -DPOLYSOLVE_WITH_UMFPACK=OFF
+
+destroot {
+    copy ${cmake.build_dir}/libpolysolve.a ${destroot}${prefix}/lib
+}

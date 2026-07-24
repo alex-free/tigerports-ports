@@ -1,0 +1,316 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           conflicts_build 1.0
+PortGroup           ffmpeg 1.0
+PortGroup           github 1.0
+
+name                QMPlay2
+conflicts           QMPlay2-devel
+
+# Does not build with Qt5 on 10.10 and below.
+if {${os.platform} eq "darwin" && ${os.major} < 15} {
+    PortGroup       qt4 1.0
+
+    github.setup    zaps166 QMPlay2 19.09.03
+    revision        1
+    checksums       rmd160  b2a8dbaecf070de5a2bdcfc79e140e554bd4a532 \
+                    sha256  95d912c68c5d61d9436bb970d410844f57348cbaeb96cac9ec3b3e3057b6eb08 \
+                    size    1290624
+    github.tarball_from archive
+
+    ffmpeg.version  5
+
+    depends_lib-append \
+                    port:QJson4
+
+    # Unfortunately, currently qt4-mac and qt4-mac-devel are installed somewhat differently.
+    # See: https://github.com/RJVB/macstrop/issues/110
+    # Force qt4-mac with QMPlay2 and qt4-mac-devel with QMPlay2-devel.
+    # Notice, since the current default is qt4-mac, we do not care about libdep here.
+    depends_build-delete \
+                    port:qt4-mac port:qt4-mac-devel
+    depends_build-append \
+                    port:qt4-mac
+
+    # Another attempt to fix destroot regardless of how qt4-mac decided to install itself.
+    # https://github.com/macos-powerpc/powerpc-ports/issues/135
+    if {[info exists qt4_is_concurrent]} {
+        set qt_dir          ${prefix}/libexec/qt4
+        set qt_libs_dir     ${qt_dir}/lib
+        set qt_share_dir    ${qt_dir}/share
+        set qt_plugins_dir  ${qt_share_dir}/plugins
+    }
+
+    # Do not explicitly require it, to avoid depending on ffmpeg port.
+    # depends_run-append \
+                    port:yt-dlp
+
+    patchfiles-append \
+                    0001-Fallbacks-for-Qt4.patch \
+                    0002-Fix-for-ffmpeg${ffmpeg.version}.patch \
+                    0003-Downloader.cpp-provisional-fix-for-crash-on-quit.patch \
+                    0004-PlayClass.cpp-restore-fallback-if-no-QRawFont-suppor.patch \
+                    0005-AudioDeviceList-verify_noerr.diff
+
+    configure.args-append \
+                    -DUSE_CUVID=OFF \
+                    -DUSE_FFMPEG_VTB=OFF \
+                    -DUSE_MEDIABROWSER=OFF \
+                    -DUSE_NOTIFY=OFF \
+                    -DUSE_OPENGL2=ON \
+                    -DUSE_QML=OFF \
+                    -DUSE_QT4=ON \
+                    -DUSE_YOUTUBE=ON
+
+    compiler.cxx_standard   2011
+
+    # Apparently QRawFont works with qt4-mac-devel, but not with qt4-mac.
+    # Allow to control that via -DUSE_QRAWFONT flag.
+    # See: https://github.com/macos-powerpc/powerpc-ports/issues/85
+    # configure.cppflags-append \
+                    -DUSE_QRAWFONT
+
+    platform darwin 8 {
+        patchfiles-append \
+                    tiger-fixes.patch
+        configure.cxxflags-append -fpermissive
+    }
+
+    post-destroot {
+        system "install_name_tool -id ${applications_dir}/${name}.app/Contents/MacOS/libqmplay2.dylib \
+                    ${destroot}${applications_dir}/${name}.app/Contents/MacOS/libqmplay2.dylib"
+        system "install_name_tool -change ${prefix}/lib/libqmplay2.dylib \
+                    ${applications_dir}/${name}.app/Contents/MacOS/libqmplay2.dylib \
+                    ${destroot}${applications_dir}/${name}.app/Contents/MacOS/QMPlay2"
+        foreach dylib [ exec find ${destroot}${applications_dir}/${name}.app/Contents/MacOS/modules -name "\*.dylib" ] {
+            regsub ":$" ${dylib} "" destroot_dylib_path
+            regsub ${destroot} ${destroot_dylib_path} "" dylib_path
+            system "install_name_tool -id ${dylib_path} ${destroot_dylib_path}"
+            system "install_name_tool -change ${prefix}/lib/libqmplay2.dylib ${applications_dir}/${name}.app/Contents/MacOS/libqmplay2.dylib \
+                ${destroot_dylib_path}"
+        }
+    }
+
+    notes "
+    ${name} expects to have yt-dlp in ~/.qmplay2/ and use it for YouTube playback.\
+    After installation and initial launch you could make a symlink to PPCPorts-provided yt-dlp:\
+
+    ln -s ${prefix}/bin/yt-dlp ~/.qmplay2/yt-dlp
+
+    On resource-constrained systems you may find that disabling video to audio sync\
+    in Playback settings improves experience.
+    "
+} else {
+    # Support for Qt5 < 5.10 has been dropped in 21.03.09:
+    # https://github.com/zaps166/QMPlay2/commit/02684fec6217ac87a37dbd40d7b07683122e5997
+    if {${os.platform} eq "darwin" && ${os.major} < 19} {
+        PortGroup       qt5 1.0
+
+        qt5.depends_component qtdeclarative qtmacextras qttools qttranslations
+
+        github.setup    zaps166 QMPlay2 20.12.16
+        revision        3
+        checksums       rmd160  582ec7368e582b4b29280d6c76d4dc54d1fd0bb3 \
+                        sha256  d6a5425f552e33a70b254ed27631878f20ea92850ccf221c2f2322200783d278 \
+                        size    1564588
+        github.tarball_from releases
+        distname        ${name}-src-${version}
+
+        patchfiles-append \
+                        1001-Fix-Qt-paths.patch
+
+        compiler.cxx_standard   2014
+
+        # error: use of undeclared identifier 'av_register_all'
+        ffmpeg.version  4
+     } else {
+        PortGroup       qt6 1.0
+
+        qt6.depends_lib qt5compat qtdeclarative qttools qttranslations
+
+        github.setup    zaps166 QMPlay2 25.09.11
+        revision        1
+        checksums       rmd160  231fe94b63f3074289f1c0701846fc4776a9d68e \
+                        sha256  2821194dc09630b3238d4a95665501b5fa4578d8e76626c92f184dfd0025e782 \
+                        size    2200356
+        github.tarball_from releases
+        distname        ${name}-src-${version}
+
+        # Unsupported generator Unix Makefiles. Ninja is the only supported generator.
+        cmake.generator Ninja
+
+        # Why on earth the PG fails to set these?
+        set qt_dir          ${prefix}/libexec/qt6
+        set qt_libs_dir     ${qt_dir}/lib
+        set qt_plugins_dir  ${qt_dir}/plugins
+
+        patchfiles-append \
+                        2001-Fix-Qt-paths.patch
+
+        compiler.cxx_standard   2017
+
+        ffmpeg.version  7
+
+        # Qt6 PG is useless.
+        cmake.prefix_path-append \
+                        ${qt_libs_dir}/cmake
+
+        configure.args-append \
+                        -DBUILD_WITH_QT6=ON
+
+        configure.cppflags-append \
+                        -DTAGLIB_FULL_INCLUDE_PATH
+
+        notes-append "
+        To complete the set-up, please run the following commands:
+        rm ~/Library/Application\ Support/QMPlay2/yt-dlp
+        ln -s ${prefix}/bin/yt-dlp ~/Library/Application\ Support/QMPlay2/yt-dlp
+        "
+    }
+
+    use_xz          yes
+
+    configure.args-append \
+                    -DCMAKE_LINK_DEPENDS_NO_SHARED=OFF \
+                    -DSET_INSTALL_RPATH=OFF \
+                    -DUSE_OPENGL=ON \
+                    -DUSE_RUBBERBAND=ON \
+                    -DUSE_UPDATES=OFF
+
+    # VTBOpenGL.cpp: error: use of undeclared identifier 'kCVPixelFormatType_420YpCbCr10BiPlanarVideoRange'
+    if {${os.platform} eq "darwin" && ${os.major} < 17} {
+        configure.args-append \
+                    -DUSE_FFMPEG_VTB=OFF
+    }
+
+    depends_lib-append \
+                    port:rubberband
+
+    post-destroot {
+        system "install_name_tool -id ${applications_dir}/${name}.app/Contents/MacOS/libqmplay2.dylib \
+                    ${destroot}${applications_dir}/${name}.app/Contents/MacOS/libqmplay2.dylib"
+        if {${os.platform} eq "darwin" && ${os.major} < 19} {
+            system "install_name_tool -change ${prefix}/lib/libqmplay2.dylib \
+                    ${applications_dir}/${name}.app/Contents/MacOS/libqmplay2.dylib \
+                    ${destroot}${applications_dir}/${name}.app/Contents/MacOS/QMPlay2"
+            foreach dylib [ exec find ${destroot}${applications_dir}/${name}.app/Contents/MacOS/modules -name "\*.dylib" ] {
+                regsub ":$" ${dylib} "" destroot_dylib_path
+                regsub ${destroot} ${destroot_dylib_path} "" dylib_path
+                system "install_name_tool -id ${dylib_path} ${destroot_dylib_path}"
+                system "install_name_tool -change ${prefix}/lib/libqmplay2.dylib ${applications_dir}/${name}.app/Contents/MacOS/libqmplay2.dylib \
+                    ${destroot_dylib_path}"
+            }
+        } else {
+            system "install_name_tool -change @rpath/libqmplay2.dylib \
+                    ${applications_dir}/${name}.app/Contents/MacOS/libqmplay2.dylib \
+                    ${destroot}${applications_dir}/${name}.app/Contents/MacOS/QMPlay2"
+            foreach so [ exec find ${destroot}${applications_dir}/${name}.app/Contents/MacOS/modules -name "\*.so" ] {
+                regsub ":$" ${so} "" destroot_so_path
+                regsub ${destroot} ${destroot_so_path} "" so_path
+                system "install_name_tool -id ${so_path} ${destroot_so_path}"
+                system "install_name_tool -change @rpath/libqmplay2.dylib ${applications_dir}/${name}.app/Contents/MacOS/libqmplay2.dylib \
+                    ${destroot_so_path}"
+            }
+        }
+    }
+}
+
+categories          multimedia
+license             LGPL-3
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+description         Qt Media Player 2
+long_description    QMPlay2 is a video and audio player. It can play all formats supported by FFmpeg, \
+                    libmodplug (including J2B and SFX). It also supports Audio CD, raw files, \
+                    Rayman 2 music and chiptunes. It contains YouTube and Prostopleer browser.
+
+patch.pre_args-replace  -p0 -p1
+
+# !THIS IS IMPORTANT!
+conflicts_build     ffmpeg ffmpeg-devel libGLU mesa
+
+# Common dependencies:
+depends_lib-append  path:lib/pkgconfig/libass.pc:libass \
+                    port:libcddb \
+                    port:libcdio \
+                    port:portaudio \
+                    port:taglib \
+                    port:zlib
+
+post-patch {
+    if {${os.platform} eq "darwin" && ${os.major} < 15} {
+        reinplace "s|@prefix@|${prefix}|g" ${worksrcpath}/src/qmplay2/CMakeLists.txt \
+                    ${worksrcpath}/src/modules/Extensions/CMakeLists.txt
+    }
+    reinplace "s|@destroot@|${destroot}|" ${worksrcpath}/src/gui/CMakeLists.txt
+    reinplace "s|@qt_libs_dir@|${qt_libs_dir}|" ${worksrcpath}/src/gui/CMakeLists.txt
+    reinplace "s|@qt_plugins_dir@|${qt_plugins_dir}|" ${worksrcpath}/src/gui/CMakeLists.txt
+}
+
+configure.args-append \
+                    -DCMAKE_INSTALL_PREFIX=${applications_dir} \
+                    -DUSE_ALSA=OFF \
+                    -DUSE_AUDIOCD=ON \
+                    -DUSE_CHIPTUNE_GME=OFF \
+                    -DUSE_CHIPTUNE_SID=OFF \
+                    -DUSE_FFMPEG=ON \
+                    -DUSE_LASTFM=ON \
+                    -DUSE_LIBASS=ON \
+                    -DUSE_LYRICS=ON \
+                    -DUSE_PORTAUDIO=ON \
+                    -DUSE_PULSEAUDIO=OFF \
+                    -DUSE_TAGLIB=ON \
+                    -DUSE_VISUALIZATIONS=OFF \
+                    -DUSE_XVIDEO=OFF
+
+if {${os.platform} ne "darwin"} {
+    configure.args-delete \
+                    -DUSE_ALSA=OFF \
+                    -DUSE_PORTAUDIO=ON \
+                    -DUSE_XVIDEO=OFF
+}
+
+variant pulse description "Use Pulseaudio" {
+    depends_lib-append \
+                    port:pulseaudio
+    configure.args-replace \
+                    -DUSE_PULSEAUDIO=OFF -DUSE_PULSEAUDIO=ON
+}
+
+variant lto description "Enable LTO" {
+    # Does not seem to do anything on its own.
+    configure.args-replace \
+                    -DUSE_LINK_TIME_OPTIMIZATION=OFF \
+                    -DUSE_LINK_TIME_OPTIMIZATION=ON
+    # So just pass flags explicitly:
+    configure.cxxflags-append \
+                    -flto
+    configure.ldflags-append \
+                    -flto
+}
+
+variant G4 conflicts G5 description "Optimize for G4" {
+    configure.cxxflags-append \
+                    -mcpu=G4 -mtune=G4
+}
+
+variant G5 conflicts G4 description "Optimize for G5" {
+    configure.cxxflags-append \
+                    -mcpu=970 -mtune=970
+
+    # https://github.com/iains/gcc-14-branch/issues/24
+    if {${configure.build_arch} ne "ppc64"} {
+        configure.cxxflags-append \
+                    -mno-powerpc64
+    }
+}
+
+if {${os.platform} ne "darwin" || ${os.major} > 9} {
+    default_variants-append +lto
+}
+
+# ppc64 can only be built on a G5, so default to that.
+if {${os.platform} eq "darwin" && ${configure.build_arch} eq "ppc64"} {
+    default_variants-append +G5
+}

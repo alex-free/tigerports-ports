@@ -1,0 +1,696 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           active_variants 1.1
+PortGroup           cmake 1.1
+PortGroup           legacysupport 1.1
+PortGroup           openssl 1.0
+
+legacysupport.use_mp_libcxx yes
+legacysupport.newest_darwin_requires_legacy 16
+
+set realname        gdal
+name                ${realname}-R
+version             3.12.2
+revision            1
+categories          R gis science
+license             MIT BSD
+maintainers         {@barracuda156 macos-powerpc.org:barracuda}
+description         GDAL – Geospatial Data Abstraction Library
+long_description    {*}${description}. Dedicated port to use with R packages.
+homepage            https://www.gdal.org
+master_sites        https://download.osgeo.org/gdal/${version}
+distname            ${realname}-${version}
+use_xz              yes
+checksums           rmd160  006285caec6470dda266365221dd45336cd50463 \
+                    sha256  21c5e0f91974383b4c5692b7103650f176f2f54f1b0d449787f444b89881e9b4 \
+                    size    9605624
+
+# Supported PostgreSQL versions
+set pg_suffixes     {15 16 17 18}
+
+depends_build-append \
+                    port:bash-completion \
+                    port:bison \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  port:blosc \
+                    port:brunsli \
+                    port:charls \
+                    port:curl \
+                    port:expat \
+                    port:geos-R \
+                    port:giflib \
+                    path:include/turbojpeg.h:libjpeg-turbo \
+                    port:lerc \
+                    port:libaec \
+                    port:libdeflate \
+                    port:libpng \
+                    port:libxml2 \
+                    port:lz4 \
+                    port:pcre2 \
+                    port:proj-R \
+                    port:qhull \
+                    port:sqlite3 \
+                    port:webp \
+                    port:zlib \
+                    port:zstd
+
+# DO NOT SET C++ STANDARD.
+# We need it to use the new C++ ABI, regardless of the runtime in use.
+
+# error: call to 'abs' is ambiguous
+compiler.blacklist-append \
+                    {clang < 900} *gcc-4.*
+
+# See https://trac.macports.org/ticket/56908
+compiler.thread_local_storage yes
+
+# Install in a dedicated subprefix:
+set port_prefix     ${prefix}/libexec/R
+cmake.install_prefix \
+                    ${port_prefix}/${realname}
+
+# Find correct PROJ and GEOS:
+cmake.module_path-prepend \
+                    ${port_prefix}/proj/lib/cmake/proj
+
+# By default, disable all drivers
+configure.args-append \
+                    -DGDAL_BUILD_OPTIONAL_DRIVERS=OFF \
+                    -DOGR_BUILD_OPTIONAL_DRIVERS=OFF
+
+configure.args-append \
+                    -DGDAL_ENABLE_PLUGINS=ON \
+                    -DGDAL_USE_EXTERNAL_LIBS=ON
+
+# Enable all built-in raster drivers
+configure.args-append \
+                    -DGDAL_ENABLE_DRIVER_AAIGRID=ON \
+                    -DGDAL_ENABLE_DRIVER_ADRG=ON \
+                    -DGDAL_ENABLE_DRIVER_AIGRID=ON \
+                    -DGDAL_ENABLE_DRIVER_AIRSAR=ON \
+                    -DGDAL_ENABLE_DRIVER_BMP=ON \
+                    -DGDAL_ENABLE_DRIVER_BSB=ON \
+                    -DGDAL_ENABLE_DRIVER_CALS=ON \
+                    -DGDAL_ENABLE_DRIVER_CEOS=ON \
+                    -DGDAL_ENABLE_DRIVER_COASP=ON \
+                    -DGDAL_ENABLE_DRIVER_COSAR=ON \
+                    -DGDAL_ENABLE_DRIVER_CTG=ON \
+                    -DGDAL_ENABLE_DRIVER_DIMAP=ON \
+                    -DGDAL_ENABLE_DRIVER_DTED=ON \
+                    -DGDAL_ENABLE_DRIVER_ERS=ON \
+                    -DGDAL_ENABLE_DRIVER_ENVISAT=ON \
+                    -DGDAL_ENABLE_DRIVER_ESRIC=ON \
+                    -DGDAL_ENABLE_DRIVER_GFF=ON \
+                    -DGDAL_ENABLE_DRIVER_GIF=ON \
+                    -DGDAL_ENABLE_DRIVER_GRIB=ON \
+                    -DGDAL_ENABLE_DRIVER_GSG=ON \
+                    -DGDAL_ENABLE_DRIVER_GTIFF=ON \
+                    -DGDAL_ENABLE_DRIVER_GXF=ON \
+                    -DGDAL_ENABLE_DRIVER_HF2=ON \
+                    -DGDAL_ENABLE_DRIVER_HFA=ON \
+                    -DGDAL_ENABLE_DRIVER_IDRISI=ON \
+                    -DGDAL_ENABLE_DRIVER_ILWIS=ON \
+                    -DGDAL_ENABLE_DRIVER_IRIS=ON \
+                    -DGDAL_ENABLE_DRIVER_JAXAPALSAR=ON \
+                    -DGDAL_ENABLE_DRIVER_JDEM=ON \
+                    -DGDAL_ENABLE_DRIVER_JPEG=ON \
+                    -DGDAL_ENABLE_DRIVER_KMLSUPEROVERLAY=ON \
+                    -DGDAL_ENABLE_DRIVER_L1B=ON \
+                    -DGDAL_ENABLE_DRIVER_LEVELLER=ON \
+                    -DGDAL_ENABLE_DRIVER_MAP=ON \
+                    -DGDAL_ENABLE_DRIVER_MRF=ON \
+                    -DGDAL_ENABLE_DRIVER_MSGN=ON \
+                    -DGDAL_ENABLE_DRIVER_NGSGEOID=ON \
+                    -DGDAL_ENABLE_DRIVER_NITF=ON \
+                    -DGDAL_ENABLE_DRIVER_NORTHWOOD=ON \
+                    -DGDAL_ENABLE_DRIVER_PCIDSK=ON \
+                    -DGDAL_ENABLE_DRIVER_PCRASTER=ON \
+                    -DGDAL_ENABLE_DRIVER_PDS=ON \
+                    -DGDAL_ENABLE_DRIVER_PNG=ON \
+                    -DGDAL_ENABLE_DRIVER_PRF=ON \
+                    -DGDAL_ENABLE_DRIVER_RAW=ON \
+                    -DGDAL_ENABLE_DRIVER_RMF=ON \
+                    -DGDAL_ENABLE_DRIVER_RS2=ON \
+                    -DGDAL_ENABLE_DRIVER_SAFE=ON \
+                    -DGDAL_ENABLE_DRIVER_SAGA=ON \
+                    -DGDAL_ENABLE_DRIVER_SAR_CEOS=ON \
+                    -DGDAL_ENABLE_DRIVER_SDTS=ON \
+                    -DGDAL_ENABLE_DRIVER_SENTINEL2=ON \
+                    -DGDAL_ENABLE_DRIVER_SIGDEM=ON \
+                    -DGDAL_ENABLE_DRIVER_SRTMHGT=ON \
+                    -DGDAL_ENABLE_DRIVER_STACIT=ON \
+                    -DGDAL_ENABLE_DRIVER_STACTA=ON \
+                    -DGDAL_ENABLE_DRIVER_TERRAGEN=ON \
+                    -DGDAL_ENABLE_DRIVER_TGA=ON \
+                    -DGDAL_ENABLE_DRIVER_TIL=ON \
+                    -DGDAL_ENABLE_DRIVER_TSX=ON \
+                    -DGDAL_ENABLE_DRIVER_USGSDEM=ON \
+                    -DGDAL_ENABLE_DRIVER_VRT=ON \
+                    -DGDAL_ENABLE_DRIVER_XYZ=ON \
+                    -DGDAL_ENABLE_DRIVER_ZARR=ON \
+                    -DGDAL_ENABLE_DRIVER_ZMAP=ON
+
+# Same with built-in vector drivers
+configure.args-append \
+                    -DOGR_ENABLE_DRIVER_AVC=ON \
+                    -DOGR_ENABLE_DRIVER_CAD=ON \
+                    -DOGR_ENABLE_DRIVER_CSV=ON \
+                    -DOGR_ENABLE_DRIVER_DGN=ON \
+                    -DOGR_ENABLE_DRIVER_DXF=ON \
+                    -DOGR_ENABLE_DRIVER_EDIGEO=ON \
+                    -DOGR_ENABLE_DRIVER_FLATGEOBUF=ON \
+                    -DOGR_ENABLE_DRIVER_JSONFG=ON \
+                    -DOGR_ENABLE_DRIVER_GEOJSON=ON \
+                    -DOGR_ENABLE_DRIVER_GMT=ON \
+                    -DOGR_ENABLE_DRIVER_MAPML=ON \
+                    -DOGR_ENABLE_DRIVER_MVT=ON \
+                    -DOGR_ENABLE_DRIVER_OPENFILEGDB=ON \
+                    -DOGR_ENABLE_DRIVER_PG=OFF \
+                    -DOGR_ENABLE_DRIVER_PGDUMP=ON \
+                    -DOGR_ENABLE_DRIVER_S57=ON \
+                    -DOGR_ENABLE_DRIVER_SDTS=ON \
+                    -DOGR_ENABLE_DRIVER_SELAFIN=ON \
+                    -DOGR_ENABLE_DRIVER_SHAPE=ON \
+                    -DOGR_ENABLE_DRIVER_SQLITE=ON \
+                    -DOGR_ENABLE_DRIVER_SXF=ON \
+                    -DOGR_ENABLE_DRIVER_VDV=ON \
+                    -DOGR_ENABLE_DRIVER_WASP=ON
+
+# These drivers require curl
+configure.args-append \
+                    -DGDAL_ENABLE_DRIVER_DAAS=ON \
+                    -DGDAL_ENABLE_DRIVER_EEDA=ON \
+                    -DGDAL_ENABLE_DRIVER_OGCAPI=ON \
+                    -DGDAL_ENABLE_DRIVER_PLMOSAIC=ON \
+                    -DGDAL_ENABLE_DRIVER_WCS=ON \
+                    -DGDAL_ENABLE_DRIVER_WMS=ON \
+                    -DGDAL_ENABLE_DRIVER_WMTS=ON \
+                    -DOGR_ENABLE_DRIVER_AMIGOCLOUD=ON \
+                    -DOGR_ENABLE_DRIVER_CARTO=ON \
+                    -DOGR_ENABLE_DRIVER_CSW=OFF \
+                    -DOGR_ENABLE_DRIVER_ELASTIC=ON \
+                    -DOGR_ENABLE_DRIVER_NGW=ON \
+                    -DOGR_ENABLE_DRIVER_PLSCENES=ON \
+                    -DOGR_ENABLE_DRIVER_WFS=ON
+
+# These drivers require sqlite3
+configure.args-append \
+                    -DGDAL_ENABLE_DRIVER_MBTILES=ON \
+                    -DOGR_ENABLE_DRIVER_GPKG=ON \
+                    -DOGR_ENABLE_DRIVER_OSM=ON \
+                    -DOGR_ENABLE_DRIVER_PMTILES=ON \
+                    -DOGR_ENABLE_DRIVER_VFK=ON
+
+# These drivers require expat
+configure.args-append \
+                    -DOGR_ENABLE_DRIVER_GEORSS=ON \
+                    -DOGR_ENABLE_DRIVER_GML=ON \
+                    -DOGR_ENABLE_DRIVER_GPSBABEL=ON \
+                    -DOGR_ENABLE_DRIVER_GPX=ON \
+                    -DOGR_ENABLE_DRIVER_JML=ON \
+                    -DOGR_ENABLE_DRIVER_LVBAG=ON \
+                    -DOGR_ENABLE_DRIVER_ODS=ON \
+                    -DOGR_ENABLE_DRIVER_XLSX=ON
+
+# These drivers require libxml2
+configure.args-append \
+                    -DGDAL_USE_LIBXML2=ON
+
+# These drivers require OpenEXR
+configure.args-append \
+                    -DGDAL_ENABLE_DRIVER_EXR=OFF
+
+# These drivers require Apache Arrow
+configure.args-append \
+                    -DGDAL_USE_ARROW=OFF \
+                    -DGDAL_USE_PARQUET=OFF \
+                    -DOGR_ENABLE_DRIVER_ARROW=OFF \
+                    -DOGR_ENABLE_DRIVER_PARQUET=OFF
+
+# Miscellaneous drivers
+configure.args-append \
+                    -DBUILD_CSHARP_BINDINGS=OFF \
+                    -DBUILD_JAVA_BINDINGS=OFF \
+                    -DBUILD_PYTHON_BINDINGS=OFF \
+                    -DGDAL_ENABLE_DRIVER_HDF5=OFF \
+                    -DGDAL_ENABLE_DRIVER_KEA=OFF \
+                    -DGDAL_USE_ARCHIVE=OFF \
+                    -DGDAL_USE_ARMADILLO=OFF \
+                    -DGDAL_USE_CFITSIO=OFF \
+                    -DGDAL_USE_CRYPTOPP=OFF \
+                    -DGDAL_USE_CURL=ON \
+                    -DGDAL_USE_DEFLATE=ON \
+                    -DGDAL_USE_ECW=OFF \
+                    -DGDAL_USE_EXPAT=ON \
+                    -DGDAL_USE_GEOS=ON \
+                    -DGDAL_USE_GEOTIFF_INTERNAL=ON \
+                    -DGDAL_USE_GIF=ON \
+                    -DGDAL_USE_HDF4=OFF \
+                    -DGDAL_USE_HDF5=OFF \
+                    -DGDAL_USE_HEIF=OFF \
+                    -DGDAL_USE_ICONV=ON \
+                    -DGDAL_USE_IDB=OFF \
+                    -DGDAL_USE_JXL=OFF \
+                    -DGDAL_USE_JXL_THREADS=OFF \
+                    -DGDAL_USE_KEA=OFF \
+                    -DGDAL_USE_LIBAEC=ON \
+                    -DGDAL_USE_LIBLZMA=OFF \
+                    -DGDAL_USE_MRSID=OFF \
+                    -DGDAL_USE_MYSQL=OFF \
+                    -DGDAL_USE_NETCDF=OFF \
+                    -DGDAL_USE_ODBC=OFF \
+                    -DGDAL_USE_OPENEXR=OFF \
+                    -DGDAL_USE_OPENJPEG=OFF \
+                    -DGDAL_USE_PCRE2=ON \
+                    -DGDAL_USE_PDFIUM=OFF \
+                    -DGDAL_USE_PNG=ON \
+                    -DGDAL_USE_POSTGRESQL=ON \
+                    -DGDAL_USE_PROJ=ON \
+                    -DGDAL_USE_QHULL=ON \
+                    -DGDAL_USE_RASTERLITE2=OFF \
+                    -DGDAL_USE_SPATIALITE=OFF \
+                    -DGDAL_USE_SQLITE3=ON \
+                    -DGDAL_USE_TIFF_INTERNAL=ON \
+                    -DGDAL_USE_TILEDB=OFF \
+                    -DGDAL_USE_WEBP=ON \
+                    -DGDAL_USE_XERCESC=OFF \
+                    -DGDAL_USE_ZSTD=ON
+
+configure.args-append \
+                    -DGEOS_INCLUDE_DIR=${port_prefix}/geos/include \
+                    -DGEOS_LIBRARY=${port_prefix}/geos/lib/libgeos_c.dylib \
+                    -DLIBAEC_INCLUDE_DIR=${prefix}/lib/libaec/include \
+                    -DLIBAEC_LIBRARY=${prefix}/lib/libaec/lib/libaec.dylib \
+                    -DPROJ_INCLUDE_DIR=${port_prefix}/proj/include \
+                    -DPROJ_LIBRARY_RELEASE=${port_prefix}/proj/lib/libproj.dylib
+                    
+# Always choose internal libjson code (#44098)
+configure.args-append -DGDAL_USE_JSONC_INTERNAL=ON
+
+if {${build_arch} in [list i386 ppc]} {
+    # https://trac.macports.org/ticket/67468
+    configure.args-append \
+                    -DBUILD_WITHOUT_64BIT_OFFSET=ON
+}
+
+configure.optflags  -DGDAL_COMPILATION
+
+pre-configure {
+    # see https://trac.macports.org/ticket/56517
+    if {${configure.cxx_stdlib} eq "libc++"} {
+        configure.ldflags-append -stdlib=${configure.cxx_stdlib}
+    }
+
+    global worksrcpath_dirs
+    if {![variant_exists universal] || ![variant_isset universal]} {
+        set worksrcpath_dirs ${worksrcpath}
+    } else {
+        foreach arch ${universal_archs_to_use} {
+            lappend worksrcpath_dirs ${worksrcpath}-${arch}
+        }
+    }
+
+    # If HDF5 is built with a mpi variant, we need to know the path to "mpi.h".
+    # Figure out HDF5's mpi include directory:
+    set mpl_include_dir ""
+    if {![catch {set result [active_variants hdf5 openmpi]}]} {
+        if {$result} {
+            set mpl_include_dir "-I${prefix}/include/openmpi-mp"
+        }
+    }
+    if {![catch {set result [active_variants hdf5 mpich]}]} {
+        if {$result} {
+            set mpl_include_dir "-I${prefix}/include/mpich-mp"
+        }
+    }
+    if {$mpl_include_dir ne ""} {
+        configure.cxxflags-append ${mpl_include_dir}
+    }
+}
+
+variant arrow description {Enable (Geo)Arrow IPC File Format / Stream and (Geo)Parquet support} {
+        depends_lib-append      port:apache-arrow
+        configure.args-replace  -DGDAL_USE_ARROW=OFF -DGDAL_USE_ARROW=ON \
+                                -DGDAL_USE_PARQUET=OFF -DGDAL_USE_PARQUET=ON \
+                                -DOGR_ENABLE_DRIVER_ARROW=OFF -DOGR_ENABLE_DRIVER_ARROW=ON \
+                                -DOGR_ENABLE_DRIVER_PARQUET=OFF -DOGR_ENABLE_DRIVER_PARQUET=ON
+        configure.args-append   -DARROW_USE_STATIC_LIBRARIES=OFF
+
+        if {[string match *gcc* ${configure.compiler}]} {
+            configure.ldflags-append \
+                                -latomic
+        }
+}
+
+variant cfitsio description {Enable FITS support} {
+        depends_lib-append      port:cfitsio
+        configure.args-replace  -DGDAL_USE_CFITSIO=OFF -DGDAL_USE_CFITSIO=ON
+        configure.args-append   -DGDAL_ENABLE_DRIVER_FITS=ON
+}
+
+variant cryptopp description {Enable Crypto++ support} {
+        depends_lib-append      port:libcryptopp
+        configure.args-replace  -DGDAL_USE_CRYPTOPP=OFF -DGDAL_USE_CRYPTOPP=ON
+}
+
+variant ecw description {Enable ECW file format} {
+        configure.args-replace  -DGDAL_USE_ECW=OFF -DGDAL_USE_ECW=ON
+        configure.args-append   -DECW_ROOT=${prefix}/lib/ECW \
+                                -DGDAL_ENABLE_DRIVER_ECW=ON
+        pre-configure {
+            if {(![file exists ${prefix}/lib/ECW]) && \
+            (![file exists /Intergraph/ERDASEcwJpeg2000SDK5.1.1/Desktop_Read-Only])} {
+                ui_error "
+    ****
+    * The Intergraph ECW SDK version 5.5.0.2034 is needed to
+    * compile gdal with the ecw variant. It must be installed separately.
+    * Please download the macOS version of the SDK
+    * 'ERDAS ECW/JP2 SDK v5.5 (MacOSX)' from
+    * https://download.hexagongeospatial.com/downloads/ecw/erdas-ecw-jp2-sdk-v5-5-update-3-macos
+    * Choose to install it in ${prefix}/lib/ECW.
+    * Then try to install GDAL again.
+    ****"
+                return -code error "ECW SDK 5.5 not installed."
+            }
+
+            if {(![file exists ${prefix}/lib/ECW]) && \
+                ([file exists /Intergraph/ERDASEcwJpeg2000SDK5.1.1/Desktop_Read-Only])} {
+
+              ui_error "
+    ****
+    * Please create symbolic links from the installation directory to
+    * ${prefix}/lib/ECW, by executing at the prompt:
+    * sudo ln -s \${ECW_install_dir}/ERDASEcwJpeg2000SDK5.5.1/Desktop_Read-Only \
+                      ${prefix}/lib/ECW
+    * Or reinstall the ECW SDK in ${prefix}/lib/ECW directly.
+    * Then try again.
+    ****"
+                return -code error "Symlinks missing."
+            }
+        }
+    }
+
+variant hdf4 description {Enable HDF4 file format} {
+        depends_lib-append      port:hdf4
+        configure.args-replace  -DGDAL_USE_HDF4=OFF -DGDAL_USE_HDF4=ON
+        configure.args-append   -DGDAL_ENABLE_DRIVER_HDF4=ON
+}
+
+variant hdf5 description {Enable HDF5 file format} {
+        pre-configure {
+            # If HDF5 is built with a mpi variant, we need to know the path to "mpi.h".
+            # Figure out HDF5's mpi include directory:
+            set mpl_include_dir ""
+            if {![catch {set result [active_variants hdf5 openmpi]}]} {
+                if {$result} {
+                    set mpl_include_dir "-I${prefix}/include/openmpi-mp"
+                }
+            }
+            if {![catch {set result [active_variants hdf5 mpich]}]} {
+                if {$result} {
+                    set mpl_include_dir "-I${prefix}/include/mpich-mp"
+                }
+            }
+            if {$mpl_include_dir ne ""} {
+                configure.cxxflags-append ${mpl_include_dir}
+            }
+        }
+        depends_lib-append      port:hdf5
+        configure.args-replace  -DGDAL_USE_HDF5=OFF -DGDAL_USE_HDF5=ON
+        configure.args-append   -DGDAL_ENABLE_DRIVER_HDF5=ON
+}
+
+variant heif description {Enable HEIF support} {
+        depends_lib-append      port:libheif
+        configure.args-replace  -DGDAL_USE_HEIF=OFF -DGDAL_USE_HEIF=ON
+        configure.args-append   -DGDAL_ENABLE_DRIVER_HEIF=ON
+}
+
+variant jpegxl description {Enable JPEG XL support} {
+        depends_lib-append      port:libjxl
+        configure.args-replace  -DGDAL_USE_JXL=OFF -DGDAL_USE_JXL=ON \
+                                -DGDAL_USE_JXL_THREADS=OFF -DGDAL_USE_JXL_THREADS=ON
+}
+
+variant kea description {Enable KEA support} {
+        depends_lib-append      port:kealib
+        configure.args-replace  -DGDAL_USE_KEA=OFF -DGDAL_USE_KEA=ON
+        configure.args-append   -DGDAL_ENABLE_DRIVER_KEA=ON
+}
+
+variant libarchive description {Enable libarchive support} {
+        depends_lib-append      port:libarchive
+        configure.args-replace  -DGDAL_USE_ARCHIVE=OFF -DGDAL_USE_ARCHIVE=ON
+}
+
+variant lto description {Enable Link Time Optimization} {
+        configure.args-append   -DENABLE_IPO=ON
+}
+
+variant lzma description {Enable LZMA (7Z) compression support} {
+        depends_lib-append      port:lzma
+        configure.args-replace  -DGDAL_USE_LIBLZMA=OFF -DGDAL_USE_LIBLZMA=ON
+}
+
+variant mrsid description {Enable MrSID file format} {
+        depends_lib-append      port:geoexpress-sdk
+        configure.args-replace  -DGDAL_USE_MRSID=OFF -DGDAL_USE_MRSID=ON \
+                                -DGDAL_USE_JP2MRSID=OFF -DGDAL_USE_JP2MRSID=ON
+}
+
+variant mysql57 conflicts mysql8 description {Enable MySQL 5.7 support} {
+        depends_lib-append      port:mysql57
+        configure.args-replace  -DGDAL_USE_MYSQL=OFF -DGDAL_USE_MYSQL=ON
+        configure.args-append   -DMYSQL_INCLUDE_DIR=${prefix}/include/mysql57/mysql \
+                                -DMYSQL_LIBRARY=${prefix}/lib/mysql57/mysql/libmysqlclient.dylib
+}
+
+variant native description {Optimize for speed} {
+        if {${os.arch} eq "arm"} {
+            configure.optflags  -O3 -pipe -mcpu=apple-m1 -DGDAL_COMPILATION
+        } elseif {${os.arch} eq "powerpc"} {
+            # https://github.com/macports/macports-ports/pull/18587#issuecomment-1540025830
+            configure.optflags  -O3 -pipe -mtune=native -DGDAL_COMPILATION
+        } else {
+            configure.optflags  -O3 -pipe -march=native -DGDAL_COMPILATION
+        }
+}
+
+variant netcdf description {Enable NetCDF file format} {
+        pre-configure {
+            # If NetCDF is built with a mpi variant, we need to know the path to "mpi.h".
+            # Figure out NetCDF's mpi include directory:
+            set mpl_include_dir ""
+            if {![catch {set result [active_variants netcdf openmpi]}]} {
+                if {$result} {
+                    set mpl_include_dir "-I${prefix}/include/openmpi-mp"
+                }
+            }
+            if {![catch {set result [active_variants netcdf mpich]}]} {
+                if {$result} {
+                    set mpl_include_dir "-I${prefix}/include/mpich-mp"
+                }
+            }
+            if {$mpl_include_dir ne ""} {
+                configure.cxxflags-append ${mpl_include_dir}
+            }
+        }
+        depends_lib-append      port:netcdf
+        configure.args-replace  -DGDAL_USE_NETCDF=OFF -DGDAL_USE_NETCDF=ON
+        configure.args-append   -DGDAL_ENABLE_DRIVER_NETCDF=ON
+}
+
+variant odbc description {Enable ODBC support} {
+        depends_lib-append      port:unixODBC
+        configure.args-replace  -DGDAL_USE_ODBC=OFF -DGDAL_USE_ODBC=ON
+        # These drivers depend on odbc
+        configure.args-append   -DOGR_ENABLE_DRIVER_ODBC=ON \
+                                -DOGR_ENABLE_DRIVER_PGEO=ON \
+                                -DOGR_ENABLE_DRIVER_MSSQLSPATIAL=ON
+}
+
+variant openexr description {Enable OpenEXR image file format} {
+        depends_lib-append      port:openexr
+        configure.args-replace  -DGDAL_USE_OPENEXR=OFF -DGDAL_USE_OPENEXR=ON \
+                                -DGDAL_ENABLE_DRIVER_EXR=OFF -DGDAL_ENABLE_DRIVER_EXR=ON
+}
+
+variant openjpeg description {Enable OpenJPEG JPEG-2000 format support} {
+        depends_lib-append      port:openjpeg
+        configure.args-replace  -DGDAL_USE_OPENJPEG=OFF -DGDAL_USE_OPENJPEG=ON
+        configure.args-append   -DGDAL_ENABLE_DRIVER_JP2OPENJPEG=ON
+}
+
+variant rasterlite2 description {Enable RasterLite2 coverages support} {
+        depends_lib-append      port:librasterlite2
+        configure.args-replace  -DGDAL_USE_RASTERLITE2=OFF -DGDAL_USE_RASTERLITE2=ON
+}
+
+variant tiledb description {Enable TileDB support} {
+        depends_lib-append      port:tiledb
+        configure.args-replace  -DGDAL_USE_TILEDB=OFF -DGDAL_USE_TILEDB=ON
+        configure.args-append   -DGDAL_ENABLE_DRIVER_TILEDB=ON
+}
+
+# PostgreSQL variants
+set pg_variants {}
+set pg_default_variant "if {"
+foreach v ${pg_suffixes} {
+        lappend pg_variants postgresql${v}
+        set pg_default_variant "${pg_default_variant}!\[variant_isset postgresql${v}] && "
+}
+set pg_default_variant [string range ${pg_default_variant} 0 end-4]
+set pg_default_variant "${pg_default_variant}} {default_variants +postgresql${v}}"
+eval $pg_default_variant
+foreach v ${pg_suffixes} {
+        set p postgresql${v}
+        set i [lsearch -exact ${pg_variants} ${p}]
+        set c [lreplace ${pg_variants} ${i} ${i}]
+        variant ${p} description "Enable PostgreSQL ${v} support" conflicts {*}${c} "
+            depends_lib-append      port:${p}
+            configure.args-replace  -DOGR_ENABLE_DRIVER_PG=OFF -DOGR_ENABLE_DRIVER_PG=ON
+            configure.args-append   -DPostgreSQL_INCLUDE_DIR=${prefix}/include/${p} \
+                                    -DPostgreSQL_LIBRARY_DIR=${prefix}/lib/${p} \
+                                    -DPostgreSQL_ADDITIONAL_VERSIONS=${v}
+        "
+}
+
+variant xerces description {Enable Xerces XML support for GML file format} {
+        depends_lib-append      path:include/xercesc/util/XercesVersion.hpp:xercesc3
+        configure.args-replace  -DGDAL_USE_XERCESC=OFF -DGDAL_USE_XERCESC=ON
+        # These drivers need xerces-c
+        configure.args-append   -DOGR_ENABLE_DRIVER_NAS=ON \
+                                -DOGR_ENABLE_DRIVER_ILI=ON \
+                                -DOGR_ENABLE_DRIVER_GMLAS=ON
+}
+
+set jpeg2k 0
+foreach jpeg2kVariant {openjpeg ecw} {
+    if {[variant_isset ${jpeg2kVariant}]} {
+        incr jpeg2k 1
+    }
+}
+if {${jpeg2k} > 1} {
+        notes-append "Multiple drivers are able to open JPEG-2000 datasets. See https://trac.osgeo.org/gdal/wiki/ConfigOptions#GDAL_SKIP."
+}
+
+post-destroot {
+        xinstall -m 755 -d ${destroot}${cmake.install_prefix}/share/doc/${name}
+        xinstall -m 644 -W ${worksrcpath} HOWTO-RELEASE VERSION \
+            ${destroot}${cmake.install_prefix}/share/doc/${name}
+
+        if {[variant_isset ecw]} {
+              foreach f [list \
+                bin/gdal_contour \
+                bin/gdal_create \
+                bin/gdal_grid \
+                bin/gdal_rasterize \
+                bin/gdal_translate \
+                bin/gdal_viewshed \
+                bin/gdaladdo \
+                bin/gdalbuildvrt \
+                bin/gdaldem \
+                bin/gdalenhance \
+                bin/gdalinfo \
+                bin/gdallocationinfo \
+                bin/gdalmanage \
+                bin/gdalmdiminfo \
+                bin/gdalmdimtranslate \
+                bin/gdalsrsinfo \
+                bin/gdaltindex \
+                bin/gdaltransform \
+                bin/gdalwarp \
+                bin/gnmanalyse \
+                lib/libgdal.dylib] \
+                {
+                    if {${configure.cxx_stdlib} eq "libc++"} {
+                        system "install_name_tool -change \
+                            /Users/jenkins/hudson/workspace/RL_5.1.1_ECWJP2SDK_OSX/Master/libNCSEcw.dylib ${prefix}/lib/ECW/redistributable/libc++/libNCSEcw.dylib \
+                            ${destroot}${cmake.install_prefix}/${f}"
+                    } else {
+                        system "install_name_tool -change \
+                            /Users/jenkins/hudson/workspace/RL_5.1.1_ECWJP2SDK_OSX/Master/libNCSEcw.dylib ${prefix}/lib/ECW/redistributable/libstdc++/libNCSEcw.dylib \
+                            ${destroot}${cmake.install_prefix}/${f}"
+                    }
+                }
+        }
+}
+
+livecheck.type  regex
+livecheck.url   https://download.osgeo.org/gdal/CURRENT
+livecheck.regex ${realname}-(\\d+(?:\\.\\d+)*)\\.tar
+
+proc set_gdal_variants {} {
+    global prefix
+    global pg_suffixes
+    global os.arch
+
+    set pg ""
+    set pg_v ""
+    foreach v ${pg_suffixes} {
+        if {![catch {set result [active_variants gdal postgresql${v}]}]} {
+            if {$result} {
+                set pg postgresql${v}
+                set pg_v ${v}
+            }
+        }
+    }
+    if {$pg ne ""} {
+        depends_build-append     port:${pg}
+        configure.args-replace  -DOGR_ENABLE_DRIVER_PG=OFF -DOGR_ENABLE_DRIVER_PG=ON
+        configure.args-append   -DPostgreSQL_INCLUDE_DIR=${prefix}/include/${pg} \
+                                -DPostgreSQL_LIBRARY_DIR=${prefix}/lib/${pg} \
+                                -DPostgreSQL_ADDITIONAL_VERSIONS=${pg_v}
+    }
+
+    if {![catch {set result [active_variants gdal lto]}]} {
+        if {$result} {
+            configure.args-append   -DENABLE_IPO=ON
+        }
+    }
+
+    if {![catch {set result [active_variants gdal native]}]} {
+        if {${os.arch} eq "arm"} {
+            configure.optflags  -O3 -pipe -mcpu=apple-m1 -DGDAL_COMPILATION
+        } elseif {${os.arch} eq "powerpc"} {
+            # https://github.com/macports/macports-ports/pull/18587#issuecomment-1540025830
+            configure.optflags  -O3 -pipe -mtune=native -DGDAL_COMPILATION
+        } else {
+            configure.optflags  -O3 -pipe -march=native -DGDAL_COMPILATION
+        }
+    }
+}
+
+# default_variants-append         +hdf5
+
+post-destroot {
+    # gdal(27242) malloc: *** error for object 0xa04da754: pointer being freed was not allocated
+    # Cannot use legacysupport directly until this is fixed: https://trac.macports.org/ticket/72636
+    if {${os.platform} eq "darwin" && ${configure.cxx_stdlib} ne "libc++"} {
+        foreach rbin {gdal gdalinfo} {
+            set dir [file dirname ${rbin}]
+            if {${dir} eq "."} {
+                set dir ${cmake.install_prefix}/bin
+            }
+            set bin ${dir}/[file tail ${rbin}]
+
+            move    ${destroot}${bin} \
+                    ${destroot}${bin}-orig
+
+            set  wrapper    [open "${destroot}${bin}" w 0755]
+            puts ${wrapper} "#!/bin/bash"
+            puts ${wrapper} ""
+            puts ${wrapper} {if [ -n "$DYLD_LIBRARY_PATH" ]; then}
+            puts ${wrapper} "   DYLD_LIBRARY_PATH=${prefix}/lib/libgcc:\${DYLD_LIBRARY_PATH}"
+            puts ${wrapper} {else}
+            puts ${wrapper} "   DYLD_LIBRARY_PATH=${prefix}/lib/libgcc"
+            puts ${wrapper} {fi}
+            puts ${wrapper} {export DYLD_LIBRARY_PATH}
+            puts ${wrapper} ""
+            puts ${wrapper} {exec "${0}-orig" "$@"}
+            close $wrapper
+        }
+    }
+}

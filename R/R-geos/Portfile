@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github paleolimbot geos 0.2.5 v
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Open Source Geometry Engine (GEOS) R API
+long_description    {*}${description}
+homepage            https://paleolimbot.github.io/geos
+checksums           rmd160  d8a2d7b10b4792f2bfe96ca9351a090ddf5de98c \
+                    sha256  8be6eb37f60a0ee94fd85c92c83e307161c2d2039e21e3889f0fed9751fce40e \
+                    size    159575
+github.tarball_from archive
+
+depends_lib-append  port:R-libgeos \
+                    port:R-wk
+
+depends_test-append port:R-sf \
+                    port:R-testthat \
+                    port:R-vctrs
+
+# 5 tests fails on ppc: https://github.com/paleolimbot/geos/issues/88
+test.run            yes

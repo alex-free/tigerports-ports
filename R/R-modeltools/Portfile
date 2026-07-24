@@ -1,0 +1,19 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran r-project modeltools 0.2-24
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2
+description         Tools and classes for statistical models
+long_description    {*}${description}
+checksums           rmd160  1aa8998c80be1ee7fbc7125438e03f0ba0e1260e \
+                    sha256  f8b285897c535526f2c37b70bf66f182e12dd02a7ec8261f52d28caca8ce1eaf \
+                    size    14911
+supported_archs     noarch
+
+test.run            yes

@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran sebastian.calonico rdrobust 3.0.0
+revision            1
+categories-append   economics
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Robust data-driven statistical inference in regression-discontinuity designs
+long_description    {*}${description}
+checksums           rmd160  e84547be44905364f5fa53aa4cae01a4d2f87942 \
+                    sha256  b1bcd0d6dae4ea0ceadf5fb3c2d62d787fb316c0a19c671c05b5db300d4b27a3 \
+                    size    52086
+supported_archs     noarch
+
+depends_lib-append  port:R-ggplot2
+
+test.run            yes

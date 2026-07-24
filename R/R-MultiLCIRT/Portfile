@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran bart MultiLCIRT 2.12
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Multidimensional Latent Class Item Response Theory models
+long_description    {*}${description}
+checksums           rmd160  b1ea1ac1cd3cf80e8c63cb44eb383b9927115231 \
+                    sha256  2aed4760093f0030fd1cb8e05bcc373f995ba94f62b2fc4a3fbde4875a39d7c8 \
+                    size    39944
+
+depends_lib-append  port:R-limSolve
+
+compilers.setup     require_fortran
+
+test.run            yes

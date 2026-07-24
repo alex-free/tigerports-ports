@@ -1,0 +1,63 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github rspatial terra 1.9-1
+revision            1
+categories-append   gis
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3+
+description         Spatial data analysis
+long_description    {*}${description}
+homepage            https://rspatial.org/terra
+checksums           rmd160  1ada8f605c3afd297f74560c47640202100df6be \
+                    sha256  e95ace896feaccfe73496343ad2e147d17d0c718c4f30084a2e7d85b512a85b1 \
+                    size    1091046
+github.tarball_from archive
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+
+set deproot         ${prefix}/libexec/R
+
+depends_lib-append  port:gdal-R \
+                    port:geos-R \
+                    port:onetbb \
+                    port:proj-R \
+                    port:R-Rcpp \
+                    port:sqlite3
+
+# configure borrowed from quanteda, and in result is incapable of handling TBB.
+patchfiles-append   patch-Makevars.in.diff
+
+if {${configure.build_arch} in [list arm i386 ppc]} {
+    patchfiles-append \
+                    patch-tbb32.diff
+}
+
+post-patch {
+    reinplace "s,@PREFIX@,${prefix},g" ${worksrcpath}/src/Makevars.in
+}
+
+# configure fails to do its job: https://github.com/r-spatial/sf/issues/2292
+build.env-append    CPPFLAGS=-I${deproot}/proj/include \
+                    DYLD_LIBRARY_PATH=${prefix}/lib/libgcc:${deproot}/proj/lib \
+                    PKG_CONFIG_PATH=${prefix}/libexec/onetbb/lib/pkgconfig:${deproot}/proj/lib/pkgconfig
+
+build.args-append   --configure-args="--with-gdal-config=${deproot}/gdal/bin/gdal-config \
+                        --with-geos-config=${deproot}/geos/bin/geos-config \
+                        --with-proj-include=${deproot}/proj/include \
+                        --with-proj-lib=${deproot}/proj/lib \
+                        --with-proj-share=${deproot}/proj/share/proj"
+
+depends_test-append port:R-deldir \
+                    port:R-htmlwidgets \
+                    port:R-leaflet \
+                    port:R-ncdf4 \
+                    port:R-sf \
+                    port:R-tinytest \
+                    port:R-XML
+
+# For now, not enabled:
+test.run            no

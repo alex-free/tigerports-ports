@@ -1,0 +1,53 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran cjvanlissa tidySEM 0.2.9
+revision            1
+epoch               1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3+
+description         Tidy Structural Equation Modelling
+long_description    {*}${description}
+homepage            https://cjvanlissa.github.io/tidySEM
+checksums           rmd160  9d9a863d83d8ee7cedb17a035ff61852df2e60b5 \
+                    sha256  b354a0ade31c39d493d17b69f259a73ebfe70e026789aa883c49133aa1aa4385 \
+                    size    3494073
+supported_archs     noarch
+
+depends_lib-append  port:R-car \
+                    port:R-dbscan \
+                    port:R-future.apply \
+                    port:R-ggplot2 \
+                    port:R-gtable \
+                    port:R-igraph \
+                    port:R-lavaan \
+                    port:R-MplusAutomation \
+                    port:R-nonnest2 \
+                    port:R-progressr \
+                    port:R-psych \
+                    port:R-RANN
+
+# Some optional deps are omitted.
+depends_test-append port:R-bain \
+                    port:R-blavaan \
+                    port:R-covr \
+                    port:R-dplyr \
+                    port:R-formatR \
+                    port:R-ggraph \
+                    port:R-knitr \
+                    port:R-mclust \
+                    port:R-mice \
+                    port:R-OpenMx \
+                    port:R-poLCA \
+                    port:R-rmarkdown \
+                    port:R-scales \
+                    port:R-stringr \
+                    port:R-testthat \
+                    port:R-umx \
+                    port:R-yaml
+
+test.run            yes

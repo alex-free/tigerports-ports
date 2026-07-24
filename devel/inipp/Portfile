@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+
+github.setup        mcmtroffaes inipp 1.0.13
+revision            0
+epoch               1
+categories          devel
+platforms           {darwin any}
+license             MIT
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+description         Simple C++ ini parser
+long_description    Simple header-only C++ ini parser and generator.
+checksums           rmd160  d2f61e52013e6f1150da329ecbd2d5ade016f5a8 \
+                    sha256  656c5d82db48f4da8ed70482839ad0da95ea1d576a3c890c272e9b9e0fb89571 \
+                    size    13096
+github.tarball_from archive
+supported_archs     noarch
+
+compiler.cxx_standard   2011
+
+destroot {
+    copy ${worksrcpath}/${name}/inipp.h ${destroot}${prefix}/include/
+}
+
+test.run            yes

@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             bioconductor Bioconductor rsbml 2.66.0
+revision            1
+categories-append   bioconductor
+maintainers         nomaintainer
+license             Artistic-2
+description         R support for SBML, using libsbml
+long_description    {*}${description}
+checksums           rmd160  ac5732c72c1b135e04f0d07ca0dfe8fb448a7dcf \
+                    sha256  e0ad4d628869342aacae5b5b9dc3d64fe8f7cd4822472a74b386d3aa786c0e0b \
+                    size    678292
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  port:libsbml \
+                    port:R-BiocGenerics \
+                    port:R-graph
+
+platform darwin {
+    if {${os.major} > 10 && ${configure.cxx_stdlib} eq "libc++"} {
+    build.args-append   --configure-vars=' \
+                        RSBML_CPPFLAGS="-D_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION" \
+                        '
+    }
+}
+
+test.run            no

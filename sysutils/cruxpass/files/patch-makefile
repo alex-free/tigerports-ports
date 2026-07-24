@@ -1,0 +1,52 @@
+--- makefile	2026-01-21 00:49:28.000000000 +0800
++++ makefile	2026-01-29 06:45:47.000000000 +0800
+@@ -1,11 +1,11 @@
+-CC             := gcc
++CC             ?= gcc
+ 
+-CFLAGS         := -Wall -Wextra -Wformat-security -Wformat-overflow=2 -O3 #-ggdb
++CFLAGS         ?= -Wall -Wextra -Wformat-security -Wformat-overflow=2 -O3
+ 
+ 
+-INCLUDE        := -Iinclude -Ilib
++INCLUDE        := -Iinclude -Ilib -I$(PREFIX)/libexec/sqlcipher/include
+ 
+-LDLIBS         := -lsodium -lm -lsqlcipher -ldl -lpthread
++LDLIBS         := -lsodium  $(PREFIX)/libexec/sqlcipher/lib/libsqlite3.dylib -lm -ldl -lpthread
+ 
+ SRC            := $(wildcard src/*.c)
+ TUI_SRC        := $(wildcard src/tui/*.c)
+@@ -16,7 +16,7 @@
+ BIN            := bin/cruxpass
+ BIN_NAME	   := cruxpass
+ 
+-PREFIX         := /usr/
++PREFIX         ?= /usr/
+ OLD_PREFIX_BIN := /usr/local/bin/cruxpass
+ 
+ BASH_COMPLETION_PATH := /usr/share/bash-completion/completions/$(BIN_NAME)
+@@ -40,22 +40,12 @@
+ 	-$(BIN) completion bash > $(BASH_COMPLETION_PATH)
+ 	-$(BIN) completion zsh > $(ZSH_COMPLETION_PATH)
+ 	-$(BIN) completion fish > $(FISH_COMPLETION_PATH) 
+-	@install -d $(PREFIX)/bin
+-	@install -m 0755 $(BIN) $(PREFIX)/bin
+-
+-# migrating from /usr/local/bin/ to /usr/bin/
+-# Because bin used to be installed in: /usr/local/bin/ 
+-	@echo "Checking for $(OLD_PREFIX_BIN)"
+-	@if [ -f "$(OLD_PREFIX_BIN)" ]; then \
+-		echo "Removing system-local copy: $(OLD_PREFIX_BIN)"; \
+-		 rm -f "$(OLD_PREFIX_BIN)"; \
+-	fi
+-	@echo '[+] Installation complete.'
++	install -m 0755 $(BIN) $(DESTDIR)$(PREFIX)/bin
+ 
+ .PHONY: all clean install run seed uninstall
+ 
+ clean:
+-	@rm -rf build $(BIN)
++	rm -rf build $(BIN)
+ 	@echo "[+] Clean up complete."
+ 
+ run:

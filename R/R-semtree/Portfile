@@ -1,0 +1,45 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran brandmaier semtree 0.9.22 v
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Recursive partitioning for structural equation models
+long_description    {*}${description}
+checksums           rmd160  571fc81866672dafc9aef0186d258ef73fa966af \
+                    sha256  7960a063badc7bb8ac27f1f61b1b40a9a59da816207ce671bda8ca9af18c0d96 \
+                    size    414008
+# github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-crayon \
+                    port:R-clisymbols \
+                    port:R-data.table \
+                    port:R-expm \
+                    port:R-future.apply \
+                    port:R-ggplot2 \
+                    port:R-gridBase \
+                    port:R-lavaan \
+                    port:R-OpenMx \
+                    port:R-rpart.plot \
+                    port:R-sandwich \
+                    port:R-stringr \
+                    port:R-strucchange \
+                    port:R-tidyr \
+                    port:R-zoo
+
+depends_test-append port:R-ctsemOMX \
+                    port:R-future \
+                    port:R-knitr \
+                    port:R-psychTools \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-viridis
+
+test.run            yes

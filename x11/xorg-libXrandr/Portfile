@@ -1,0 +1,34 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem      1.0
+
+name            xorg-libXrandr
+version         1.5.5
+revision        0
+categories      x11 devel
+license         X11
+maintainers     {jeremyhu @jeremyhu} openmaintainer
+description     X.org libXrandr
+homepage        https://www.x.org
+platforms       darwin macosx
+long_description    X Resize and Rotate Extension C Library
+master_sites    xorg:individual/lib/
+distname        libXrandr-${version}
+use_xz          yes
+
+checksums       rmd160  82806ecf7a8edc6eb8c769154cc13429e578f68f \
+                sha256  72b922c2e765434e9e9f0960148070bd4504b288263e2868a4ccce1b7cf2767a \
+                size    288912
+
+depends_build   path:bin/pkg-config:pkgconfig
+
+depends_lib     port:xorg-libX11 \
+                port:xorg-libXext \
+                port:xorg-xorgproto \
+                port:xrender
+
+configure.checks.implicit_function_declaration.whitelist-append strchr
+
+livecheck.type  regex
+livecheck.url   https://xorg.freedesktop.org/archive/individual/lib/?C=M&O=D
+livecheck.regex libXrandr-(\\d+(?:\\.\\d+)*)

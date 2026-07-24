@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran sjmgarnier viridisLite 0.4.3
+revision            1
+categories-append   graphics
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Colorblind-friendly color maps (lite version)
+long_description    {*}${description}
+homepage            https://sjmgarnier.github.io/viridisLite
+checksums           rmd160  033824671cffe1fcbf5d030dda02fd059aaeb9fd \
+                    sha256  433be9bde66234dc76301fb4ffbbc9fc74bab5c14f4548d8ef2fc0065e121ef5 \
+                    size    1269031
+supported_archs     noarch
+
+depends_test-append port:R-covr \
+                    port:R-ggplot2 \
+                    port:R-hexbin \
+                    port:R-testthat
+
+test.run            yes

@@ -1,0 +1,60 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran openpharma mmrm 0.3.17 v
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             Apache-2
+description         Mixed Models for Repeated Measures
+long_description    {*}${description}
+homepage            https://openpharma.github.io/mmrm
+checksums           rmd160  fdb98e6447b03d3692943ef295759fc7e76208d7 \
+                    sha256  87f84dd5d60adee8823a9511eb43a068b863d069be6e96c9676991ca90382e49 \
+                    size    934220
+
+depends_lib-append  port:R-checkmate \
+                    port:R-generics \
+                    port:R-lifecycle \
+                    port:R-Rcpp \
+                    port:R-RcppEigen \
+                    port:R-Rdpack \
+                    port:R-stringr \
+                    port:R-testthat \
+                    port:R-tibble \
+                    port:R-TMB
+
+compiler.cxx_standard 2014
+
+depends_test-append port:R-broom \
+                    port:R-broom.helpers \
+                    port:R-car \
+                    port:R-cli \
+                    port:R-clubSandwich \
+                    port:R-clusterGeneration \
+                    port:R-dplyr \
+                    port:R-emmeans \
+                    port:R-estimability \
+                    port:R-ggplot2 \
+                    port:R-glmmTMB \
+                    port:R-hardhat \
+                    port:R-knitr \
+                    port:R-lme4 \
+                    port:R-lmerTest \
+                    port:R-microbenchmark \
+                    port:R-mockery \
+                    port:R-parallelly \
+                    port:R-parsnip \
+                    port:R-purrr \
+                    port:R-rmarkdown \
+                    port:R-sasr \
+                    port:R-scales \
+                    port:R-testthat \
+                    port:R-tidymodels \
+                    port:R-withr \
+                    port:R-xml2
+
+test.run            yes

@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+
+github.setup        libxls libxls 1.6.3 v
+revision            0
+conflicts           catdoc
+categories          textproc
+maintainers         {nicos @NicosPavlov} openmaintainer
+license             BSD
+
+description         libxls is a C library which can read Excel (xls) files
+long_description    Library for parsing Excel (XLS) files, with a sample \
+                    program for converting Excel files into CSV.
+
+checksums           rmd160  48931a4fecc931dc3492f7147983cdac1a77b217 \
+                    sha256  587c9f0ebb5647eb68ec1e0ed8c3f7f6102622d6dd83473a21d3a36dee04eed7 \
+                    size    324605
+github.tarball_from archive
+
+use_autoreconf      yes
+autoreconf.args     -fvi
+
+depends_build-append    port:autoconf-archive \
+                        port:gettext
+
+depends_lib-append      port:gettext-runtime
+
+compiler.c_standard 1999

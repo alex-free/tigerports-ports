@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is outdated.
+R.setup             cran danheck MCMCprecision 0.4.2
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Precision of discrete parameters in transdimensional MCMC
+long_description    {*}${description}
+homepage            https://github.com/danheck/MCMCprecision
+checksums           rmd160  7ae1dddfc4b74121bf888d21fab2d0c9b17c3604 \
+                    sha256  fc2109165a7f147e7d2a782774617e328282e10cf2e0a54a2ef1bf064db9fa04 \
+                    size    391200
+
+depends_lib-append  port:R-combinat \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-RcppEigen \
+                    port:R-RcppProgress
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-R.rsp \
+                    port:R-testthat
+
+test.run            yes

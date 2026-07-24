@@ -1,0 +1,115 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           active_variants 1.1
+PortGroup           gitlab 1.0
+PortGroup           muniversal 1.1
+
+gitlab.instance     https://code.videolan.org
+# Get latest stable commit id from
+# https://code.videolan.org/videolan/x264/-/tree/stable
+# Get minor version (X264_BUILD) from
+# https://code.videolan.org/videolan/x264/-/blob/stable/x264.h
+# Run port livecheck to get patch version
+# Change in minor version requires rev-bumping dependents
+gitlab.setup        videolan x264 b35605ace3ddf7c1a5d67a2eb553f034aef41d55
+version             0.165.3222
+revision            2
+
+epoch               1
+categories          multimedia
+license             GPL-2+
+maintainers         {devans @dbevans} {makr @mohd-akram} openmaintainer
+description         ${name} – a free h264/avc encoder
+long_description    ${name} is a free library for encoding H264/AVC video streams. \
+                    The code is written by Laurent Aimar, Eric Petit(OS X), Min \
+                    Chen (vfw/nasm), Justin Clay(vfw), Måns Rullgård and Loren \
+                    Merritt from scratch. It is released under the terms of \
+                    the GPL license.
+homepage            https://www.videolan.org/x264.html
+
+checksums           rmd160  55d345985a769c873d22278a7f9268d8059c9bb5 \
+                    sha256  6eeb82934e69fd51e043bd8c5b0d152839638d1ce7aa4eea65a3fedcf83ff224 \
+                    size    848719
+
+patchfiles          altivec-x264.patch
+
+# https://code.videolan.org/videolan/x264/-/merge_requests/196
+patchfiles-append   altivec-x264-2.patch
+
+set rev             [lindex [split ${version} .] 2]
+set sha             [string range ${gitlab.version} 0 6]
+
+post-patch {
+    reinplace "s|ver=\"x\"|ver=\"$rev $sha\"|" \
+        ${worksrcpath}/version.sh
+    reinplace "s|version=\"\"|version=\" r$rev $sha\"|" \
+        ${worksrcpath}/version.sh
+}
+
+if {${configure.build_arch} in [list i386 x86_64]} {
+    depends_build-append \
+                    port:nasm                    
+}
+
+# https://trac.macports.org/ticket/72192
+compiler.blacklist-append \
+                    *gcc-4.0 *gcc-4.2
+
+configure.args      --disable-avs \
+                    --disable-ffms \
+                    --disable-gpac \
+                    --disable-lavf \
+                    --disable-lsmash \
+                    --disable-swscale \
+                    --disable-vsx \
+                    --enable-pic \
+                    --enable-shared \
+                    --enable-static
+
+platform darwin powerpc {
+    # https://trac.macports.org/ticket/69935
+    variant G5 description "Optimize for G5 instead of G4" {
+        post-patch {
+            # https://github.com/iains/gcc-14-branch/issues/24
+            if {${configure.build_arch} eq "ppc64"} {
+                reinplace "s|-mcpu=G4|-mcpu=G5|" ${worksrcpath}/configure
+            } else {
+                reinplace "s|-mcpu=G4|-mcpu=G5 -mno-powerpc64|" ${worksrcpath}/configure
+            }
+        }
+
+        # Related: https://github.com/iains/LLVM-7-branch/issues/8
+        # <stdin>:3725:11: error: invalid operand for instruction
+        # mfcr r10,128
+        require_active_variants cctools {} llas
+    }
+    # ppc64 requires G5:
+    if {${configure.build_arch} eq "ppc64"} {
+        default_variants-append +G5                   
+    }
+
+    if {[string match macports-gcc* ${configure.compiler}]} {
+        # -fastf is only supported with Apple gcc:
+        post-patch {
+            reinplace "s|\-fastf|\-Wno-error=incompatible-pointer-types|" ${worksrcpath}/configure
+        }
+    }
+}
+
+platform darwin 8 {
+    depends_build-append    port:gmake
+    build.cmd               gmake
+}
+
+# sets its own optflags
+configure.optflags
+
+# https://trac.macports.org/ticket/72733
+if {[info exists livecheck.branch]} {
+    livecheck.url           ${git.url}
+    livecheck.type          git
+    livecheck.branch        stable
+} else {
+    livecheck.type          none
+}

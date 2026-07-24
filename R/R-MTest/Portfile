@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran vmoprojs MTest 1.0.3
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3+
+description         Procedure for multicollinearity testing using bootstrap
+long_description    {*}${description}
+homepage            https://github.com/vmoprojs/MTest
+checksums           rmd160  10f77c21a7b6a505fd394e2f195ab2167e0c5863 \
+                    sha256  251bb8dbc74a170e5283272f3b02ffe8cde0a44e5e2137975cc2bc6b7956fd95 \
+                    size    314469
+supported_archs     noarch
+
+depends_lib-append  port:R-car \
+                    port:R-ggplot2 \
+                    port:R-plotly
+
+test.run            yes

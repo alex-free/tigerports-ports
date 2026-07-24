@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran eddelbuettel RcppQuantuccia 0.1.4
+revision            1
+categories-append   finance
+maintainers         nomaintainer
+license             GPL-2+
+description         R bindings to the calendaring functionality of QuantLib
+long_description    {*}${description}
+homepage            https://dirk.eddelbuettel.com/code/rcpp.quantuccia.html
+checksums           rmd160  df323ee53a20d3047f40d9d09f21cf7870bbcc42 \
+                    sha256  30d75c38ef77a87c88443f106f60f4daeaa4427034e60fd7b1de683a6d601e42 \
+                    size    129887
+
+depends_lib-append  port:R-BH \
+                    port:R-Rcpp
+
+test.run            yes

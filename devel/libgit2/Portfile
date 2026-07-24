@@ -1,0 +1,116 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+PortGroup           muniversal 1.0
+PortGroup           openssl 1.0
+
+set my_name         libgit2
+name                ${my_name}
+conflicts           ${my_name}-devel
+
+# don't forget to update py-pygit2 and libgit2-glib as well
+github.setup        libgit2 libgit2 1.9.6 v
+revision            0
+epoch               1
+categories          devel
+maintainers         {devans @dbevans} {mascguy @mascguy}
+license             {GPL-2 Permissive}
+
+description         Portable, pure-C implementation of the Git core methods
+long_description    libgit2 is a portable, pure-C implementation of \
+                    the Git core methods provided as a re-entrant linkable \
+                    library with a solid API, allowing you to write native \
+                    speed custom Git applications in any language which \
+                    supports C bindings.
+homepage            https://libgit2.org
+
+dist_subdir         ${my_name}
+
+checksums           rmd160  191dc24c339619b50fd4dfe816784ad00a053a99 \
+                    sha256  a88a42a4ea9bdab7aa8686eead3bf7d9c6dd74529caca16ab22eaa92433d31d9 \
+                    size    7769080
+github.tarball_from archive
+
+set py_ver          3.14
+set py_ver_nodot    [string map {. {}} ${py_ver}]
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig \
+                    port:python${py_ver_nodot}
+
+depends_lib-append  port:curl \
+                    port:libiconv \
+                    port:libssh2 \
+                    port:pcre2 \
+                    port:zlib
+
+configure.python    ${prefix}/bin/python${py_ver}
+
+# Fix for error: parameter '...' not found in the function declaration
+# See: https://trac.macports.org/ticket/65585
+patchfiles-append   patch-tests-no-error.diff
+
+post-patch {
+    # Upstream compiles with C standard set to 90, which isn't sufficient for
+    # legacy-support. So patch all CMake files, and raise that to C 99.
+    # See: https://trac.macports.org/ticket/68148
+    fs-traverse f ${worksrcpath} {
+        set fname [file tail ${f}]
+        if {[string match CMakeLists.txt ${fname}]} {
+            ui_info "Patching c_standard for cmake file: ${f}"
+            reinplace -q "s|PROPERTIES C_STANDARD 90|PROPERTIES C_STANDARD 99|g" ${f}
+        }
+    }
+    # Fix python:
+    reinplace "s|/usr/bin/env python|${configure.python}|" ${worksrcpath}/tests/clar/generate.py
+}
+
+compiler.c_standard  1999
+
+# Force cmake to pass `-std=c99`, otherwise `-std=c90` is used
+# See: https://trac.macports.org/ticket/72428
+cmake.set_c_standard yes
+
+# Clear optflags; controlled by project, via cmake build type
+configure.optflags
+
+if {[variant_isset debug]} {
+    cmake.build_type Debug
+} else {
+    cmake.build_type RelWithDebInfo
+}
+
+configure.args-append \
+                    -DBUILD_TESTS:BOOL=OFF \
+                    -DREGEX_BACKEND:STRING=pcre2 \
+                    -DUSE_ICONV:BOOL=ON \
+                    -DUSE_SSH:BOOL=ON \
+                    -DUSE_THREADS:BOOL=OFF
+
+variant threadsafe description "Build with threadsafe option" {
+    configure.args-replace \
+                    -DUSE_THREADS:BOOL=OFF \
+                    -DUSE_THREADS:BOOL=ON
+}
+
+default_variants    +threadsafe
+
+platform darwin 8 {
+    # Fix unsetenv return value
+    configure.cflags-append \
+                    -D__DARWIN_UNIX03
+
+    # Copy Apple's copyfile.h for use on Mac OS X 10.4 and higher.
+    # See APPLE_LICENSE.txt for license and copying information.
+    post-patch {
+        file copy ${filespath}/copyfile.h ${worksrcpath}
+    }
+    configure.cflags-append \
+                    "-I${worksrcpath}"
+}
+
+# customize regex to avoid release candidates, alpha, beta, etc
+github.livecheck.regex (\\d+(?:\\.\\d+)*)

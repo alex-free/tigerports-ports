@@ -1,0 +1,82 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           conflicts_build 1.0
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+
+github.setup        KhronosGroup SPIRV-Tools 2026.1 v
+name                spirv-tools
+revision            0
+categories          graphics
+license             Apache-2
+maintainers         {judaew @judaew} openmaintainer
+
+description         Various SPIR-V tools
+long_description    SPIR-V assembler, binary module parser, \
+                    disassembler, validator and optimizer
+homepage            https://vulkan.lunarg.com
+
+# move extracted main module to worksrcpath
+# Move submodules to cmakes expected location in worksrcpath
+post-extract {
+    foreach {sub_author sub_project sub_commit sub_dest} ${submodules} {
+        move ${workpath}/${sub_project}-${sub_commit} ${worksrcpath}/${sub_dest}
+    }
+}
+
+github.tarball_from archive
+
+set mimalloc_hash   b69f9cb39f22b95971a4b9196a9c265a7b474718
+set spirv_h_hash    04f10f650d514df88b76d25e83db360142c7b174
+
+checksums           SPIRV-Tools-${version}.tar.gz \
+                    rmd160  41ff3459722d08eaf9e2bb90b8c9aeee2efeef02 \
+                    sha256  35dc16cf2dc64be5b6bbbe86d210e6f4a82b070cffd751605a3365cd8bce2d7e \
+                    size    3453737 \
+                    SPIRV-Headers-${spirv_h_hash}.tar.gz \
+                    rmd160  5183f673e28dc07d61c5043137ca59251346698c \
+                    sha256  1b220e3eec1714f0451b0e3652979bd280edf10893f617837b88e6359a804ded \
+                    size    561661 \
+                    mimalloc-${mimalloc_hash}.tar.gz \
+                    rmd160  6a9a1bcf62ecf6b4603b4c43d004689bf55bac4c \
+                    sha256  3fc94d36298636dfb8c232f19f936652cc70ddbcc5fb04c233cab9c06cc8d894 \
+                    size    1297646
+
+compiler.cxx_standard 2017
+# Need to use MacPorts libc++ on macOS 10.14 Mojave and older, because
+# Apple Clang only added support for the C++17 <filesystem> library
+# starting in Xcode 11 (clang-1100) for macOS 10.15+.
+# References:
+# * https://stackoverflow.com/a/55353263
+# * https://developer.apple.com/documentation/xcode-release-notes/xcode-11-release-notes
+legacysupport.newest_darwin_requires_legacy 18
+legacysupport.use_mp_libcxx yes
+
+set py_ver          3.13
+set py_ver_nodot    [string map {. {}} ${py_ver}]
+foreach stage {configure build destroot test} {
+    ${stage}.env-append PATH=${frameworks_dir}/Python.framework/Versions/${py_ver}/bin:$env(PATH)
+}
+depends_build-append port:python${py_ver_nodot}
+
+# See DEPS file in repo.
+# TODO: figure out how to expand hashes from variables.
+set submodules {
+    KhronosGroup SPIRV-Headers 04f10f650d514df88b76d25e83db360142c7b174 external/spirv-headers
+    microsoft mimalloc b69f9cb39f22b95971a4b9196a9c265a7b474718 external/mimalloc
+}
+
+foreach {sub_author sub_project sub_commit sub_dest} ${submodules} {
+    master_sites-append https://github.com/${sub_author}/${sub_project}/archive/${sub_commit}.tar.gz?dummy=:${sub_project}
+    distfiles-append    ${sub_project}-${sub_commit}.tar.gz:${sub_project}
+}
+
+configure.args-append \
+                    -DBUILD_SHARED_LIBS=ON \
+                    -DCMAKE_INSTALL_PREFIX=${prefix} \
+                    -DSPIRV_SKIP_TESTS=ON \
+                    -DSPIRV_TOOLS_BUILD_STATIC=OFF \
+                    -DSPIRV_TOOLS_USE_MIMALLOC=ON \
+                    -DSPIRV_WERROR=OFF

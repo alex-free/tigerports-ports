@@ -1,0 +1,53 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran business-science modeltime.ensemble 1.1.0
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Ensemble algorithms for time series forecasting with R-modeltime
+long_description    {*}${description}
+homepage            https://business-science.github.io/modeltime.ensemble
+checksums           rmd160  bda7f54c87c38189f23752a3e62af1fab8f9a0e7 \
+                    sha256  55f64a618a2784c9ab3338d483a72da2a041fa7ecae4809e261f3b08198770fd \
+                    size    1689072
+supported_archs     noarch
+
+depends_lib-append  port:R-cli \
+                    port:R-doParallel \
+                    port:R-dplyr \
+                    port:R-foreach \
+                    port:R-generics \
+                    port:R-glmnet \
+                    port:R-magrittr \
+                    port:R-modeltime \
+                    port:R-modeltime.resample \
+                    port:R-purrr \
+                    port:R-recipes \
+                    port:R-rlang \
+                    port:R-rsample \
+                    port:R-stringr \
+                    port:R-tibble \
+                    port:R-tictoc \
+                    port:R-tidyr \
+                    port:R-timetk \
+                    port:R-tune \
+                    port:R-workflows \
+                    port:R-yardstick
+
+depends_test-append port:R-dials \
+                    port:R-earth \
+                    port:R-gt \
+                    port:R-knitr \
+                    port:R-lubridate \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-tidymodels \
+                    port:R-xgboost
+
+test.run            yes

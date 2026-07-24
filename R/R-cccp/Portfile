@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran bernhard cccp 0.3-2
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3+
+description         Cone-Constrained Convex Problems
+long_description    {*}${description}
+checksums           rmd160  97aabdf7e67a8bbfdd2cb6ac83322ba1136131e8 \
+                    sha256  48543edceddc20e0194fb92b6edafb94bbf506ffd3b2334a561816f027203bc5 \
+                    size    40967
+
+depends_lib-append  port:R-Rcpp \
+                    port:R-RcppArmadillo
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-numDeriv \
+                    port:R-RUnit
+
+test.run            yes

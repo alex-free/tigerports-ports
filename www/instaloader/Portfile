@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                instaloader
+version             4.15
+revision            0
+categories-prepend  www multimedia
+platforms           any
+license             MIT
+maintainers         nomaintainer
+description         Download pictures from Instagram
+long_description    Download pictures (or videos) along with their captions \
+                    and other metadata from Instagram.
+homepage            https://github.com/instaloader/instaloader
+checksums           rmd160  7d16142678e2d00f811ab4bfdfc68d11c3a79125 \
+                    sha256  baf1c29ba16f9d30f7c6e330a00bc1fca100522bb3a217d3c36ad620eb744685 \
+                    size    66295
+supported_archs     noarch
+
+patch.pre_args-replace  -p0 -p1
+
+# https://github.com/instaloader/instaloader/pull/2545
+# patchfiles          59344dd08800fc7210f3b2ad2a563a26534a225d.patch
+
+python.default_version  312
+
+depends_lib-append  port:py${python.version}-browser_cookie3 \
+                    port:py${python.version}-requests

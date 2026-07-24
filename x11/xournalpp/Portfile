@@ -1,0 +1,73 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+
+# filesystem
+legacysupport.newest_darwin_requires_legacy 18
+
+github.setup        xournalpp xournalpp 1.3.2 v
+revision            1
+categories          x11 office sysutils
+maintainers         nomaintainer
+license             GPL-2
+
+description         A hand note taking software
+
+long_description    Xournal++ is a hand note taking software written in C++ \
+                    with the target of flexibility, functionality and speed.
+
+checksums           rmd160  2afbc6b26fc41a6b7008de85cb18550a2af469c1 \
+                    sha256  9c38cb9b9fedc307ac7cb2bba8a500858043c281fea12bcc9afd4914dfdcef6b \
+                    size    17156388
+github.tarball_from archive
+
+# https://github.com/xournalpp/xournalpp/issues/7070
+patchfiles          patch-librsvg.diff
+# The build may "forget" to link to CoreFoundation.
+patchfiles-append   patch-fix-linking-apple.diff
+
+depends_build-append \
+                    port:gettext \
+                    path:bin/git:git \
+                    port:help2man \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  port:adwaita-icon-theme \
+                    port:gettext-runtime \
+                    path:lib/pkgconfig/gtk+-3.0.pc:gtk3 \
+                    port:gtksourceview4 \
+                    path:lib/pkgconfig/librsvg-2.0.pc:librsvg \
+                    port:libsndfile \
+                    port:libzip \
+                    port:lua \
+                    path:lib/pkgconfig/poppler.pc:poppler \
+                    port:portaudio \
+                    port:qpdf \
+                    port:xorg-libX11 \
+                    port:xorg-libXext \
+                    port:xorg-libXi \
+                    port:zlib
+
+compiler.cxx_standard   2020
+
+# xournalpp(76272) malloc: *** error for object 0x2ff8034: Non-aligned pointer being freed
+legacysupport.redirect_bins xournalpp xournalpp-thumbnailer
+
+configure.args-append \
+                    -DCMAKE_REQUIRED_FIND_PACKAGE_X11=ON \
+                    -DENABLE_PLUGINS=ON \
+                    -DENABLE_PROFILING=OFF
+
+if {[string match *gcc* ${configure.compiler}] && ${configure.build_arch} in [list arm i386 ppc]} {
+    configure.ldflags-append \
+                    -latomic
+}
+
+post-destroot {
+    set docdir ${prefix}/share/doc/${subport}
+    xinstall -d ${destroot}${docdir}
+    xinstall -m 0644 -W ${worksrcpath} AUTHORS LICENSE CHANGELOG.md README.md ${destroot}${docdir}
+}

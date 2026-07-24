@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran biometry bipartite 2.22
+revision            1
+maintainers         nomaintainer
+license             GPL-2+
+description         Visualising bipartite networks \
+                    and calculating some (ecological) indices
+long_description    {*}${description}
+checksums           rmd160  f35870afd9fa041aa2d850195597ffa25f70e76c \
+                    sha256  5b43fae574778951f6a9b851d4465befe6f8918c9e42095c696a4729b7ef1e22 \
+                    size    4513741
+
+depends_lib-append  port:R-corpcor \
+                    port:R-fields \
+                    port:R-igraph \
+                    port:R-permute \
+                    port:R-sna \
+                    port:R-vegan
+
+depends_test-append port:R-knitr
+
+test.run            yes

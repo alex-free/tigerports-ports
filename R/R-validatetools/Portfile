@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran data-cleaning validatetools 0.6.1
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Checking and simplifying validation rule sets
+long_description    {*}${description}
+homepage            https://github.com/data-cleaning/validatetools
+checksums           rmd160  59b2946a29bf6f3b59d4af4f3f87a8fcb0a7fffc \
+                    sha256  306d58bcf3cd3862a62101d9b6c4e2b9baa3a795f5af62d398dc846accd5888a \
+                    size    33608
+supported_archs     noarch
+
+depends_lib-append  port:R-lpSolveAPI \
+                    port:R-validate
+
+depends_test-append port:R-covr \
+                    port:R-testthat
+
+test.run            yes

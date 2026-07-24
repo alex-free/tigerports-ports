@@ -1,0 +1,36 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran tidyverse purrr 1.2.2 v
+revision            0
+categories-append   devel
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Functional programming tools
+long_description    {*}${description}
+homepage            https://purrr.tidyverse.org
+checksums           rmd160  7913972f263183e3dee6496df3e5f4b311f89480 \
+                    sha256  ac3bc0fc0e789510042522e6c4294336c71447be8f6921b5ef78b9a9fb86617d \
+                    size    278508
+
+depends_lib-append  port:R-cli \
+                    port:R-lifecycle \
+                    port:R-magrittr \
+                    port:R-rlang \
+                    port:R-vctrs
+
+depends_test-append port:R-carrier \
+                    port:R-covr \
+                    port:R-dplyr \
+                    port:R-httr \
+                    port:R-knitr \
+                    port:R-lubridate \
+                    port:R-mirai \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-tibble \
+                    port:R-tidyselect
+
+test.run            yes

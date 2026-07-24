@@ -1,0 +1,42 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           legacysupport 1.1
+PortGroup           R 1.0
+
+# clock_gettime, timespec_gettimespec_get
+legacysupport.newest_darwin_requires_legacy 15
+
+R.setup             github r-lib later 1.4.8 v
+revision            0
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         The fastest delimited reader for R
+long_description    Schedule an R function or formula to run \
+                    after a specified period of time. \
+                    Similar to JavaScript’s setTimeout function.
+homepage            https://r-lib.github.io/later
+checksums           rmd160  594aadd4c0f103b7d587a22987b8671abcb6de7b \
+                    sha256  419359dfd76ec072277acd285b969f301a7b17471b47ab962ecd0e7577792310 \
+                    size    68829
+github.tarball_from archive
+
+depends_lib-append  port:R-Rcpp \
+                    port:R-rlang
+
+
+if {${os.platform} eq "darwin" && ${os.major} < 16} {
+    patchfiles-append \
+                    patch-legacysupport.diff
+    post-patch {
+        reinplace "s|@PREFIX@|${prefix}|" ${worksrcpath}/configure
+    }
+}
+
+depends_test-append port:R-knitr \
+                    port:R-nanonext \
+                    port:R-promises \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

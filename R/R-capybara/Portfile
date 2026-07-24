@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran pachadotdev capybara 1.0.1
+revision            2
+categories-append   math
+maintainers         nomaintainer
+license             Apache-2
+description         Fast and memory-efficient fitting of linear models \
+                    with high-dimensional fixed effects
+long_description    {*}${description}.
+homepage            https://pacha.dev/capybara
+checksums           rmd160  a41d76abf3c5efca3fd89d05e62016c1914ba421 \
+                    sha256  88ed6f1adffdb567a4d8196dbb21752e7d42011c928ffd0215a4754eeae4c2f0 \
+                    size    372312
+
+depends_lib-append  port:R-cpp11 \
+                    port:R-cpp11armadillo \
+                    port:R-data.table \
+                    port:R-Formula \
+                    port:R-generics \
+                    port:R-ggplot2 \
+                    port:R-kendallknight
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-broom \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-units
+
+test.run            yes

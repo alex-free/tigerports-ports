@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-json-repair
+python.rootname     json_repair
+version             0.61.1
+revision            0
+categories-append   devel
+platforms           any
+license             MIT
+maintainers         nomaintainer
+description         A package to repair broken json strings
+long_description    {*}${description}
+homepage            https://github.com/mangiucugna/json_repair
+checksums           rmd160  fff938b6b2d8af1c2c4eaf30d18f8cb5b23e2cec \
+                    sha256  24a68de2891c696ad3bd9a94874e8d3ef2d309c56af2973094b8297c975b5b58 \
+                    size    50069
+supported_archs     noarch
+
+python.versions     310 311 312 313 314

@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran grantmcdermott etwfe 0.6.0
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Extended Two-Way Fixed Effects
+long_description    {*}${description}
+homepage            https://grantmcdermott.com/etwfe
+checksums           rmd160  7d2f0d4c2c7256fd99078e375330f612be6ca842 \
+                    sha256  a252616173bfb0bae1932c1bda22594bc14044e07c4b364f6abd954d99674182 \
+                    size    197348
+supported_archs     noarch
+
+depends_lib-append  port:R-data.table \
+                    port:R-fixest \
+                    port:R-Formula \
+                    port:R-marginaleffects \
+                    port:R-tinyplot
+
+depends_test-append port:R-broom \
+                    port:R-did \
+                    port:R-ggplot2 \
+                    port:R-knitr \
+                    port:R-modelsummary \
+                    port:R-rmarkdown \
+                    port:R-tinytest
+
+test.run            yes

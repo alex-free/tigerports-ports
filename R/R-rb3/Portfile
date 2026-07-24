@@ -1,0 +1,53 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran ropensci rb3 0.1.0 v
+revision            1
+categories-append   finance
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Download and parse public data released by B3 Exchange
+long_description    {*}${description}
+homepage            https://ropensci.github.io/${R.package}
+checksums           rmd160  a8486920e4a68751c052c55b2f215d121680fcc1 \
+                    sha256  8942dc85cc8c76e552a847681eddb2d9739ed501d18a23068160d672a98ffbdc \
+                    size    4129048
+supported_archs     noarch
+
+depends_lib-append  port:R-arrow \
+                    port:R-base64enc \
+                    port:R-bizdays \
+                    port:R-cli \
+                    port:R-DBI \
+                    port:R-digest \
+                    port:R-dplyr \
+                    port:R-httr \
+                    port:R-jsonlite \
+                    port:R-lubridate \
+                    port:R-purrr \
+                    port:R-R.utils \
+                    port:R-readr \
+                    port:R-rlang \
+                    port:R-RSQLite \
+                    port:R-stringi \
+                    port:R-stringr \
+                    port:R-XML \
+                    port:R-yaml
+
+depends_test-append port:R-covr \
+                    port:R-ggplot2 \
+                    port:R-knitr \
+                    port:R-magrittr \
+                    port:R-rmarkdown \
+                    port:R-scales \
+                    port:R-testthat \
+                    port:R-tibble \
+                    port:R-tidyr \
+                    port:R-vcr \
+                    port:R-withr
+
+test.run            yes

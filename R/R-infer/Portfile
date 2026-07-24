@@ -1,0 +1,48 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github tidymodels infer 1.1.0 v
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Tidy statistical inference
+long_description    {*}${description}
+homepage            https://infer.tidymodels.org
+checksums           rmd160  11488fc822316f4388f0ac545402759c4b0d62fa \
+                    sha256  109192f2c1ed5b096a97224f8090a6ac0496c7a0883144c0f9a176f5f540275c \
+                    size    2772972
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-broom \
+                    port:R-cli \
+                    port:R-dplyr \
+                    port:R-generics \
+                    port:R-ggplot2 \
+                    port:R-glue \
+                    port:R-lifecycle \
+                    port:R-magrittr \
+                    port:R-patchwork \
+                    port:R-purrr \
+                    port:R-rlang \
+                    port:R-tibble \
+                    port:R-tidyr \
+                    port:R-vctrs \
+                    port:R-withr
+
+depends_test-append port:R-covr \
+                    port:R-devtools \
+                    port:R-fs \
+                    port:R-knitr \
+                    port:R-nycflights13 \
+                    port:R-parsnip \
+                    port:R-rmarkdown \
+                    port:R-stringr \
+                    port:R-testthat \
+                    port:R-vdiffr
+
+test.run            yes

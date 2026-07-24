@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran jmbarbone fuj 0.2.2
+revision            1
+categories-append   devel
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Functions and utilities for packages and other code
+long_description    {*}${description} developed by Jordan Mark Barbone.
+homepage            https://jmbarbone.github.io/fuj
+checksums           rmd160  ef49d3ceee6b8443f27bbabe0080c6d8a05ea877 \
+                    sha256  7f8ff8c044f00ef819e73a79394836f7d1b22ba6f1e261a0972c301e85a52073 \
+                    size    105465
+supported_archs     noarch
+
+depends_test-append port:R-spelling \
+                    port:R-testthat
+
+test.run            yes

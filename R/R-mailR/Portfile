@@ -1,0 +1,37 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           active_variants 1.1
+PortGroup           R 1.0
+
+# GitHub version is archaic.
+R.setup             cran rpremrajGit mailR 0.8 v
+revision            1
+categories-append   mail java
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Utility to send e-mails from R
+long_description    Interface to Apache Commons E-mail to send e-mails from R.
+homepage            https://github.com/beast-dev/BeastJar
+checksums           rmd160  a437c71aaf9ce1b5f7d58a84bf2cfc5aa69b6ce2 \
+                    sha256  530014b1485bfa7efdb46548bd6a751d711bfbfff1000956eb37e8eaefefdb5c \
+                    size    731828
+supported_archs     noarch
+
+require_active_variants R java
+
+if {${configure.build_arch} in [list ppc ppc64]} {
+    depends_run-append \
+                    port:openjdk8
+} else {
+    PortGroup       java 1.0
+
+}
+
+depends_lib-append  port:R-assertthat \
+                    port:R-R.utils \
+                    port:R-rJava \
+                    port:R-stringr
+
+test.run            yes

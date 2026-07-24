@@ -1,0 +1,70 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran r-dbi odbc 1.6.4.1 v
+revision            1
+categories-append   databases
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         DBI-compatible interface to ODBC databases
+long_description    {*}${description}
+homepage            https://r-dbi.github.io/odbc
+checksums           rmd160  8400b35e5a9de91d8d389660ce2e37b2f0070502 \
+                    sha256  7135ea9132f02494b8f39701ea2be613556635c3d50ec0e6a9b224e1d47273fe \
+                    size    359917
+# github.tarball_from archive
+
+patchfiles          patch-configure.diff
+
+# https://github.com/nanodbc/nanodbc/issues/438
+patchfiles-append   patch-MAC_OS_X_VERSION_MIN_REQUIRED.diff
+
+variant libiodbc description "Use libiodbc" {
+    depends_lib-append \
+                    port:libiodbc
+    post-patch {
+        reinplace "s|@ODBC@|libiodbc|g" ${worksrcpath}/configure
+    }
+}
+
+variant unixODBC description "Use unixODBC" {
+    depends_lib-append \
+                    port:unixODBC
+    post-patch {
+        reinplace "s|@ODBC@|unixODBC|g" ${worksrcpath}/configure
+    }
+}
+
+if {![variant_isset libiodbc] && ![variant_isset unixODBC]} {
+    default_variants    +libiodbc
+}
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  port:R-bit64 \
+                    port:R-blob \
+                    port:R-cli \
+                    port:R-DBI \
+                    port:R-hms \
+                    port:R-lifecycle \
+                    port:R-Rcpp \
+                    port:R-rlang
+
+depends_test-append port:R-connectcreds \
+                    port:R-covr \
+                    port:R-DBItest \
+                    port:R-httr2 \
+                    port:R-knitr \
+                    port:R-magrittr \
+                    port:R-paws.common \
+                    port:R-rmarkdown \
+                    port:R-RSQLite \
+                    port:R-testthat \
+                    port:R-tibble \
+                    port:R-withr
+
+test.run            yes

@@ -1,0 +1,58 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+
+name                Thunar
+version             4.18.11
+revision            0
+set branch          [join [lrange [split ${version} .] 0 1] .]
+categories          xfce
+license             {GPL-2+ LGPL-2+}
+maintainers         nomaintainer
+description         Thunar is a modern file manager for the Unix/Linux desktop
+long_description    {*}${description}
+
+homepage            https://docs.xfce.org/xfce/thunar/start
+master_sites        https://archive.xfce.org/src/xfce/thunar/${branch}/
+distname            thunar-${version}
+use_bzip2           yes
+checksums           rmd160  555336e967f65bc78e989380282159cefa41ae69 \
+                    sha256  7d0bdae2076a568c137d403ab5600e06a7a4f7a02514d486da7b8414aa75d612 \
+                    size    2944418
+
+patchfiles          no-symlink.patch
+
+configure.args-append \
+                    --enable-dbus \
+                    --enable-exif \
+                    --enable-pcre \
+                    --enable-startup-notification
+
+depends_build-append \
+                    port:intltool \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  port:desktop-file-utils \
+                    port:exo \
+                    port:libexif \
+                    port:libnotify \
+                    port:pcre \
+                    port:shared-mime-info \
+                    port:startup-notification \
+                    port:xfce4-panel
+
+# thunar-gobject-extensions.c: error: ‘for’ loop initial declaration used outside C99 mode
+configure.cflags-append \
+                    -std=c99
+# xfce-gtk-extensions.h: error: redefinition of typedef ‘XfceGtkActionEntry’
+compiler.blacklist-append \
+                    *gcc-4.0 *gcc-4.2
+
+variant quartz conflicts x11 {
+    depends_lib-delete \
+                    port:startup-notification
+    configure.args-append \
+                    --disable-wallpaper-plugin
+    configure.args-replace \
+                    --enable-startup-notification --disable-startup-notification
+}

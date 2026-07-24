@@ -1,0 +1,47 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is archaic.
+R.setup             cran asgr imager 1.0.5
+revision            1
+categories-append   graphics
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             LGPL-3
+description         Image processing library based on CImg
+long_description    {*}${description}
+homepage            https://asgr.github.io/imager
+checksums           rmd160  949fb16cd0e9be0c27f6fcfcd83632f8c830eb86 \
+                    sha256  66919076fcc1211b1da4e20d934037c420c63c8a098c0b322cf3e398d3c20455 \
+                    size    4526601
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  port:fftw-3 \
+                    port:R-downloader \
+                    port:R-igraph \
+                    port:R-jpeg \
+                    port:R-magrittr \
+                    port:R-png \
+                    port:R-purrr \
+                    port:R-Rcpp \
+                    port:R-readbitmap \
+                    port:R-stringr \
+                    port:tiff \
+                    port:xorg-libx11
+
+depends_test-append port:R-Cairo \
+                    port:R-dplyr \
+                    port:R-ggplot2 \
+                    port:R-knitr \
+                    port:R-magick \
+                    port:R-raster \
+                    port:R-rmarkdown \
+                    port:R-scales \
+                    port:R-spatstat.geom \
+                    port:R-testthat \
+                    port:R-webp
+
+test.run            yes

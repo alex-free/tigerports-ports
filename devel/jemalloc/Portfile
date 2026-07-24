@@ -1,0 +1,74 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           muniversal 1.1
+
+name                jemalloc
+license             BSD
+categories          devel
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+
+description         general-purpose scalable concurrent malloc(3) implementation
+long_description    ${name} is a {*}${description}.
+
+homepage            https://jemalloc.net
+
+if {${subport} eq ${name}} {
+    github.setup        jemalloc jemalloc 5.3.1
+    revision            1
+    conflicts           jemalloc-devel
+    checksums           rmd160  6743dc2c828f1e3c60a6db31f648c65a8ec834ca \
+                        sha256  3826bc80232f22ed5c4662f3034f799ca316e819103bdc7bb99018a421706f92 \
+                        size    920181
+    github.tarball_from releases
+    use_bzip2           yes
+
+    # Do not use OSAtomicAdd64 to detect macOS atomics, it is not defined on 32-bit:
+    patchfiles-append   osatomic.patch
+
+    # building as x86_64 on an arm64 Mac gives an error if rosetta is installed
+    # https://trac.macports.org/ticket/65671
+    patchfiles-append   patch-universal.diff
+}
+
+subport jemalloc-devel {
+    # Upstream has archived the repo. Unless it gets forked, this is it.
+    github.setup        jemalloc jemalloc 94977e823ea76356c897b58492cf8afe64bf6e1b
+    version             2026.04.21
+    revision            1
+    conflicts           jemalloc
+    checksums           rmd160  624063e152d918dd9afdbc1c92d2008b65793eb0 \
+                        sha256  0482eb20109c89821ed5f83e6cd2f001b15dbe4f62b99580f813ca24f7ded4db \
+                        size    927833
+    github.tarball_from archive
+
+    use_autoreconf      yes
+    # autoheader: warning: missing template: LIMIT_USIZE_GAP
+    # autoheader: warning: Use AC_DEFINE([LIMIT_USIZE_GAP], [], [Description])
+    # autoreconf: error: /opt/local/bin/autoheader failed with exit status: 1
+    autoreconf.cmd      ./autogen.sh
+    autoreconf.args
+    depends_build-append \
+                        port:autoconf \
+                        port:automake \
+                        port:libtool
+}
+
+compiler.cxx_standard   2014
+
+configure.args-append   --with-jemalloc-prefix=
+
+# Untested
+platform darwin 8 {
+    configure.args-append \
+                        --disable-zone-allocator
+}
+
+# provide a compatibility symlink with the older name
+post-destroot {
+    ln -s jeprof ${destroot}${prefix}/bin/jemalloc-prof
+}
+
+test.run            yes
+test.target         check

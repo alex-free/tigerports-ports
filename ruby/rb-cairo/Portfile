@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           ruby 1.0
+
+ruby.branches       3.3 3.2 3.1
+ruby.setup          cairo 1.18.4 gem {} rubygems
+maintainers         {kimuraw @kimuraw} openmaintainer
+description         Ruby bindings for Cairo
+long_description    {*}${description}. Cairo is a 2D graphics library \
+                    with support for multiple output devices.
+homepage            https://rcairo.github.io
+categories-append   graphics
+license             GPL-2+ Ruby
+
+checksums           rmd160  a8b6b4e5f28c70a4850cb5b5fcbacbee013e7240 \
+                    sha256  9a07667d9aef12421d0cdceaa6287f5efbc1e8ad581a4fd07696e0f9dd472d0b \
+                    size    199680
+
+if {${name} ne ${subport}} {
+    depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+
+    depends_lib-append \
+                    path:lib/pkgconfig/cairo.pc:cairo \
+                    port:freetype
+
+    depends_run-append \
+                    port:rb${ruby.suffix}-native-package-installer \
+                    port:rb${ruby.suffix}-pkg-config \
+                    port:rb${ruby.suffix}-red-colors
+}

@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran r-project Ecdat 0.4.7
+revision            1
+categories-append   economics
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Data-sets for econometrics
+long_description    {*}${description}, including political science.
+homepage            https://github.com/sbgraves237/Ecdat
+checksums           rmd160  82375d0dd8c15afffef3be9fca7c4412f94b902a \
+                    sha256  cd61f4de6196b74ff0c42ce8b9a6f29a90515279e4c3a686e3aa0c5913210bcc \
+                    size    2898963
+supported_archs     noarch
+
+depends_test-append port:R-carData \
+                    port:R-Ecfun \
+                    port:R-plm \
+                    port:R-systemfit \
+                    port:R-wooldridge
+
+test.run            yes

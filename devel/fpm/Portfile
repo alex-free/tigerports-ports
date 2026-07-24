@@ -1,0 +1,58 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           compilers 1.0
+PortGroup           github 1.0
+
+github.setup        fortran-lang fpm 0.13.0 v
+revision            0
+categories          devel fortran
+license             MIT
+maintainers         {@barracuda156 macos-powerpc.org:barracuda}
+description         Fortran Package Manager
+long_description    {*}${description} (fpm) is a package manager and build system for Fortran. \
+                    Its key goal is to improve the user experience of Fortran programmers. \
+                    It does so by making it easier to build your Fortran program or library, \
+                    run the executables, tests and examples, and distribute it as a dependency \
+                    to other Fortran projects.
+homepage            https://fpm.fortran-lang.org
+checksums           rmd160  0c57378658f87b35f704d2c34c5989d056429584 \
+                    sha256  6cb305bbc9a2f351b8dc8908d96ca198ba732f93707c6bb38d99e79647a72564 \
+                    size    347865
+github.tarball_from archive
+
+depends_build-append \
+                    port:curl
+
+if {${os.platform} eq "darwin" && ${os.major} < 13} {
+    # Lion+ (with Xcode 4.1+) have git; earlier need to bring their own.
+    # On 10.8.5 git fetch fails with ssl error.
+    depends_build-append    path:bin/git:git
+    git.cmd                 ${prefix}/bin/git
+}
+
+patchfiles          patch-install.diff
+
+post-patch {
+    reinplace "s,@FC@,${configure.fc}," ${worksrcpath}/install.sh
+    reinplace "s,@PREFIX@,${worksrcpath}${prefix}," ${worksrcpath}/install.sh
+
+    file attributes ${worksrcpath}/install.sh -permissions +x
+}
+
+# Xcode clang of 10.7 fails with error: invalid instruction mnemonic 'cvtsi2ssl'
+compiler.blacklist-append \
+                    {clang < 500} {*gcc-[34].*} {macports-gcc-[56]}
+compilers.setup     require_fortran
+
+use_configure       no
+
+build.cmd           ${worksrcpath}/install.sh
+build.target
+build.cmd-prepend   FPM_CFLAGS="${configure.cflags} [get_canonical_archflags cc]" \
+                    FPM_LDFLAGS="${configure.ldflags} [get_canonical_archflags ld]"
+
+destroot {
+    xinstall -d -m 0755 ${destroot}${prefix}/bin
+    copy ${worksrcpath}${prefix}/bin/${name} ${destroot}${prefix}/bin/
+}

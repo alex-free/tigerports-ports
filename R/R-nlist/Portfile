@@ -1,0 +1,39 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran poissonconsulting nlist 0.4.0 v
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Lists of numeric atomic objects
+long_description    {*}${description}
+homepage            https://poissonconsulting.github.io/nlist
+checksums           rmd160  5e105a31ac1689b2abbd8d7770b3f28411c0aed1 \
+                    sha256  44a0ec355605a43108243f1e5468beb3d73bdaf10385ae02f3a3b40f6d5168f0 \
+                    size    63385
+# github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-abind \
+                    port:R-chk \
+                    port:R-coda \
+                    port:R-extras \
+                    port:R-generics \
+                    port:R-lifecycle \
+                    port:R-purrr \
+                    port:R-term \
+                    port:R-tibble \
+                    port:R-universals
+
+depends_test-append port:R-covr \
+                    port:R-knitr \
+                    port:R-mcmcr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

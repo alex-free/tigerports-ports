@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is outdated.
+R.setup             cran richfitz storr 1.2.6
+revision            1
+categories-append   devel
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Simple key value stores
+long_description    Creates and manages simple key-value stores. These can use a variety of approaches for storing the data. \
+                    This package implements the base methods and support for file system, in-memory and DBI-based database stores.
+checksums           rmd160  51a4e5e22627fc10d67193a0b1a97a7a33ddabb6 \
+                    sha256  c5a76ad87af6d4cd21d26a13422217508cf5d83f608e24688bc136e97fb4eeea \
+                    size    92283
+
+depends_lib-append  port:R-digest \
+                    port:R-R6
+
+depends_test-append port:R-DBI \
+                    port:R-knitr \
+                    port:R-mockr \
+                    port:R-progress \
+                    port:R-rbenchmark \
+                    port:R-rmarkdown \
+                    port:R-RPostgres \
+                    port:R-RSQLite \
+                    port:R-testthat
+
+test.run            yes

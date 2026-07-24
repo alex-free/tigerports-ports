@@ -1,0 +1,33 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran rsquaredacademy yahoofinancer 0.4.0
+revision            1
+categories-append   finance www
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Fetch data from Yahoo Finance API
+long_description    {*}${description}
+homepage            https://yahoofinancer.rsquaredacademy.com
+checksums           rmd160  574e738eb731b8998ccb58a978c59e08c19974d0 \
+                    sha256  a910ff225ded033b0d07988a8a68f6e5cff2c861bd0d478c67fe0eda292a43e3 \
+                    size    120929
+supported_archs     noarch
+
+depends_lib-append  port:R-curl \
+                    port:R-httr \
+                    port:R-jsonlite \
+                    port:R-lubridate \
+                    port:R-magrittr \
+                    port:R-purrr \
+                    port:R-R6 \
+                    port:R-stringr
+
+depends_test-append port:R-covr \
+                    port:R-httptest \
+                    port:R-testthat
+
+test.run            yes

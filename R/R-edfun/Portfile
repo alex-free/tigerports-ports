@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran talgalili edfun 0.2.0
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             {GPL-2 GPL-3}
+description         Create empirical distribution functions
+long_description    {*}${description}
+homepage            https://github.com/talgalili/edfun
+checksums           rmd160  d36324bd6a89aec4d0f473eedea69e8be732fb43 \
+                    sha256  bfba01f5075306569ae08e8c63b7b0892c16a85ccb94625a60e70fe0df32bdf3 \
+                    size    323180
+supported_archs     noarch
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown
+
+test.run            yes

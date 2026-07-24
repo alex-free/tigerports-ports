@@ -1,0 +1,40 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+PortGroup           meson 1.0
+
+# filesystem
+legacysupport.newest_darwin_requires_legacy 18
+legacysupport.use_mp_libcxx yes
+
+github.setup        NanoMichael MicroTeX 0e3707f6dafebb121d98b53c64364d16fefe481d
+version             2024.08.06
+revision            0
+categories          tex
+license             MIT
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+description         Dynamic, cross-platform and embeddable LaTeX rendering library
+long_description    {*}${description}
+checksums           rmd160  38bc6cdb051ffe88a7950398849fa973ef968f7e \
+                    sha256  47476269d29c41df322bce6bdd2daa7017cc50b9eda841b2bec1767dba28daa6 \
+                    size    1599003
+github.tarball_from archive
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  port:gtkmm3 \
+                    port:gtksourceviewmm3 \
+                    port:tinyxml2
+
+compiler.cxx_standard   2017
+
+# Oddly, only macOS 12 fails to compile this.
+# error: no matching function for call to 'not_fn'
+# s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not_fn<int(int)>(isspace)));
+if {${os.platform} eq "darwin" && ${os.major} == 21} {
+    compiler.blacklist-append \
+                    {clang}
+}

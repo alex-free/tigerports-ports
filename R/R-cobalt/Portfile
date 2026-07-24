@@ -1,0 +1,40 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran ngreifer cobalt 4.6.2
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Covariate balance tables and plots
+long_description    {*}${description}
+homepage            https://ngreifer.github.io/cobalt
+checksums           rmd160  17a42fff80cc678c5c8c9f5aea4524570ebc0857 \
+                    sha256  1526a2c2d37b6e12e297d25304741196cb301476308b6f479f1bd20bb2503cf9 \
+                    size    2101947
+supported_archs     noarch
+
+depends_lib-append  port:R-chk \
+                    port:R-cli \
+                    port:R-crayon \
+                    port:R-ggplot2 \
+                    port:R-gridExtra \
+                    port:R-gtable \
+                    port:R-rlang
+
+# Several packages are omitted, since they are not in MacPorts atm.
+depends_test-append port:R-brglm2 \
+                    port:R-caret \
+                    port:R-CBPS \
+                    port:R-ebal \
+                    port:R-gbm \
+                    port:R-knitr \
+                    port:R-MatchIt \
+                    port:R-mice \
+                    port:R-optweight \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-twang \
+                    port:R-WeightIt

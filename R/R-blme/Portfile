@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran vdorie blme 1.0-7
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Bayesian Linear Mixed Effect models
+long_description    Maximum a posteriori estimation for linear and generalized linear mixed-effects models \
+                    in a Bayesian setting. Extends lme4 package.
+homepage            https://github.com/vdorie/blme
+checksums           rmd160  b83dff90bafa3e3b4ffd413c6fce0735f5e2d742 \
+                    sha256  5647b91ce106aab2fce9e50c62324bba3236977956b1ecec08a4611fa3f21efa \
+                    size    42472
+supported_archs     noarch
+
+depends_lib-append  port:R-lme4
+
+depends_test-append port:R-expint \
+                    port:R-testthat
+
+test.run            yes

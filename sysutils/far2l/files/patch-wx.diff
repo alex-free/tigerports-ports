@@ -1,0 +1,44 @@
+--- far2l/CMakeLists.txt
++++ far2l/CMakeLists.txt	2025-09-18 02:18:40.000000000 +0800
+@@ -195,23 +195,8 @@
+ endif()
+ 
+ # Set target names for the executables
+-if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+-    set(MACOSX_BUNDLE_LONG_VERSION_STRING ${VERSION})
+-    set(MACOSX_BUNDLE_SHORT_VERSION_STRING ${VERSION})
+-    set(MACOSX_BUNDLE_GUI_IDENTIFIER ${APP_IDENTIFIER})
+-    set(MACOSX_BUNDLE_ICON_FILE "Far.icns")
+-    set(MACOSX_BUNDLE_BUNDLE_NAME ${APP_NAME})
+-    add_executable(far2l MACOSX_BUNDLE ${SOURCES} "DE/Far.icns")
+-    set_target_properties(far2l PROPERTIES
+-        OUTPUT_NAME ${APP_NAME}
+-        RUNTIME_OUTPUT_DIRECTORY ${APP_DIR})
+-    set_source_files_properties("DE/Far.icns" PROPERTIES
+-        MACOSX_PACKAGE_LOCATION Resources)
+-else()
+-    add_executable(far2l ${SOURCES})
+-    set_target_properties(far2l PROPERTIES
+-        RUNTIME_OUTPUT_DIRECTORY "${INSTALL_DIR}")
+-endif()
++add_executable(far2l ${SOURCES})
++set_target_properties(far2l PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${INSTALL_DIR}")
+ 
+ if (NOT DEFINED USEUCD)
+     set(USEUCD "YES")
+@@ -292,9 +292,6 @@
+     COMMAND ln -sf ${EXECUTABLE_NAME} ${INSTALL_DIR}/far2l_sudoapp
+     COMMAND ln -sf ${EXECUTABLE_NAME} ${INSTALL_DIR}/far2ledit)
+ 
+-if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+-#TODO
+-else()
+     configure_file("${CMAKE_CURRENT_SOURCE_DIR}/DE/far2l-tty.desktop" "${CMAKE_CURRENT_BINARY_DIR}/DE/far2l-tty.desktop")
+     configure_file("${CMAKE_CURRENT_SOURCE_DIR}/DE/far2ledit-tty.desktop" "${CMAKE_CURRENT_BINARY_DIR}/DE/far2ledit-tty.desktop")
+     configure_file("${CMAKE_CURRENT_SOURCE_DIR}/DE/far2l.desktop" "${CMAKE_CURRENT_BINARY_DIR}/DE/far2l.desktop")
+@@ -342,5 +339,3 @@
+     else()
+         message(WARNING "Python >=3.9 interpreter not found. Skipping AppStream metainfo generation.")
+     endif()
+-
+-endif()

@@ -1,0 +1,47 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+
+name                    dsocks
+version                 1.8
+categories              net
+license                 GPL-2
+maintainers             nomaintainer
+description             SOCKS client wrapper for *BSD / Mac OS X
+long_description        dsocks supports just enough of SOCKS 4 and 5 to allow \
+                        non-SOCKS-aware applications to connect through either \
+                        a local OpenSSH or a local Tor SOCKS proxy.
+platforms               darwin freebsd
+
+homepage                https://monkey.org/~dugsong/dsocks/
+master_sites            googlecode
+
+checksums               rmd160  79c53384e8509dff824c12bbc47dae8c208ca803 \
+                        sha256  2b57fb487633f6d8b002f7fe1755480ae864c5e854e88b619329d9f51c980f1d \
+                        size    9932
+
+depends_run             bin:ssh:openssh
+
+post-patch  {
+    reinplace "s|/usr/local|${prefix}|g" \
+        ${worksrcpath}/dsocks.sh \
+        ${worksrcpath}/dsocks-torify.sh
+}
+
+use_configure           no
+
+build.type              bsd
+
+destroot.post_args      DESTDIR=${destroot} LIBDIR=${prefix}/lib STRIP=''
+
+post-destroot {
+    xinstall -m 755 ${worksrcpath}/dsocks.sh ${destroot}${prefix}/bin
+}
+
+variant tor description {Add support for using the TOR anonymising network} {
+    depends_run-append  bin:tor:tor port:py27-dpkt
+    
+    post-destroot {
+        xinstall -W ${worksrcpath} dsocks.sh dsocks-torify.sh tor-dns-proxy.py ${destroot}${prefix}/bin
+    }
+}

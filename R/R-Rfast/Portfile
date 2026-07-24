@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran RfastOfficial Rfast 2.1.5.2
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Collection of efficient and extremely fast R functions
+long_description    {*}${description}
+homepage            https://github.com/RfastOfficial/Rfast
+checksums           rmd160  4dfd04489df264e1eb9a380d6b3c2e64c751b8cc \
+                    sha256  d2032ce3565b6e1e63b8d3ea66d3b4e92fcafd7db46a0e28ff93d60b87dc1697 \
+                    size    338390
+
+depends_lib-append  port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-RcppParallel \
+                    port:R-zigg
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-philentropy
+
+test.run            yes

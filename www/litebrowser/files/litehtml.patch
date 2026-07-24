@@ -1,0 +1,64 @@
+Don't use bundled litehtml. Use MacPorts litehtml.
+diff --git CMakeLists.txt CMakeLists.txt
+index bffe7ef..43f3581 100644
+--- CMakeLists.txt
++++ CMakeLists.txt
+@@ -16,8 +16,8 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+ set(CMAKE_C_FLAGS_RELEASE "-O3")
+ 
+ set(LITEBROWSER_PATH src)
+-set(LITEHTML_PATH litehtml)
+-set(CONTAINER_PATH ${LITEHTML_PATH}/containers/cairo)
++set(LITEHTML_PATH ${CMAKE_INSTALL_PREFIX})
++set(CONTAINER_PATH ${LITEHTML_PATH}/include/litehtml/containers/cairo)
+ 
+ pkg_check_modules(LB_LIBS REQUIRED gdkmm-3.0 gtkmm-3.0 libcurl cairo pango pangocairo)
+ 
+@@ -49,7 +49,6 @@ set(HEADERS ${LITEBROWSER_PATH}/browser_wnd.h
+         )
+ 
+ option(LITEHTML_BUILD_TESTING "enable testing for litehtml" OFF)
+-add_subdirectory(${LITEHTML_PATH})
+ 
+ # additional warnings
+ add_compile_options(-Wall -Wextra -Wpedantic)
+diff --git src/globals.h src/globals.h
+index 83a9e05..0490f35 100644
+--- src/globals.h
++++ src/globals.h
+@@ -19,7 +19,7 @@
+ #include <gtkmm.h>
+ #include <gtkmm/application.h>
+ #include <gtkmm/window.h>
+-#include "../litehtml/include/litehtml.h"
++#include <litehtml/litehtml.h>
+ #include <cairo-ft.h>
+ #include <gdk/gdk.h>
+ #include <cairomm/context.h>
+
+diff --git src/html_dumper.h src/html_dumper.h
+index e5bbe45..311c6a6 100644
+--- src/html_dumper.h
++++ src/html_dumper.h
+@@ -1,7 +1,7 @@
+ #ifndef LITEBROWSER_HTML_DUMPER_H
+ #define LITEBROWSER_HTML_DUMPER_H
+ 
+-#include <litehtml.h>
++#include <litehtml/litehtml.h>
+ #include <fstream>
+ 
+ #define BUFF_SIZE    (10 * 1024)
+diff --git src/html_host.h src/html_host.h
+index 3e60843..20673d8 100644
+--- src/html_host.h
++++ src/html_host.h
+@@ -1,7 +1,7 @@
+ #ifndef LITEBROWSER_HTML_HOST_H
+ #define LITEBROWSER_HTML_HOST_H
+ 
+-#include <litehtml.h>
++#include <litehtml/litehtml.h>
+ 
+ namespace litebrowser
+ {

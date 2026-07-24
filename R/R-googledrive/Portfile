@@ -1,0 +1,42 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github tidyverse googledrive 2.1.2 v
+revision            1
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Interface to Google Drive
+long_description    Manage Google Drive files from R.
+homepage            https://googledrive.tidyverse.org
+checksums           rmd160  c4ea1eecf042ddc4bb62a901a1ff3b8d10f0332b \
+                    sha256  1f3b0b6301deced1038eee7698db5764a14f37567c020ae1db3beb0c3a8a8a19 \
+                    size    2294282
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-cli \
+                    port:R-gargle \
+                    port:R-glue \
+                    port:R-httr \
+                    port:R-jsonlite \
+                    port:R-lifecycle \
+                    port:R-magrittr \
+                    port:R-pillar \
+                    port:R-purrr \
+                    port:R-rlang \
+                    port:R-tibble \
+                    port:R-uuid \
+                    port:R-vctrs \
+                    port:R-withr
+
+depends_test-append port:R-curl \
+                    port:R-dplyr \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-spelling \
+                    port:R-testthat
+
+test.run            yes

@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github bmewing mgsub 1.7.3 v
+revision            1
+categories-append   textproc
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2
+description         Safe, Multiple, Simultaneous String Substitution
+long_description    {*}${description}
+homepage            https://github.com/yanyachen/FinCovRegularization
+checksums           rmd160  f2c2fcf521c4791f7c07efec81f90229248baf05 \
+                    sha256  1ce1e8989538316720bf9a76b8dbfb3835f90508bb0af8984a1d1095919804d7 \
+                    size    12539
+github.tarball_from archive
+supported_archs     noarch
+
+depends_test-append port:R-covr \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

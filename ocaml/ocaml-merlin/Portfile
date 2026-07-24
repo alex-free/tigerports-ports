@@ -1,0 +1,42 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           ocaml 1.1
+
+# Version must match OCaml: https://github.com/ocaml/merlin/issues/1697
+name                ocaml-merlin
+github.setup        ocaml merlin 4.19-414 v
+revision            1
+categories          ocaml devel
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             MIT
+description         Editor helper, provides completion, typing and source browsing in Vim and Emacs
+long_description    {*}${description}
+checksums           rmd160  e54351cfb18d0cd53e9c4ac4c592d7fe9cfe3c0d \
+                    sha256  8e112c36eb38b3751e5d2d167ac11749619cdc2057257d3bbb866b9f28f5c31d \
+                    size    2504665
+github.tarball_from archive
+
+ocaml.build_type    dune
+
+if {${subport} eq ${name} } {
+    depends_lib-append \
+                    port:ocaml-dot-merlin-reader \
+                    port:ocaml-yojson
+}
+
+subport ocaml-dot-merlin-reader {
+    description     Reads config files for merlin
+    depends_lib-append \
+                    port:ocaml-findlib \
+                    port:ocaml-merlin-lib
+}
+
+subport ocaml-merlin-lib {
+    depends_lib-append \
+                    port:ocaml-csexp \
+                    port:ocaml-menhir \
+                    port:ocaml-menhirLib \
+                    port:ocaml-menhirSdk
+}

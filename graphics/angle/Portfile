@@ -1,0 +1,344 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+
+# strnlen
+legacysupport.newest_darwin_requires_legacy 10
+
+set rev             13e691adf3d4d3ebee2f7239731a07d3b9704956
+
+github.setup        google angle $rev
+
+# Major and minor version from src/common/angle_version.h
+# Patch version using `git rev-list HEAD --count`
+version             2.1.27953
+revision            0
+categories          graphics devel
+platforms           {darwin >= 10}
+license             BSD
+maintainers         {makr @mohd-akram} {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+
+description         OpenGL ES implementation
+long_description    Cross-platform, conformant OpenGL ES implementation.
+
+homepage            https://angleproject.org
+
+github.tarball_from archive
+
+# grep -E '/src/(build\.|testing|third_party/zlib)|jsoncpp_revision.:|SPIRV-(Headers|Tools)|Vulkan-Headers|astc-encoder@' DEPS
+set astc_encoder    2319d9c4d4af53a7fc7c52985e264ce6e8a02a9b
+set cr_build        5e78d27a99576916b3cc2e99c46a623719c58d43
+set cr_jsoncpp      f62d44704b4da6014aa231cfc116e7fd29617d2a
+set cr_testing      9d6144773492600f776980ed1e09913108051973
+set cr_zlib         3246f1b60849cc505e231c5d19d0cbf358093555
+set jsoncpp         42e892d96e47b1f6e29844cc705e148ec4856448
+set spirv_headers   1e770e7de8373a8dd49f23416cf7ca4001d01040
+set spirv_tools     39813baec458ada43263749757b15fbfbd6be107
+set vk_headers      015e25c3c91b70eb1a754d36fb14c4ba6ad9b0b9
+
+master_sites-append https://github.com/gsource-mirror/chromium-src-build/archive/${cr_build}:chromium-build
+distfiles-append    chromium-src-build-${cr_build}${extract.suffix}:chromium-build
+
+master_sites-append https://github.com/gsource-mirror/chromium-src-testing/archive/${cr_testing}:chromium-testing
+distfiles-append    chromium-src-testing-${cr_testing}${extract.suffix}:chromium-testing
+
+master_sites-append https://github.com/gsource-mirror/chromium-src-third_party-jsoncpp/archive/${cr_jsoncpp}:chromium-jsoncpp
+distfiles-append    chromium-src-third_party-jsoncpp-${cr_jsoncpp}${extract.suffix}:chromium-jsoncpp
+
+master_sites-append https://github.com/gsource-mirror/chromium-src-third_party-zlib/archive/${cr_zlib}:chromium-zlib
+distfiles-append    chromium-src-third_party-zlib-${cr_zlib}${extract.suffix}:chromium-zlib
+
+master_sites-append https://github.com/KhronosGroup/SPIRV-Headers/archive/${spirv_headers}:spirv-headers
+distfiles-append    SPIRV-Headers-${spirv_headers}${extract.suffix}:spirv-headers
+
+master_sites-append https://github.com/KhronosGroup/SPIRV-Tools/archive/${spirv_tools}:spirv-tools
+distfiles-append    SPIRV-Tools-${spirv_tools}${extract.suffix}:spirv-tools
+
+master_sites-append https://github.com/KhronosGroup/Vulkan-Headers/archive/${vk_headers}:vulkan-headers
+distfiles-append    Vulkan-Headers-${vk_headers}${extract.suffix}:vulkan-headers
+
+master_sites-append https://github.com/ARM-software/astc-encoder/archive/${astc_encoder}:astc-encoder
+distfiles-append    astc-encoder-${astc_encoder}${extract.suffix}:astc-encoder
+
+master_sites-append https://github.com/open-source-parsers/jsoncpp/archive/${jsoncpp}:jsoncpp
+distfiles-append    jsoncpp-${jsoncpp}${extract.suffix}:jsoncpp
+
+checksums           ${distname}${extract.suffix} \
+                    rmd160  07fcce9cb5aa6b1f06a33537ab246ec48f77fe5b \
+                    sha256  a4992b08615bdb0fae2a8538676fc083276e7e0ff4f04c00180c85c7c9ae42a9 \
+                    size    16891285 \
+                    astc-encoder-${astc_encoder}${extract.suffix} \
+                    rmd160  1c792cca8415346924640772699e6ffc2d3871f4 \
+                    sha256  8b5068ef28a8db1cb354d89d9cefd19d43eddfc72c3468fce7ebb92b2431d4c4 \
+                    size    36161899 \
+                    chromium-src-build-${cr_build}${extract.suffix} \
+                    rmd160  ad20ea878725a7b7ff192143781fb90ec9c6bf10 \
+                    sha256  b90d154f1f92739ec1762afc1f2eb1fb58eee8228bf473416d85c21a40ecf273 \
+                    size    1780890 \
+                    chromium-src-testing-${cr_testing}${extract.suffix} \
+                    rmd160  275f1a88734933917012d0dae2446a913c13f254 \
+                    sha256  ea78608ccf66ce4da4f97c4822f62f998f9239c3553d72ed7f35a37b24701761 \
+                    size    2049946 \
+                    chromium-src-third_party-jsoncpp-${cr_jsoncpp}${extract.suffix} \
+                    rmd160  8611455ceb50dd821a942c3b10f2110c418fe182 \
+                    sha256  7360eff9ce58208c68da260db23bdc29bbc00c769905af10aa45af0dd308aba4 \
+                    size    4411 \
+                    chromium-src-third_party-zlib-${cr_zlib}${extract.suffix} \
+                    rmd160  3293fe7af4938f26ac5c3c5157c00f7fb129c6e2 \
+                    sha256  77772896f800482a19f2b81605eae1017b7e53d0836f1e9f866803b800d8c0e2 \
+                    size    1382040 \
+                    jsoncpp-${jsoncpp}${extract.suffix} \
+                    rmd160  2938aba554af493df2cc854497fa3a00d55521ee \
+                    sha256  0b40e4598d68d3dbd8cab90b249e18f1363ecc694c38f727851f4db34b6887ec \
+                    size    216350 \
+                    SPIRV-Headers-${spirv_headers}${extract.suffix} \
+                    rmd160  02f3399e9539af45ace649c7a7dc3ab83d0eec14 \
+                    sha256  9d6c51923bce1f0fde35b7827b5335689197d604d62e06251860f80322f7ac76 \
+                    size    568459 \
+                    SPIRV-Tools-${spirv_tools}${extract.suffix} \
+                    rmd160  3eac2b6f3bd1e8554db56412a864959efb1aa4b7 \
+                    sha256  e86fe4ef23e000bbcc6a949061c1f3746c00b45a24637fe79260ca15e2d5a672 \
+                    size    3504199 \
+                    Vulkan-Headers-${vk_headers}${extract.suffix} \
+                    rmd160  119cb01693b329cc5941ef51f99c8e5a8c84b28f \
+                    sha256  666700236101d288dea8bb080c6f8039467cb1d29ea1e1aae6f93a819f4f9029 \
+                    size    3341743
+
+post-extract {
+    delete ${worksrcpath}/build
+    move ${workpath}/chromium-src-build-${cr_build} ${worksrcpath}/build
+
+    delete ${worksrcpath}/testing
+    move ${workpath}/chromium-src-testing-${cr_testing} ${worksrcpath}/testing
+
+    delete ${worksrcpath}/third_party/jsoncpp
+    move ${workpath}/chromium-src-third_party-jsoncpp-${cr_jsoncpp} \
+        ${worksrcpath}/third_party/jsoncpp
+
+    delete ${worksrcpath}/third_party/zlib
+    move ${workpath}/chromium-src-third_party-zlib-${cr_zlib} \
+        ${worksrcpath}/third_party/zlib
+
+    delete ${worksrcpath}/third_party/spirv-headers/src
+    move ${workpath}/SPIRV-Headers-${spirv_headers} \
+        ${worksrcpath}/third_party/spirv-headers/src
+
+    delete ${worksrcpath}/third_party/spirv-tools/src
+    move ${workpath}/SPIRV-Tools-${spirv_tools} \
+        ${worksrcpath}/third_party/spirv-tools/src
+
+    delete ${worksrcpath}/third_party/vulkan-headers/src
+    move ${workpath}/Vulkan-Headers-${vk_headers} \
+        ${worksrcpath}/third_party/vulkan-headers/src
+
+    delete ${worksrcpath}/third_party/astc-encoder/src
+    move ${workpath}/astc-encoder-${astc_encoder} \
+        ${worksrcpath}/third_party/astc-encoder/src
+
+    delete ${worksrcpath}/third_party/jsoncpp/source
+    move ${workpath}/jsoncpp-${jsoncpp} \
+        ${worksrcpath}/third_party/jsoncpp/source
+
+    copy ${filespath}/gclient_args.gni ${worksrcpath}/build/config/
+}
+
+set py_ver          3.14
+set py_ver_nodot    [string map {. {}} ${py_ver}]
+
+depends_build       port:gn \
+                    port:ninja \
+                    port:python${py_ver_nodot} \
+                    path:lib/pkgconfig/RapidJSON.pc:rapidjson
+
+# Python only needed for scripts
+depends_skip_archcheck-append \
+                    python${py_ver_nodot}
+configure.python    ${prefix}/bin/python${py_ver}
+
+use_xcode           yes
+
+# Upstream MacPorts patches:
+patchfiles          patch-commit-id.diff \
+                    patch-apple-toolchain.diff \
+                    patch-src-common-platform.diff
+
+# https://github.com/gsource-mirror/chromium-src-build/commit/887f0fe79088967b0c5b13009972f86207885636
+patchfiles-append   patch-lld.diff
+
+# Our patches. These are needed / safe to use unconditionally,
+# and sufficient to fix build on Catalina.
+patchfiles-append   patch-debug.cpp.diff \
+                    patch-apple_platform_utils.diff \
+                    patch-SystemInfo_macos.mm.diff \
+                    patch-build_config.h.diff \
+                    patch-roll_aosp.sh.diff \
+                    patch-driver_utils_mac.mm.diff \
+                    patch-no-stupid-error-in-host_byteorder.diff
+
+# May need to be broken down into general vs legacy part:
+patchfiles-append   fix-broken-build-system.diff
+
+# Misc fixes, exact threshold is unknown.
+# Fixes bugs in build system, throws away rust includes (rust is not used for any archs,
+# but gn includes its build spec files, which breaks powerpc build), recognizes powerpc,
+# fixes OpenGL includes, fix wrong paths to /Developer contents.
+if {${os.platform} eq "darwin" && ${os.major} < 19} {
+    patchfiles-append \
+                    fix-sdk-path.diff \
+                    patch-FunctionsCGL.diff \
+                    patch-fix-libtool.diff \
+                    patch-IOSurfaceSurfaceCGL.cpp.diff \
+                    patch-WindowSurfaceCGL.mm.diff \
+                    patch-DisplayCGL.mm.diff \
+                    patch-no-dsyms-and-strip.diff
+}
+
+if {${os.platform} eq "darwin" && ${os.major} < 15} {
+    patchfiles-append \
+                    no-metal-for-goodness-sake.patch
+}
+
+# No direct linking to CoreGraphics before 10.8:
+if {${os.platform} eq "darwin" && ${os.major} < 12} {
+    patchfiles-append \
+                    patch-fix-frameworks.diff
+}
+
+# legacy-support, adjust if needed.
+if {${os.platform} eq "darwin" && ${os.major} < 11} {
+    patchfiles-append \
+                    patch-legacysupport.diff
+}
+
+# Fix wrong struct size on ppc32:
+if {${os.platform} eq "darwin" && ${configure.build_arch} eq "ppc"} {
+    patchfiles-append \
+                    patch-Uniform.h-fix-struct-size.diff
+}
+
+# Drop clangisms, fix 32-bit builds with gcc:
+if {[string match *gcc* ${configure.compiler}]} {
+    patchfiles-append \
+                    fix-wrong-flags-for-gcc.diff \
+                    patch-fix-threadId.diff \
+                    patch-SoftLinking.h.diff \
+                    patch-Context.cpp.diff \
+                    patch-Display.cpp.diff \
+                    patch-global_state.cpp.diff \
+                    patch-fix-id-bug.diff
+
+    # https://trac.macports.org/ticket/74110
+    patchfiles-append \
+                    patch-IntermNode.cpp.diff
+
+    if {${configure.build_arch} in [list arm i386 ppc]} {
+        patchfiles-append \
+                    patch-libatomic.diff
+    }
+}
+
+post-patch {
+    reinplace "s|@COMMIT_POSITION@|[lindex [split ${version} .] 2]|" \
+        ${worksrcpath}/src/commit_id.py
+
+    fs-traverse f ${worksrcpath} {
+        if {[string match *.py ${f}]} {
+            reinplace -q "s|/usr/bin/python3|${configure.python}|" ${f}
+            reinplace -q "s|/usr/bin/env python3|${configure.python}|" ${f}
+        }
+    }
+    reinplace "s|@PYTHON@|${configure.python}|" ${worksrcpath}/scripts/roll_aosp.sh
+    reinplace "s|exec python3|exec ${configure.python}|" ${worksrcpath}/build/gn_editor
+    reinplace "s|/usr/bin/env python3|${configure.python}|" ${worksrcpath}/build/util/ide_query
+
+    if {${os.platform} eq "darwin" && ${os.major} < 11} {
+        reinplace "s|@PREFIX@|${prefix}|g" ${worksrcpath}/build/config/compiler/BUILD.gn
+    }
+}
+
+compiler.cxx_standard   2020
+
+# avoid conflict with installed zlib
+compiler.limit_flags    yes
+
+if {${macosx_deployment_target} eq ""} {
+    # Uses IOSurface
+    set macosx_deployment_target 10.6
+}
+
+configure.cmd       gn
+configure.pre_args  gen out
+configure.args      --args='\
+                    angle_build_tests=false \
+                    angle_enable_metal=false \
+                    angle_enable_vulkan=false \
+                    angle_enable_wgpu=false \
+                    enable_rust=false \
+                    fatal_linker_warnings=false \
+                    is_clang=false \
+                    is_official_build=true \
+                    install_prefix=\"${destroot}${prefix}\" \
+                    mac_sdk_min=\"${macosx_deployment_target}\" \
+                    mac_deployment_target=\"${macosx_deployment_target}\" \
+                    mac_min_system_version=\"${macosx_deployment_target}\" \
+                    treat_warnings_as_errors=false \
+                    use_custom_libcxx=false \
+                    use_system_xcode=true' \
+                    --script-executable=${configure.python}
+configure.post_args -v
+
+# Needed, otherwise the build picks system zlib and everything breaks:
+configure.cppflags
+
+if {${os.platform} eq "darwin" && ${os.major} < 19} {
+    configure.cppflags-append \
+                    -DTARGET_OS_MACCATALYST=0 \
+                    -DMTLGPUFamilyMac2=2002
+}
+configure.cxx       ${configure.cxx} {*}${configure.cppflags}
+
+build.cmd           ninja
+build.pre_args      -C out
+build.post_args     -v
+build.env           ANGLE_UPSTREAM_HASH=[string range $rev 0 11]
+
+destroot.cmd        ninja
+destroot.pre_args   -C out
+destroot.post_args  -v
+destroot.destdir
+destroot.target     install_angle
+
+post-destroot {
+    copy ${worksrcpath}/out/angle_shader_translator ${destroot}${prefix}/bin/
+
+    reinplace "s|^prefix=.*$|prefix=${prefix}|" \
+        {*}[glob ${destroot}${prefix}/lib/pkgconfig/*.pc]
+
+    delete \
+        ${destroot}${prefix}/include/CL \
+        ${destroot}${prefix}/include/GLX \
+        ${destroot}${prefix}/include/WGL \
+        ${destroot}${prefix}/include/GLSLANG \
+        ${destroot}${prefix}/include/vulkan \
+        ${destroot}${prefix}/include/platform \
+        {*}[glob ${destroot}${prefix}/include/*.h] \
+        {*}[glob ${destroot}${prefix}/include/*/README.md] \
+        {*}[glob ${destroot}${prefix}/include/*/.clang-format]
+
+    platform darwin {
+        foreach f [glob -tails -directory ${destroot} ${prefix}/lib/*.dylib] {
+            system "install_name_tool -id /$f ${destroot}/$f"
+        }
+
+        system "install_name_tool -change ./libGLESv2.dylib \
+            ${prefix}/lib/libGLESv2.dylib \
+            ${destroot}${prefix}/lib/libGLESv1_CM.dylib"
+    }
+}
+
+livecheck.url       https://chromiumdash.appspot.com/fetch_releases?channel=Stable&platform=Mac
+livecheck.type      regex
+livecheck.regex     {"angle":"([0-9a-f]+)"}
+livecheck.version   $rev

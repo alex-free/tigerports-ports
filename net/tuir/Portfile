@@ -1,0 +1,37 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                tuir
+python.rootname     tuir_continued
+version             1.32.2
+platforms           {darwin any}
+license             MIT
+categories          net www
+maintainers         nomaintainer
+
+description         Browse Reddit from your terminal
+long_description    Text-based interface (TUI) to view and interact \
+                    with Reddit from your terminal.
+
+homepage            https://gitlab.com/Chocimier/tuir
+
+checksums           rmd160  162d249889d17ad59b2b618719be12dde8218a6f \
+                    sha256  9b181941162473d58d9cc0144624f5f09cd693461774f2e185ce6a93d240495e \
+                    size    217083
+supported_archs     noarch
+
+python.default_version \
+                    314
+
+depends_lib-append  port:py${python.version}-beautifulsoup4 \
+                    port:py${python.version}-decorator \
+                    port:py${python.version}-kitchen \
+                    port:py${python.version}-mailcap-fix \
+                    port:py${python.version}-requests \
+                    port:py${python.version}-six \
+                    port:py${python.version}-vcrpy
+
+# Reddit killed access without being logged in:
+# https://gitlab.com/Chocimier/tuir/-/commit/357d2c446bbb7edbfad3a09195067b200d9a7971

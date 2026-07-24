@@ -1,0 +1,36 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran handcock rpm 0.7-4
+revision            1
+categories-append   economics
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Modelling of Revealed Preferences Matchings
+long_description    Statistical estimation of revealed preference models \
+                    from data collected on bipartite matchings.
+homepage            https://github.com/handcock/rpm
+checksums           rmd160  7781650f3eec746691758f5b10329a0a85f5fe1f \
+                    sha256  d7c193fc2b97304bdafd8bbd9e5686154fe8d1d1b31f31f0fbe22bf4a2d37473 \
+                    size    147590
+ 
+depends_lib-append  port:R-abind \
+                    port:R-coda \
+                    port:R-doFuture \
+                    port:R-doRNG \
+                    port:R-dplyr \
+                    port:R-foreach \
+                    port:R-future \
+                    port:R-ggplot2 \
+                    port:R-matrixStats \
+                    port:R-nloptr \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-testthat
+
+test.run            yes

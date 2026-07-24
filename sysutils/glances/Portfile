@@ -1,0 +1,41 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           python 1.0
+
+github.setup        nicolargo glances 4.5.5 v
+revision            0
+categories          sysutils
+platforms           {darwin any}
+license             GPL-3
+maintainers         {hotmail.com:amtor @RobK88} \
+                    openmaintainer
+supported_archs     noarch
+
+description         Glances is a CLI curses based monitoring tool for GNU/Linux and BSD OS.
+long_description    Glances is a cross-platform monitoring tool which aims to present a large \
+                    amount of monitoring information through a curses or web-based interface. \
+                    The information dynamically adapts depending on the size of the user interface.
+checksums           rmd160  d10e622d4febc271cdd449e50adeedd65730a52c \
+                    sha256  0d67ee3571b25166641d93dfb2605a98b15d5b1bdbbcbf112f39e49f5501148d \
+                    size    7857197
+github.tarball_from archive
+
+python.default_version \
+                    314
+
+depends_lib-append  port:py${python.version}-future \
+                    port:py${python.version}-jinja2 \
+                    port:py${python.version}-packaging \
+                    port:py${python.version}-psutil \
+                    port:py${python.version}-setuptools
+
+# Use non-rusty deps across the board.
+# https://github.com/nicolargo/glances/issues/2930
+depends_run-append  port:py${python.version}-ujson \
+                    port:py${python.version}-defusedxml
+
+post-patch {
+    reinplace "s|/usr/local|${prefix}|" glances/config.py
+}

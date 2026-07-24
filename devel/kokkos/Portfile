@@ -1,0 +1,69 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem                  1.0
+PortGroup                   cmake 1.1
+PortGroup                   github 1.0
+
+# TODO: update to 5.x branch once confirmed all is good.
+github.setup                kokkos kokkos 4.7.04
+conflicts                   kokkos-devel
+revision                    0
+categories                  devel
+license                     BSD
+maintainers                 {mcalhoun @MarcusCalhoun-Lopez} \
+                            {@barracuda156 macos-powerpc.org:barracuda} \
+                            openmaintainer
+description                 implements a programming model in C++ for writing performance portable applications \
+                            targeting all major HPC platforms
+long_description            Kokkos Core {*}${description}.
+
+checksums                   rmd160  e91f0664d6f39ed255a556733e921820ecf4c3b7 \
+                            sha256  4213b248c39e112299fa94ee08817e51126fc02996ed6e2ab56aec4cdb80ee1f \
+                            size    2524402
+github.tarball_from         releases
+
+subport kokkos-devel {
+    github.setup            kokkos kokkos 5.1.1
+    revision                0
+    epoch                   1
+    conflicts               kokkos
+    checksums               rmd160  bf58dea24835270700c3d3d7fafc98200be1451f \
+                            sha256  8bdbee0f0ac383436743ad8a9e3e928705b34b31a25a92dc5179c52a3aa98519 \
+                            size    1791938
+    github.tarball_from     releases
+    github.livecheck.branch develop
+    # Kokkos_HostSpace.cpp:79:11: error: aligned allocation function
+    # of type 'void *(std::size_t, std::align_val_t, const std::nothrow_t &)
+    # noexcept' is only available on macOS 10.13 or newer
+    if {${os.platform} eq "darwin" && ${os.major} < 17} {
+        if {${configure.cxx_stdlib} eq "libc++"} {
+            configure.cxxflags-append -fno-aligned-allocation
+        }
+    }
+}
+
+if {${subport} eq "kokkos-devel"} {
+    compiler.cxx_standard   2020
+} else {
+    compiler.cxx_standard   2017
+}
+compiler.openmp_version     4.0
+
+depends_lib-append          port:hwloc
+
+configure.args-append       -DBUILD_SHARED_LIBS=ON \
+                            -DKokkos_ENABLE_HWLOC=ON \
+                            -DKokkos_ENABLE_OPENMP=ON \
+                            -DKokkos_ENABLE_SERIAL=ON
+
+# see https://github.com/macports/macports-base/commit/7c91604891fa0d071b8d598490c4dc2edb8e0031
+# see https://github.com/macports/macports-ports/pull/17877#discussion_r1183486766
+compiler.log_verbose_output no
+
+variant tests description {Enable tests} {
+    configure.args-append   -DKokkos_ENABLE_TESTS=ON
+    configure.pre_args-replace \
+                            -DCMAKE_BUILD_WITH_INSTALL_RPATH:BOOL=ON \
+                            -DCMAKE_BUILD_WITH_INSTALL_RPATH:BOOL=OFF
+    test.run                yes
+}

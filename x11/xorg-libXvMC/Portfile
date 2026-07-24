@@ -1,0 +1,38 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem      1.0
+
+name            xorg-libXvMC
+version         1.0.15
+revision        0
+categories      x11 devel
+license         X11
+maintainers     {jeremyhu @jeremyhu} openmaintainer
+description     X.org libXvMC
+long_description \
+                Xvideo extension library with Motion Compression
+homepage        https://www.x.org
+platforms       darwin macosx
+
+master_sites    xorg:individual/lib/
+distname        libXvMC-${version}
+
+checksums       rmd160  a3c60c547683f8d0613d346cfa192c1158ac7b5d \
+                sha256  c48f6051b1df9bd190d2763cd0312d715e4509575926247110d8f840463bdc94 \
+                size    439287
+
+depends_build   path:bin/pkg-config:pkgconfig
+
+depends_lib     port:xorg-libXv
+
+# xorg-libXvMC now includes a header already installed
+# by another X11 port. Skip it.
+# Image error: /opt/local/include/X11/extensions/vldXvMC.h
+# is being used by the active xorg-xorgproto port.
+patchfiles      patch-fix-install-ext-headers.diff
+
+configure.args  --disable-silent-rules
+
+livecheck.type  regex
+livecheck.url   https://xorg.freedesktop.org/archive/individual/lib/?C=M&O=D
+livecheck.regex libXvMC-(\\d+(?:\\.\\d+)*)

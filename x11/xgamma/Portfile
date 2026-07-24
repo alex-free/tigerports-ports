@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           gitlab 1.0
+
+name                xgamma
+gitlab.instance     https://gitlab.freedesktop.org/xorg
+gitlab.setup        app ${name} 1.0.7 ${name}-
+revision            0
+categories          x11
+license             X11
+maintainers         {jeremyhu @jeremyhu} openmaintainer
+description         Monitor gamma utility for X11
+long_description    ${name} allows X users to query and alter the gamma correction \
+                    of a monitor via the X video mode extension (XFree86-VidModeExtension).
+
+homepage            https://www.x.org
+use_bzip2           yes
+
+checksums           rmd160  aa6a8015052481e6e6152a62c6623256dedbe8ab \
+                    sha256  492faca2a4bd2224f3051175dedb4b9579ea952d3afcc0f6b3231e019022d55c \
+                    size    7797
+
+use_autoreconf      yes
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig \
+                    port:xorg-util-macros
+
+depends_lib         port:xorg-libXxf86vm

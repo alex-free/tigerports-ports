@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           gitlab 1.0
+
+name                xclock
+gitlab.instance     https://gitlab.freedesktop.org/xorg
+gitlab.setup        app ${name} 1.1.1 ${name}-
+revision            0
+license             X11
+maintainers         {jeremyhu @jeremyhu} openmaintainer
+description         Analog/digital clock for X11
+long_description \
+   The xclock program displays the time in analog or digital form. The time \
+   is continuously updated at a frequency which may be specified by the user.
+
+homepage            https://www.x.org
+use_bzip2           yes
+
+checksums           rmd160  8bcfae78d8631389c5efeb8b32c988c6ee6f2fca \
+                    sha256  63cd76e52acce7da388a9ce0403f210edefcd9aadf83d86e0a75da4fa0d25ead \
+                    size    31735
+
+use_autoreconf      yes
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig \
+                    port:xorg-util-macros
+
+depends_lib-append  port:Xft2 \
+                    port:xorg-libXaw \
+                    port:xorg-libxkbfile

@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran cristiano.varin gcmr 1.0.4
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Gaussian Copula Marginal Regression
+long_description    {*}${description}
+checksums           rmd160  38bb330fd00a20daac7a1570ef404dfed4f75235 \
+                    sha256  63cc0796f333f398ea229de9290aac45f8a0c8318c3f0133952fbfbe180348eb \
+                    size    34482
+
+depends_lib-append  port:R-betareg \
+                    port:R-car \
+                    port:R-Formula \
+                    port:R-lmtest \
+                    port:R-sandwich \
+                    port:R-sp
+
+test.run            yes

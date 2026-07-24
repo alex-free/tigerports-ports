@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Switch to GitHub once updated there.
+R.setup             cran cdueben cppcontainers 1.0.5
+revision            1
+categories-append   devel
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         C++ standard template library containers
+long_description    {*}${description}
+checksums           rmd160  0f8e07b281f2918326edb0167db427d769e94746 \
+                    sha256  4b937392a6c26940bb625169bbb6721415b1d11b041c958e5dc989a5eaf39f3c \
+                    size    234179
+# github.tarball_from archive
+
+depends_lib-append  port:R-Rcpp
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

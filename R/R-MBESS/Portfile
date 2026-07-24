@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran kkelley MBESS 4.9.41
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             {GPL-2 GPL-3}
+description         The MBESS R package
+long_description    {*}${description}
+homepage            https://www3.nd.edu/~kkelley/site/MBESS.html
+checksums           rmd160  a9aeaff8457e178feb30735204747e6099588609 \
+                    sha256  a52b4a25503ef1c11ced8b5a65b2cfb145027b69613e0c43279af282e18936c9 \
+                    size    223018
+supported_archs     noarch
+
+depends_lib-append  port:R-lavaan \
+                    port:R-mnormt \
+                    port:R-OpenMx \
+                    port:R-sem \
+                    port:R-semTools
+
+depends_test-append port:R-gsl
+
+test.run            yes

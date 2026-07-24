@@ -1,0 +1,124 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+PortGroup               debug 1.0
+PortGroup               legacysupport 1.1
+
+# _strnlen
+legacysupport.newest_darwin_requires_legacy 10
+
+name                    GraphicsMagick
+version                 1.3.47
+revision                1
+set branch              [join [lrange [split ${version} .] 0 1] .]
+categories              graphics
+maintainers             {ryandesign @ryandesign} openmaintainer
+license                 MIT
+
+description             Image processing tools collection
+long_description        GraphicsMagick is the swiss army knife of image \
+                        processing. It provides a robust collection of tools and \
+                        libraries which support reading, writing, and manipulating \
+                        an image in over 88 major formats including important formats \
+                        like DPX, GIF, JPEG, JPEG-2000, PNG, PDF, SVG and TIFF.
+
+homepage                http://www.graphicsmagick.org
+master_sites            sourceforge:project/graphicsmagick/graphicsmagick/${version}
+checksums               rmd160  f411e89e52ebcea1454111083eea4c545ff75f92 \
+                        sha256  95fb682dab0206a9db168d065963f4ffdf5a60b0b2a375aca1f4492fb18d0627 \
+                        size    6075948
+
+depends_build-append    path:bin/pkg-config:pkgconfig
+
+depends_lib-append      port:bzip2 \
+                        path:lib/pkgconfig/freetype2.pc:freetype \
+                        port:jasper \
+                        port:lcms2 \
+                        port:libheif \
+                        port:libiconv \
+                        path:include/turbojpeg.h:libjpeg-turbo \
+                        port:libjxl \
+                        port:libpng \
+                        port:libtool \
+                        port:libwmf \
+                        port:libxml2 \
+                        port:libzip \
+                        port:netpbm \
+                        port:tiff \
+                        port:webp \
+                        port:xz \
+                        port:zlib \
+                        port:zstd
+
+use_xz                  yes
+
+# llvm-gcc-4.2 gives "Undefined symbols for architecture x86_64: ___builtin_object_size"
+compiler.blacklist      *llvm-gcc-4.2
+
+# https://trac.macports.org/wiki/WimplicitFunctionDeclaration#strchr
+configure.checks.implicit_function_declaration.whitelist-append strchr
+
+configure.args-append   --enable-openmp=no \
+                        --enable-shared=yes \
+                        --with-bzlib=yes \
+                        --with-fpx=no \
+                        --with-gs=no \
+                        --with-heif=yes \
+                        --with-jbig=no \
+                        --with-jp2=yes \
+                        --with-jpeg=yes \
+                        --with-jxl=yes \
+                        --with-lcms2=yes \
+                        --with-libzip=yes \
+                        --with-lzma=yes \
+                        --with-perl=no \
+                        --with-png=yes \
+                        --with-tiff=yes \
+                        --with-trio=no \
+                        --with-ttf=yes \
+                        --with-umem=no \
+                        --with-webp=yes \
+                        --with-wmf=yes \
+                        --with-x=no \
+                        --with-xml=yes \
+                        --with-zlib=yes \
+                        --with-zstd=yes
+
+post-configure {
+    reinplace -E {s|-arch [a-z0-9_]+||g} \
+        ${worksrcpath}/magick/GraphicsMagick-config \
+        ${worksrcpath}/Magick++/bin/GraphicsMagick++-config
+}
+
+test.run                yes
+test.target             check
+
+variant q8 conflicts q16 q32 description {Use 8 bits per pixel quantum} {
+    configure.args-append --with-quantum-depth=8
+}
+
+variant q16 conflicts q8 q32 description {Use 16 bits per pixel quantum} {
+    configure.args-append --with-quantum-depth=16
+}
+
+variant q32 conflicts q8 q16 description {Use 32 bits per pixel quantum} {
+    configure.args-append --with-quantum-depth=32
+}
+
+if {![variant_isset q16] && ![variant_isset q32]} {
+    default_variants +q8
+}
+
+variant openmp description "Build with OpenMP support" {
+    # OpenMP is beneficial for GM: http://www.graphicsmagick.org/OpenMP.html
+    compiler.openmp_version 4.0
+    # Make sure gcc does not pick incompatible ABI:
+    compiler.cxx_standard   2011
+    configure.args-replace  --enable-openmp=no --enable-openmp=yes
+}
+
+if {[string match macports-gcc* ${configure.compiler}]} {
+    default_variants-append +openmp
+}
+
+livecheck.regex         /${name}-(\\d+(?:\\.\\d{1,5})+)[quotemeta ${extract.suffix}]

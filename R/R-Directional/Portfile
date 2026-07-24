@@ -1,0 +1,33 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran mtsagris Directional 7.3
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Collection of functions for directional data analysis
+long_description    {*}${description}
+checksums           rmd160  38384e16000baf9e0f8cca68ddf21c06fcdb037d \
+                    sha256  8549df9fd6cf19ca8f9944cc6c4116983fc2e68aa39f8e432bb3b06074b97270 \
+                    size    167245
+supported_archs     noarch
+
+depends_lib-append  port:R-bigstatsr \
+                    port:R-doParallel \
+                    port:R-foreach \
+                    port:R-ggplot2 \
+                    port:R-magrittr \
+                    port:R-Rfast \
+                    port:R-Rfast2 \
+                    port:R-rgl \
+                    port:R-Rnanoflann \
+                    port:R-rnaturalearth \
+                    port:R-sf
+
+depends_test-append port:R-bigreadr
+
+test.run            yes

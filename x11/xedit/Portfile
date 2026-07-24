@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           gitlab 1.0
+
+name                xedit
+gitlab.instance     https://gitlab.freedesktop.org/xorg
+gitlab.setup        app ${name} 1.2.4 ${name}-
+revision            0
+categories          x11 editors
+license             X11 BSD
+maintainers         {jeremyhu @jeremyhu} openmaintainer
+description         Simple text editor for X11
+long_description    ${description}
+
+homepage            https://www.x.org
+use_bzip2           yes
+
+checksums           rmd160  cca995351a949cc6af0b53fd7668d8ec39186dcf \
+                    sha256  0cbdaf1e6e76c031639ec034092ae5205a4ac2aebeeeda8c7abf8ac4fc60bc70 \
+                    size    378806
+
+use_autoreconf      yes
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig \
+                    port:xorg-util-macros
+
+depends_lib         port:xorg-libXaw

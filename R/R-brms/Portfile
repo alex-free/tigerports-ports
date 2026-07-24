@@ -1,0 +1,71 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github paul-buerkner brms 0bde770ceadcff198d58166de77bdcfb67027571
+version             2.23.1
+revision            1
+categories-append   math economics
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2
+description         Bayesian applied regression modelling via RStan
+long_description    {*}${description}
+homepage            https://paul-buerkner.github.io/brms
+checksums           rmd160  ae44529a3d0fcdd0352505a4d0df900679097755 \
+                    sha256  48712e5da6b23132abcd13b566cdeae4ab8573d44c583a767c4cb96ec60e9e8a \
+                    size    5543600
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-abind \
+                    port:R-backports \
+                    port:R-bayesplot \
+                    port:R-bridgesampling \
+                    port:R-coda \
+                    port:R-future \
+                    port:R-future.apply \
+                    port:R-ggplot2 \
+                    port:R-glue \
+                    port:R-loo \
+                    port:R-matrixStats \
+                    port:R-nleqslv \
+                    port:R-posterior \
+                    port:R-Rcpp \
+                    port:R-rlang \
+                    port:R-rstan \
+                    port:R-rstantools \
+                    port:R-shinystan
+
+depends_test-append port:R-ape \
+                    port:R-arm \
+                    port:R-cmdstanr \
+                    port:R-colorspace \
+                    port:R-diffobj \
+                    port:R-digest \
+                    port:R-emmeans \
+                    port:R-extraDistr \
+                    port:R-future.mirai \
+                    port:R-gtable \
+                    port:R-knitr \
+                    port:R-lme4 \
+                    port:R-MCMCglmm \
+                    port:R-mice \
+                    port:R-mirai \
+                    port:R-mnormt \
+                    port:R-priorsense \
+                    port:R-processx \
+                    port:R-projpred \
+                    port:R-R.rsp \
+                    port:R-ragg \
+                    port:R-rmarkdown \
+                    port:R-rtdists \
+                    port:R-RWiener \
+                    port:R-shiny \
+                    port:R-spdep \
+                    port:R-splines2 \
+                    port:R-statmod \
+                    port:R-testthat
+
+test.run            yes

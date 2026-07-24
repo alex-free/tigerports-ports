@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran covaruber sommer 4.4.3
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Solving Mixed Model Equations in R
+long_description    {*}${description}
+homepage            https://github.com/covaruber/sommer
+checksums           rmd160  ce023604cdff526a81195be1060107eb9acf1b71 \
+                    sha256  442877a463ab09be84656b0c5e6e0137430541bf0c875db4d026992653c66adc \
+                    size    1951615
+
+depends_lib-append  port:R-crayon \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-RcppProgress
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-knitr \
+                    port:R-orthopolynom \
+                    port:R-plyr \
+                    port:R-rmarkdown \
+                    port:R-RSpectra \
+                    port:R-testthat
+
+test.run            yes

@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran fbertran plsdof 0.4-0
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Degrees of freedom and statistical inference \
+                    for partial least squares regression
+long_description    {*}${description}
+homepage            https://fbertran.github.io/plsdof
+checksums           rmd160  5315def07356aefb173682ab872871654eb5028d \
+                    sha256  a7d2e9d77a96148d2d2ad7ec8cbbe1d012f8073f1ab9027568618224b7a82ed0 \
+                    size    106795
+supported_archs     noarch
+
+depends_test-append port:R-testthat
+
+test.run            yes

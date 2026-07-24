@@ -1,0 +1,56 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+
+# don't forget to revbump gstreamer1-gst-plugins-bad if
+# update of chromaprint results in an ABI break
+github.setup        acoustid chromaprint 1.6.0 v
+revision            2
+categories          audio
+description         Chromaprint is an audio fingerprint library
+long_description    Chromaprint is the core component of the AcoustID \
+                    project. It's a client-side library that implements \
+                    a custom algorithm for extracting fingerprints from \
+                    any audio source.
+
+maintainers         {khindenburg @kurthindenburg} openmaintainer
+
+homepage            https://acoustid.org/${name}
+license             LGPL-2.1+
+
+checksums           rmd160  420e21f6ab10ba3e06536cb3bef60948dbb12f1f \
+                    sha256  65bfce4a35b2e673dbcda917b6aa577e2f145cf805243d19e6a50fea2a520c2a \
+                    size    1580199
+github.tarball_from archive
+
+compiler.cxx_standard \
+                    2014
+
+# Does not build with ffmpeg4 anymore, also rather match it to gstreamer1-gst-libav:
+set ffmpeg_ver      8
+
+depends_build-append \
+                    port:gmake
+depends_lib-append  port:ffmpeg${ffmpeg_ver} \
+                    port:fftw-3
+
+configure.args-append       -DBUILD_SHARED_LIBS=ON \
+                            -DBUILD_TESTS=OFF \
+                            -DBUILD_TOOLS=ON \
+                            -DCMAKE_BUILD_TYPE=Release \
+                            -DFFMPEG_ROOT=${prefix}/libexec/ffmpeg${ffmpeg_ver}
+
+variant tests description "Enable tests" {
+    depends_build-append    port:gtest
+
+    configure.args-replace  -DBUILD_TESTS=OFF -DBUILD_TESTS=ON
+    configure.args-append   -DGTEST_ROOT=${prefix}/src/googletest
+
+    test.run                yes
+    test.cmd                env DYLD_LIBRARY_PATH=${cmake.build_dir}/src ${cmake.build_dir}/tests/all_tests
+    test.target
+}
+
+github.livecheck.regex      (\[0-9.\]+)

@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran redina.berkachy FuzzySTs 0.4
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Fuzzy Statistical Tools
+long_description    {*}${description}
+checksums           rmd160  ce2a43b5e9d3736837a8f9259a63a75995c9c1c9 \
+                    sha256  5eed2d65953b43b3705ef6d390345a92e2595a636c9f47d18510dd8856340c6a \
+                    size    353590
+supported_archs     noarch
+
+depends_lib-append  port:R-FuzzyNumbers \
+                    port:R-polynom
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown
+
+test.run            yes

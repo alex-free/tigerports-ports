@@ -1,0 +1,37 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran nashjc optimx 2025-4.9
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2
+description         Expanded replacement and extension of the optim function
+long_description    {*}${description}
+homepage            https://github.com/nashjc/optimx
+checksums           rmd160  a4587d9ce8c0a1b2b5a8e878c833061f640dec2c \
+                    sha256  10b68ab371e3f29fd0c2f4c3b8569ce1f10a99a6bef84a7c4161431c631d1854 \
+                    size    2259553
+supported_archs     noarch
+
+depends_lib-append  port:R-nloptr \
+                    port:R-numDeriv \
+                    port:R-pracma
+
+depends_test-append port:R-BB \
+                    port:R-dfoptim \
+                    port:R-knitr \
+                    port:R-lbfgs \
+                    port:R-lbfgsb3c \
+                    port:R-marqLevAlg \
+                    port:R-minqa \
+                    port:R-R.rsp \
+                    port:R-rmarkdown \
+                    port:R-setRNG \
+                    port:R-subplex \
+                    port:R-ucminf
+
+test.run            yes

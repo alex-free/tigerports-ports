@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran r-forge isotone 1.1-2
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2
+description         Active set and generalized PAVA for isotone optimization
+long_description    {*}${description}
+checksums           rmd160  7ed8f12ffbac33106e5f41bd0a4a788cae26f563 \
+                    sha256  a88b61e94f6df525b74c063c22876c441320e73629337aaf08d7f8f37bbe6c49 \
+                    size    344223
+supported_archs     noarch
+
+depends_lib-append  port:R-nnls
+
+test.run            yes

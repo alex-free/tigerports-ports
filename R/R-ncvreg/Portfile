@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran pbreheny ncvreg 3.16.0 ncvreg_
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Regularization paths for SCAD and MCP penalized regression models
+long_description    {*}${description}
+homepage            https://pbreheny.github.io/ncvreg
+checksums           rmd160  57068b67233d7118824e9aab3104ff8ce9f195dc \
+                    sha256  354ec5c7166ae0b166878b4609fafe4542e2be4f8df936671243d5a8be092145 \
+                    size    166049
+# github.tarball_from archive
+
+depends_test-append port:R-ashr \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-tinytest
+
+test.run            yes

@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran r-lib bit64 4.8.2
+revision            0
+categories-append   devel
+maintainers         nomaintainer
+license             {GPL-2 GPL-3}
+description         S3 class for vectors of 64-bit integers
+long_description    {*}${description}
+homepage            https://github.com/r-lib/bit64
+checksums           rmd160  6694a8c3024440f46b4b54b50534b5e235cdd113 \
+                    sha256  be5907acc6ebc389e9fb3fb6760b07ca4ee9c6da2fe1c286277bc67b9af5db9f \
+                    size    171594
+
+depends_lib-append  port:R-bit
+
+depends_test-append port:R-patrick \
+                    port:R-testthat \
+                    port:R-withr
+
+test.run            yes

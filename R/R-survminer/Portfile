@@ -1,0 +1,42 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github kassambara survminer 0.5.0 v
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2
+description         Draw survival curves using R-ggplot2
+long_description    {*}${description}
+homepage            https://rpkgs.datanovia.com/survminer/index.html
+checksums           rmd160  da619320c5cad927b51904bcdeefbb1b1aae6ee7 \
+                    sha256  5a4cfda05d6da396eb997dd0a62828b8e13026a3377522715182d90f6b3ea21b \
+                    size    1600964
+github.tarball_from tarball
+supported_archs     noarch
+
+depends_lib-append  port:R-broom \
+                    port:R-dplyr \
+                    port:R-ggplot2 \
+                    port:R-ggpubr \
+                    port:R-ggtext \
+                    port:R-gridExtra \
+                    port:R-magrittr \
+                    port:R-maxstat \
+                    port:R-purrr \
+                    port:R-rlang \
+                    port:R-scales \
+                    port:R-survMisc \
+                    port:R-tibble \
+                    port:R-tidyr
+
+depends_test-append port:R-cmprsk \
+                    port:R-flexsurv \
+                    port:R-knitr \
+                    port:R-markdown \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

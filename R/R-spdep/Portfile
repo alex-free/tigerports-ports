@@ -1,0 +1,47 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is archaic.
+R.setup             cran r-spatial spdep 1.4-1
+revision            1
+categories-append   math gis
+maintainers         nomaintainer
+license             GPL-2+
+description         Spatial Dependence: weighting schemes, statistics
+long_description    {*}${description}
+homepage            https://r-spatial.github.io/spdep
+checksums           rmd160  92fa22e7fa1bd3a9e8ffeed2cece56796123a99e \
+                    sha256  4d0beca3b8b696373a74670f916cca3e77cbe97d002f3be62f172815774f5588 \
+                    size    4694107
+
+depends_lib-append  port:R-deldir \
+                    port:R-e1071 \
+                    port:R-s2 \
+                    port:R-sf \
+                    port:R-sp \
+                    port:R-spData \
+                    port:R-units
+
+compilers.setup     require_fortran
+
+# R-tmap is omitted for now.
+depends_test-append port:R-classInt \
+                    port:R-codingMatrices \
+                    port:R-dbscan \
+                    port:R-ggplot2 \
+                    port:R-Guerry \
+                    port:R-igraph \
+                    port:R-knitr \
+                    port:R-mipfp \
+                    port:R-RColorBrewer \
+                    port:R-rgeoda \
+                    port:R-rmarkdown \
+                    port:R-RSpectra \
+                    port:R-spam \
+                    port:R-spatialreg \
+                    port:R-tinytest \
+                    port:R-xtable
+
+test.run            yes

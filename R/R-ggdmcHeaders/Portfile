@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran yxlin ggdmcHeaders 0.2.9.1
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         C++ headers for R-ggdmc package
+long_description    {*}${description}
+homepage            https://github.com/yxlin/ggdmcHeaders
+checksums           rmd160  12e2bf06b1f21b59717a09adf0d0699401ae384a \
+                    sha256  fe38f38ef1733cdb3b0397f008c17f6f65ea2a387d08d44d72ac97069a20657c \
+                    size    44782
+# CRAN lies.
+supported_archs     noarch
+
+test.run            yes

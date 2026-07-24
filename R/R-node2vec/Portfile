@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran tianyang1211 node2vec 0.1.0
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3+
+description         Algorithmic framework for representational learning on graphs
+checksums           rmd160  3b70a9cd0056aba71abe54a6b7e91142997390fe \
+                    sha256  afa4b7f2f8b06b09e4e47e1b59d0e5b59c69a0bdeda6c86fa6bcd5d789bdee0d \
+                    size    5070
+supported_archs     noarch
+
+depends_lib-append  port:R-data.table \
+                    port:R-dplyr \
+                    port:R-igraph \
+                    port:R-rlist \
+                    port:R-vctrs \
+                    port:R-vegan \
+                    port:R-word2vec
+
+test.run            yes

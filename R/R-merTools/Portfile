@@ -1,0 +1,40 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is outdated.
+R.setup             cran jknowles merTools 0.6.4
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Tools for analyzing mixed effect regression models
+long_description    {*}${description}
+homepage            https://github.com/jknowles/merTools
+checksums           rmd160  b61daca9e44d96c4802b88769ae2c9c0ff17a6b9 \
+                    sha256  4c73280257de121d3d5fc722a3008f0d7581e2b8120c483073839a050d01525d \
+                    size    641911
+supported_archs     noarch
+
+depends_lib-append  port:R-abind \
+                    port:R-arm \
+                    port:R-blme \
+                    port:R-broom.mixed \
+                    port:R-dplyr \
+                    port:R-foreach \
+                    port:R-ggplot2 \
+                    port:R-lme4 \
+                    port:R-mvtnorm \
+                    port:R-shiny
+
+depends_test-append port:R-Amelia \
+                    port:R-DT \
+                    port:R-future.apply \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-rstanarm \
+                    port:R-testthat
+
+test.run            yes

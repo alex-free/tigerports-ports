@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran fhernanb DiscreteDists 1.1.0
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Discrete Statistical Distributions
+long_description    {*}${description}
+homepage            https://github.com/fhernanb/DiscreteDists
+checksums           rmd160  f38eceae5f29f7edb1e6190168429f0e8a1dad8a \
+                    sha256  250c5d8fd2ed60fe3de09c28a8ba9224e8bc77121e3ec4c0aec94f36fdae9bcf \
+                    size    556829
+
+depends_lib-append  port:R-COMPoissonReg \
+                    port:R-gamlss \
+                    port:R-gamlss.dist \
+                    port:R-nleqslv \
+                    port:R-pracma \
+                    port:R-Rcpp
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown
+
+test.run            yes

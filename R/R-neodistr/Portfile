@@ -1,0 +1,37 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is outdated.
+R.setup             cran madsyair neodistr 0.1.2
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Neo-Normal Distribution
+long_description    {*}${description}
+homepage            https://github.com/madsyair/neodistr
+checksums           rmd160  07016ded17482303a4b64e9ebc9d90dde6a18a9e \
+                    sha256  8c56bf57dd405eca6966833d2fb23a81c2757f7f2dfceeac813bb38691cf3b23 \
+                    size    4645845
+supported_archs     noarch
+
+depends_lib-append  port:R-brms \
+                    port:R-ggplot2 \
+                    port:R-plotly \
+                    port:R-Rmpfr \
+                    port:R-rstan \
+                    port:R-shiny \
+                    port:R-shinythemes
+
+depends_test-append port:R-bayesplot \
+                    port:R-kableExtra \
+                    port:R-knitr \
+                    port:R-loo \
+                    port:R-rmarkdown \
+                    port:R-spelling \
+                    port:R-testthat
+
+test.run            yes

@@ -1,0 +1,52 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           legacysupport 1.1
+PortGroup           R 1.0
+
+# strnlen
+legacysupport.newest_darwin_requires_legacy 10
+
+# Revert to GitHub once updated there.
+R.setup             cran tidyverse haven 2.5.5
+revision            1
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Import and export SPSS, Stata and SAS files
+long_description    {*}${description}
+homepage            https://haven.tidyverse.org
+checksums           rmd160  d7c9753101818e8f78cf9a71a69723059e3892b0 \
+                    sha256  9482cd9c3760e1838acf687235317fed97fa6bf79219d3216f0ea447d4b1c9a5 \
+                    size    316909
+
+# Defining _XOPEN_SOURCE 700 has exactly the opposite effect of desired:
+# it hides strnlen, and the build fails even with LegacySupport.
+# This was fixed earlier in https://github.com/tidyverse/haven/commit/4a878a1
+# but CRAN still has a broken version.
+patchfiles-append   patch-fix-readstat_dta_read.c.diff
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  port:R-cli \
+                    port:R-cpp11 \
+                    port:R-forcats \
+                    port:R-hms \
+                    port:R-lifecycle \
+                    port:R-readr \
+                    port:R-rlang \
+                    port:R-tibble \
+                    port:R-tidyselect \
+                    port:R-vctrs \
+                    port:zlib
+
+depends_test-append port:R-covr \
+                    port:R-crayon \
+                    port:R-fs \
+                    port:R-knitr \
+                    port:R-pillar \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-utf8
+
+test.run            yes

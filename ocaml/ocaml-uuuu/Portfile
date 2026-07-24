@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           ocaml 1.1
+
+name                ocaml-uuuu
+github.setup        mirage uuuu 0.4.0 v
+revision            1
+categories          ocaml devel
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Mapper of ISO-8859-* to Unicode
+long_description    {*}${description}
+use_bzip2           yes
+extract.suffix      .tbz
+distname            uuuu-${version}
+checksums           rmd160  da2ee334f4efd8981d8b59a73e57fb7b65f3ad29 \
+                    sha256  e7e18d93db37e99a1cac08eebe50c88904eae9617dab433c8f787f4da92b1928 \
+                    size    19123
+github.tarball_from releases
+
+ocaml.build_type    dune

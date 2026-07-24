@@ -1,0 +1,88 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           boost 1.0
+PortGroup           github 1.0
+PortGroup           wxWidgets 1.0
+
+set my_name         poedit
+name                ${my_name}1
+github.setup        vslavik ${my_name} 1.6.11 v -oss
+revision            1
+set branch          [join [lrange [split ${version} .] 0 1] .]
+categories          editors aqua
+license             MIT
+maintainers         nomaintainer
+description         Poedit is a cross-platform gettext catalogs (.po files) editor.
+long_description    {*}${description}. It aims to provide more convenient approach \
+                    to editing catalogs than editing the file by hand. \
+                    This port installs Poedit.app.
+homepage            https://www.poedit.net
+distname            ${my_name}-${version}
+
+checksums           rmd160  c0ed29930682f18f697dc3ba29134ae36b0cf7d4 \
+                    sha256  b4e7593feb5a43141fb7f380b3be154c1bd19be9d28646445e1c3ef6be8f269a \
+                    size    141450328
+github.tarball_from archive
+
+wxWidgets.use       wxGTK-3.0-cxx11
+
+boost.version       1.81
+
+set dbv             48
+
+post-patch {
+    reinplace "s|-lboost_regex -lboost_system|-lboost_regex-mt -lboost_system-mt|" ${worksrcpath}/src/Makefile.am
+}
+
+use_autoreconf      yes
+autoreconf.cmd      ./bootstrap
+
+depends_build-append \
+                    port:asciidoc \
+                    port:autoconf \
+                    port:automake \
+                    port:gettext \
+                    port:libtool \
+                    port:libxslt \
+                    path:bin/pkg-config:pkgconfig \
+                    port:xmlto
+
+depends_lib-append  port:db${dbv} \
+                    port:expat \
+                    port:gettext-runtime \
+                    path:lib/pkgconfig/gtk+-3.0.pc:gtk3 \
+                    path:lib/pkgconfig/icu-uc.pc:icu \
+                    port:LucenePlusPlus \
+                    port:${wxWidgets.port}
+
+depends_run-append  port:desktop-file-utils
+
+depends_skip_archcheck pkgconfig [boost::depends_portname]
+
+compiler.cxx_standard \
+                    2011
+
+# remove some additional features, especially sparkle because MacPorts handles updates
+configure.args-append \
+                    --disable-spellchecking \
+                    --with-wxdir=${wxWidgets.wxdir}
+
+configure.cppflags-append   "-I${prefix}/include/db${dbv}"
+configure.ldflags-append    "-L${prefix}/lib/db${dbv}"
+
+build.env-append    GETTEXT_PREFIX=${prefix} \
+                    WX_ROOT=${wxWidgets.prefix}
+
+variant spellcheck description {Enables spellchecking} {
+    depends_lib-append      port:gtkspell2
+    configure.args-delete   --disable-spellchecking
+    configure.args-append   --enable-spellchecking
+}
+
+post-activate {
+    system "${prefix}/bin/gtk-update-icon-cache -f -t ${prefix}/share/icons/hicolor"
+    system "${prefix}/bin/update-desktop-database ${prefix}/share/applications"
+}
+
+livecheck.type      none

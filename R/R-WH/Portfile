@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran GuillaumeBiessy WH 2.0.0
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-3+
+description         Enhanced implementation of Whittaker–Henderson smoothing
+long_description    {*}${description}
+homepage            https://github.com/GuillaumeBiessy/WH
+checksums           rmd160  e47a933b8dd8ce087fa6c8d9783918ed895ba65b \
+                    sha256  7919c194654dc03f4ee2f93e93d6bdc345580e3d385a8491f969ef999f090e54 \
+                    size    174483
+
+depends_lib-append  port:R-Rcpp
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-spelling \
+                    port:R-testthat
+
+test.run            yes

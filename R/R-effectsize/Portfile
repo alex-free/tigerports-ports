@@ -1,0 +1,47 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran easystats effectsize 1.0.1
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Indices of effect size
+long_description    {*}${description}
+homepage            https://easystats.github.io/effectsize
+checksums           rmd160  f3c01aa1c8ec86cda09ce4ed583a9f20eddb8248 \
+                    sha256  2dff59201dc8281650041f8b8ef2e08fd9b4026c293ba8d2a144796b911e02d3 \
+                    size    387694
+supported_archs     noarch
+
+depends_lib-append  port:R-bayestestR \
+                    port:R-datawizard \
+                    port:R-insight \
+                    port:R-parameters \
+                    port:R-performance
+
+depends_test-append port:R-afex \
+                    port:R-BayesFactor \
+                    port:R-brms \
+                    port:R-car \
+                    port:R-correlation \
+                    port:R-emmeans \
+                    port:R-gt \
+                    port:R-knitr \
+                    port:R-lavaan \
+                    port:R-lme4 \
+                    port:R-lmerTest \
+                    port:R-parsnip \
+                    port:R-pwr \
+                    port:R-rmarkdown \
+                    port:R-rms \
+                    port:R-rstanarm \
+                    port:R-rstantools \
+                    port:R-see \
+                    port:R-testthat
+
+test.run            yes

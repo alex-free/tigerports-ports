@@ -1,0 +1,43 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             bioconductor Bioconductor BiocCheck 1.44.2
+revision            1
+categories-append   bioconductor
+platforms           {darwin any}
+maintainers         nomaintainer
+license             Artistic-2
+description         Bioconductor-specific package checks
+long_description    {*}${description}
+checksums           rmd160  09a5db0afbe78b514536f4d8cb470ff7d5062839 \
+                    sha256  96e231e661e3b1c03f3a86f7bbacbec90d7e04231352f2cd45f94939fe6a1645 \
+                    size    316743
+supported_archs     noarch
+
+depends_lib-append  port:R-BiocBaseUtils \
+                    port:R-BiocFileCache \
+                    port:R-BiocManager \
+                    port:R-biocViews \
+                    port:R-callr \
+                    port:R-graph \
+                    port:R-httr2 \
+                    port:R-knitr \
+                    port:R-rvest \
+                    port:R-stringdist
+
+depends_test-append port:R-Biobase \
+                    port:R-BiocGenerics \
+                    port:R-BiocStyle \
+                    port:R-callr \
+                    port:R-devtools \
+                    port:R-downloader \
+                    port:R-jsonlite \
+                    port:R-rmarkdown \
+                    port:R-RUnit \
+                    port:R-usethis
+
+# One test fails, at least on ppc:
+# https://github.com/Bioconductor/BiocCheck/issues/188
+test.run            yes

@@ -1,0 +1,94 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=portfile:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           conflicts_build 1.0
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+
+# clock_gettime
+legacysupport.newest_darwin_requires_legacy 15
+
+github.setup        radareorg radare2 6.1.6
+revision            0
+categories          devel
+license             LGPL-3+
+maintainers         {i0ntempest @i0ntempest} openmaintainer
+description         Opensource tools to disasm, debug, analyze and manipulate binary files.
+long_description    ${name} provides {*}${description}.
+homepage            https://www.radare.org
+checksums           rmd160  3546d301eaf1580750a691730f17fa627e5b6239 \
+                    sha256  7370c52cb22cba3ab02ee77970fd258a8ecdbf3fd3282f2647ff12393c6ae8ac \
+                    size    11915420
+github.tarball_from archive
+
+# FIXME: add proper support for ppc thread state.
+# See: https://github.com/radareorg/radare2/issues/25144
+
+# Needed if a bundled zydis is used.
+# https://github.com/radareorg/radare2/issues/26030
+# patchfiles-append   patch-zydis.diff
+
+# Zydis configure args are not handled correctly:
+# https://github.com/radareorg/radare2/issues/26031
+patchfiles-append   patch-fix-configure.diff
+
+depends_build-append \
+                    path:bin/git:git \
+                    port:gperf \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  port:capstone \
+                    port:libmagic \
+                    path:lib/pkgconfig/libuv.pc:libuv \
+                    port:libzip \
+                    port:lz4 \
+                    port:xxhash \
+                    port:zlib \
+                    port:zydis
+
+conflicts_build     ${name}
+
+# Type redefinition
+compiler.c_standard 2011
+
+configure.args-append \
+                    --with-libuv \
+                    --with-syscapstone \
+                    --with-syslz4 \
+                    --with-sysmagic \
+                    --with-sysxxhash \
+                    --with-syszip \
+                    --with-syszydis \
+                    --without-jemalloc
+
+if {[string match *clang* ${configure.compiler}]} {
+    configure.args-append \
+                    --with-compiler=clang
+} elseif {[string match *gcc* ${configure.compiler}]} {
+    configure.args-append \
+                    --with-compiler=gcc
+}
+
+post-patch {
+    # 5.7.8: r_fs library fails to build without -lzip. Check again in the next version.
+    reinplace "s|LDFLAGS+=\$(SHLR)/grub/libgrubfs.a|LDFLAGS+=\$(SHLR)/grub/libgrubfs.a -lzip|g" ${worksrcpath}/libr/fs/Makefile
+}
+
+build.env-append    HOST_CC=${configure.cc}
+
+variant jemalloc description "Build with jemalloc support" {
+    depends_lib-append \
+                    port:jemalloc
+    configure.args-delete \
+                    --without-jemalloc
+}
+
+variant openssl description "Use OpenSSL library" {
+    PortGroup       openssl 1.0
+
+    configure.args-append \
+                    --with-ssl \
+                    --with-ssl-crypto
+}
+
+default_variants    +openssl

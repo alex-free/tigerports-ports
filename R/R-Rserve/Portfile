@@ -1,0 +1,20 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           openssl 1.0
+PortGroup           R 1.0
+
+R.setup             r-forge rforge Rserve 1.8-17
+revision            1
+categories-append   net devel
+maintainers         nomaintainer
+license             GPL-2
+description         Binary R server
+long_description    {*}${description}
+homepage            https://www.rforge.net/Rserve
+master_sites        ${homepage}/snapshot/
+checksums           rmd160  41576ef9f538eeccae7784c7fd7800b273fd046d \
+                    sha256  975ef4ac36a52d55797c2fcc9989b50fb579eb591535eecc2804aeb783338aab \
+                    size    543060
+
+test.run            yes

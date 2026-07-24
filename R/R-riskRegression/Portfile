@@ -1,0 +1,36 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran tagteam riskRegression 2025.05.20
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             {GPL-2 GPL-3}
+description         risk regression and prediction with censored data
+long_description    R package for {*}${description}.
+homepage            https://github.com/tagteam/riskRegression
+checksums           rmd160  766ac877293d8562ae03091d6ab9f01d7386286e \
+                    sha256  fbdd0039de3989dcbb8111cbca67ba88d6385d4556ba02496789661bea9752c8 \
+                    size    459443
+
+depends_lib-append  port:R-cmprsk \
+                    port:R-data.table \
+                    port:R-doParallel \
+                    port:R-foreach \
+                    port:R-ggplot2 \
+                    port:R-glmnet \
+                    port:R-lava \
+                    port:R-mets \
+                    port:R-mvtnorm \
+                    port:R-plotrix \
+                    port:R-prodlim \
+                    port:R-Publish \
+                    port:R-ranger \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-rms \
+                    port:R-timereg
+
+compilers.setup     require_fortran

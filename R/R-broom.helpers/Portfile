@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran larmarange broom.helpers 1.21.0
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3+
+description         Helpers for model coefficients tibbles
+long_description    {*}${description}
+homepage            https://larmarange.github.io/broom.helpers
+checksums           rmd160  8c4471496f9ecb9045115c24adba0ca3d20d1c1e \
+                    sha256  4afe0cc299df4f4eadd85780bc713cd05e45a3ca1c01e516526b72374c987fac \
+                    size    207172
+supported_archs     noarch
+
+depends_lib-append  port:R-broom \
+                    port:R-cards \
+                    port:R-cli \
+                    port:R-dplyr \
+                    port:R-labelled \
+                    port:R-lifecycle \
+                    port:R-purrr \
+                    port:R-rlang \
+                    port:R-stringr \
+                    port:R-tibble \
+                    port:R-tidyr \
+                    port:R-tidyselect

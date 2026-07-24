@@ -1,0 +1,69 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+PortGroup           makefile 1.0
+
+# CLOCK_MONOTONIC in mbedtls
+legacysupport.newest_darwin_requires_legacy 15
+
+github.setup        premake premake-core 5.0.0-beta7 v
+name                premake5
+revision            0
+
+categories          devel
+maintainers         {amake @amake} openmaintainer
+description         Premake is a build script generator.
+long_description    Premake is a build script generator. Describe your \
+                    project using the full-featured Lua scripting language \
+                    and use premake to create input files for various IDEs \
+                    and GnuMake
+
+license             BSD
+installs_libs       no
+
+homepage            https://premake.github.io
+
+github.tarball_from releases
+use_zip             yes
+distname            premake-${version}-src
+checksums           sha256  d39874aed04e317a46bdd281b193fe58c70457cd07bbd50e1bdcb4729c3a4860 \
+                    rmd160  7447638f9a93289548bf5296cd0d980d05c916a2 \
+                    size    10926866
+
+worksrcdir          .
+
+depends_run         path:share/curl/curl-ca-bundle.crt:curl-ca-bundle
+
+# https://github.com/premake/premake-core/issues/2470
+patchfiles-append   0002-fix-build.patch
+
+post-patch {
+    reinplace "s,@PREFIX@,${prefix},g" \
+        ${worksrcpath}/build/gmake.macosx/curl-lib.make \
+        ${worksrcpath}/contrib/curl/premake5.lua
+}
+
+# Premake statically links a handful of vendored libraries;
+# don't let MacPorts installed libraries conflict with these.
+compiler.library_path
+compiler.cpath
+configure.cppflags-delete -I${prefix}/include
+configure.ldflags-delete  -L${prefix}/lib
+
+if {${configure.build_arch} in [list ppc ppc64]} {
+    post-patch {
+        reinplace "s,PLATFORM    = x86,PLATFORM    = ${configure.build_arch}," ${worksrcpath}/Bootstrap.mak
+    }
+    build.args      -f ./Bootstrap.mak
+    build.target    osx
+} else {
+    build.dir       ${worksrcpath}/build/gmake.macosx
+    build.args-append \
+                    config=release verbose=true
+}
+
+destroot	{
+    xinstall -m 0755 ${worksrcpath}/bin/release/premake5 ${destroot}${prefix}/bin/
+}

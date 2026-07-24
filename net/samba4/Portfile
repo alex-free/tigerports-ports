@@ -1,0 +1,146 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           legacysupport 1.1
+PortGroup           perl5 1.0
+
+# O_CLOEXEC, AT_FDCWD, utimensat
+legacysupport.newest_darwin_requires_legacy 16
+
+name                samba4
+# With sbsat due to /opt/local/bin/gentest
+conflicts           samba3 sbsat
+version             4.24.3
+revision            0
+categories          net
+platforms           darwin freebsd
+maintainers         {gmail.com:cl.jeremy @CL-Jeremy} openmaintainer
+license             GPL-3+
+description         SMB/CIFS server and client
+long_description    Samba is an software suite that provides seamless file \
+                    and print services to SMB/CIFS clients.
+
+homepage            https://www.samba.org
+master_sites        https://download.samba.org/pub/samba/stable
+distname            samba-${version}
+checksums           rmd160  ff94a7146fa89bd438baa98b8e96f98caf946b6e \
+                    sha256  4a5e0ed1ea192b798c873d9957c50a5767c10c2767cccb00d56ecc427e94f8e9 \
+                    size    43446520
+
+set py_ver          3.14
+set py_ver_nodot    [string map {. {}} ${py_ver}]
+
+depends_build       port:bison \
+                    port:cmocka \
+                    port:docbook-xml \
+                    port:docbook-xsl-nons \
+                    port:gettext \
+                    port:libxslt \
+                    port:p${perl5.major}-parse-yapp \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  port:gettext-runtime \
+                    path:lib/pkgconfig/gnutls.pc:gnutls \
+                    port:gpgme \
+                    path:lib/pkgconfig/icu-uc.pc:icu \
+                    port:jansson \
+                    port:libarchive \
+                    port:libiconv \
+                    port:libtasn1 \
+                    port:lmdb \
+                    port:ncurses \
+                    port:ngtcp2 \
+                    path:lib/libldap.dylib:openldap \
+                    path:lib/libssl.dylib:openssl \
+                    port:popt \
+                    port:python${py_ver_nodot} \
+                    port:readline \
+                    port:talloc \
+                    port:tdb \
+                    port:tevent \
+                    port:zlib
+
+depends_run         port:py${py_ver_nodot}-dnspython \
+                    port:py${py_ver_nodot}-markdown
+
+# https://bugzilla.samba.org/show_bug.cgi?id=9665
+patchfiles-append   patch-samba-install.diff
+
+# https://bugzilla.samba.org/show_bug.cgi?id=15030
+patchfiles-append   patch-bug-15030.diff
+
+# https://bugzilla.samba.org/show_bug.cgi?id=15763
+patchfiles-append   patch-ldb-test.diff
+
+# https://trac.macports.org/ticket/72369
+patchfiles-append   patch-errno.diff
+
+# https://cgit.freebsd.org/ports/commit/?id=2daf87ac19838c9a36f56fb51b0678d193921771
+patchfiles-append   patch-add-configure-option-dnssd.diff \
+                    patch-fix-dnsbrowse.c-dnsregister.c.diff
+
+# LaunchDaemons
+patchfiles-append   patch-startupitems.diff
+
+# sysquotas_nfs.c:278:25: error: too many arguments to function 'clnt->cl_auth->ah_ops->ah_destroy'; expected 0, have 1
+patchfiles-append   patch-sysquotas_nfs.c.diff
+
+configure.perl      ${perl5.bin}
+configure.python    ${prefix}/bin/python${py_ver}
+
+post-patch {
+    foreach {plistfile} [glob ${worksrcpath}/org.samba.*.plist] {
+        reinplace "s|@@PREFIX@@|${prefix}|g" ${plistfile}
+    }
+    reinplace "s|/usr/bin/env python3|${configure.python}|" ${worksrcpath}/buildtools/bin/waf
+}
+
+# error: redefinition of typedef ‘SMB_STRUCT_STAT’
+compiler.blacklist-append *gcc-4.* {clang < 400}
+
+configure.env-append    YAPP=${prefix}/bin/yapp-${perl5.major}
+configure.args-append   --enable-fhs \
+                        --disable-avahi
+
+# https://trac.macports.org/ticket/71494
+configure.cflags-append \
+                    -Wno-error=incompatible-pointer-types
+
+startupitem.type    launchd
+startupitems \
+    name            ${name}-smbd \
+    plist           org.samba.smbd.plist \
+    uniquename      org.samba.smbd \
+    custom_file     ${worksrcpath}/org.samba.smbd.plist \
+    name            ${name}-nmbd \
+    plist           org.samba.nmbd.plist \
+    uniquename      org.samba.nmbd \
+    custom_file     ${worksrcpath}/org.samba.nmbd.plist
+
+variant dnssd conflicts avahi description {Use DNS-SD for Bonjour/mDNS service registration} {
+    platform freebsd {
+        depends_lib-append  lib:libdns_sd:mdnsresponder
+    }
+    configure.args-append   --enable-dnssd
+}
+
+variant avahi conflicts dnssd description {Use Avahi for Bonjour/mDNS service registration} {
+    depends_lib-append      port:avahi
+    configure.args-delete   --disable-avahi
+}
+
+if {${os.platform} eq "darwin"} {
+    default_variants-append +dnssd
+    configure.args-append   --without-acl-support
+} else {
+    default_variants-append +avahi
+}
+
+build.env-append    PYTHON=${configure.python} \
+                    XML_CATALOG_FILES=file://${prefix}/etc/xml/catalog
+
+destroot.env-append {*}${build.env}
+
+livecheck.type      regex
+livecheck.url       https://download.samba.org/pub/samba/
+livecheck.regex     samba-(\[0-9a-z.\]+)\\.tar\\.gz

@@ -1,0 +1,52 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+
+name                x264transcode
+version             0.3.1
+revision            1
+categories          multimedia
+platforms           any
+maintainers         gmail.com:stefan.van.der.eijk openmaintainer
+license             GPL-3+
+supported_archs     noarch
+
+description         Automated DVD/VOB/M2TS to MKV system
+long_description    Script for automated backup of DVDs, SD vob and HD m2ts \
+                    files for GNU/Linux and MacOS X. It works in _completely \
+                    unattended mode_ and is designed to run in the \
+                    background. It rips ALL subtitles and ALL audio tracks \
+                    and transcodes video to x264, profile 3.1, crf mode, \
+                    with b-frames. Video stream is cropped to get rid of \
+                    black borders. Chapters work. The container is MKV.
+                
+homepage            http://go.warwick.ac.uk/grok/x264transcode
+master_sites        macports_distfiles
+worksrcdir          ${name}
+
+depends_lib         port:crswallow \
+                    port:giflib \
+                    port:lsdvd \
+                    port:mkvtoolnix-legacy \
+                    port:mplayer-devel \
+                    port:ogmtools
+
+checksums           rmd160  246780a7a645e2047f04fe5b649cf2c86186960b \
+                    sha256  301ce6b198c1580b777712711d3b59af08f5932dc263e3a01c51e886d85a8dce \
+                    size    34313
+
+use_configure       no
+build               {}
+
+destroot {
+    xinstall -m 444 ${worksrcpath}/autoripper.conf \
+        ${destroot}${prefix}/etc/autoripper.conf.default
+    xinstall -W ${worksrcpath} autorip.py crippler.sh  monitor.sh ripper.sh \
+        x264transcode.sh ${destroot}${prefix}/bin
+    file mkdir ${destroot}${prefix}/share/doc/${name}
+    xinstall -m 444 -W ${worksrcpath} CHANGELOG COPYING README \
+        ${destroot}${prefix}/share/doc/${name}
+}
+
+livecheck.type      regex
+livecheck.regex     ${name}-(\[0-9a-z.\]+)\\.tar

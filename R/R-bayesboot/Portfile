@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran rasmusab bayesboot 0.2.3
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Implementation of Rubin's (1981) Bayesian bootstrap
+long_description    {*}${description}
+homepage            https://github.com/rasmusab/bayesboot
+checksums           rmd160  362a04e3fa0e5eadf88ae0cf53c1c726d37468cc \
+                    sha256  321d323d87f06261817ae1c0529dc938c42e2695cabc79dfbe795835785e4e64 \
+                    size    124698
+supported_archs     noarch
+
+depends_lib-append  port:R-HDInterval \
+                    port:R-plyr
+
+depends_test-append port:R-doParallel \
+                    port:R-foreach \
+                    port:R-testthat
+
+test.run            yes

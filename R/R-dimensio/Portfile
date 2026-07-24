@@ -1,0 +1,33 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran tesselle dimensio 0.14.1 v
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3+
+description         Multivariate data analysis
+long_description    {*}${description}
+homepage            https://packages.tesselle.org/dimensio
+checksums           rmd160  b089becd7fef06d16a7ea8b96cee6010f60d6b19 \
+                    sha256  91ea4fcc6e48560d33acfedf87901b43e5c2eb418d5b1c06cedb85d9cf6852e7 \
+                    size    782349
+# github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-arkhe \
+                    port:R-khroma
+
+depends_test-append port:R-fontquiver \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-rsvg \
+                    port:R-svglite \
+                    port:R-tinysnapshot \
+                    port:R-tinytest
+
+test.run            yes

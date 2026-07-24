@@ -1,0 +1,19 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran bnosac word2vec 0.4.0
+revision            1
+categories-append   textproc
+maintainers         nomaintainer
+license             Apache-2
+description         Distributed representations of words
+long_description    {*}${description}
+homepage            https://github.com/bnosac/word2vec
+checksums           rmd160  0388a4418204a085e7872630a38b0e81e39963d8 \
+                    sha256  38c6934ad7c601d6de7fa44a1ecf911ef34609b5c32b67da12a0814124036a91 \
+                    size    208705
+
+depends_lib-append  port:R-Rcpp \
+                    port:R-RcppProgress

@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran sgsokol r2sundials 7.2.1-4
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Rcpp wrapper for SUNDIALS/CVODES library
+long_description    {*}${description}
+checksums           rmd160  d2bc893ed6cbc93311e6b5b7a422608ac67dc4ff \
+                    sha256  35120c31b7bdbdb4ff5213a9237a67c014ce88dc1559d3916986f6262bb241d2 \
+                    size    433380
+
+depends_lib-append  port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-rmumps
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-ast2ast \
+                    port:R-deSolve \
+                    port:R-RUnit \
+                    port:R-slam \
+                    port:R-RcppXPtrUtils
+
+test.run            yes

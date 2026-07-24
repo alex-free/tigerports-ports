@@ -1,0 +1,47 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           openssl 1.0
+
+# lfd_encrypt.c:98: error: storage size of ‘ctx_enc’ isn’t known
+openssl.branch      1.0
+
+name                vtun
+version             3.0.4
+revision            3
+categories          net security
+maintainers         nomaintainer
+license             {GPL-2+ OpenSSLException}
+
+description         ${name} is for creating encrypted network links
+
+long_description    {*}${description}. It is the easiest way to create \
+                    virtual tunnels over TCP/IP networks with traffic \
+                    shaping, compression and encryption. Open-source \
+                    and distributed under the GPL, it supports IP, PPP, SLIP, \
+                    ethernet and other tunnel types. ${name} is easily and \
+                    highly configurable, it can be used for various network tasks.
+
+homepage            https://vtun.sourceforge.net
+master_sites        sourceforge:project/vtun/vtun/${version}/
+
+checksums           rmd160  004f2fa3a583b579706a1bc8728108ce9e4bca6e \
+                    sha256  abf8df6b15e3febeaaeae2ce24ead7105eb1537ad4ec0d830c83cbb684fd98b9 \
+                    size    132691
+
+patchfiles          clear_nat_hack_flags.patch \
+                    patch-lfd_legacy_encrypt.c.diff
+
+depends_lib         port:lzo \
+                    port:zlib
+
+configure.args      --mandir=${prefix}/share/man \
+                    --with-blowfish-headers=[openssl::include_dir] \
+                    --with-lzo-headers=${prefix}/include \
+                    --with-lzo-lib=${prefix}/lib \
+                    --with-ssl-headers=[openssl::include_dir] \
+                    --with-ssl-lib=[openssl::lib_dir]
+
+build.target        vtund
+
+destroot.args       INSTALL_OWNER=

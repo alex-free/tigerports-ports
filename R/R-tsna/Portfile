@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran statnet tsna 0.3.6 v
+revision            1
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Dynamic extensions for network objects
+long_description    {*}${description}
+homepage            https://github.com/statnet/tsna
+checksums           rmd160  c3b20d65fba0df3ca4500ff3d0cb124efb9d7792 \
+                    sha256  c1dd9e5596f42ba742a40ec8fff8d820d9c75674c1976401aee18356a2109074 \
+                    size    2442855
+supported_archs     noarch
+
+depends_lib-append  port:R-network \
+                    port:R-networkDynamic \
+                    port:R-statnet.common

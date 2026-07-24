@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-validators
+version             0.35.0
+platforms           {darwin any}
+supported_archs     noarch
+license             MIT
+maintainers         nomaintainer
+
+description         Python Data Validation for Humans™
+long_description    {*}${description}
+
+homepage            https://github.com/kvesteri/validators
+
+checksums           rmd160  c7fdff5905a215ab91da8a4086409d42b0863030 \
+                    sha256  992d6c48a4e77c81f1b4daba10d16c3a9bb0dbb79b3a19ea847ff0928e70497a \
+                    size    73399
+
+python.versions     310 311 312 313 314

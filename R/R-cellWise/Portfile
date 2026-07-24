@@ -1,0 +1,38 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran jakob.raymaekers cellWise 2.5.7
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Analyzing data with cellwise outliers
+long_description    {*}${description}
+checksums           rmd160  9f2735f697f1db297a419160dc15cd1d1e95e0d5 \
+                    sha256  7ec193580f609a2bb6b8ff60b0a857f708df159ad71ea4631b1ebb160f0fc890 \
+                    size    4708389
+
+depends_lib-append  port:R-ggplot2 \
+                    port:R-gridExtra \
+                    port:R-matrixStats \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-reshape2 \
+                    port:R-robustbase \
+                    port:R-rrcov \
+                    port:R-scales \
+                    port:R-shape \
+                    port:R-svd
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-ellipse \
+                    port:R-GSE \
+                    port:R-knitr \
+                    port:R-markdown \
+                    port:R-robustHD \
+                    port:R-rospca
+
+test.run            yes

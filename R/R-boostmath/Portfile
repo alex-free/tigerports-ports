@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran andrjohns boostmath 1.4.0
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         R bindings for the Boost math functions
+long_description    {*}${description}
+homepage            https://github.com/andrjohns/boostmath
+checksums           rmd160  4ce3ec10df29882c976e560470d2a0b2a64459e5 \
+                    sha256  102f1ad267db3cdfa7d784186b6a5c63ec195a8787bb34e21922b4de2d29857c \
+                    size    177670
+
+depends_lib-append  port:R-BH \
+                    port:R-cpp11
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-tinytest
+
+test.run            yes

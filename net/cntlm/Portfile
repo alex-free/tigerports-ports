@@ -1,0 +1,60 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+PortGroup               github 1.0
+PortGroup               makefile 1.0
+
+github.setup            versat cntlm 0.94.0
+revision                0
+license                 GPL-2+
+categories              net
+maintainers             nomaintainer
+description             Cntlm is an NTLM / NTLM Session Response / \
+                        NTLMv2 authenticating HTTP proxy
+long_description        Cntlm integrates TCP/IP port forwarding (HTTP \
+                        tunneling), SOCKS5 proxy mode, standalone proxy \
+                        allowing you to browse intranet as well as \
+                        Internet and to access corporate web servers \
+                        with NTLM protection. There are many advanced \
+                        features like NTLMv2 support, password protection, \
+                        password hashing, completely mutliplatform code \
+                        (running on just about every architecture and OS \
+                        out there) and so much more.
+homepage                http://cntlm.sourceforge.net
+
+checksums               rmd160  81b540a74699968e030030342ebcb5c3eaf7f7b1 \
+                        sha256  da9e98f26be5810abc88fd6c35c86151c6b3e8f326eb8a774902083c21985000 \
+                        size    1675702
+github.tarball_from     archive
+
+patchfiles              patch-Makefile
+
+depends_lib             path:libexec/coreutils/libstdbuf.so:coreutils
+
+build.args              BINDIR=${destroot}${prefix}/sbin \
+                        MANDIR=${destroot}${prefix}/share/man \
+                        SYSCONFDIR=${destroot}${prefix}/etc \
+                        PREFIX=${prefix}
+
+destroot.args           ${build.args}
+
+post-destroot {
+    # Move conf file to sample so it does not get overwritten
+    file rename ${destroot}${prefix}/etc/cntlm.conf ${destroot}${prefix}/etc/cntlm.conf.sample
+}
+
+post-activate {
+   # Create initial conf file if needed
+   if {![file exists ${prefix}/etc/cntlm.conf]} {
+      file copy ${prefix}/etc/cntlm.conf.sample \
+         ${prefix}/etc/cntlm.conf
+   }
+}
+
+startupitem.create      yes
+startupitem.name        cntlm
+startupitem.executable  ${prefix}/sbin/cntlm -f
+
+notes "The Cntlm configuration file -> ${prefix}/etc/cntlm.conf"
+
+livecheck.regex         ${name} (\[0-9.\]+)

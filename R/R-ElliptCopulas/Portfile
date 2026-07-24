@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is outdated.
+R.setup             cran AlexisDerumigny ElliptCopulas 0.1.4.1
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Inference of elliptical distributions and copulas
+long_description    {*}${description}
+homepage            https://github.com/AlexisDerumigny/ElliptCopulas
+checksums           rmd160  2051163bc02b2b082e6809fd362ce83bc356eb62 \
+                    sha256  36751301b7f6380cefd7d80767f2e0870322314a949bc3572208523f34db392b \
+                    size    44694
+supported_archs     noarch
+
+depends_lib-append  port:R-kStatistics \
+                    port:R-pbapply \
+                    port:R-Runuran \
+                    port:R-wdm
+
+depends_test-append port:R-mvtnorm \
+                    port:R-Rmpfr \
+                    port:R-testthat
+
+test.run            yes

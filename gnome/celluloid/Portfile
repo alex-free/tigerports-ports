@@ -1,0 +1,83 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           active_variants 1.1
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+PortGroup           meson 1.0
+
+# strnlen
+legacysupport.newest_darwin_requires_legacy 10
+
+# Stuck at the older version since later ones require gtk4,
+# which has a broken video playback. Versions up to 0.27
+# can be built with gtk4 4.14.x, however they crash
+# when opening any video due to a gtk4 bug,
+# which its upstream is not interested to fix.
+# https://github.com/celluloid-player/celluloid/issues/1056
+# https://gitlab.gnome.org/GNOME/gtk/-/issues/7590
+github.setup        celluloid-player celluloid 0.21 v
+revision            1
+categories          gnome multimedia
+license             GPL-3
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+description         GTK+ frontend for mpv
+long_description    Celluloid (formerly GNOME MPV) is a simple GTK+ frontend for mpv.
+homepage            https://celluloid-player.github.io
+checksums           rmd160  1b2ab4be13d97e7b153c322740b8f695361ad663 \
+                    sha256  322bed4337857c3c6e3affe312573e88128aef346528508c58a12cab4867a64d \
+                    size    377260
+github.tarball_from archive
+
+# FIXME: some legacy systems appear to have issues with playback,
+# despite mpv-legacy itself being functional.
+# https://github.com/celluloid-player/celluloid/issues/992
+
+set py_ver          3.12
+set py_ver_nodot    [string map {. {}} ${py_ver}]
+
+# Match mpv here:
+set ffmpeg_ver      7
+configure.pkg_config_path-prepend \
+                    ${prefix}/libexec/ffmpeg${ffmpeg_ver}/lib/pkgconfig
+
+depends_build-append \
+                    port:appstream-glib \
+                    port:gettext \
+                    path:bin/pkg-config:pkgconfig \
+                    port:python${py_ver_nodot}
+
+depends_lib-append  port:ffmpeg${ffmpeg_ver} \
+                    port:gettext-runtime \
+                    path:lib/pkgconfig/glib-2.0.pc:glib2 \
+                    path:lib/pkgconfig/gtk+-3.0.pc:gtk3 \
+                    port:libepoxy \
+                    path:lib/libmpv.dylib:mpv
+
+depends_run-append  port:desktop-file-utils
+
+require_active_variants mpv libmpv
+
+platform darwin 8 {
+    configure.ldflags-append -lssp
+}
+
+patchfiles-append   patch-fix-flags-0.21.diff
+
+compiler.c_standard 1999
+# Fails to build with Xcode gccs:
+compiler.blacklist-append \
+                    *gcc-4.0 *gcc-4.2
+
+configure.python    ${prefix}/bin/python${py_ver}
+
+post-patch {
+    reinplace "s|/usr/bin/env python3$|${configure.python}|" \
+                    ${worksrcpath}/meson-post-install.py \
+                    ${worksrcpath}/src/generate-authors.py
+}
+
+post-activate {
+    system "${prefix}/bin/update-desktop-database ${prefix}/share/applications"
+    system "${prefix}/bin/glib-compile-schemas ${prefix}/share/glib-2.0/schemas"
+}

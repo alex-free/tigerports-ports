@@ -1,0 +1,20 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran nickpoison astsa 2.4
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Applied Statistical Time Series Analysis
+long_description    {*}${description}
+homepage            https://dsstoffer.github.io
+checksums           rmd160  03dd460179fb980096031e93f9540c6c47088ea7 \
+                    sha256  4331644421e418637d99f348e1ad6cb774e7e87fda72199c7ba7aa35d4d7889e \
+                    size    878852
+supported_archs     noarch
+
+test.run            yes

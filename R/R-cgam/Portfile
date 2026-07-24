@@ -1,0 +1,33 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran xliao cgam 1.31
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Constrained Generalized Additive Model
+long_description    {*}${description}
+checksums           rmd160  46f996ee666d032049b2221aecccb09778259d49 \
+                    sha256  ba6028aaf604dce1419d423bb71fa117e35b4b4ad035d62cdf2d83212be60627 \
+                    size    316126
+supported_archs     noarch
+
+depends_lib-append  port:R-coneproj \
+                    port:R-dplyr \
+                    port:R-ggplot2 \
+                    port:R-lme4 \
+                    port:R-quadprog \
+                    port:R-rlang \
+                    port:R-splines2 \
+                    port:R-statmod \
+                    port:R-svDialogs \
+                    port:R-zeallot
+
+depends_test-append port:R-patchwork \
+                    port:R-roxygen2
+
+test.run            yes

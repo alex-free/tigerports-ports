@@ -1,0 +1,36 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github NicChr fastplyr 0.9.91 v
+revision            1
+categories-append   textproc
+maintainers         nomaintainer
+license             MIT
+description         Fast alternatives to tidyverse functions
+long_description    {*}${description}
+homepage            https://github.com/NicChr/fastplyr
+checksums           rmd160  07b58b31d5e6f02ae378319ecf3794b759d1e12d \
+                    sha256  4c491a6dab61881ac0c6c6f3bf9e89448bcd18b240fb66716d6736515f3733b3 \
+                    size    115654
+github.tarball_from archive
+
+depends_lib-append  port:R-cheapr \
+                    port:R-cli \
+                    port:R-collapse \
+                    port:R-cpp11 \
+                    port:R-dplyr \
+                    port:R-lifecycle \
+                    port:R-purrr \
+                    port:R-rlang \
+                    port:R-stringr \
+                    port:R-tidyselect \
+                    port:R-vctrs
+
+depends_test-append port:R-data.table \
+                    port:R-nycflights13 \
+                    port:R-testthat \
+                    port:R-tidyr
+
+test.run            yes

@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran tsungwu iForecast 1.1.2
+revision            1
+categories-append   math
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             MIT
+description         Machine learning time series forecasting
+long_description    {*}${description}
+checksums           rmd160  c789d91412b8867cafff4eaafb130595c99bd8a4 \
+                    sha256  15894dda289a32c80172e33b2ae7ccd824c8d75cca17bb1f12b80c2f6a0d40bf \
+                    size    73329
+supported_archs     noarch
+
+depends_lib-append  port:R-caret \
+                    port:R-zoo
+
+depends_test-append port:R-forecast \
+                    port:R-h2o \
+                    port:R-kernlab \
+                    port:R-lubridate \
+                    port:R-timeSeries \
+                    port:R-timeDate \
+                    port:R-xts
+
+test.run            yes

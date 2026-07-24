@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran OHDSI ParallelLogger 3.4.2 v
+revision            1
+categories-append   sysutils
+platforms           {darwin any}
+maintainers         nomaintainer
+license             Apache-2
+description         Support for parallel computation, logging and function automation
+long_description    {*}${description}
+homepage            https://ohdsi.github.io/ParallelLogger
+checksums           rmd160  5942331d0c424795a63f677fed6ce5c06b4eb940 \
+                    sha256  2655a8b1ace301fbe8006c4b276e0b5813f0a6a89410471fa5e955153e030fbf \
+                    size    562407
+supported_archs     noarch
+
+depends_lib-append  port:R-jsonlite \
+                    port:R-memuse \
+                    port:R-rstudioapi \
+                    port:R-snow \
+                    port:R-xml2
+
+depends_test-append port:R-DT \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-sendmailR \
+                    port:R-shiny \
+                    port:R-testthat \
+                    port:R-tibble
+
+test.run            yes

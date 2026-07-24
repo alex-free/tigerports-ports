@@ -1,0 +1,43 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran insightsengineering cardx 0.3.2
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             Apache-2
+description         Extra analysis results data (ARD) utilities
+long_description    {*}${description}
+homepage            https://github.com/insightsengineering/cardx
+checksums           rmd160  33ebd3197107d57c09a0eea1b43648c1e4e5865f \
+                    sha256  cbac390697d9c8b8c38ca8975aa03772d6fd7b65ceb5f2806558debf8988f080 \
+                    size    200110
+supported_archs     noarch
+
+depends_lib-append  port:R-cards \
+                    port:R-cli \
+                    port:R-dplyr \
+                    port:R-glue \
+                    port:R-lifecycle \
+                    port:R-rlang \
+                    port:R-tidyr
+
+depends_test-append port:R-aod \
+                    port:R-broom \
+                    port:R-broom.helpers \
+                    port:R-broom.mixed \
+                    port:R-car \
+                    port:R-effectsize \
+                    port:R-emmeans \
+                    port:R-geepack \
+                    port:R-ggsurvfit \
+                    port:R-lme4 \
+                    port:R-parameters \
+                    port:R-smd \
+                    port:R-survey \
+                    port:R-testthat \
+                    port:R-withr
+
+test.run            yes

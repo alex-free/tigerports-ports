@@ -1,0 +1,41 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran jomulder BFpack 1.5.0
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3+
+description         Flexible Bayes factor testing of scientific expectations
+long_description    {*}${description}
+homepage            https://github.com/jomulder/BFpack
+checksums           rmd160  511d1e97a8f81da60802abb9001a9364428e8843 \
+                    sha256  25bd057015e43c4e84d0118fad251d2ef6b801cc78353963d904a2cd5be396af \
+                    size    459810
+
+depends_lib-append  port:R-bain \
+                    port:R-Bergm \
+                    port:R-berryFunctions \
+                    port:R-coda \
+                    port:R-ergm \
+                    port:R-extraDistr \
+                    port:R-lme4 \
+                    port:R-metaBMA \
+                    port:R-mvtnorm \
+                    port:R-pracma \
+                    port:R-QRM \
+                    port:R-sandwich
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-knitr \
+                    port:R-lmtest \
+                    port:R-metafor \
+                    port:R-polycor \
+                    port:R-pscl \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

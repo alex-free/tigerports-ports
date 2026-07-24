@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran sgsokol rmumps 5.2.1-37
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Wrapper for MUMPS library
+long_description    {*}${description}
+homepage            https://github.com/sgsokol/rmumps
+checksums           rmd160  987c440fb749d6520206b11616e0907c4eef10a2 \
+                    sha256  1a51ae16968b61b4a0b70a8f778017af5704b1ddcbf862c8cee28a9db10b2144 \
+                    size    2355714
+
+depends_lib-append  port:metis \
+                    port:mumps \
+                    port:R-Rcpp \
+                    port:scotch
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-slam \
+                    port:R-testthat
+
+test.run            yes

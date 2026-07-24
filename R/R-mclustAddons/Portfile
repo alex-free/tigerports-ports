@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran mclust-org mclustAddons 0.10
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Addons for the R-mclust package
+long_description    {*}${description}
+homepage            https://mclust-org.github.io/mclustAddons
+checksums           rmd160  225bcfdfe19b75acafb6b92414dcf84c4407bc72 \
+                    sha256  ae7c6232a1e72503b7a99d225539964e46303b1ce3f67f71dd4c1c2a06330a60 \
+                    size    1534758
+
+depends_lib-append  port:R-cli \
+                    port:R-doParallel \
+                    port:R-doRNG \
+                    port:R-foreach \
+                    port:R-iterators \
+                    port:R-knitr \
+                    port:R-mclust \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-rmarkdown
+
+compilers.setup     require_fortran
+
+test.run            yes

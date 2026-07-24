@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran zhi.zhao BayesSUR 2.3-0
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Bayesian Seemingly Unrelated Regression
+long_description    {*}${description}
+homepage            https://github.com/mbant/BayesSUR
+checksums           rmd160  d7cb9263a738eceafaaacf37ab5c1c5d73277285 \
+                    sha256  6c4e033a46fe45a85b09abb59cc80f0456e86c77c79307579dfb463d122e7ee9 \
+                    size    3490780
+
+depends_lib-append  port:R-igraph \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-tikzDevice \
+                    port:R-xml2
+
+compiler.cxx_standard 2017
+compilers.setup     require_fortran
+
+depends_test-append port:R-BDgraph \
+                    port:R-data.table \
+                    port:R-knitr \
+                    port:R-plyr \
+                    port:R-R.rsp \
+                    port:R-rmarkdown \
+                    port:R-scrime
+
+test.run            yes

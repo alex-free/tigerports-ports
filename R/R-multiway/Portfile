@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran helwig multiway 1.0-7
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Component models for multi-way data
+long_description    {*}${description}
+checksums           rmd160  9e4540fd560f420a127f33f82f22a29938d091f3 \
+                    sha256  e5fcc92368accfa94e5750032c640b0327d957f92adec89110447ceffff9acce \
+                    size    178926
+supported_archs     noarch
+
+depends_lib-append  port:R-CMLS
+
+test.run            yes

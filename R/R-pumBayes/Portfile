@@ -1,0 +1,33 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is outdated.
+R.setup             cran SkylarShiHub pumBayes 1.0.0 v
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Bayesian estimation of probit unfolding models \
+                    for binary preference data
+long_description    {*}${description}
+homepage            https://github.com/SkylarShiHub/pumBayes
+checksums           rmd160  69e84d6c4225b6a7a3fa9aefa40d56b139fcb253 \
+                    sha256  9ae1b0f51bba3841eff6cbf37595208da008ce39ac3476a0cd224bae841cd4bf \
+                    size    122137
+
+depends_lib-append  port:R-mvtnorm \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-RcppDist \
+                    port:R-RcppTN
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-knitr \
+                    port:R-MCMCpack \
+                    port:R-pscl \
+                    port:R-rmarkdown
+
+test.run            yes

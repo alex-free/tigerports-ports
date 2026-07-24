@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran r-project bindata 0.9-24
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2
+description         Generation of artificial binary data
+long_description    {*}${description}
+checksums           rmd160  8cc03cfad3fbb386bd6e641321ce41c58027f6f9 \
+                    sha256  3c8d20c6714fc464b80a32128439402c167451ce7958670f9cab9833888ec0e5 \
+                    size    267577
+supported_archs     noarch
+
+depends_lib-append  port:R-e1071 \
+                    port:R-mvtnorm
+
+test.run            yes

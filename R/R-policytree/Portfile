@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github grf-labs policytree 1.2.3 v
+revision            1
+categories-append   economics
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Policy learning via doubly robust empirical welfare maximization over trees
+long_description    {*}${description}
+checksums           rmd160  e5d2426a68ba6bf2372583f2dd1b9700c2c42a5f \
+                    sha256  62420a27f2a991c8b72d60e603c6e672fdcdc5ef508324a77ad1d1fa230540ff \
+                    size    1183840
+github.tarball_from archive
+
+worksrcdir          ${worksrcpath}/r-package/${github.project}
+
+depends_lib-append  port:R-BH \
+                    port:R-grf \
+                    port:R-Rcpp
+
+depends_test-append port:R-DiagrammeR \
+                    port:R-testthat
+
+test.run            yes

@@ -1,0 +1,19 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran pd.mes ISwR 2.0-11
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Introductory Statistics with R (2nd ed.)
+long_description    {*}${description}
+checksums           rmd160  46635a40c662b323d23978c0010435984ef51f1a \
+                    sha256  31e21ee7733b304041d50e805029d129ddad0ac56452e3fa04f0f5fad9c9e902 \
+                    size    214111
+supported_archs     noarch
+
+test.run            yes

@@ -1,0 +1,39 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran noah.greifer optweight 1.0.0
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL
+description         Targeted stable balancing weights using optimization
+long_description    {*}${description}
+checksums           rmd160  64a423ab0cb0949edad5b0fdbab8e084a4923ff2 \
+                    sha256  4b202379ea6fb3e93a06be7a6975e1ebbac9be5a0ce3835f0c745b0cc0edca7b \
+                    size    500639
+supported_archs     noarch
+
+depends_lib-append  port:R-chk \
+                    port:R-ggplot2 \
+                    port:R-osqp \
+                    port:R-rlang
+
+# R-clarabel dropped due to being rusty.
+depends_test-append port:R-cobalt \
+                    port:R-twang \
+                    port:R-scs \
+                    port:R-highs \
+                    port:R-lpSolve \
+                    port:R-WeightIt \
+                    port:R-gbm \
+                    port:R-marginaleffects \
+                    port:R-sandwich \
+                    port:R-fwb \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

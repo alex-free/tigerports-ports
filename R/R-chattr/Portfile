@@ -1,0 +1,44 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran mlverse chattr 0.3.1
+revision            1
+categories-append   llm
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Interact with Large Language Models
+long_description    {*}${description} in RStudio.
+homepage            https://mlverse.github.io/chattr
+checksums           rmd160  a60e719982492cbff561bef4e82a47c8001260aa \
+                    sha256  761d2cf63e48a0f2e4135aa12a7cfebf4a8524f48731bb5e5c4a483b70372472 \
+                    size    2493533
+supported_archs     noarch
+
+depends_lib-append  port:R-bslib \
+                    port:R-cli \
+                    port:R-clipr \
+                    port:R-config \
+                    port:R-coro \
+                    port:R-ellmer \
+                    port:R-fs \
+                    port:R-glue \
+                    port:R-httr2 \
+                    port:R-lifecycle \
+                    port:R-processx \
+                    port:R-purrr \
+                    port:R-rlang \
+                    port:R-rstudioapi \
+                    port:R-shiny \
+                    port:R-yaml
+
+# R-shinytest2 is omitted.
+depends_test-append port:R-covr \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-withr
+
+test.run            yes

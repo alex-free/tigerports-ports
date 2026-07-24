@@ -1,0 +1,25 @@
+--- cpp_world_clock.cpp	2025-11-15 12:47:25.000000000 +0800
++++ cpp_world_clock.cpp	2026-01-03 05:59:20.000000000 +0800
+@@ -309,11 +309,11 @@
+   // files.
+ 
+   std::map<std::string, std::string> config_file_map =
+-      csv_to_map("../config/cwc_config.csv");
++      csv_to_map("@TZDIR@/config/cwc_config.csv");
+ 
+   // Parsing the active configuration file:
+   std::map<std::string, std::string> config_map =
+-      csv_to_map("../config/" + config_file_map["config_list"]);
++      csv_to_map("@TZDIR@/config/" + config_file_map["config_list"]);
+ 
+   // Reading time zone database codes and user-specified titles
+   // for each time zone from tz_list:
+@@ -321,7 +321,7 @@
+   // the original order in which time zones were entered.)
+ 
+   std::vector<std::vector<std::string>> tz_vec =
+-      csv_to_vector("../config/" + config_file_map["tz_list"]);
++      csv_to_vector("@TZDIR@/config/" + config_file_map["tz_list"]);
+ 
+   // Determining the ANSI escape codes that correspond to the
+   // display colors specified by the user:

@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github yihui testit 0.15 v
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Simple package for testing R packages
+long_description    {*}${description}
+checksums           rmd160  361575d28039345d24d4c79db1ae26cb085388d2 \
+                    sha256  ea762c827f44ae9b45be680f566649ff5cd5466a543accba2c00dc61ba01300b \
+                    size    11942
+github.tarball_from archive
+supported_archs     noarch
+
+depends_test-append port:R-rstudioapi
+
+test.run            yes

@@ -1,0 +1,134 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:filetype=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           active_variants 1.1
+PortGroup           gobject_introspection 1.0
+PortGroup           legacysupport 1.1
+PortGroup           yelp 1.0
+
+# O_CLOEXEC, at least
+legacysupport.newest_darwin_requires_legacy 10
+
+name                evince
+version             3.36.10
+revision            1
+license             GPL-2+
+set branch          [join [lrange [split ${version} .] 0 1] .]
+description         Evince is a document viewer for multiple document formats like pdf, and many others.
+long_description    {*}${description}
+maintainers         {devans @dbevans} openmaintainer
+categories          gnome print
+homepage            https://wiki.gnome.org/Apps/Evince
+master_sites        gnome:sources/${name}/${branch}/
+
+use_xz              yes
+
+checksums           rmd160  2de4c8cac727d553be1bc7ea88441ca395ef714c \
+                    sha256  6b024a91f8451d60c6536b2f7befe2954ee66b7be98d4e1959acf24e4d7d6638 \
+                    size    2430584
+
+patchfiles          patch-browser-plugin-Makefile.am.diff \
+                    dvi-backend.patch \
+                    dont-use-ar-crD.patch \
+                    patch-configure.ac.diff
+
+use_autoreconf      yes
+autoreconf.args     -fvi
+
+depends_build-append \
+                    port:appstream-glib \
+                    port:gettext \
+                    port:gtk-doc \
+                    port:itstool \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  port:adwaita-icon-theme \
+                    path:lib/pkgconfig/gdk-pixbuf-2.0.pc:gdk-pixbuf2 \
+                    port:gettext-runtime \
+                    port:gsettings-desktop-schemas \
+                    port:gspell \
+                    path:lib/pkgconfig/gtk+-3.0.pc:gtk3 \
+                    port:libarchive \
+                    port:libiconv \
+                    port:libsecret \
+                    port:libspectre \
+                    port:libxml2 \
+                    path:lib/pkgconfig/poppler.pc:poppler \
+                    port:tiff \
+                    port:texlive-bin \
+                    port:zlib
+
+depends_run-append  port:desktop-file-utils
+
+gobject_introspection yes
+
+# requires C++11
+compiler.cxx_standard 2011
+
+configure.args      --disable-debug \
+                    --disable-djvu \
+                    --disable-libgnome-desktop \
+                    --disable-multimedia \
+                    --disable-nautilus \
+                    --disable-schemas-compile \
+                    --disable-silent-rules \
+                    --disable-t1lib \
+                    --disable-xps \
+                    --enable-comics \
+                    --enable-compile-warnings=minimum \
+                    --enable-dvi \
+                    --enable-pdf \
+                    --enable-ps \
+                    --enable-tiff
+
+# ev-sidebar-links.c:345:36: error: passing argument 1 of 'gtk_menu_attach_to_widget'
+# from incompatible pointer type [-Wincompatible-pointer-types]
+# https://trac.macports.org/ticket/71965
+configure.cflags-append \
+                    -Wno-error=incompatible-pointer-types
+
+# browser plugin requires -std=c++11 -stdlib=libc++
+# disable plugin if libc++ is not configured
+# browser plugin uses gtk_plug_new which is only available with gtk3 +x11
+# disable plugin if variant +quartz is set
+
+if {${configure.cxx_stdlib} ne "libc++" || [variant_isset quartz]} {
+    configure.args-append   --disable-browser-plugin
+}
+
+variant quartz {}
+
+if {[variant_isset quartz]} {
+    require_active_variants gtk3 quartz
+} else {
+    require_active_variants gtk3 x11
+
+# enable gnome-desktop thumbnail cache
+
+    depends_lib-append      port:gnome-desktop
+    configure.args-replace  --disable-libgnome-desktop --enable-libgnome-desktop
+}
+
+variant djvu description {Support for djvu documents using djvulibre} {
+    configure.args-replace --disable-djvu --enable-djvu
+    depends_lib-append port:djvulibre
+}
+
+variant multimedia description {Build optional multimedia support using Gstreamer} {
+    configure.args-replace  --disable-multimedia --enable-multimedia
+    depends_lib-append      port:gstreamer1 \
+                            port:gstreamer1-gst-plugins-base
+}
+
+variant nautilus conflicts quartz description {Build optional nautilus extensions} {
+    configure.args-replace  --disable-nautilus --enable-nautilus
+    depends_lib-append      port:nautilus
+}
+
+post-activate    {
+    system "${prefix}/bin/gtk-update-icon-cache -f -t ${prefix}/share/icons/hicolor"
+    system "${prefix}/bin/update-desktop-database ${prefix}/share/applications"
+    system "${prefix}/bin/glib-compile-schemas ${prefix}/share/glib-2.0/schemas"
+}
+
+livecheck.type      gnome

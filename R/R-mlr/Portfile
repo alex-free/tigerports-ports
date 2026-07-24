@@ -1,0 +1,37 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran mlr-org mlr 2.19.3
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             BSD
+description         Machine Learning in R
+long_description    {*}${description}
+homepage            https://mlr.mlr-org.com
+checksums           rmd160  fc2ea4df3fe6f6483f15fa2b5f45c6675b89aa8c \
+                    sha256  49d785160fa0d93be317573eb28b7926df1dc79991f58777b026b25bfb485c44 \
+                    size    2943826
+
+depends_lib-append  port:R-backports \
+                    port:R-BBmisc \
+                    port:R-checkmate \
+                    port:R-data.table \
+                    port:R-ggplot2 \
+                    port:R-parallelMap \
+                    port:R-ParamHelpers \
+                    port:R-stringi \
+                    port:R-XML
+
+# These are declared as optional dependencies, and not linked to.
+depends_run-append  port:gdal-R \
+                    port:geos-R \
+                    port:gmp \
+                    port:gsl \
+                    port:jags \
+                    port:libGLU \
+                    port:mpfr \
+                    port:proj-R \
+                    port:udunits

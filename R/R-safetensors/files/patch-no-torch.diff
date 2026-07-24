@@ -1,0 +1,12 @@
+--- DESCRIPTION	2025-08-13 21:16:29.000000000 +0800
++++ DESCRIPTION	2025-08-21 19:15:57.000000000 +0800
+@@ -15,8 +15,7 @@
+ Roxygen: list(markdown = TRUE)
+ RoxygenNote: 7.3.2
+ Suggests:
+-    testthat (>= 3.0.0),
+-    torch (>= 0.11.0)
++    testthat (>= 3.0.0)
+ Config/testthat/edition: 3
+ Imports:
+     cli,

@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:filetype=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+PortGroup           wxWidgets 1.0
+
+github.setup        utelle wxsqlite3 4.12.5 v
+revision            0
+categories          databases
+license             {GPL-3 LGPL-3}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+
+description         wxSQLite3, a lightweight wrapper for SQLite
+long_description    {*}${description}
+checksums           rmd160  557eb9b14174fc9d4fc115c9844025cb4d683d36 \
+                    sha256  39c20b8814f204ef75f8b300c2f264a282669e3c84f4e34c3cf5019ef9fa505a \
+                    size    9874458
+github.tarball_from archive
+
+wxWidgets.use       wxGTK-3.2
+
+use_autoreconf      yes
+
+depends_lib-append  port:sqlite3 \
+                    port:${wxWidgets.port}
+
+# sqlite3mc_amalgamation.c: error: redefinition of typedef 'u8'
+compiler.c_standard     2011
+# strvararg.h: error: type_traits: No such file or directory
+compiler.cxx_standard   2011
+
+configure.args-append \
+                    --disable-silent-rules \
+                    --with-wx-config=${wxWidgets.wxconfig}

@@ -1,0 +1,71 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           linear_algebra 1.1
+PortGroup           mpi 1.0
+
+github.setup        sfilippone psblas3 3.9.0 v
+revision            0
+categories          math science parallel
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             BSD
+description         Library of parallel sparse linear algebra on high performance computer.
+long_description    {*}${description}
+checksums           rmd160  cc1157634cb5cc2bf7c8995d7d9829b5c88fe864 \
+                    sha256  ce523ed2d266fb6dc8723c45a2bcbf40a1c67b7ca61cd9408032a73af7cf8605 \
+                    size    4548445
+github.tarball_from archive
+
+# FIXME: currently metis is not used:
+# configure: metis dir 
+# checking for limits.h... yes
+# checking for metis.h... yes
+# checking for METIS integer size... 32
+# checking for METIS real size... 32
+# checking for METIS_PartGraphKway in /opt/local... no
+# checking for METIS_PartGraphKway in /opt/local -L/Lib -L/lib... no
+# checking for METIS_PartGraphKway in /opt/local -L/METIS/Lib -L/METIS/Lib... no
+# checking Compatibility between metis and LPK... no
+# METIS usable          : no
+depends_lib-append  port:metis \
+                    port:SuiteSparse_AMD
+
+mpi.setup           require require_fortran \
+                    -gcc44 -gcc45 -gcc46 -gcc47 -gcc48 -gcc49 -gcc5 -gcc6
+
+# Consider moving .mod into ${prefix}/finclude: https://trac.macports.org/ticket/68384
+patchfiles          patch-install-dirs.diff
+
+# Fix broken build: https://github.com/sfilippone/psblas3/issues/38
+post-patch {
+    reinplace "s| \-cDr| \-cr|" ${worksrcpath}/configure
+}
+
+pre-configure {
+    configure.env   MPIFC=${prefix}/bin/${mpi.f90} \
+                    MPICC=${prefix}/bin/${mpi.cc}
+}
+
+# FIXME: enable dynamic libs?
+configure.args-append \
+                    --enable-openmp \
+                    --with-metis=${prefix} \
+                    --prefix=${destroot}${prefix}
+
+if {![variant_isset accelerate] && ![variant_isset atlas] && ![variant_isset blis] \
+    && ![variant_isset flexiblas] && ![variant_isset openblas]} {
+        default_variants-append +accelerate
+}
+
+pre-configure {
+    configure.args-append  \
+                    --with-blas="${linalglib}"
+}
+
+compiler.openmp_version 3.0
+# https://github.com/sfilippone/psblas3/issues/26
+compilers.allow_arguments_mismatch yes
+
+test.run            yes
+test.target         check

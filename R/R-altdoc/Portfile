@@ -1,0 +1,42 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github etiennebacher altdoc 0.5.0 v
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Tools to generate package documentation
+long_description    {*}${description}
+homepage            https://altdoc.etiennebacher.com
+checksums           rmd160  636218c945ae849f646074deaba3fd040990d883 \
+                    sha256  7b6057d7d4f7a9d687bc74f83f25e1951f4d3e9d6720247e4048ff34443dd913 \
+                    size    11744740
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-cli \
+                    port:R-desc \
+                    port:R-evaluate \
+                    port:R-fs \
+                    port:R-quarto
+
+depends_test-append port:R-covr \
+                    port:R-digest \
+                    port:R-downlit \
+                    port:R-future \
+                    port:R-future.apply \
+                    port:R-knitr \
+                    port:R-servr \
+                    port:R-spelling \
+                    port:R-testthat \
+                    port:R-usethis \
+                    port:R-withr \
+                    port:R-yaml
+
+# Tests will fail at the moment due to broken R BATCH.
+# https://trac.macports.org/ticket/67059
+# https://github.com/etiennebacher/altdoc/issues/254
+test.run            yes

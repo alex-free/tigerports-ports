@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran eddelbuettel nanotime 0.3.15
+revision            0
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Nanosecond-resolution time support
+long_description    {*}${description} for R.
+homepage            https://dirk.eddelbuettel.com/code/nanotime.html
+checksums           rmd160  4961fe527bc1c5c86017c22c7a8dee8b354fd079 \
+                    sha256  83b320693bfcb4ab686085c966b490b957be309eaeba5d2d96061083f2764986 \
+                    size    206503
+
+depends_lib-append  port:R-bit64 \
+                    port:R-Rcpp \
+                    port:R-RcppCCTZ \
+                    port:R-RcppDate \
+                    port:R-zoo
+
+depends_test-append port:R-data.table \
+                    port:R-ggplot2 \
+                    port:R-tinytest \
+                    port:R-xts
+
+# There are a few failures in tests on PPC: https://github.com/eddelbuettel/nanotime/issues/113
+test.run            yes

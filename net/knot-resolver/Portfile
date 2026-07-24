@@ -1,0 +1,112 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           legacysupport 1.1
+PortGroup           meson 1.0
+
+# clock_gettime
+legacysupport.newest_darwin_requires_legacy 15
+# Required at least if building with jemalloc, but won't hurt anyway.
+legacysupport.redirect_sbins kresd kres-cache-gc
+
+name                knot-resolver
+version             6.4.1
+revision            0
+categories          net
+platforms           {darwin >= 9}
+license             GPL-3+
+maintainers         {mps @Schamschula} openmaintainer
+description         The Knot Resolver is a caching DNS resolver scalable \
+                    from huge resolver farms down to home network routers.
+long_description    {*}${description}
+homepage            https://www.knot-resolver.cz
+master_sites        https://secure.nic.cz/files/knot-resolver/ \
+                    https://sources.openwrt.org
+
+use_xz              yes
+
+checksums           rmd160  937e9223875d0b061e297229d6b34656c2d67a95 \
+                    sha256  1aa4c29721c09bce9a99f3d5657223110363d66b35cad4989b95b2afda9379a8 \
+                    size    2372020
+
+depends_build       path:bin/pkg-config:pkgconfig
+
+depends_lib-append  port:fstrm \
+                    path:lib/pkgconfig/gnutls.pc:gnutls \
+                    port:libedit \
+                    path:lib/pkgconfig/libknot.pc:libknot \
+                    path:lib/pkgconfig/libuv.pc:libuv \
+                    port:lmdb \
+                    port:lua51-cqueues \
+                    path:lib/libluajit-5.1.2.dylib:luajit \
+                    port:nghttp2 \
+                    port:protobuf-c
+
+if {${os.platform} eq "darwin" && ${os.major} < 15} {
+    # https://trac.macports.org/ticket/72369
+    patchfiles-append   patch-ENOTRECOVERABLE.diff
+
+    # daemon/main.c:418:53: error: passing argument 5 of 'sendto'
+    # from incompatible pointer type [-Wincompatible-pointer-types]
+    configure.cflags-append \
+                    -Wno-error=incompatible-pointer-types
+}
+
+configure.args      -Dkeyfile_default=${prefix}/var/lib/knot-resolver/root.ds \
+                    -Dinstall_kresd_conf=enabled \
+                    -Dinstall_root_keys=enabled \
+                    -Dmalloc=disabled \
+                    -Dmanaged_ta=enabled \
+                    -Dunit_tests=disabled
+
+variant jemalloc description "Enable jemalloc" {
+    depends_lib-append      path:lib/pkgconfig/jemalloc.pc:jemalloc
+    configure.args-delete   -Dmalloc=disabled
+}
+
+default_variants    +jemalloc
+
+platform powerpc {
+    # PANIC: unprotected error in call to Lua API ((command line):15:
+    # Lua binding for C type zs_scanner_t has incorrect size: 206056
+    # It is not an uncommon problem that sizes of structs and alignments
+    # are miscalculated, because nobody bothers to test outside of x86.
+    # FIXME: look into the issue in detail.
+    configure.args-append \
+                    -Dkres_gen_test=false
+
+    # lib/defines.h:44:23: error: static assertion failed:
+    # "detected padding with undefined data inside mmapped header"
+    patchfiles-append   patch-static_assert.diff
+}
+
+# cc1: error: unrecognized command line option "-std=gnu11"
+compiler.c_standard     2011
+compiler.cxx_standard   2011
+
+startupitem.create      yes
+startupitem.netchange   yes
+startupitem.executable  ${prefix}/sbin/kresd -n \
+                        -c ${prefix}/etc/knot-resolver/kresd.conf \
+                        ${prefix}/var/run/knot-resolver
+
+destroot.keepdirs       ${destroot}${prefix}/var/cache/knot-resolver \
+                        ${destroot}${prefix}/var/lib/knot-resolver \
+                        ${destroot}${prefix}/var/run/knot-resolver
+
+post-destroot {
+    move                ${destroot}${prefix}/etc/knot-resolver/kresd.conf \
+                        ${destroot}${prefix}/etc/knot-resolver/kresd.sample.conf
+
+    xinstall -m 755 -o root -d ${destroot}${prefix}/var/cache/knot-resolver
+    xinstall -m 755 -o root -d ${destroot}${prefix}/var/lib/knot-resolver
+    xinstall -m 755 -o root -d ${destroot}${prefix}/var/run/knot-resolver
+}
+
+notes "
+To complete the installation, run:
+
+sudo cp ${prefix}/etc/knot-resolver/kresd.sample.conf ${prefix}/etc/knot-resolver/kresd.conf
+
+Edit as necessary. (See the kresd.conf manpage for additional information.)
+"

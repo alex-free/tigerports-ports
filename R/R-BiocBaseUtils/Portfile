@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             bioconductor Bioconductor BiocBaseUtils 1.10.0
+revision            1
+categories-append   bioconductor devel
+platforms           {darwin any}
+maintainers         nomaintainer
+license             Artistic-2
+description         General utility functions for developing Bioconductor packages
+long_description    {*}${description}
+checksums           rmd160  06966611781cbfe1019869d064d7e6708cd0ee1e \
+                    sha256  7cfea8b27ae0c80a00e440d0736538a3529aada1968d6d2692c69af7c7505beb \
+                    size    231680
+supported_archs     noarch
+
+depends_test-append port:R-BiocStyle \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-tinytest
+
+test.run            yes

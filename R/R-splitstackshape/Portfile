@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github mrdwab splitstackshape 1.4.8 v
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Stack and reshape datasets after splitting concatenated values
+long_description    {*}${description}
+checksums           rmd160  c6bb356e0e3d896f3f9b6f3e913e1c2a460119b3 \
+                    sha256  e206091a5c9b649fe335e818fdd0c3cb209d71c8f693f842f579595c72dbfec3 \
+                    size    9850001
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-data.table
+
+depends_test-append port:R-covr \
+                    port:R-testthat
+
+test.run            yes

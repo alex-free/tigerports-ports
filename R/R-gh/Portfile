@@ -1,0 +1,40 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github r-lib gh 1.6.0 v
+revision            0
+categories-append   devel
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         GitHub API
+long_description    {*}${description}
+homepage            https://gh.r-lib.org
+checksums           rmd160  020e6cd251fe296f120ac135a831cfd68a9bacbb \
+                    sha256  a79ee3b46e116eabba8563a0de918aeb525f780224953c14dc85dc5e7967c06a \
+                    size    61895
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-cli \
+                    port:R-gitcreds \
+                    port:R-glue \
+                    port:R-httr2 \
+                    port:R-ini \
+                    port:R-jsonlite \
+                    port:R-lifecycle \
+                    port:R-rlang
+
+depends_test-append port:R-connectcreds \
+                    port:R-covr \
+                    port:R-knitr \
+                    port:R-mockery \
+                    port:R-rmarkdown \
+                    port:R-rprojroot \
+                    port:R-spelling \
+                    port:R-testthat \
+                    port:R-withr
+
+test.run            yes

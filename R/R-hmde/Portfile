@@ -1,0 +1,42 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is messed up.
+R.setup             cran traitecoevo hmde 1.2.1
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3+
+description         Hierarchical Methods for Differential Equations
+long_description    {*}${description}
+homepage            https://traitecoevo.github.io/hmde
+checksums           rmd160  15b6b81f24e6e064f06ab6a5828ad5ed1c559e1b \
+                    sha256  eba9fa0b45b14070b47db50c9db751805a9be0c9c0466f51fdb556f67f40436e \
+                    size    3566117
+
+depends_lib-append  port:R-BH \
+                    port:R-dplyr \
+                    port:R-ggplot2 \
+                    port:R-purrr \
+                    port:R-Rcpp \
+                    port:R-RcppEigen \
+                    port:R-RcppParallel \
+                    port:R-rlang \
+                    port:R-rstan \
+                    port:R-rstantools \
+                    port:R-StanHeaders
+
+depends_test-append port:R-cowplot \
+                    port:R-deSolve \
+                    port:R-here \
+                    port:R-knitr \
+                    port:R-mixtools \
+                    port:R-mnormt \
+                    port:R-patchwork \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-withr
+
+test.run            yes

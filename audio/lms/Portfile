@@ -1,0 +1,88 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           boost 1.0
+PortGroup           cmake 1.1
+PortGroup           conflicts_build 1.0
+PortGroup           ffmpeg 1.0
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+
+# O_CLOEXEC
+legacysupport.newest_darwin_requires_legacy 10
+legacysupport.redirect_bins lms lms-audioinfo lms-audioplay lms-recommendation
+
+boost.version       1.81
+
+github.setup        epoupon lms 3.78.0 v
+revision            1
+
+categories          audio multimedia www
+license             GPL-3
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+
+description         Lightweight Music Server
+long_description    LMS is a self-hosted music streaming software: \
+                    access your music collection from anywhere using a web interface.
+homepage            https://lms-demo.poupon.dev
+checksums           rmd160  f2288ca9178f0fda1f04a7041cb30d0893fd8183 \
+                    sha256  8ed0d8323bf8ebb110864f8359c6b00d8c2872fea8e7a0a1a2ee07838725be1e \
+                    size    3649993
+github.tarball_from archive
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+
+# Fails with ffmpeg4 now:
+# https://github.com/epoupon/lms/issues/801
+# Also build system cannot properly handle includes,
+# so we need build conflict -_-
+
+conflicts_build     ffmpeg
+
+# If this is changed, modify lms.conf patch as well.
+ffmpeg.version      8
+
+depends_lib-append  port:libarchive \
+                    port:libconfig-hr \
+                    port:pugixml \
+                    port:stb \
+                    port:taglib \
+                    port:wt \
+                    port:xxhashlib
+
+# https://github.com/epoupon/lms/issues/525
+patchfiles-append   0001-Fix-lms.conf-path.patch
+
+post-patch {
+    reinplace "s|@PREFIX@|${prefix}|" \
+                    ${worksrcpath}/src/libs/core/include/core/SystemPaths.hpp
+}
+
+configure.args-append \
+                    -DBUILD_BENCHMARKS=OFF \
+                    -DENABLE_TESTS=OFF
+
+# https://github.com/epoupon/lms/issues/526
+if {${os.platform} eq "darwin" && ${os.major} < 24} {
+    compiler.blacklist-append \
+                    {macports-clang-1[8-9]}
+}
+
+compiler.cxx_standard   2020
+
+post-destroot {
+    xinstall -d ${destroot}${prefix}/etc/${name}
+    xinstall -d ${destroot}${prefix}/var/${name}
+    reinplace "s|@PREFIX@|${prefix}|g" ${destroot}${prefix}/share/lms/lms.conf
+}
+
+post-activate {
+    if {![file exists ${prefix}/etc/lms.conf]} {
+        copy ${prefix}/share/lms/lms.conf ${prefix}/etc/lms.conf
+    }
+}
+
+notes "
+You may want to edit config settings in ${prefix}/etc/lms.conf
+"

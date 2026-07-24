@@ -1,0 +1,47 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+PortGroup               cmake 1.1
+PortGroup               github 1.0
+PortGroup               legacysupport 1.1
+
+github.setup            fuzziqersoftware phosg d292a91b61052ed8b4b56424c252c2f583c90302
+version                 2025.11.25
+revision                0
+categories              devel
+maintainers             {alum.wpi.edu:arno+macports @fracai} openmaintainer
+license                 MIT
+
+description             Phosg is a basic C++ wrapper library around some common C routines
+long_description        {*}${description}
+
+checksums               rmd160  327812aabe6c3fa370d7447c8bf63e92dce386a5 \
+                        sha256  54869ce7884b5ec19649aa7bbf8ba3c561bc1fd372776b27c57cf44a20ff2472 \
+                        size    203711
+github.tarball_from     archive
+
+# Fix configure:
+patchfiles-append       patch-CMakeLists.txt
+
+compiler.cxx_standard   2023
+
+set pyver               3.13
+set python_version      [string index ${pyver} 0][string range ${pyver} 2 end]
+
+depends_build-append    port:python${python_version}
+
+configure.args-append   -DPYTHON_EXECUTABLE=${prefix}/bin/python${pyver}
+
+# src/JSON.cc:162:18: error: 'float_data' may be used uninitialized [-Werror=maybe-uninitialized]
+configure.cxxflags-append \
+                        -Wno-error=maybe-uninitialized
+
+pre-test {
+    # Test infrastructure uses /bin/ps, which is forbidden by sandboxing
+    append portsandbox_profile " (allow process-exec (literal \"/bin/ps\") (with no-profile))"
+}
+
+# One tests fails on PPC: https://github.com/fuzziqersoftware/phosg/issues/24
+# 92% tests passed, 1 tests failed out of 13
+test.run                yes
+test.cmd                ctest

@@ -1,0 +1,18 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran shikokuchuo secretbase 1.3.0
+revision            0
+categories-append   crypto
+maintainers         nomaintainer
+license             GPL-3+
+description         Cryptographic hash and extendable-output functions
+long_description    {*}${description}
+homepage            https://shikokuchuo.net/secretbase
+checksums           rmd160  2b6d71a6a29636da99c3c05940e73baf72c69139 \
+                    sha256  8f53693a04e7135d7a5b7b6079124455dee42cd892f0960341f8bbd99cc531de \
+                    size    44303
+
+test.run            yes

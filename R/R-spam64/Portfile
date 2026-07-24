@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Has to match version of R-spam.
+# Watch out, CRAN is careless and may not upgrade them simultaneously.
+R.setup             cran reinhard.furrer spam64 2.11-4
+revision            0
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             {BSD LGPL-2}
+description         64-bit extension of the SPArse Matrix R package spam
+long_description    {*}${description}
+homepage            https://git.math.uzh.ch/reinhard.furrer/spam
+checksums           rmd160  1a41445486b9d305320bd78f3f02806d94c2996c \
+                    sha256  83c98b35bad1c05b46fbfb513b2078cc3e80a66103a831c872d3bf8d7d60f032 \
+                    size    146045
+# master_sites        https://git.math.uzh.ch/reinhard.furrer/spam/-/raw/master/
+
+depends_lib-append  port:R-spam
+
+compilers.setup     require_fortran
+
+test.run            yes

@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once a new version is out there.
+R.setup             cran daattali shinyjs 2.1.1
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Easily improve the user experience of your shiny apps in seconds
+long_description    {*}${description}
+homepage            https://deanattali.com/shinyjs
+checksums           rmd160  d013d309da344035e21f86bd5fc606e69d1c289d \
+                    sha256  8f0b12f7434275d014599470f0dbf0ebd7fb65e8bd3c0ba75d0e207bd3051eff \
+                    size    992492
+# github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-digest \
+                    port:R-jsonlite \
+                    port:R-shiny

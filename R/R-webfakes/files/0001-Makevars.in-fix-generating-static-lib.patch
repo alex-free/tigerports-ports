@@ -1,0 +1,25 @@
+From 62daeae93d843bb757834580b3a689837d23e476 Mon Sep 17 00:00:00 2001
+From: Sergey Fedorov <barracuda@macos-powerpc.org>
+Date: Wed, 25 Jun 2025 07:30:56 +0800
+Subject: [PATCH] Makevars.in: fix generating static lib
+
+---
+ src/Makevars.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git src/Makevars.in src/Makevars.in
+index 6ae22c5..0d643b6 100644
+--- src/Makevars.in
++++ src/Makevars.in
+@@ -11,7 +11,7 @@ all: $(SHLIB) mrproper
+ $(SHLIB): libmbedtls.a
+ 
+ libmbedtls.a: @MBED@
+-	$(AR) r $@ $^
++	$(AR) rs $@ $^
+ 
+ mrproper: $(SHLIB)
+ 	rm -f libmbedtls.a
+-- 
+2.48.0
+

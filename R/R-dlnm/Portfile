@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran gasparrini dlnm 2.4.10
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Distributed lag non-linear models
+long_description    {*}${description}
+checksums           rmd160  cb995854550ffd638bffd3cece491ad1d4e8ab3d \
+                    sha256  3b75be8ce30b41c90a7b01f373d7a4ca9c5ddddb1739c5e6763c66ac2dfb0bf2 \
+                    size    929017
+supported_archs     noarch
+
+depends_lib-append  port:R-tsModel
+
+depends_test-append port:R-gee \
+                    port:R-geepack \
+                    port:R-lme4 \
+                    port:R-mixmeta
+
+test.run            yes

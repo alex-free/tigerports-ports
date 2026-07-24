@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran mcol CBTF 0.5.0 v
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Caught by the Fuzz!
+long_description    {*}${description} – minimalistic fuzz-test runner
+homepage            https://github.com/mcol/caught-by-the-fuzz
+checksums           rmd160  9860cef8a6828aadc42117471bef7b61f72733a6 \
+                    sha256  de941d7f508ba01d3e60e0a76001358e6bb7513b0ceb56d34ec34c976d2d163b \
+                    size    42603
+supported_archs     noarch
+
+depends_lib-append  port:R-cli
+
+depends_test-append port:R-testthat \
+                    port:R-withr
+
+test.run            yes

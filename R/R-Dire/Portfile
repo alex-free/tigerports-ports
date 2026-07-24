@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran American-Institutes-for-Research Dire 2.2.0
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2
+description         Linear regressions with a latent outcome variable
+long_description    {*}${description}
+homepage            https://american-institutes-for-research.github.io/Dire
+checksums           rmd160  ec7eb62c2abae09b49fd3eb93604b841e96888d9 \
+                    sha256  9b5545fda0b9653b84247218f083e941481b4ad7a838f7eb061cc30deec51890 \
+                    size    199331
+
+depends_lib-append  port:R-foreach \
+                    port:R-iterators \
+                    port:R-haven \
+                    port:R-lbfgs \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo
+
+# Optional dep on R-EdSurvey is dropped.
+depends_test-append port:R-doParallel \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-withr
+
+test.run            yes

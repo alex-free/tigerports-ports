@@ -1,0 +1,17 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran yi.yang6 erboost 1.5
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-3
+description         Non-parametric multiple expectile regression via ER-Boost
+long_description    {*}${description}
+checksums           rmd160  d6f6b74b63c7ff2e7ce2ea925b51672d5eddf26e \
+                    sha256  c009a46fb2fc35b7f16475bf582a19727da0c54717fd007139a82c77f7acdfa5 \
+                    size    47157
+
+test.run            yes

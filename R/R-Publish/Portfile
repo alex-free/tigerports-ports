@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran tag Publish 2025.07.24
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Format output of various routines in a suitable way \
+                    for reports and publication.
+long_description    A bunch of convenience functions that transform the results of some basic statistical analyses \
+                    into table format nearly ready for publication.
+checksums           rmd160  582c3474c07fa722e7e249dea591314ad63e166c \
+                    sha256  fe141fffb13c74b4657e4e373d794862c4e598e40a5edad2ddcaf646014bc8ab \
+                    size    179336
+supported_archs     noarch
+
+depends_lib-append  port:R-data.table \
+                    port:R-lava \
+                    port:R-multcomp \
+                    port:R-prodlim
+
+depends_test-append port:R-mitools \
+                    port:R-riskRegression \
+                    port:R-rms \
+                    port:R-smcfcs \
+                    port:R-testthat
+
+test.run            yes

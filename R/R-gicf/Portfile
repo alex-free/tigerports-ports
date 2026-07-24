@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran lcibinel gicf 1.0.1
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Penalised likelihood estimation of a covariance matrix
+long_description    {*}${description}
+checksums           rmd160  c48d16d60b95e57e637c5958dcc323a958942166 \
+                    sha256  415e4d55f3bbb5cfb83428c7d1c6520119e7212e7591f2c0d2e320e1549e50cc \
+                    size    17042
+
+depends_lib-append  port:R-Rcpp \
+                    port:R-RcppArmadillo
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-mvtnorm
+
+test.run            yes

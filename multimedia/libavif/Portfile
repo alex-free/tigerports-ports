@@ -1,0 +1,88 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+PortGroup               cmake 1.1
+PortGroup               github 1.0
+
+github.setup            AOMediaCodec libavif 1.4.2 v
+revision                0
+categories              multimedia
+license                 BSD
+maintainers             {mascguy @mascguy} openmaintainer
+
+description             Portable C implementation of the AV1 Image File Format
+long_description        {*}${description}
+
+checksums               rmd160  8093bd79fb9a29f332731e79c58f878785989072 \
+                        sha256  2b645287340ba5a631d268b551dc2d72bd73ac33335962dd36dcdb6d8366921d \
+                        size    14665927
+github.tarball_from     archive
+
+cmake.generator         Ninja
+
+# src/io.c:53:15: error: expected declaration specifiers or '...' before 'sizeof'
+patchfiles-append       patch-io.c.diff
+
+# Patch cmake script to use installed libargparse; to be contributed to upstream
+patchfiles-append       patch-cmake-libargparse.diff
+
+post-patch {
+    # Remove script which downloads and builds private libargparse
+    delete ${worksrcpath}/cmake/Modules/LocalLibargparse.cmake
+}
+
+depends_build-append    path:bin/pkg-config:pkgconfig
+
+depends_lib-append      port:aom \
+                        port:dav1d \
+                        port:libargparse \
+                        path:include/turbojpeg.h:libjpeg-turbo \
+                        port:libpng \
+                        port:libxml2 \
+                        port:libyuv \
+                        port:svt-av1 \
+                        port:zlib
+
+# Avoid build errors on 10.8 and earlier
+compiler.blacklist-append \
+                        {clang < 600}
+
+# Needed when compiling with lib dep libargparse
+compiler.cxx_standard   2014
+
+configure.args-append   -DAVIF_BUILD_APPS=ON \
+                        -DAVIF_BUILD_EXAMPLES=OFF \
+                        -DAVIF_BUILD_MAN_PAGES=OFF \
+                        -DAVIF_BUILD_TESTS=OFF \
+                        -DAVIF_CODEC_AOM=SYSTEM \
+                        -DAVIF_CODEC_DAV1D=SYSTEM \
+                        -DAVIF_CODEC_LIBGAV1=OFF \
+                        -DAVIF_CODEC_RAV1E=OFF \
+                        -DAVIF_CODEC_SVT=SYSTEM \
+                        -DAVIF_ENABLE_NODISCARD=OFF \
+                        -DAVIF_ENABLE_WERROR=OFF \
+                        -DAVIF_JPEG=SYSTEM \
+                        -DAVIF_LIBSHARPYUV=OFF \
+                        -DAVIF_LIBXML2=SYSTEM \
+                        -DAVIF_LIBYUV=SYSTEM \
+                        -DAVIF_ZLIBPNG=SYSTEM \
+                        -DBUILD_SHARED_LIBS=ON
+
+variant tests description "Enable testing" {
+    # Note: While core lib is C99, tests require C++ 2014
+    compiler.cxx_standard 2014
+
+    depends_test-append \
+                        port:gtest
+
+    configure.args-replace \
+                        -DAVIF_BUILD_TESTS=OFF \
+                        -DAVIF_BUILD_TESTS=ON
+    configure.args-append \
+                        -DAVIF_GTEST=SYSTEM
+
+    test.run            yes
+}
+
+# Exclude pre-release candidates in livecheck
+github.livecheck.regex  {([0-9.]+)}

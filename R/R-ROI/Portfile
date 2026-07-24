@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran r-forge ROI 1.0-2
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         R Optimization Infrastructure
+long_description    {*}${description}
+homepage            https://roi.r-forge.r-project.org
+checksums           rmd160  672d40a04c0f5a07451d0b341662e51e40779102 \
+                    sha256  3e884b711aa0519b6d416f924795b57ebb073ab6f9cfcc3410ed15d92f20197d \
+                    size    114366
+supported_archs     noarch
+
+depends_lib-append  port:R-checkmate \
+                    port:R-registry \
+                    port:R-slam
+
+depends_test-append port:R-numDeriv
+
+test.run            yes

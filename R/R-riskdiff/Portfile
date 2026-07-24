@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github jackmurphy2351 riskdiff 0.2.1 v
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Risk difference estimation with multiple link functions \
+                    and inverse probability of treatment weighting
+long_description    {*}${description}
+homepage            https://github.com/YuLab-SMU/ggbreak
+checksums           rmd160  f3cfccd073d744c861d32e6e71d09de38ef955a2 \
+                    sha256  742fa1a8f1d2b6afbea8c418e32d7ebed035cd0515dfd7a4498e94f7a46dbbf1 \
+                    size    134276
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-dplyr \
+                    port:R-ggplot2 \
+                    port:R-purrr \
+                    port:R-rlang \
+                    port:R-scales \
+                    port:R-stringr \
+                    port:R-tibble
+
+depends_test-append port:R-covr \
+                    port:R-kableExtra \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

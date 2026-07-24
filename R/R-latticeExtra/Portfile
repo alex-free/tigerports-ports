@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran r-project latticeExtra 0.6-31
+revision            1
+categories-append   graphics
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Extra graphical utilities based on lattice
+long_description    {*}${description}
+homepage            http://latticeextra.r-forge.r-project.org
+checksums           rmd160  b3acb8f0a3a01c02845257400f3168cff186206e \
+                    sha256  be69d8014bf722fab00d1afc7a8b515fdba65b25c7700ef44d76f092c5b6e66e \
+                    size    1294027
+supported_archs     noarch
+
+depends_lib-append  port:R-interp \
+                    port:R-jpeg \
+                    port:R-png \
+                    port:R-RColorBrewer
+
+depends_test-append port:R-deldir \
+                    port:R-maps \
+                    port:R-mapproj \
+                    port:R-quantreg \
+                    port:R-zoo
+
+test.run            yes

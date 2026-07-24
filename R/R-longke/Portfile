@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran wangs43 longke 0.1.0
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Nonparametric predictive model for sparse and irregular longitudinal data
+long_description    {*}${description}
+checksums           rmd160  7bcc7df0e3c0b718e6ea59c505f3af4946b6dc51 \
+                    sha256  28b8a0285787a32367bd772fcd972d376f8f65a1f1614ead90c6b6c3322783b9 \
+                    size    11510
+supported_archs     noarch
+
+depends_lib-append  port:R-bvls \
+                    port:R-dplyr \
+                    port:R-fdapace \
+                    port:R-mvtnorm \
+                    port:R-purrr \
+                    port:R-tidyr
+
+test.run            yes

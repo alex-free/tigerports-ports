@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran ikerugr metacor 1.1.2
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Meta-analysis of correlation coefficients
+long_description    Meta-analytic effect size calculation for pre-post designs \
+                    with correlation imputation.
+checksums           rmd160  58f8fe7eb1dc36c7cf563e81e38d4d5ea38a2bbb \
+                    sha256  6437535e7167b9a008925e0811e6815d99354d87379b6df65290fd6364228c6a \
+                    size    18594
+supported_archs     noarch
+
+depends_lib-append  port:R-officer \
+                    port:R-stringr
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown
+
+test.run            yes

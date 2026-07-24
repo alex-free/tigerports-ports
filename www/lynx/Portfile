@@ -1,0 +1,68 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+
+name                lynx
+version             2.9.3
+revision            0
+categories          www
+license             {GPL-2 OpenSSLException}
+maintainers         {larryv @larryv} openmaintainer
+
+description         The text web browser
+long_description    Lynx is a fully-featured World Wide Web browser for \
+                    users on Unix, VMS, and other platforms running \
+                    cursor-addressable, character-cell terminals or \
+                    emulators.
+homepage            https://lynx.invisible-island.net
+
+depends_build       port:gettext \
+                    bin:perl:perl5
+
+depends_lib         port:brotli \
+                    port:bzip2 \
+                    port:gettext-runtime \
+                    port:libiconv \
+                    port:libidn2 \
+                    port:ncurses \
+                    port:zlib
+
+master_sites        https://invisible-island.net/archives/lynx/tarballs \
+                    https://invisible-mirror.net/archives/lynx/tarballs
+distname            [strsed ${distname} {g/-//}]
+
+checksums           rmd160  04513c668916dff9bc85bb202814e14726b516a9 \
+                    sha256  6e99e46980974a6d89eceefbb26ca8c7aa7702b78ecb5bad383b859af225d052 \
+                    size    4016681
+
+patchfiles          patch-LYCharSets.diff
+
+configure.args      --datadir=${prefix}/share/doc \
+                    --enable-htmlized-cfg \
+                    --enable-ipv6 \
+                    --enable-local-docs \
+                    --enable-nls \
+                    --with-brotli \
+                    --with-bzlib \
+                    --with-zlib
+
+destroot.target-append  install-doc install-help
+
+if {![variant_isset gnutls]} {
+    default_variants +ssl
+}
+
+variant ssl conflicts gnutls description "Enable secure connections using OpenSSL" {
+    depends_lib-append      path:lib/libssl.dylib:openssl
+    configure.args-append   --with-ssl=${prefix}
+}
+
+variant gnutls conflicts ssl description "Enable secure connections with GnuTLS (experimental)" {
+    depends_lib-append      path:lib/pkgconfig/gnutls.pc:gnutls
+    configure.args-append   --with-gnutls=${prefix}
+}
+
+livecheck.type      regex
+livecheck.url       [lindex ${master_sites} 0]
+livecheck.regex     [format {href="%s(\d+(?:\.\d+)*)%s"} \
+                        ${name} ${extract.suffix}]

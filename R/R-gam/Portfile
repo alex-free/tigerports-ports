@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran hastie gam 1.22-7
+revision            0
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2
+description         Generalized Additive Models
+long_description    {*}${description}
+checksums           rmd160  db07fdaad7d889a6546b3f7dbdcd06dd78b5b462 \
+                    sha256  d513964b0cb63e11e76466cae775e75b559386d4ea6dee41612c35b85125eebc \
+                    size    203170
+
+depends_lib-append  port:R-foreach
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-interp \
+                    port:R-testthat
+
+test.run            yes

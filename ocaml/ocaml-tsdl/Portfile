@@ -1,0 +1,36 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           ocaml 1.1
+
+name                ocaml-tsdl
+version             1.2.0
+revision            1
+categories          ocaml devel
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             ISC
+description         Thin bindings to SDL for OCaml
+long_description    {*}${description}
+homepage            https://erratique.ch/software/tsdl
+master_sites        ${homepage}/releases/
+use_bzip2           yes
+extract.suffix      .tbz
+distname            tsdl-${version}
+checksums           rmd160  f6e82a2c9fdf754c8a0f096a9094b11c88bc01e0 \
+                    sha256  22107fa8287a2957d340d1684ddc6649145deae32affd3a9746bf1eaeaa58806 \
+                    size    74552
+
+# https://github.com/dbuenzli/tsdl/commit/a2386d5da7a979684f09c99457f2333667237086
+patchfiles          a2386d5da7a979684f09c99457f2333667237086.patch
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  port:libsdl2 \
+                    port:ocaml-ctypes \
+                    port:ocaml-ctypes-foreign
+
+ocaml.build_type    topkg
+
+livecheck.type      regex
+livecheck.regex     logs-(\[0-9\.]+).tbz

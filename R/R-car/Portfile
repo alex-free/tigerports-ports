@@ -1,0 +1,44 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran jfox car 3.1-5
+revision            1
+categories-append   economics finance
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Companion to Applied Regression
+long_description    {*}${description}
+homepage            https://socialsciences.mcmaster.ca/jfox/Books/Companion/index.html
+checksums           rmd160  32da8b538654904efb732d7dae4353e20d56a81a \
+                    sha256  27ab23cff7c5c123ffe8a2475b5a3b4d778414a28dde0a59d5cfbbefa08c99fb \
+                    size    378895
+supported_archs     noarch
+
+depends_lib-append  port:R-abind \
+                    port:R-carData \
+                    port:R-Formula \
+                    port:R-lme4 \
+                    port:R-pbkrtest \
+                    port:R-quantreg \
+                    port:R-scales
+
+depends_test-append port:R-alr4 \
+                    port:R-coxme \
+                    port:R-effects \
+                    port:R-knitr \
+                    port:R-leaps \
+                    port:R-lmtest \
+                    port:R-MatrixModels \
+                    port:R-ordinal \
+                    port:R-plotrix \
+                    port:R-mvtnorm \
+                    port:R-rgl \
+                    port:R-rio \
+                    port:R-sandwich \
+                    port:R-SparseM \
+                    port:R-survey
+
+test.run            yes

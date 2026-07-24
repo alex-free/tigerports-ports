@@ -1,0 +1,45 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lies about itself.
+R.setup             cran jbengler tidyplots 0.3.1 v
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Tidy plots for scientific papers
+long_description    The goal of ${name} is to streamline the creation \
+                    of publication-ready plots for scientific papers.
+homepage            https://jbengler.github.io/tidyplots
+checksums           rmd160  4dc1726e4d6d6f0148ef38c190cb3aea8f005e14 \
+                    sha256  1deffbe70f3bb0a8aceee30512e4abc338e2eede2c173faa5a38715e5e8135d8 \
+                    size    3114412
+supported_archs     noarch
+
+depends_lib-append  port:R-cli \
+                    port:R-dplyr \
+                    port:R-forcats \
+                    port:R-ggbeeswarm \
+                    port:R-ggplot2 \
+                    port:R-ggpubr \
+                    port:R-ggrastr \
+                    port:R-ggrepel \
+                    port:R-Hmisc \
+                    port:R-htmltools \
+                    port:R-lifecycle \
+                    port:R-patchwork \
+                    port:R-purrr \
+                    port:R-rlang \
+                    port:R-scales \
+                    port:R-stringr \
+                    port:R-tidyr \
+                    port:R-tidyselect
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-vdiffr
+
+test.run            yes

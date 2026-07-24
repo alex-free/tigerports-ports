@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran jasonjfoster yfhist 0.1.3
+revision            1
+categories-append   finance
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Yahoo Finance history API
+long_description    {*}${description}
+homepage            https://github.com/jasonjfoster/hist
+checksums           rmd160  ee537aa57d409944156fd24a85727f80c7c50df1 \
+                    sha256  9e0d53618427e59268381a1f47503bfefb59ef4760242af4c66afc46d80f71f1 \
+                    size    6890
+supported_archs     noarch
+
+depends_lib-append  port:R-curl \
+                    port:R-jsonlite
+
+depends_test-append port:R-covr \
+                    port:R-testthat
+
+test.run            yes

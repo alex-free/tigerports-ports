@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran kenkellner jagsUI 1.6.3 v
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Wrapper around R-rjags to streamline JAGS analyses
+long_description    {*}${description}
+homepage            https://kenkellner.com/jagsUI
+checksums           rmd160  10c3b630326c13a0f7426c8d6f13c72aee3076e6 \
+                    sha256  17f7e4c2f485844797f9ba15d16ea18cc975ebfee9803f001eb768808a744cf5 \
+                    size    1444707
+supported_archs     noarch
+
+depends_lib-append  port:jags \
+                    port:R-coda \
+                    port:R-rjags
+
+depends_test-append port:R-knitr \
+                    port:R-markdown \
+                    port:R-tinytest
+
+test.run            yes

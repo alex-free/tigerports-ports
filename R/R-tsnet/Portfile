@@ -1,0 +1,38 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran bsiepe tsnet 0.2.0
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Fitting, comparing and visualizing networks, \
+                    based on time series data
+long_description    {*}${description}
+homepage            https://github.com/bsiepe/tsnet
+checksums           rmd160  280719cfd7b7acadedc2dfd6c5c7b483c829ba50 \
+                    sha256  4fd90b9455d40a70b420206eeba125607bf7d827b533c21013355a5263f23fa9 \
+                    size    710838
+
+depends_lib-append  port:R-BH \
+                    port:R-cowplot \
+                    port:R-dplyr \
+                    port:R-ggdist \
+                    port:R-ggokabeito \
+                    port:R-ggplot2 \
+                    port:R-loo \
+                    port:R-posterior \
+                    port:R-Rcpp \
+                    port:R-RcppEigen \
+                    port:R-RcppParallel \
+                    port:R-rlang \
+                    port:R-rstan \
+                    port:R-rstantools \
+                    port:R-StanHeaders \
+                    port:R-tidyr
+
+depends_test-append port:R-testthat
+
+test.run            yes

@@ -1,0 +1,61 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:filetype=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+PortGroup           openssl 1.0
+
+# clock_gettime
+legacysupport.newest_darwin_requires_legacy 15
+
+# Commit-based due to https://github.com/isaki68k/sayaka/issues/58
+github.setup        isaki68k sayaka 3.8.7
+revision            0
+categories          www
+license             BSD
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+
+description         Misskey client for the terminal
+long_description    sayaka ちゃんはターミナルに特化した Misskey ストリームクライアントです。
+
+checksums           rmd160  0e9af24507f13b17a0b9f0dbd5e7d6aacae8d5f6 \
+                    sha256  e35384a66162b4428f004cf5d80dc56e70cdb5e8ca6d5b635b815176e81e0122 \
+                    size    320222
+github.tarball_from archive
+
+# image.c:126: error: array size missing in ‘palette_fixed8’
+compiler.blacklist-append \
+                    *gcc-4.* {clang < 421}
+
+depends_build-append \
+                    port:bmake \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  port:libiconv \
+                    path:include/turbojpeg.h:libjpeg-turbo \
+                    port:libjxl \
+                    port:libpng \
+                    port:webp
+
+# For w/e reason it does not want to accept our giflib and tiff.
+configure.args-append \
+                    CC=${configure.cc} \
+                    --with-giflib=no \
+                    --with-iconv=yes \
+                    --with-libjpeg=yes \
+                    --with-libpng=yes \
+                    --with-libtiff=no \
+                    --with-libwebp=yes \
+                    --with-openssl=yes
+
+if {${os.platform} eq "darwin" && ${os.major} < 16} {
+    configure.env-append \
+                    LIBS=-lMacportsLegacySupport
+}
+
+build.cmd           ${prefix}/bin/bmake
+
+destroot {
+    copy ${worksrcpath}/src/${name} ${destroot}${prefix}/bin/
+    copy ${worksrcpath}/src/sixelv ${destroot}${prefix}/bin/
+}

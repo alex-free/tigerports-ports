@@ -1,0 +1,36 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran giancarlo.vercellino chopper 1.0
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Changepoint-aware ensemble for probabilistic modelling
+long_description    {*}${description}
+homepage            https://rpubs.com/giancarlo_vercellino/chopper
+checksums           rmd160  48c4d8caef92e82c21c6ab19182d18f7a5d513b5 \
+                    sha256  3169eacf73c29c827aaac52d5c61de7fac0c7fd5a3309516a80a13d5dea94550 \
+                    size    40172
+supported_archs     noarch
+
+depends_lib-append  port:R-ald \
+                    port:R-changepoint \
+                    port:R-evd \
+                    port:R-fGarch \
+                    port:R-forecast \
+                    port:R-GeneralizedHyperbolic \
+                    port:R-ggplot2 \
+                    port:R-imputeTS \
+                    port:R-lubridate \
+                    port:R-normalp \
+                    port:R-purrr \
+                    port:R-scales
+
+depends_test-append port:R-knitr \
+                    port:R-testthat
+
+test.run            yes

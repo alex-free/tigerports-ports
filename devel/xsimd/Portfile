@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+
+github.setup        xtensor-stack xsimd 14.2.0
+revision            0
+categories          devel
+platforms           any
+license             BSD
+maintainers         nomaintainer
+description         C++ wrappers for SIMD intrinsics
+long_description    {*}${description} and parallelized, optimized mathematical functions.
+homepage            https://xsimd.readthedocs.io
+checksums           rmd160  2f00abf558206b76159c4b413740b00c740b2efb \
+                    sha256  21e841ab684b05331e81e7f782431753a029ef7b7d9d6d3ddab837e7782a40ee \
+                    size    339961
+github.tarball_from archive
+supported_archs     noarch
+
+compiler.cxx_standard   2014
+
+configure.args-append   -DBUILD_TESTS=OFF

@@ -1,0 +1,244 @@
+--- src/inspect.cpp	2023-01-17 23:07:57.000000000 +0800
++++ src/inspect.cpp	2026-07-06 06:46:08.000000000 +0800
+@@ -2,7 +2,9 @@
+ using namespace Rcpp;
+ 
+ bool is_namespace(Environment env) {
+-  return Rf_findVarInFrame3(env, Rf_install(".__NAMESPACE__."), FALSE) != R_UnboundValue;
++  // R_IsNamespaceEnv is public API in R >= 2.7.0; replaces the manual
++  // Rf_findVarInFrame3(env, ".__NAMESPACE__.", ...) check.
++  return (bool) R_IsNamespaceEnv(env);
+ }
+ 
+ std::string sexp_type(SEXP x);
+@@ -17,10 +19,10 @@
+ List inspect_rec(SEXP x, Environment base_env, std::set<SEXP>& seen) {
+   // If we've seen it before, return nothing
+   if (!seen.insert(x).second) {
+-    List out =  List::create(
++    List out = List::create(
+       _["address"] = address(x),
+       _["type"] = sexp_type(x),
+-      _["named"] = NAMED(x),
++      _["shared"] = (bool) MAYBE_SHARED(x),
+       _["seen"] = true
+     );
+     std::vector<std::string> klass;
+@@ -69,9 +71,9 @@
+     case LANGSXP:
+     case BCODESXP:
+       children = List::create(
+-        _["tag"] = inspect_rec(TAG(x), base_env, seen), // name of first element
+-        _["car"] = inspect_rec(CAR(x), base_env, seen), // first element
+-        _["cdr"] = inspect_rec(CDR(x), base_env, seen) // pairlist (subsequent elements) or NILSXP
++        _["tag"] = inspect_rec(TAG(x), base_env, seen),
++        _["car"] = inspect_rec(CAR(x), base_env, seen),
++        _["cdr"] = inspect_rec(CDR(x), base_env, seen)
+       );
+       break;
+ 
+@@ -80,34 +82,32 @@
+       if (x == R_BaseEnv || x == R_GlobalEnv || x == R_EmptyEnv ||
+           x == base_env || is_namespace(x)) break;
+ 
++      // FRAME() and HASHTAB() have no public replacements in R >= 4.6.0.
++      // R_ParentEnv() replaces ENCLOS().
+       children = List::create(
+-        _["frame"] = inspect_rec(FRAME(x), base_env, seen),
+-        _["enclos"] = inspect_rec(ENCLOS(x), base_env, seen),
+-        _["hashtab"] = inspect_rec(HASHTAB(x), base_env, seen)
++        _["enclos"] = inspect_rec(R_ParentEnv(x), base_env, seen)
+       );
+       break;
+ 
+-    // Functions
++    // Functions — R_ClosureFormals/Body/Env replace FORMALS/BODY/CLOENV
+     case CLOSXP:
+       children = List::create(
+-        _["formals"] = inspect_rec(FORMALS(x), base_env, seen),
+-        _["body"] = inspect_rec(BODY(x), base_env, seen),
+-        _["env"]  = inspect_rec(CLOENV(x), base_env, seen)
++        _["formals"] = inspect_rec(R_ClosureFormals(x), base_env, seen),
++        _["body"]    = inspect_rec(R_ClosureBody(x), base_env, seen),
++        _["env"]     = inspect_rec(R_ClosureEnv(x), base_env, seen)
+       );
+       break;
+ 
++    // Promises — no public replacement for PRCODE/PRENV in R >= 4.6.0.
++    // R_PromiseExpr() (= old PRCODE) is available only under
++    // ENABLE_LEGACY_NONAPI_FUNS; omit those children.
+     case PROMSXP:
+-      children = List::create(
+-        _["value"] = inspect_rec(PRVALUE(x), base_env, seen),
+-        _["code"] = inspect_rec(PRCODE(x), base_env, seen),
+-        _["env"]  = inspect_rec(PRENV(x), base_env, seen)
+-      );
+       break;
+ 
+     case EXTPTRSXP:
+       children = List::create(
+-        _["prot"] = inspect_rec(EXTPTR_PROT(x), base_env, seen),
+-        _["tag"] = inspect_rec(EXTPTR_TAG(x), base_env, seen)
++        _["prot"] = inspect_rec(R_ExternalPtrProtected(x), base_env, seen),
++        _["tag"]  = inspect_rec(R_ExternalPtrTag(x), base_env, seen)
+       );
+       break;
+ 
+@@ -125,13 +125,15 @@
+ 
+   List out = List::create(
+     _["address"] = address(x),
+-    _["type"] = sexp_type(x),
+-    _["named"] = NAMED(x),
+-    _["seen"] = false
++    _["type"]    = sexp_type(x),
++    _["shared"]  = (bool) MAYBE_SHARED(x),
++    _["seen"]    = false
+   );
+ 
+-  if (ATTRIB(x) != R_NilValue) {
+-    children["attributes"] = inspect_rec(ATTRIB(x), base_env, seen);
++  // R_getAttributes() returns the full attribute pairlist, replacing ATTRIB().
++  SEXP attrs = R_getAttributes(x);
++  if (attrs != R_NilValue) {
++    children["attributes"] = inspect_rec(attrs, base_env, seen);
+   }
+   if (children.size() > 0) {
+     out["children"] = children;
+@@ -148,14 +150,14 @@
+ // [[Rcpp::export]]
+ List inspect_(SEXP x, Environment base_env) {
+   std::set<SEXP> seen;
+-
+   return inspect_rec(x, base_env, seen);
+ }
+ 
+ 
+ // [[Rcpp::export]]
+ std::string address2(Symbol name, Environment env) {
+-  SEXP object = Rf_findVar(name, env);
++  // R_getVar(sym, env, inherits) replaces Rf_findVar(sym, env)
++  SEXP object = R_getVar(name, env, TRUE);
+   std::ostringstream s;
+   s << object;
+   return s.str();
+@@ -163,6 +165,6 @@
+ 
+ // [[Rcpp::export]]
+ int named2(Symbol name, Environment env) {
+-  SEXP object = Rf_findVar(name, env);
+-  return NAMED(object);
++  SEXP object = R_getVar(name, env, TRUE);
++  return (int) MAYBE_SHARED(object);
+ }
+
+--- src/promise.cpp	2023-01-17 23:07:57.000000000 +0800
++++ src/promise.cpp	2026-07-06 07:00:14.000000000 +0800
+@@ -1,31 +1,38 @@
++#define ENABLE_LEGACY_NONAPI_FUNS
+ #include <Rcpp.h>
+ using namespace Rcpp;
+ 
+ // [[Rcpp::export]]
+ bool is_promise2(Symbol name, Environment env) {
+-  SEXP object = Rf_findVar(name, env);
+-
+-  return (TYPEOF (object) == PROMSXP);
++  SEXP object = R_getVar(name, env, FALSE);
++  return (TYPEOF(object) == PROMSXP);
+ }
+ 
+ // [[Rcpp::export]]
+ SEXP promise_code(Symbol name, Environment env) {
+-  SEXP object = Rf_findVar(name, env);
+-  return PRCODE(object);
++  SEXP object = R_getVar(name, env, FALSE);
++  return R_PromiseExpr(object);
+ }
++
+ // [[Rcpp::export]]
+ SEXP promise_value(Symbol name, Environment env) {
+-  SEXP object = Rf_findVar(name, env);
+-  return PRVALUE(object);
++  // PRVALUE has no public replacement in R >= 4.6.0.
++  // R_BindingTypeForced means the promise has been evaluated;
++  // R_getVarEx with wantActive=FALSE returns the forced value.
++  if (R_GetBindingType(name, env) == R_BindingTypeForced) {
++    return R_getVarEx(name, env, FALSE, R_NilValue);
++  }
++  return R_UnboundValue;
+ }
++
+ // [[Rcpp::export]]
+ bool promise_evaled(Symbol name, Environment env) {
+-  SEXP object = Rf_findVar(name, env);
+-  return PRVALUE(object) != R_UnboundValue;
++  return R_GetBindingType(name, env) == R_BindingTypeForced;
+ }
++
+ // [[Rcpp::export]]
+ SEXP promise_env(Symbol name, Environment env) {
+-  SEXP object = Rf_findVar(name, env);
++  SEXP object = R_getVar(name, env, FALSE);
+   return PRENV(object);
+ }
+ 
+@@ -37,13 +44,13 @@
+   }
+ 
+   // recurse until we find the real promise, not a promise of a promise
+-  while(true) {
+-    SEXP code = PRCODE(prom);
+-    if(TYPEOF(code) != PROMSXP) break;
++  while (true) {
++    SEXP code = R_PromiseExpr(prom);
++    if (TYPEOF(code) != PROMSXP) break;
+     prom = code;
+   }
+ 
+-  SEXP args = PROTECT(Rf_lcons(PRCODE(prom), R_NilValue));
++  SEXP args = PROTECT(Rf_lcons(R_PromiseExpr(prom), R_NilValue));
+   RObject formula = Rf_lcons(Rf_install("~"), args);
+   UNPROTECT(1);
+ 
+@@ -55,7 +62,7 @@
+ 
+ // [[Rcpp::export]]
+ RObject explicitPromise(Symbol name, Environment env) {
+-  SEXP prom = Rf_findVar(name, env);
++  SEXP prom = R_getVar(name, env, FALSE);
+   return makeExplicit(prom);
+ }
+ 
+@@ -69,17 +76,16 @@
+   dots = env.find("...");
+ 
+   SEXP el;
+-  for(SEXP nxt = dots; nxt != R_NilValue; el = CAR(nxt), nxt = CDR(nxt)) {
++  for (SEXP nxt = dots; nxt != R_NilValue; el = CAR(nxt), nxt = CDR(nxt)) {
+     out.push_back(makeExplicit(el));
+ 
+-    SEXP name = TAG(nxt);
+-    if (Rf_isNull(name)) {
++    SEXP tag = TAG(nxt);
++    if (Rf_isNull(tag)) {
+       names.push_back("");
+     } else {
+       names.push_back("");
+     }
+   }
+ 
+-
+   return out;
+ }
+
+--- src/typename.cpp	2023-01-17 23:07:57.000000000 +0800
++++ src/typename.cpp	2026-07-06 07:04:44.000000000 +0800
+@@ -54,6 +54,6 @@
+ 
+ // [[Rcpp::export]]
+ std::string typename2(Symbol name, Environment env) {
+-  SEXP object = Rf_findVar(name, env);
++  SEXP object = R_getVar(name, env, FALSE);
+   return sexp_type(object);
+ }

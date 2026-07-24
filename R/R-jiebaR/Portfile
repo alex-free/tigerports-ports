@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is old.
+R.setup             cran qinwf jiebaR 0.11.1
+revision            1
+categories-append   textproc chinese
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Chinese text segmentation, keyword extraction and speech tagging
+long_description    {*}${description}
+homepage            https://qinwenfeng.com/jiebaR
+checksums           rmd160  05cc7100663b152849782955ba0c86d7836c8a51 \
+                    sha256  b52a896c59e5443fc16b9501ef5a6454fb60f9b7690dca012f06f58bed8d33b7 \
+                    size    78547
+
+depends_lib-append  port:R-jiebaRD \
+                    port:R-Rcpp
+
+depends_test-append port:R-devtools \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-roxygen2 \
+                    port:R-testthat
+
+test.run            yes

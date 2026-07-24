@@ -1,0 +1,20 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           java 1.0
+PortGroup           R 1.0
+
+R.setup             cran tsungwu h2o 3.44.0.3
+revision            1
+maintainers         nomaintainer
+license             Apache-2
+description         R interface for the H2O scalable machine learning platform
+long_description    {*}${description}
+homepage            https://github.com/h2oai/h2o-3
+checksums           rmd160  a453ba5249828f7f753228fad05727825dc38214 \
+                    sha256  61a85f6c2f15e8e96839f8a4fd3a45eaa6bca90517bb20a4dd36e951d6fd0c82 \
+                    size    665867
+supported_archs     noarch
+
+depends_lib-append  port:R-jsonlite \
+                    port:R-RCurl

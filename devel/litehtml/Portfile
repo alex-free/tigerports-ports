@@ -1,0 +1,53 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+
+github.setup        litehtml litehtml b5ab35fa12ca27461cc1c0b814ac217410ac8054
+version             0.9-20240402
+revision            0
+checksums           rmd160  e877c401dc85a18e92801d10edf22abe274baf31 \
+                    sha256  6602583cc70c65140927cf414a0a271092ee0d5262c043c0658d1c36d0e65912 \
+                    size    1033855
+
+categories          devel www
+maintainers         {ryandesign @ryandesign} openmaintainer
+license             BSD
+
+description         fast, lightweight HTML/CSS rendering engine
+
+long_description    ${name} is a {*}${description}.
+
+homepage            http://www.litehtml.com
+github.tarball_from archive
+
+depends_lib-append  port:gumbo-parser
+
+patchfiles          container.patch
+
+compiler.c_standard 1999
+compiler.cxx_standard \
+                    2011
+
+configure.args      -DBUILD_SHARED_LIBS=ON \
+                    -DCMAKE_BUILD_WITH_INSTALL_RPATH=OFF \
+                    -DEXTERNAL_GUMBO=ON
+
+# Building the tests causes gtest and gmock to also get installed when
+# this port is installed.
+# https://github.com/litehtml/litehtml/issues/152
+configure.args-append \
+                    -DLITEHTML_BUILD_TESTING=OFF
+
+post-destroot {
+    set docdir ${prefix}/share/doc/${name}
+
+    xinstall -d ${destroot}${docdir} \
+        ${destroot}${prefix}/include/${name}/containers
+
+    xinstall -m 0644 -W ${worksrcpath} LICENSE README.md ${destroot}${docdir}
+
+    copy ${worksrcpath}/containers/cairo \
+        ${destroot}${prefix}/include/${name}/containers
+}

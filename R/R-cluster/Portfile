@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.recommended       yes
+
+# This is a recommended package. Keep it CRAN-sourced.
+R.setup             cran r-project cluster 2.1.8.2
+revision            1
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Methods for cluster analysis
+long_description    {*}${description}. Recommended package.
+homepage-append     https://svn.r-project.org/R-packages/trunk/cluster
+checksums           rmd160  2a9ec4de4c11345f5754cea7a76ea2990c5eb919 \
+                    sha256  4cc898a58baade883bb33aa0ee9be1723f321bd85ad91562cbd1e43dfdb41585 \
+                    size    373022
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-ellipse \
+                    port:R-fpc \
+                    port:R-MASS \
+                    port:R-Matrix \
+                    port:R-mvoutlier \
+                    port:R-sfsmisc
+
+test.run            yes

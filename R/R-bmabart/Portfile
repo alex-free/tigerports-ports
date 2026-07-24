@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran r-project bmabart 2.0
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Bayesian Mediation Analysis via BART
+long_description    {*}${description}
+checksums           rmd160  b4764d7a25607f10661c047b26d9b8a58e6094bc \
+                    sha256  94210285f7f14bccc8201948d2ce22f6678a55bad6e05b173451b392dfff1863 \
+                    size    395156
+supported_archs     noarch
+
+depends_lib-append  port:R-BART \
+                    port:R-gplots
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown
+
+test.run            yes

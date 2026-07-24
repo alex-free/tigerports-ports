@@ -1,0 +1,39 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           ruby 1.0
+
+# rb-multi_xml needs Ruby 3.2+
+ruby.branches       3.4 3.3 3.2
+ruby.setup          oauth2 2.0.18 gem {} rubygems
+revision            0
+categories-append   net devel
+platforms           any
+license             MIT
+maintainers         nomaintainer
+description         Ruby wrapper for the OAuth 2.0 protocol
+long_description    {*}${description}
+homepage            https://oauth2.galtzo.com
+checksums           rmd160  74e5c7c0758defe6fe9f0530961ba47877c5849f \
+                    sha256  bacf11e470dfb963f17348666d0a75c7b29ca65bc48fd47be9057cf91a403287 \
+                    size    83456
+supported_archs     noarch
+
+if {${subport} ne ${name}} {
+    depends_run-append \
+                    port:rb${ruby.suffix}-faraday \
+                    port:rb${ruby.suffix}-jwt \
+                    port:rb${ruby.suffix}-logger \
+                    port:rb${ruby.suffix}-multi_xml \
+                    port:rb${ruby.suffix}-rack \
+                    port:rb${ruby.suffix}-snaky_hash \
+                    port:rb${ruby.suffix}-version_gem
+
+    # Verify this upon updating:
+    post-destroot {
+        # Fix rb-logger version:
+        reinplace "s|~> 1.2|>= 1.2|g" ${destroot}${ruby.gemdir}/specifications/${ruby.module}-${version}.gemspec
+        # Fix rb-multi_xml version:
+        reinplace "s|~> 0.5|>= 0.5|g" ${destroot}${ruby.gemdir}/specifications/${ruby.module}-${version}.gemspec
+    }
+}

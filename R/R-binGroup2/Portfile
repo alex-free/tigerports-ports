@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran brianna.hitt binGroup2 1.3.3
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3+
+description         Identification and estimation using group testing
+long_description    {*}${description}
+homepage            https://bdhitt.github.io/binGroup2
+checksums           rmd160  5d71ed727d063a30b90014a8ed43a4541d5a6f96 \
+                    sha256  861f6502650a422d287866bafd5694634d21070f9f768d6f4e896868fb44fc72 \
+                    size    411381
+
+depends_lib-append  port:R-ggplot2 \
+                    port:R-partitions \
+                    port:R-rBeta2009 \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-Rdpack \
+                    port:R-scales
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown
+
+test.run            yes

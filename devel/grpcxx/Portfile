@@ -1,0 +1,47 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+PortGroup               boost 1.0
+PortGroup               cmake 1.1
+PortGroup               github 1.0
+PortGroup               legacysupport 1.1
+
+boost.version           1.81
+# kernel_timeout.h:94:45: error: 'clockid_t' has not been declared
+legacysupport.newest_darwin_requires_legacy 15
+
+github.setup            uatuko grpcxx 0.7.0 v
+revision                0
+categories              devel net
+maintainers             {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license                 MIT
+description             gRPC C++ Server
+long_description        {*}${description} implemented using modern standards (C++20)
+checksums               rmd160  edd01aeeb7888c7e1d2948bdd37b46f4104bb28b \
+                        sha256  0bd8ab6e7a5df3206bc5c6fecd6c197014ffd08292ed9aa36fc252bf65db3db6 \
+                        size    44176
+github.tarball_from     archive
+
+# libfmt 12 does not work atm:
+# https://github.com/uatuko/grpcxx/issues/62
+set libfmt_v            11
+cmake.prefix_path-append \
+                        ${prefix}/lib/libfmt${libfmt_v}/cmake
+
+depends_build-append    port:gtest \
+                        path:bin/pkg-config:pkgconfig
+
+depends_lib-append      port:abseil \
+                        port:libfmt${libfmt_v} \
+                        port:nghttp2 \
+                        port:protobuf
+
+compiler.cxx_standard   2020
+
+configure.args-append   -DGRPCXX_HERMETIC_BUILD=OFF \
+                        -DGRPCXX_BUILD_EXAMPLES=OFF \
+                        -DGRPCXX_BUILD_EXPERIMENTS=OFF \
+                        -DGRPCXX_BUILD_TESTING=ON \
+                        -DGRPCXX_USE_ASIO=ON
+
+test.run                yes

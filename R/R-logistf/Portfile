@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran georgheinze logistf 1.26.1
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL
+description         Firth’s bias-reduced logistic regression
+long_description    {*}${description}
+homepage            https://github.com/georgheinze/logistf
+checksums           rmd160  aefeb1cfcf835fca8146697479c00239100a5a99 \
+                    sha256  351e0ffca232c0ffe29cbda53a3f5770dab30fb72b8223d782ee1ae5f37e8592 \
+                    size    75713
+
+depends_lib-append  port:R-formula.tools \
+                    port:R-mice
+
+depends_test-append port:R-emmeans \
+                    port:R-estimability
+
+test.run            yes

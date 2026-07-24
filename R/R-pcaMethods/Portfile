@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             bioconductor hredestig pcaMethods 2.0.0
+revision            1
+categories-append   bioconductor
+maintainers         nomaintainer
+license             GPL-3+
+description         Collection of PCA methods
+long_description    {*}${description}
+homepage            https://github.com/hredestig/pcamethods
+checksums           rmd160  b04943db9c01b7e0dfc1db84d94488bb6f03892f \
+                    sha256  0475d7ecf7a3003884e37d8f8a94fe6aef1678a4bae870f6511f316555703f83 \
+                    size    1039215
+
+depends_lib-append  port:R-Biobase \
+                    port:R-BiocGenerics \
+                    port:R-Rcpp
+
+depends_test-append port:R-ggplot2 \
+                    port:R-matrixStats
+
+test.run            yes

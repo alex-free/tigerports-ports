@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran coolbutuseless yyjsonr 0.1.22 v
+revision            0
+categories-append   devel
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Fast JSON, NDJSON and GeoJSON parser and generator
+long_description    {*}${description}
+homepage            https://coolbutuseless.github.io/package/yyjsonr
+checksums           rmd160  64fe56a2817045c295ff56f9b7cfbc4731c7c43d \
+                    sha256  ca2c68e0c1589e536bb76aac8235a75d90bde82e32e3367a321a12731fa48b8e \
+                    size    1387119
+# github.tarball_from archive
+
+depends_test-append port:R-bit64 \
+                    port:R-jsonlite \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

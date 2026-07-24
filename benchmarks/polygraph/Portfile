@@ -1,0 +1,44 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+PortGroup               openssl 1.0
+
+name                    polygraph
+version                 4.13.0
+revision                0
+categories              benchmarks www
+maintainers             nomaintainer
+
+description             Web Polygraph is a performance testing tool for caching proxies and other Web intermediaries.
+
+long_description        Web Polygraph is a freely available performance testing tool for caching proxies, \
+                        origin server accelerators, L4/7 switches, content filters, and other Web intermediaries. \
+                        Polygraph's features include: \
+                        - high-performance HTTP clients and servers \
+                        - realistic HTTP, FTP and SSL traffic generation \
+                        - HTTP and SOCKS5 proxy support, with chaining \
+                        - HTTP Basic, NTLM, and Negotiate proxy authentication \
+                        - LDAP-friendly generation of user credentials \
+                        - flexible content simulation \
+                        - ready-to-use standard workloads for benchmarking \
+                        - powerful domain-specific configuration language \
+                        - portable open-source implementation \
+                        - friendly commercial support
+
+homepage                https://www.web-polygraph.org
+master_sites            ${homepage}/downloads/srcs/
+
+checksums               rmd160  5d421e55bc12ef6b7191df71a1239319ba037f37 \
+                        sha256  2ac8cbe68258b22affd789e9c83ae58f7fca6c53e9b4ab078763e06347649fe7 \
+                        size    3422051
+
+depends_lib-append      port:ldns \
+                        port:ncurses
+
+distfiles               ${name}-${version}-src.tgz
+
+patchfiles              patch-src-xstd-Select.h.diff
+
+livecheck.type          regex
+livecheck.url           ${homepage}downloads/srcs/
+livecheck.regex         ${name}-(\[0-9\\.\]+)-src.tgz

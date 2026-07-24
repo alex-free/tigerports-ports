@@ -1,0 +1,33 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github r-lib waldo 0.6.2 v
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Find differences between R objects
+long_description    {*}${description}
+homepage            https://waldo.r-lib.org
+checksums           rmd160  447b2fb2a8aa6d6486fd6be502e593fc404dd013 \
+                    sha256  58e0c8973c59b308e18727ab1eff9386aa64d5e6aed160d507d6958e32b2ab2e \
+                    size    52021
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-cli \
+                    port:R-diffobj \
+                    port:R-glue \
+                    port:R-rlang
+
+depends_test-append port:R-bit64 \
+                    port:R-covr \
+                    port:R-R6 \
+                    port:R-S7 \
+                    port:R-testthat \
+                    port:R-withr \
+                    port:R-xml2
+
+test.run            yes

@@ -1,0 +1,36 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github tidyverse forcats 1.0.1 v
+revision            1
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Tools for working with categorical variables (factors)
+long_description    {*}${description}
+homepage            https://forcats.tidyverse.org
+checksums           rmd160  78338232270dc90538e3a5979dfd62c023025b9d \
+                    sha256  54d4af2a61e5b53946f99cc52b2917d73f3a80eefeeb02739e0fca7c1b7b5803 \
+                    size    1064202
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-cli \
+                    port:R-glue \
+                    port:R-lifecycle \
+                    port:R-magrittr \
+                    port:R-rlang \
+                    port:R-tibble
+
+depends_test-append port:R-covr \
+                    port:R-dplyr \
+                    port:R-ggplot2 \
+                    port:R-knitr \
+                    port:R-readr \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-withr
+
+test.run            yes

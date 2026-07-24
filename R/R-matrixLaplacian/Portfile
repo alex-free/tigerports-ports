@@ -1,0 +1,20 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran tianhao.wu matrixLaplacian 1.0
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-2
+description         Normalized Laplacian matrix and Laplacian map
+long_description    {*}${description}
+checksums           rmd160  56436cf46fc139cc632feee6da07e02a24a0fee6 \
+                    sha256  91d54ab7a3d33cb6f683a5a283e866a71f990ea610ef61793a4c8fafc76eb8c7 \
+                    size    1568
+supported_archs     noarch
+
+depends_lib-append  port:R-scatterplot3d
+
+test.run            yes

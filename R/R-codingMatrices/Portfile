@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran Bill.Venables codingMatrices 0.4.0
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Alternative factor coding matrices for linear model formulae
+long_description    {*}${description}
+checksums           rmd160  da36cf18e9a069bd2505ae0f8194137ceae2efc3 \
+                    sha256  4f3106639fee03118e4e78f9a38e44f7221ead34c213b789c7ed43e1f992a414 \
+                    size    238609
+supported_archs     noarch
+
+depends_lib-append  port:R-fractional
+
+depends_test-append port:R-car \
+                    port:R-dplyr \
+                    port:R-ggplot2 \
+                    port:R-knitr \
+                    port:R-xtable
+
+test.run            yes

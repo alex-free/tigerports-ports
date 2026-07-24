@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran FlorianSchwendinger scs 3.2.7
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Splitting Conic Solver
+long_description    {*}${description}
+homepage            https://github.com/FlorianSchwendinger/scs
+checksums           rmd160  50c369a606d1163571bf75f5bddcfdc912f519a1 \
+                    sha256  f84004f95365f713e22e78b9c5a0a05670f5c5d17640b3dfa6e7ed747479aaca \
+                    size    1883126
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-slam \
+                    port:R-tinytest
+
+test.run            yes

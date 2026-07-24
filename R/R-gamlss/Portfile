@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran mstasinopoulos gamlss 5.5-0
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             {GPL-2 GPL-3}
+description         Generalised Additive Models for Location Scale and Shape
+long_description    {*}${description}
+homepage            https://www.gamlss.com
+checksums           rmd160  80557e507cfaa89fb1b9cfed0f13fe8907387a57 \
+                    sha256  a0b7cde5ca377d4725e5568e32944693b3c4bfd30214f1fe90e80395d5a95976 \
+                    size    321657
+
+depends_lib-append  port:R-gamlss.data \
+                    port:R-gamlss.dist
+
+depends_test-append port:R-distributions3
+
+test.run            yes

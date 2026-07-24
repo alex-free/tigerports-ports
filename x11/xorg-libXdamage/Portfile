@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem      1.0
+
+name            xorg-libXdamage
+version         1.1.7
+revision        0
+categories      x11 devel
+license         X11
+maintainers     {jeremyhu @jeremyhu} openmaintainer
+description     X.org libXdamage
+homepage        https://www.x.org
+platforms       darwin macosx
+long_description    Damage extension
+master_sites    xorg:individual/lib/
+
+distname        libXdamage-${version}
+
+checksums       rmd160  8a070a79302265e7b3bfb24e1dd2ceb69e6b37c6 \
+                sha256  127067f521d3ee467b97bcb145aeba1078e2454d448e8748eb984d5b397bde24 \
+                size    265336
+
+use_xz          yes
+
+depends_build   path:bin/pkg-config:pkgconfig \
+                port:xorg-xorgproto
+
+depends_lib     port:xorg-libXfixes \
+                port:xorg-xorgproto
+
+configure.checks.implicit_function_declaration.whitelist-append strchr
+
+livecheck.type  regex
+livecheck.url   https://xorg.freedesktop.org/archive/individual/lib/?C=M&O=D
+livecheck.regex libXdamage-(\\d+(?:\\.\\d+)*)

@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran insightsengineering sasr 0.1.5 v
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             Apache-2
+description         SAS interface
+long_description    {*}${description}
+homepage            https://insightsengineering.github.io/sasr
+checksums           rmd160  2293ff3286cb56df0e543ac32db4d0da9eb27d77 \
+                    sha256  863700d356dabe848affc3b7380fd876b4090961b38cfe2c4483f63733e0f77f \
+                    size    373222
+supported_archs     noarch
+
+depends_lib-append  port:R-checkmate \
+                    port:R-lifecycle \
+                    port:R-reticulate
+
+depends_test-append port:R-knitr \
+                    port:R-mockery \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

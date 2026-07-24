@@ -1,0 +1,15 @@
+--- src/rlang/c-utils.h	2026-04-07 16:05:47.000000000 +0800
++++ src/rlang/c-utils.h	2026-07-06 06:11:10.000000000 +0800
+@@ -9,6 +9,12 @@
+ #include <math.h>
+ #include <float.h>
+ #include <string.h>
++
++#ifdef __cplusplus
++#include <cmath>
++using std::isfinite;
++#endif
++
+ #include "cnd.h"
+ 
+ #define R_ARR_SIZEOF(X) sizeof(X) / sizeof(X[0])

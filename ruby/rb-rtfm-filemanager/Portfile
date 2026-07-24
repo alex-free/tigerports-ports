@@ -1,0 +1,65 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           ruby 1.0
+
+ruby.branches       3.4 3.3 3.2
+ruby.setup          rtfm-filemanager 8.7.2 gem {} rubygems
+revision            0
+categories-append   sysutils
+platforms           any
+license             Unlicense
+maintainers         nomaintainer
+description         ${name} is a full-featured terminal file-manager
+long_description    {*}${description}
+homepage            https://isene.com
+checksums           rmd160  2401e1b23c25ffdb8f48fc8ddde5bae542dea190 \
+                    sha256  30ddf6b70b2dbfd9c633d34fdb8c81e57e18edeb8333499a1bc917d4510653ea \
+                    size    1542656
+supported_archs     noarch
+
+if {${subport} ne ${name}} {
+    depends_run-append \
+                    port:rb${ruby.suffix}-bootsnap \
+                    port:rb${ruby.suffix}-rcurses \
+                    port:rb${ruby.suffix}-ruby-openai \
+                    port:rb${ruby.suffix}-termpix
+
+    depends_run-append \
+                    port:catdoc \
+                    port:ffmpegthumbnailer \
+                    port:gnumeric \
+                    port:highlight \
+                    port:ImageMagick \
+                    port:libsixel \
+                    port:ncurses \
+                    path:lib/pkgconfig/poppler.pc:poppler \
+                    port:TermMark \
+                    port:unzip \
+                    port:w3m \
+                    port:xdotool
+
+    post-destroot {
+        # Fix rb-ruby-openai version
+        reinplace "s|~> 7.4|>= 7.4|g" ${destroot}${ruby.gemdir}/specifications/${ruby.module}-${version}.gemspec
+
+        # https://github.com/isene/RTFM/issues/8
+        reinplace "s|\'bat\' : \'batcat\'|\'bat\' : \'highlight\'|g" ${destroot}${ruby.gemdir}/gems/${ruby.module}-${version}/bin/rtfm
+        reinplace "s|-n --color=always|-O ansi --force --line-numbers|g" ${destroot}${ruby.gemdir}/gems/${ruby.module}-${version}/bin/rtfm
+        reinplace "s|pandoc \@s -t plain|termmark \@s|g" ${destroot}${ruby.gemdir}/gems/${ruby.module}-${version}/bin/rtfm
+    }
+}
+
+notes "
+    You may want to set RCURSES_BORDERS=ascii in the environment.\
+    Support for image rendering requires sixel-supporting terminal,\
+    for example mlterm(-minimal) port.
+"
+
+# TODO: add select PortGroup here.
+
+# TODO: there were observed occasional crashes if terminal window is resized
+# when the app is running. It is unclear at the moment what goes wrong,
+# the log points to ruby library and KERN_PROTECTION_FAILURE at 0x0000000000000006.
+# May not be deterministic. It is safer though to set a desired window size
+# prior to launching the app.

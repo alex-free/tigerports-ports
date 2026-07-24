@@ -1,0 +1,40 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-pydantic
+# Stay with the branch untainted by rust.
+# As of May 2025, it is still maintained by the upstream.
+version             1.10.22
+revision            0
+epoch               1
+
+categories-append   devel
+license             MIT
+
+python.versions     310 311 312 313 314
+
+maintainers         {@jandemter demter.de:jan} openmaintainer
+
+description         Data validation and settings management using Python type hinting
+long_description    Fast and extensible, pydantic plays nicely \
+                    with your linters/IDE/brain. Define how data \
+                    should be in pure, canonical Python 3.6+\; \
+                    validate it with pydantic.
+
+homepage            https://github.com/samuelcolvin/pydantic
+
+checksums           rmd160  ea9251e86e52b98e63a71ff8e63ce69edf641c8c \
+                    sha256  ee1006cebd43a8e7158fb7190bb8f4e2da9649719bff65d0c287282ec38dec6d \
+                    size    356771
+
+if {${subport} ne ${name}} {
+    # Do we still need pythran here?
+    depends_build-append \
+                    port:py${python.version}-cython \
+                    port:py${python.version}-pythran
+
+    depends_run-append \
+                    port:py${python.version}-typing_extensions
+}

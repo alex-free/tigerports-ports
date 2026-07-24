@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran r-forge deSolve 1.42
+revision            0
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Solvers for initial value problems of differential equations
+long_description    {*}${description}
+homepage            https://desolve.r-forge.r-project.org
+checksums           rmd160  9014ee9713b3c10d8a99202af76d823b54eae6e1 \
+                    sha256  c15d4d3b17f7e6c9344728f7623c519495b6742d5236b9323d6b6250ce2c0f71 \
+                    size    2028781
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-FME \
+                    port:R-scatterplot3d
+
+test.run            yes

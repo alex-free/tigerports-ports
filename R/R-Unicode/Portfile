@@ -1,0 +1,19 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran r-project Unicode 16.0.0-1
+revision            1
+categories-append   textproc
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Unicode data and utilities
+long_description    Data from Unicode 16.0.0 and related utilities.
+checksums           rmd160  6092edd99903c68bf8fb6fd7b6d08b8ffb039d8d \
+                    sha256  3f5c4690066f4a441266235e309cf6da6b4d7c4083854e3d7428ded281c52960 \
+                    size    252028
+supported_archs     noarch
+
+test.run            yes

@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran dalenbe2 bayesMeanScale 0.2.1 v
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3+
+description         Bayesian Post-Estimation on the Mean Scale
+long_description    Computes Bayesian posterior distributions of predictions, \
+                    marginal effects and differences of marginal effects \
+                    for various generalized linear models.
+homepage            https://github.com/dalenbe2/bayesMeanScale
+checksums           rmd160  350ef8ca97304233f40bdfcf2a5e1452fdff3b40 \
+                    sha256  645d693e94d48b334a00403632bf647ed3a7e687298df0871b28751bfab6d28c \
+                    size    322663
+supported_archs     noarch
+
+depends_lib-append  port:R-bayestestR \
+                    port:R-data.table \
+                    port:R-magrittr \
+                    port:R-posterior
+
+depends_test-append port:R-flextable \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-rstanarm \
+                    port:R-testthat \
+                    port:R-tibble
+
+test.run            yes

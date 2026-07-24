@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is old.
+R.setup             cran agalecki lmeSplines 1.1.15 v
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Add smoothing spline modelling capability to R-nlme
+long_description    {*}${description}
+homepage            https://github.com/agalecki/lmeSplines
+checksums           rmd160  ce043672a0bef69d5dfa3ae9964530ae61100fb0 \
+                    sha256  ac950d178fb8932048c051b53217e4c2f66952a21349aaecce317990f854a652 \
+                    size    8980
+supported_archs     noarch
+
+test.run            yes

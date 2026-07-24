@@ -1,0 +1,36 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran vladimirholy gasmodel 0.6.1
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Generalized autoregressive score models
+long_description    {*}${description}
+homepage            https://github.com/vladimirholy/gasmodel
+checksums           rmd160  ac7b3b248bd7b04989a89c87381ff22219dbbb7c \
+                    sha256  095139490c1cb268e35431a8819aed4bc6d03fe7ef02276661faf01c8fd95150 \
+                    size    968016
+supported_archs     noarch
+
+depends_lib-append  port:R-abind \
+                    port:R-arrangements \
+                    port:R-copula \
+                    port:R-dplyr \
+                    port:R-ggplot2 \
+                    port:R-mvnfast \
+                    port:R-nloptr \
+                    port:R-numDeriv \
+                    port:R-pracma \
+                    port:R-tidyr
+
+depends_test-append port:R-hms \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

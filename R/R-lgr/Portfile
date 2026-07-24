@@ -1,0 +1,41 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran s-fleck lgr 0.5.2 v
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Fully featured logging framework
+long_description    {*}${description}
+homepage            https://s-fleck.github.io/lgr
+checksums           rmd160  f33a879f9acb729a3f495fcd3e5efaa36b05850e \
+                    sha256  4649e34129b3e1cbbca801983adbe6f857a748301bdb1330985e69dde9892273 \
+                    size    585978
+# github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-R6
+
+depends_test-append port:R-cli \
+                    port:R-covr \
+                    port:R-crayon \
+                    port:R-data.table \
+                    port:R-desc \
+                    port:R-future \
+                    port:R-future.apply \
+                    port:R-glue \
+                    port:R-jsonlite \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-rotor \
+                    port:R-rprojroot \
+                    port:R-testthat \
+                    port:R-tibble \
+                    port:R-whoami \
+                    port:R-yaml
+
+test.run            yes

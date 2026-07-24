@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+PortGroup               cmake 1.1
+PortGroup               github 1.0
+
+github.setup            jlblancoc nanoflann 1.10.1
+revision                0
+categories              math science
+platforms               any
+maintainers             {mcalhoun @MarcusCalhoun-Lopez} openmaintainer
+license                 BSD
+
+description             C++11 header-only library for Nearest Neighbor (NN) \
+                        search wih KD-trees
+long_description        {*}${description}
+
+checksums               rmd160  abd8c6bb7a5415ee4b8e4493a37268bc8ecdadbc \
+                        sha256  9ce16ab66c9d61a529c704a913dc41947a47e29928482105cd39f3436cdb92a1 \
+                        size    550475
+github.tarball_from     archive
+
+compiler.cxx_standard   2011
+
+supported_archs         noarch
+
+configure.args-append   -DNANOFLANN_BUILD_EXAMPLES=OFF
+
+test.run                yes

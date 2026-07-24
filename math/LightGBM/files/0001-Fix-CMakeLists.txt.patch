@@ -1,0 +1,205 @@
+--- CMakeLists.txt	2026-07-19 04:10:03.000000000 +0800
++++ CMakeLists.txt	2026-07-23 01:44:24.000000000 +0800
+@@ -116,19 +116,15 @@
+   file(MAKE_DIRECTORY "${LGBM_SWIG_DESTINATION_DIR}")
+ endif()
+ 
+-set(EIGEN_DIR "${PROJECT_SOURCE_DIR}/external_libs/eigen")
+-include_directories(${EIGEN_DIR})
++find_package(fmt REQUIRED)
++include_directories(${LIBFMT_DIR})
++find_package(Eigen3 REQUIRED)
++include_directories(${EIGEN_DIR})
+ 
+ # See https://gitlab.com/libeigen/eigen/-/blob/master/COPYING.README
+ add_definitions(-DEIGEN_MPL2_ONLY)
+ add_definitions(-DEIGEN_DONT_PARALLELIZE)
+ 
+-set(FAST_DOUBLE_PARSER_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/external_libs/fast_double_parser/include")
+-include_directories(${FAST_DOUBLE_PARSER_INCLUDE_DIR})
+-
+-set(FMT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/external_libs/fmt/include")
+-include_directories(${FMT_INCLUDE_DIR})
+-
+ if(BUILD_CPP_TEST AND MSVC)
+   # Use /MT flag to statically link the C runtime. Must be set before
+   # add_subdirectory(nanoarrow) so the bundled library uses the same runtime
+@@ -142,10 +138,7 @@
+ # subdirectory keeps the package tarball free of nanoarrow sources, which
+ # would otherwise trigger CRAN warnings about diagnostic-suppressing pragmas.
+ if(NOT __BUILD_FOR_R)
+-  add_subdirectory("${PROJECT_SOURCE_DIR}/external_libs/nanoarrow" EXCLUDE_FROM_ALL)
+-  if(NOT BUILD_STATIC_LIB)
+-    set_target_properties(nanoarrow_static PROPERTIES POSITION_INDEPENDENT_CODE ON)
+-  endif()
++  find_package(nanoarrow REQUIRED)
+ endif()
+ 
+ if(__BUILD_FOR_R)
+@@ -189,26 +182,7 @@
+ endif()
+ 
+ if(USE_OPENMP)
+-    if(APPLE)
+-        find_package(OpenMP)
+-        if(NOT OpenMP_FOUND)
+-            if(USE_HOMEBREW_FALLBACK)
+-                # libomp 15.0+ from brew is keg-only, so have to search in other locations.
+-                # See https://github.com/Homebrew/homebrew-core/issues/112107#issuecomment-1278042927.
+-                execute_process(COMMAND brew --prefix libomp
+-                            OUTPUT_VARIABLE HOMEBREW_LIBOMP_PREFIX
+-                            OUTPUT_STRIP_TRAILING_WHITESPACE)
+-                set(OpenMP_C_FLAGS "-Xpreprocessor -fopenmp -I${HOMEBREW_LIBOMP_PREFIX}/include")
+-                set(OpenMP_CXX_FLAGS "-Xpreprocessor -fopenmp -I${HOMEBREW_LIBOMP_PREFIX}/include")
+-                set(OpenMP_C_LIB_NAMES omp)
+-                set(OpenMP_CXX_LIB_NAMES omp)
+-                set(OpenMP_omp_LIBRARY ${HOMEBREW_LIBOMP_PREFIX}/lib/libomp.dylib)
+-            endif()
+-            find_package(OpenMP REQUIRED)
+-        endif()
+-    else()
+-        find_package(OpenMP REQUIRED)
+-    endif()
++    find_package(OpenMP REQUIRED)
+     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+ endif()
+ 
+@@ -724,124 +698,6 @@
+     set(CMAKE_INSTALL_PREFIX "lightgbm")
+ endif()
+ 
+-# The macOS linker puts an absolute path to linked libraries in lib_lightgbm.dylib.
+-# This block overrides that information for LightGBM's OpenMP dependency, to allow
+-# finding that library in more places.
+-#
+-# This reduces the risk of runtime issues resulting from multiple {libgomp,libiomp,libomp}.dylib being loaded.
+-#
+-if(APPLE AND USE_OPENMP AND NOT BUILD_STATIC_LIB)
+-  # store path to {libgomp,libiomp,libomp}.dylib found at build time in a variable
+-  get_target_property(
+-    OpenMP_LIBRARY_LOCATION
+-    OpenMP::OpenMP_CXX
+-    INTERFACE_LINK_LIBRARIES
+-  )
+-  # get just the filename of that path
+-  # (to deal with the possibility that it might be 'libomp.dylib' or 'libgomp.dylib' or 'libiomp.dylib')
+-  get_filename_component(
+-    OpenMP_LIBRARY_NAME
+-    ${OpenMP_LIBRARY_LOCATION}
+-    NAME
+-  )
+-  # get directory of that path
+-  get_filename_component(
+-    OpenMP_LIBRARY_DIR
+-    ${OpenMP_LIBRARY_LOCATION}
+-    DIRECTORY
+-  )
+-  # get exact name of the library in a variable
+-  get_target_property(
+-    __LIB_LIGHTGBM_OUTPUT_NAME
+-    _lightgbm
+-    OUTPUT_NAME
+-  )
+-  if(NOT __LIB_LIGHTGBM_OUTPUT_NAME)
+-    set(__LIB_LIGHTGBM_OUTPUT_NAME "lib_lightgbm")
+-  endif()
+-
+-  if(CMAKE_SHARED_LIBRARY_SUFFIX_CXX)
+-    set(
+-      __LIB_LIGHTGBM_FILENAME "${__LIB_LIGHTGBM_OUTPUT_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX_CXX}"
+-      CACHE INTERNAL "lightgbm shared library filename"
+-    )
+-  else()
+-    set(
+-      __LIB_LIGHTGBM_FILENAME "${__LIB_LIGHTGBM_OUTPUT_NAME}.dylib"
+-      CACHE INTERNAL "lightgbm shared library filename"
+-    )
+-  endif()
+-
+-  # Override the absolute path to OpenMP with a relative one using @rpath.
+-  #
+-  # This also ensures that if a {libgomp,libiomp,libomp}.dylib has already been loaded, it'll just use that.
+-  add_custom_command(
+-    TARGET _lightgbm
+-    POST_BUILD
+-      COMMAND
+-        install_name_tool
+-        -change
+-        ${OpenMP_LIBRARY_LOCATION}
+-        "@rpath/${OpenMP_LIBRARY_NAME}"
+-        "${__LIB_LIGHTGBM_FILENAME}"
+-      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+-      COMMENT "Replacing hard-coded OpenMP install_name with '@rpath/${OpenMP_LIBRARY_NAME}'..."
+-  )
+-  # add RPATH entries to ensure the loader looks in the following, in the following order:
+-  #
+-  #   - (R-only) ${LIBR_LIBS_DIR}    (wherever R for macOS stores vendored third-party libraries)
+-  #   - ${OpenMP_LIBRARY_DIR}        (wherever find_package(OpenMP) found OpenMP at build time)
+-  #   - /opt/homebrew/opt/libomp/lib (where 'brew install' / 'brew link' puts libomp.dylib)
+-  #   - /opt/local/lib/libomp        (where 'port install' puts libomp.dylib)
+-  #
+-
+-  # with some compilers, OpenMP ships with the compiler (e.g. libgomp with gcc)
+-  list(APPEND __omp_install_rpaths "${OpenMP_LIBRARY_DIR}")
+-
+-  # with clang, libomp doesn't ship with the compiler and might be supplied separately
+-  if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+-      list(
+-        APPEND __omp_install_rpaths
+-          "/opt/homebrew/opt/libomp/lib"
+-          "/opt/local/lib/libomp"
+-      )
+-      # It appears that CRAN's macOS binaries compiled with -fopenmp have install names
+-      # of the form:
+-      #
+-      #   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libomp.dylib
+-      #
+-      # That corresponds to the libomp.dylib that ships with the R framework for macOS, available
+-      # from https://cran.r-project.org/bin/macosx/.
+-      #
+-      # That absolute-path install name leads to that library being loaded unconditionally.
+-      #
+-      # That can result in e.g. 'library(data.table)' loading R's libomp.dylib and 'library(lightgbm)' loading
+-      # Homebrew's. Having 2 loaded in the same process can lead to segfaults and unpredictable behavior.
+-      #
+-      # This can't be easily avoided by forcing R-package builds in LightGBM to use R's libomp.dylib
+-      # at build time... LightGBM's CMake uses find_package(OpenMP), and R for macOS only provides the
+-      # library, not CMake config files for it.
+-      #
+-      # Best we can do, to allow CMake-based builds of the R-package here to continue to work
+-      # alongside CRAN-prepared binaries of other packages with OpenMP dependencies, is to
+-      # ensure that R's library directory is the first place the loader searches for
+-      # libomp.dylib when clang is used.
+-      #
+-      # ref: https://github.com/lightgbm-org/LightGBM/issues/6628
+-      #
+-      if(__BUILD_FOR_R)
+-        list(PREPEND __omp_install_rpaths "${LIBR_LIBS_DIR}")
+-      endif()
+-  endif()
+-  set_target_properties(
+-    _lightgbm
+-    PROPERTIES
+-      BUILD_WITH_INSTALL_RPATH TRUE
+-      INSTALL_RPATH "${__omp_install_rpaths}"
+-      INSTALL_RPATH_USE_LINK_PATH FALSE
+-  )
+-endif()
+-
+ install(
+   TARGETS _lightgbm
+   RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+@@ -854,13 +710,4 @@
+       DIRECTORY ${LightGBM_HEADER_DIR}/LightGBM
+       DESTINATION ${CMAKE_INSTALL_PREFIX}/include
+     )
+-    install(
+-      FILES ${FAST_DOUBLE_PARSER_INCLUDE_DIR}/fast_double_parser.h
+-      DESTINATION ${CMAKE_INSTALL_PREFIX}/include/LightGBM/utils
+-    )
+-    install(
+-      DIRECTORY ${FMT_INCLUDE_DIR}/
+-      DESTINATION ${CMAKE_INSTALL_PREFIX}/include/LightGBM/utils
+-      FILES_MATCHING PATTERN "*.h"
+-    )
+ endif()

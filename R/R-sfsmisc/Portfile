@@ -1,0 +1,41 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran mmaechler sfsmisc 1.1-23
+revision            1
+categories-append   graphics sysutils
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Utilities from Seminar für Statistik, ETH Zürich
+long_description    {*}${description}
+homepage            https://github.com/mmaechler/sfsmisc
+checksums           rmd160  a485dcf53c266e7c72f1b3ba7a7630d99213ae7c \
+                    sha256  b81ffa8310da56565c77626b5a499f263c26f40ea857b233586d5fef391dd25e \
+                    size    189287
+supported_archs     noarch
+
+depends_test-append port:R-DescTools \
+                    port:R-e1071 \
+                    port:R-gmp \
+                    port:R-Hmisc \
+                    port:R-lokern \
+                    port:R-nor1mix \
+                    port:R-pastecs \
+                    port:R-polycor \
+                    port:R-polynom \
+                    port:R-relevance \
+                    port:R-Rmpfr \
+                    port:R-robustbase \
+                    port:R-sm \
+                    port:R-tikzDevice
+
+pre-test {
+    # Example uses /bin/ps, which is forbidden by sandboxing.
+    # https://github.com/mmaechler/sfsmisc/issues/7
+    append portsandbox_profile " (allow process-exec (literal \"/bin/ps\") (with no-profile))"
+}
+
+test.run            yes

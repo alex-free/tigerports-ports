@@ -1,0 +1,79 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           python 1.0
+
+github.setup        nicotine-plus nicotine-plus 3.3.10
+revision            0
+categories-prepend  www p2p
+license             GPL-3
+platforms           {darwin any}
+supported_archs     noarch
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+description         Nicotine+ is a graphical client for the Soulseek peer-to-peer network
+long_description    Nicotine+ aims to be a lightweight, pleasant, free and open-source alternative \
+                    to the official Soulseek client, while also providing a comprehensive set of features.
+homepage            https://nicotine-plus.org
+checksums           rmd160  b30f92747bf18c4788689a846179f9e44bafc37d \
+                    sha256  3917ebc562f2d6a6b26b3d815d7cbdf1d11c058d994b1f47794bbb850489b35e \
+                    size    3870694
+github.tarball_from archive
+
+variant python311 conflicts python312 python313 description "Use Python 3.11" {}
+variant python312 conflicts python311 python313 description "Use Python 3.12" {}
+variant python313 conflicts python311 python312 description "Use Python 3.13" {}
+
+if {![variant_isset python311] && ![variant_isset python312]} {
+    default_variants +python313
+}
+
+foreach pv {313 312 311} {
+    if {[variant_isset python${pv}]} {
+        python.default_version  ${pv}
+        break
+    }
+}
+
+depends_build-append \
+                    port:gettext \
+                    path:bin/pkg-config:pkgconfig \
+                    port:py${python.version}-setuptools
+
+depends_lib-append  port:adwaita-icon-theme \
+                    port:gettext-runtime \
+                    port:py${python.version}-gobject3
+
+variant gtk3 conflicts gtk4 description "Build with GTK3" {
+    patchfiles-append \
+                    patch-GTK3.diff
+
+    depends_lib-append \
+                    path:lib/pkgconfig/gtk+-3.0.pc:gtk3
+}
+
+# https://github.com/nicotine-plus/nicotine-plus/issues/2942
+# https://github.com/nicotine-plus/nicotine-plus/issues/3172
+variant gtk4 conflicts gtk3 description "Build with GTK4" {
+    patchfiles-append \
+                    patch-GTK4.diff
+
+    depends_lib-append \
+                    path:lib/pkgconfig/gtk4.pc:gtk4
+
+    # https://trac.macports.org/ticket/70137
+    notes "
+    If you get an error upon launching the app,\
+    try setting GSK_RENDERER=cairo in the environment.\
+    You may also add it into a shell config file.
+    "
+}
+
+if {![variant_isset gtk3] && ![variant_isset gtk4]} {
+    default_variants-append +gtk4
+}
+
+notes-append "
+To choose GTK version at runtime, you may set NICOTINE_GTK_VERSION=\
+in the environment.
+"

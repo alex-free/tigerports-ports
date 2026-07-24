@@ -1,0 +1,39 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran JamesYang007 adelie 1.0.8
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Group lasso and elastic net solver for generalized linear models
+long_description    {*}${description}.
+homepage            https://github.com/JamesYang007/adelie-r
+checksums           rmd160  4fa40327828541541d1775c401e13bd825e104ea \
+                    sha256  4c57b7971004dfc5b9a517ba66086b294693d7465286594ff8823c6135f92c15 \
+                    size    1447491
+
+depends_lib-append  port:R-r2r \
+                    port:R-Rcpp \
+                    port:R-RcppEigen \
+                    port:R-stringr
+
+# inst/adelie/adelie/src/include/adelie_core/io/io_snp_phased_ancestry.hpp:43:34:
+# error: right operand of shift expression '(1 << 32)' is greater than or equal to the precision 32 of the left operand [-fpermissive]
+if {[string match *gcc* ${configure.compiler}]} {
+    patchfiles-append \
+                    patch-cxxflags.diff
+}
+
+# compiler.cxx_standard 2017
+
+depends_test-append port:R-ggplot2 \
+                    port:R-gridExtra \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+# Examples fail: Error: adelie_core: calldata dimensions are too large!
+test.run            yes

@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github r-lib withr 3.0.3 v
+revision            0
+categories-append   devel
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Methods for temporarily modifying global state
+long_description    A set of functions to run code with safely and temporarily modified global state, \
+                    withr makes working with the global state, i.e. side effects, less error-prone.
+homepage            https://withr.r-lib.org
+checksums           rmd160  9cc889625c2c6287ccf1ac41631455377d04e728 \
+                    sha256  a3a4fa14e21c013036d37d356caeef7f45b750d2ee4c6b55fd12b936eebd2937 \
+                    size    136754
+github.tarball_from archive
+supported_archs     noarch
+
+depends_test-append port:R-callr \
+                    port:R-DBI \
+                    port:R-knitr \
+                    port:R-rlang \
+                    port:R-rmarkdown \
+                    port:R-RSQLite \
+                    port:R-testthat
+
+test.run            yes

@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           gitlab 1.0
+
+name                xconsole
+gitlab.instance     https://gitlab.freedesktop.org/xorg
+gitlab.setup        app ${name} 1.1.0 ${name}-
+revision            0
+categories          x11
+license             X11
+maintainers         {jeremyhu @jeremyhu} openmaintainer
+description         Monitor system console messages with X11
+long_description    The xconsole program displays messages which are usually \
+                    sent to /dev/console.
+
+homepage            https://www.x.org
+use_bzip2           yes
+
+checksums           rmd160  1e6232a96c71f2bc0f6cc84a9c2440218f7638b4 \
+                    sha256  85e22c365efbca61e643630a139ffa5ed15409e4bba878d33ad50f3b5fcea241 \
+                    size    12680
+
+use_autoreconf      yes
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig \
+                    port:xorg-util-macros
+
+depends_lib         port:xorg-libXaw

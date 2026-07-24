@@ -1,0 +1,75 @@
+--- src/font_fallback.cpp	2026-03-05 20:23:57.000000000 +0800
++++ src/font_fallback.cpp	2026-06-28 02:20:48.000000000 +0800
+@@ -36,7 +36,7 @@
+ 
+   // Validate that FreeType can load the substitute font
+   if (result != nullptr && !cache.load_font(result->path, result->index)) {
+-#ifdef __APPLE__
++#if defined(__APPLE__) && defined(__clang__) // Cocoa code in this package cannot be compiled with gcc
+     // Save info before deleting
+     std::string unloadable_family(result->family);
+     std::string unloadable_path(result->path);
+
+--- configure	2026-03-05 20:23:57.000000000 +0800
++++ configure	2026-06-28 02:10:31.000000000 +0800
+@@ -11,34 +11,11 @@
+ PKG_RPM_NAME="fontconfig-devel"
+ PKG_CSW_NAME="fontconfig_dev"
+ PKG_APK_NAME="harfbuzz-dev fribidi-dev"
+-PKG_BREW_NAME="freetype"
++PKG_MP_NAME="freetype"
+ PKG_TEST_HEADER="<fontconfig/fontconfig.h>"
+ PKG_LIBS="-lfontconfig -lfreetype"
+ PKG_OBJCXXFLAGS=""
+ 
+-# Alternative config on MacOS for native APIs
+-if [ `uname` = "Darwin" ]; then
+-SYS="DARWIN"
+-PKG_CONFIG_NAME="--static freetype2"
+-PKG_TEST_HEADER="<ft2build.h>"
+-PKG_LIBS="-lfreetype"
+-PKG_OBJCXXFLAGS="-fobjc-arc"
+-
+-RBIN="${R_HOME}/bin${R_ARCH_BIN}/R"
+-OBJC=`"$RBIN" CMD config OBJC`
+-if [ -z "$OBJC" ]; then
+-  echo "--------------------------- [SYSTEMFONTS] -----------------------------"
+-  echo "Configuration failed to find an Objective-C compiler."
+-  echo "  systemfonts require the use of Objective-C code on macOS to access"
+-  echo "  the system-native font matching API."
+-  echo "  Please ensure that your build system is setup with an Objective-C"
+-  echo "  compiler to install systemfonts on macOS"
+-  echo "-----------------------------------------------------------------------"
+-  exit 1
+-fi
+-
+-fi
+-
+ # Use pkg-config if available
+ if [ "`command -v pkg-config`" ]; then
+   PKGCONFIG_CFLAGS=`pkg-config --cflags --silence-errors ${PKG_CONFIG_NAME}`
+@@ -54,15 +31,6 @@
+   echo "Found pkg-config cflags and libs!"
+   PKG_CFLAGS=${PKGCONFIG_CFLAGS}
+   PKG_LIBS=${PKGCONFIG_LIBS}
+-elif [ `uname` = "Darwin" ]; then
+-  test ! "$CI" && brew --version 2>/dev/null
+-  if [ $? -eq 0 ]; then
+-    BREWDIR=`brew --prefix`
+-    PKG_CFLAGS="-I$BREWDIR/include -I$BREWDIR/include/freetype2"
+-  else
+-    curl -sfL "https://autobrew.github.io/scripts/freetype" > autobrew
+-    . ./autobrew
+-  fi
+ fi
+ 
+ # For debugging
+@@ -85,7 +53,7 @@
+   echo " * rpm: $PKG_RPM_NAME (Fedora, EPEL)"
+   echo " * csw: $PKG_CSW_NAME (Solaris)"
+   echo " * apk: $PKG_APK_NAME (Alpine)"
+-  echo " * brew: $PKG_BREW_NAME (OSX)"
++  echo " * MacPorts/PPCPorts: $PKG_MP_NAME (macOS)"
+   echo "If $PKG_CONFIG_NAME is already installed, check that 'pkg-config' is in your"
+   echo "PATH and PKG_CONFIG_PATH contains a $PKG_CONFIG_NAME.pc file. If pkg-config"
+   echo "is unavailable you can set INCLUDE_DIR and LIB_DIR manually via:"

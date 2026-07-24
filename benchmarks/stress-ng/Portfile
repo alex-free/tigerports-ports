@@ -1,0 +1,58 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:et:sw=4:ts=4:sts=4
+
+PortSystem      1.0
+PortGroup       github 1.0
+PortGroup       legacysupport 1.1
+PortGroup       makefile 1.0
+
+# core-helper.c: error: passing argument 3 of 'scandir' from incompatible pointer type
+legacysupport.newest_darwin_requires_legacy 12
+
+github.setup    ColinIanKing stress-ng 0.21.04 V
+revision        0
+categories      benchmarks sysutils
+maintainers     {i0ntempest @i0ntempest} openmaintainer
+license         GPL-2
+
+description     System stress-test utility 
+long_description \
+                ${name} will stress test a computer system in various selectable ways. \
+                It was designed to exercise various physical subsystems of a computer \
+                as well as the various operating system kernel interfaces.
+
+checksums       rmd160  276e34b7f5d60f1b72c104f174652533a0472179 \
+                sha256  a328ba050bd3014f07a3265fb6c1aab071ae942dfad75c7459cce45a987869e1 \
+                size    8503336
+github.tarball_from archive
+
+installs_libs   no
+
+post-patch {
+    reinplace "s|shell mktemp|shell gmktemp|g" ${worksrcpath}/Makefile.config
+    reinplace "s|BINDIR=/usr/bin|BINDIR=${prefix}/bin|" ${worksrcpath}/Makefile
+    reinplace "s|MANDIR=/usr/share/man/man1|MANDIR=${prefix}/share/man/man1|" ${worksrcpath}/Makefile
+    reinplace "s|JOBDIR=/usr/share/stress-ng/example-jobs|JOBDIR=${prefix}/share/stress-ng/example-jobs|" ${worksrcpath}/Makefile
+    reinplace "s|BASHDIR=/usr/share/bash-completion/completions|BASHDIR=${prefix}/share/bash-completion/completions|" ${worksrcpath}/Makefile
+}
+
+if {${os.platform} eq "darwin" && ${os.major} < 13} {
+    configure.cflags-append \
+                -D_MACPORTS_LEGACY_COMPATIBLE_SCANDIR=1
+    build.cmd-prepend \
+                CFLAGS='${configure.cflags}'
+}
+
+depends_build-append \
+                path:libexec/coreutils/libstdbuf.so:coreutils
+depends_lib-append \
+                port:gmp \
+                port:judy \
+                path:lib/libjpeg.dylib:libjpeg-turbo \
+                port:mesa \
+                port:mpfr \
+                port:xxhashlib \
+                port:xz \
+                port:zlib
+
+compiler.blacklist-append \
+                *gcc-4.*

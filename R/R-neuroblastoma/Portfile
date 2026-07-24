@@ -1,0 +1,18 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran r-project neuroblastoma 2023.9.3
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Neuroblastoma copy number profiles
+long_description    {*}${description}
+checksums           rmd160  0086fe98e9f9b4051332f4855a887e6f8c5a6163 \
+                    sha256  3076d317455067bf55d6475119472ec4116461890624777bb1fc90d5b3f6c2a2 \
+                    size    8205771
+supported_archs     noarch
+
+test.run            yes

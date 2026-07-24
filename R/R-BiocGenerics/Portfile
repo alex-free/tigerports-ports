@@ -1,0 +1,19 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             bioconductor Bioconductor BiocGenerics 0.58.1
+revision            0
+categories-append   bioconductor
+platforms           {darwin any}
+maintainers         nomaintainer
+license             Artistic-2
+description         The package defines many S4 generic functions
+long_description    {*}${description} used in Bioconductor.
+checksums           rmd160  34a98ec0ac61f216f2665b3da37afc702cfb3ca0 \
+                    sha256  6911559f0b2b5a07081cd21b6738aa4c6048509b23425cc3ebafc0b4cb011a98 \
+                    size    57572
+supported_archs     noarch
+
+depends_lib-append  port:R-generics

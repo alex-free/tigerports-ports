@@ -1,0 +1,49 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to github once updated there:
+R.setup             cran easystats correlation 0.8.8
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Methods for correlation analysis
+long_description    {*}${description}
+homepage            https://easystats.github.io/correlation
+checksums           rmd160  3518f281b3647b98b47771266b81fcd9acf4f882 \
+                    sha256  00cbc42d2310b5941a362feb7e81fb8f67d1e9548a5877117f798d67b867aad4 \
+                    size    348782
+supported_archs     noarch
+
+depends_lib-append  port:R-bayestestR \
+                    port:R-datawizard \
+                    port:R-insight \
+                    port:R-parameters
+
+depends_test-append port:R-BayesFactor \
+                    port:R-energy \
+                    port:R-ggplot2 \
+                    port:R-ggraph \
+                    port:R-gt \
+                    port:R-Hmisc \
+                    port:R-knitr \
+                    port:R-lme4 \
+                    port:R-mbend \
+                    port:R-openxlsx2 \
+                    port:R-polycor \
+                    port:R-poorman \
+                    port:R-ppcor \
+                    port:R-psych \
+                    port:R-rmarkdown \
+                    port:R-rmcorr \
+                    port:R-rstanarm \
+                    port:R-see \
+                    port:R-testthat \
+                    port:R-tidygraph \
+                    port:R-wdm \
+                    port:R-WRS2
+
+test.run            yes

@@ -1,0 +1,79 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem                  1.0
+PortGroup                   cmake 1.1
+PortGroup                   conflicts_build 1.0
+PortGroup                   gitlab 1.0
+PortGroup                   mpi 1.0
+PortGroup                   muniversal 1.1
+
+gitlab.instance             https://gitlab.inria.fr
+gitlab.setup                scotch scotch 7.0.12 v
+revision                    0
+categories                  science math
+maintainers                 {mcalhoun @MarcusCalhoun-Lopez} openmaintainer
+license                     CeCILL-C
+
+description                 software package for graph and mesh/hypergraph \
+                            partitioning and sparse matrix ordering
+long_description            Scotch is a {*}${description}.
+
+checksums                   rmd160  53bb9c5c8ff8363bf2b86fd1bbd1ec5a0e11690a \
+                            sha256  1331a070c0d963b5c43d3905feaf33a8f24c9da8a1fa00d0de9a99165656ea4b \
+                            size    7807762
+
+# The build fails if it finds scotch already installed:
+# dyld: lazy symbol binding failed: Symbol not found: _SCOTCH_graphDump
+conflicts_build             ${name}
+
+compilers.choose            cc fc
+mpi.setup                   require
+
+depends_build-append        port:bison \
+                            port:flex
+depends_skip_archcheck-append \
+                            bison \
+                            flex
+
+depends_lib-append          port:bzip2 \
+                            port:xz \
+                            port:zlib
+
+depends_test-append         port:mumps
+
+pre-configure {
+    if {[mpi_variant_isset]} {
+        configure.args-append \
+                            -DMPIEXEC_EXECUTABLE=${prefix}/bin/${mpi.exec}
+    }
+}
+
+# MPI implementation is not threadsafe, do not use DSCOTCH_PTHREAD
+configure.args-append       -DMPI_THREAD_MULTIPLE=OFF
+
+# libScotchMeTiS header stubs conflicts with original MeTiS headers
+configure.args-append       -DINSTALL_METIS_HEADERS=OFF
+
+# Build a shared library, not static!
+configure.args-append       -DBUILD_SHARED_LIBS=ON
+
+# dyld: Library not loaded: @rpath/libscotch.7.0.dylib
+build.env-append            DYLD_LIBRARY_PATH=${cmake.build_dir}/lib
+
+post-destroot {
+    if {${muniversal.build_arch} ne ${configure.build_arch}} {
+        xinstall -d -m 0755 ${destroot}${prefix}/include/${muniversal.build_arch}
+        foreach hfile {scotchf.h ptscotchf.h} {
+            if {[file exists ${destroot}${prefix}/include/${hfile}]} {
+                move ${destroot}${prefix}/include/${hfile} ${destroot}${prefix}/include/${muniversal.build_arch}
+            }
+        }
+    }
+}
+
+test.run                    yes
+
+pre-test {
+    # test infrastructure uses /bin/ps for job parallelism which is forbidden by sandboxing
+    append portsandbox_profile " (allow process-exec (literal \"/bin/ps\") (with no-profile))"
+}

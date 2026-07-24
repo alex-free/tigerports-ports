@@ -1,0 +1,48 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran thomasp85 gganimate 1.0.11 v
+revision            1
+categories-append   graphics
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Grammar of animated graphics
+long_description    {*}${description}
+homepage            https://gganimate.com
+checksums           rmd160  8bd8d9a4298063fc582338d2a2967b64e9ac26b8 \
+                    sha256  92488c872b4a9da0e30ede71e81661ee335b84f20e12a1e70332ae53aeaaeaca \
+                    size    4550597
+# github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-cli \
+                    port:R-ggplot2 \
+                    port:R-glue \
+                    port:R-lifecycle \
+                    port:R-progress \
+                    port:R-rlang \
+                    port:R-scales \
+                    port:R-stringi \
+                    port:R-transformr \
+                    port:R-tweenr \
+                    port:R-vctrs
+
+patchfiles          patch-no-gifski.diff
+
+depends_test-append port:R-av \
+                    port:R-base64enc \
+                    port:R-covr \
+                    port:R-htmltools \
+                    port:R-knitr \
+                    port:R-magick \
+                    port:R-ragg \
+                    port:R-rmarkdown \
+                    port:R-sf \
+                    port:R-svglite \
+                    port:R-testthat
+
+test.run            yes

@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github krlmlr bindrcpp 0.2.4 v
+revision            1
+categories-append   devel
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Rcpp interface to active bindings
+long_description    {*}${description}
+homepage            https://krlmlr.github.io/bindrcpp
+checksums           rmd160  5ae160490c6b68a6dab8e3988f26d69b9f9a3bfe \
+                    sha256  0485efcaa724bea5870ef3f1e75d61f6ab391de2b393455c976666d378d70187 \
+                    size    32000
+github.tarball_from archive
+
+depends_lib-append  port:R-bindr \
+                    port:R-Rcpp
+
+depends_test-append port:R-testthat
+
+test.run            yes

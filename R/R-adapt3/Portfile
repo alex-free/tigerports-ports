@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran dormancy1 adapt3 1.0.1
+revision            1
+maintainers         nomaintainer
+license             GPL-3
+description         Adaptive dynamics and community matrix model projections
+long_description    {*}${description}
+homepage            https://github.com/dormancy1/adapt3
+checksums           rmd160  88185d6cbf6d6e8d98945ff3f59d4cc66a38d1f9 \
+                    sha256  b9d671edb3fa5c3e935c2b8658069198f621a8d841b4763d89202480cc66972c \
+                    size    635498
+
+depends_lib-append  port:R-BH \
+                    port:R-lefko3 \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown
+
+test.run            yes

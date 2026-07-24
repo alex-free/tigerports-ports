@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           common_lisp 1.0
+PortGroup           github 1.0
+
+github.setup        AccelerationNet access 346e97b3539c7eff645868a87acf0b902c629ad4
+name                cl-access
+version             20250416
+revision            0
+
+categories-append   www devel
+maintainers         nomaintainer
+license             BSD
+
+description         A common lisp library to unify access \
+                    to common dictionary-like data-structures
+long_description    {*}${description}
+
+checksums           rmd160  573b4ca4853ac659b02d93e9731f2d9c24951d01 \
+                    sha256  5025ff4016979966e6ce1195c4176bef652a2ebb4934101655ffc988d3bbb3e9 \
+                    size    15228
+github.tarball_from archive
+
+depends_lib-append  port:cl-alexandria \
+                    port:cl-closer-mop \
+                    port:cl-iterate \
+                    port:cl-lisp-unit2 \
+                    port:cl-ppcre

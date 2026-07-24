@@ -1,0 +1,46 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran vdblab FLORAL 0.5.0
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-3+
+description         Fit log-ratio lasso regression for compositional data
+long_description    {*}${description}
+homepage            https://vdblab.github.io/FLORAL
+checksums           rmd160  d5a697512423a46b3ec3728943ae415c0b2e20fe \
+                    sha256  effcd9fe3d21c2de797d58440f54a2f7d4d5029936dd54cf6891e12bdd9418c3 \
+                    size    2516075
+
+depends_lib-append  port:R-ast2ast \
+                    port:R-caret \
+                    port:R-doParallel \
+                    port:R-doRNG \
+                    port:R-dplyr \
+                    port:R-foreach \
+                    port:R-ggplot2 \
+                    port:R-glmnet \
+                    port:R-msm \
+                    port:R-mvtnorm \
+                    port:R-phyloseq \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-RcppProgress \
+                    port:R-reshape \
+                    port:R-survcomp
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-covr \
+                    port:R-knitr \
+                    port:R-patchwork \
+                    port:R-rmarkdown \
+                    port:R-spelling \
+                    port:R-testthat \
+                    port:R-tidyverse
+
+test.run            yes

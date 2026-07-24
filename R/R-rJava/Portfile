@@ -1,0 +1,36 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           active_variants 1.1
+PortGroup           R 1.0
+
+R.setup             cran s-u rJava 1.0-14
+revision            1
+categories-append   java
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             LGPL-2.1
+description         Low-level R-to-Java interface
+long_description    ${name} is a low-level interface to Java VM.
+homepage            https://github.com/s-u/rJava
+checksums           rmd160  fed2af80c584fe434db0f5b522b0d4df40587689 \
+                    sha256  b9c9e324d2846e7b3ec22992271d27252d3cd6291491931f9362bbb78bc8c355 \
+                    size    636254
+
+require_active_variants R java
+
+if {${configure.build_arch} in [list ppc ppc64]} {
+    set javahome        /Library/Java/JavaVirtualMachines/openjdk8/Contents/Home
+    depends_lib-append  port:openjdk8
+    build.env-append    JAVA_HOME=${javahome}
+    build.args-append   --configure-args="--disable-dynload --enable-headless"
+    post-destroot {
+        system "install_name_tool -change @rpath/libjvm.dylib \
+            ${prefix}${javahome}/jre/lib/server/libjvm.dylib \
+            ${destroot}${packages}/rJava/libs/rJava.so"
+    }
+} else {
+    PortGroup           java 1.0
+
+}
+
+test.run            yes

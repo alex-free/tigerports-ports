@@ -1,0 +1,60 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+PortGroup           openssl 1.0
+
+# O_CLOEXEC: https://github.com/rakshasa/libtorrent/issues/845
+legacysupport.newest_darwin_requires_legacy 10
+
+github.setup        rakshasa libtorrent 0.16.18 v
+revision            0
+conflicts           libtorrent-devel
+categories          net devel
+maintainers         nomaintainer
+license             {GPL-2+ OpenSSLException}
+description         BitTorrent library
+long_description    libTorrent is a BitTorrent library written in C++ \
+                    for *nix. It is designed to avoid redundant copying and \
+                    storing of data that other clients and libraries suffer from.
+
+checksums           rmd160  be7f1a158a76e9afb84c3a1f4a2ff9a77a9571c4 \
+                    sha256  c4023f1bf59e14ee01aa912bc2d69092cd70a479bbca693ec0d5b47e9445dade \
+                    size    496655
+github.tarball_from archive
+
+use_autoreconf      yes
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+
+# malformed object (unknown load command 2)
+if {${os.platform} eq "darwin" && ${os.major} <= 10} {
+    depends_build-append port:cctools
+}
+
+depends_lib-append  port:curl \
+                    port:zlib
+
+# PortGroup           active_variants 1.1
+# Provisionally not required anymore.
+# https://github.com/rakshasa/rtorrent/wiki/Installing#non-blocking-hostname-lookup-in-curl
+# require_active_variants curl ares
+
+compiler.cxx_standard   2017
+
+configure.args      --disable-debug
+
+if {${os.platform} ne "linux"} {
+    configure.args-append \
+                    --with-kqueue \
+                    --without-epoll
+}
+
+post-destroot {
+    set docdir ${prefix}/share/doc/${name}
+    xinstall -d ${destroot}${docdir}
+    xinstall -m 0644 -W ${worksrcpath} AUTHORS COPYING README.md \
+        ${destroot}${docdir}
+}

@@ -1,0 +1,18 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran bbnkmp txtplot 1.0-5
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             {LGPL-2 LGPL-2.1 LGPL-3}
+description         Text-based plots
+long_description    {*}${description}
+checksums           rmd160  d5ff7ecdd0c4e7fbee46dcf501790672109f488e \
+                    sha256  cebb49c9532b97ddfeef84c82445d8ca12117bf06f21060e692b8d6fd3cab205 \
+                    size    11899
+supported_archs     noarch
+
+test.run            yes

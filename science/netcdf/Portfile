@@ -1,0 +1,132 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem                  1.0
+PortGroup                   cmake 1.1
+PortGroup                   github 1.0
+PortGroup                   legacysupport 1.1
+PortGroup                   mpi 1.0
+PortGroup                   muniversal 1.0
+
+# strnlen
+legacysupport.newest_darwin_requires_legacy 10
+
+epoch                       3
+github.setup                Unidata netcdf-c 4.10.1 v
+revision                    0
+name                        netcdf
+maintainers                 {takeshi @tenomoto} openmaintainer
+categories                  science
+license                     Permissive
+
+description                 Libraries for array-oriented scientific data
+long_description \
+    NetCDF (network Common Data Form) is a set of software libraries \
+    and machine-independent data formats that support the creation, \
+    access and sharing of array-oriented scientific data.
+
+homepage                    https://www.unidata.ucar.edu/software/netcdf
+
+# Fetch from upstream release archive, not github.
+# Distfile standard suffix is .tar.gz, the MacPorts default.
+master_sites                https://downloads.unidata.ucar.edu/netcdf-c/${version}
+distname                    netcdf-c-${version}
+
+checksums                   rmd160  0cdd9a6e1ac028720e0ad0d4cdceb7ebc1d0bf87 \
+                            sha256  db3b69ff4a5ee1a7d79a5c36664d2128b752c266e966369fcf7311ec5f927564 \
+                            size    13360012
+
+# Do not hardcode universal archs:
+patchfiles-append           patch-CMakeLists.txt
+
+compilers.choose            cc cpp cxx
+mpi.setup
+
+# m4 1.4.2 which comes with Mac OS X 10.4 is too old:
+# https://trac.macports.org/ticket/47545
+# And m4 wasn't included in the Xcode 15.3 version of the command line tools:
+# https://trac.macports.org/ticket/69467#comment:6
+# https://trac.macports.org/ticket/69639#comment:1
+depends_build-append        port:m4
+
+configure.args-append       -DCMAKE_PREFIX_PATH=${worksrcpath}/cmake/modules \
+                            -DNC_M4=${prefix}/bin/gm4 \
+                            -DNETCDF_ENABLE_CDF5=OFF \
+                            -DNETCDF_ENABLE_DAP=OFF \
+                            -DNETCDF_ENABLE_NCZARR=OFF \
+                            -DNETCDF_ENABLE_NETCDF_4=OFF \
+                            -DNETCDF_ENABLE_S3=OFF
+
+# https://trac.macports.org/ticket/65672
+compiler.blacklist-append   *gcc-4.* {clang < 400}
+
+default_variants            +dap +nczarr +netcdf4
+
+if {(!${universal_possible} || ![variant_isset universal]) && (${build_arch} == "x86_64" || ${build_arch} == "ppc64")} {
+    default_variants-append +cdf5
+}
+
+if {[variant_isset netcdf4]} {
+    mpi.enforce_variant     hdf5
+}
+
+variant cdf5 description "Enable support for cdf5" {
+    configure.args-replace  -DNETCDF_ENABLE_CDF5=OFF -DNETCDF_ENABLE_CDF5=ON
+}
+
+variant dap description "Enable dap" {
+    depends_lib-append      port:curl \
+                            port:libxml2
+    configure.args-replace  -DNETCDF_ENABLE_DAP=OFF -DNETCDF_ENABLE_DAP=ON
+    configure.args-append   -DENABLE_DAP_REMOTE_TESTS=OFF
+}
+
+variant hdf4 description "Enable support for hdf4" {
+    depends_lib-append      port:hdf4 \
+                            path:include/turbojpeg.h:libjpeg-turbo
+    configure.args-append   -DNETCDF_ENABLE_HDF4=ON
+}
+
+variant nczarr description "Enable support for AWS S3" {
+    depends_lib-append      port:libzip
+    configure.args-replace  -DNETCDF_ENABLE_NCZARR=OFF -DNETCDF_ENABLE_NCZARR=ON
+}
+
+variant netcdf4 description "Enable support for netcdf-4 API" {
+    depends_lib-append      port:blosc \
+                            port:bzip2 \
+                            port:hdf5 \
+                            port:zlib \
+                            port:zstd
+    configure.args-replace  -DNETCDF_ENABLE_NETCDF_4=OFF -DNETCDF_ENABLE_NETCDF_4=ON
+}
+
+variant s3 description "Enable support for AWS S3" {
+    depends_lib-append      port:aws-sdk-cpp
+    configure.args-replace  -DNETCDF_ENABLE_S3=OFF -DNETCDF_ENABLE_S3=ON
+    configure.args-append   -DNETCDF_ENABLE_S3_AWS=ON
+}
+
+if {${universal_possible} && [variant_isset universal]} {
+    pre-configure {
+        # record configure date (as cmake does) but ensure date will be the same for achitectures
+        # helps ensure libnetcdf.settings is the same for all architectures
+        set date [exec "/bin/date"]
+        reinplace "s|@CONFIG_DATE@|${date}|g" ${worksrcpath}/libnetcdf.settings.in
+    }
+
+    merger-post-destroot {
+        foreach arch ${universal_archs_to_use} {
+            reinplace "s|${build.dir}-${arch}|${build.dir}|g" ${destroot}-${arch}${prefix}/lib/libnetcdf.settings
+        }
+    }
+}
+
+if {[mpi_variant_isset]} {
+    configure.cflags-append -DHDF5_PARALLEL
+    configure.args-append   -DENABLE_PARALLEL_TESTS=ON
+}
+
+test.run                    yes
+test.target                 test
+
+github.livecheck.regex  {([^"rba]+)}

@@ -1,0 +1,34 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Installing from GitHub source is a mess, use CRAN.
+R.setup             cran paws-r paws.common 0.8.8 paws.common-v
+revision            1
+categories-append   www
+maintainers         nomaintainer
+license             Apache-2
+description         Paws low-level Amazon Web Services API
+long_description    {*}${description}
+homepage            https://github.com/paws-r/paws
+checksums           rmd160  26c5cfbfc8440f914024a261e0514e7d780a2223 \
+                    sha256  eeb4f97b5973694f9c26d3c68665a8bd98618f7040210b3f612e7423c2fce8a6 \
+                    size    154321
+
+depends_lib-append  port:R-base64enc \
+                    port:R-curl \
+                    port:R-digest \
+                    port:R-httr2 \
+                    port:R-jsonlite \
+                    port:R-Rcpp \
+                    port:R-xml2
+
+depends_test-append port:R-covr \
+                    port:R-crayon \
+                    port:R-mockery \
+                    port:R-rstudioapi \
+                    port:R-testthat \
+                    port:R-withr
+
+test.run            yes

@@ -1,0 +1,71 @@
+#-*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+
+# sincos
+legacysupport.newest_darwin_requires_legacy 12
+
+github.setup        zapping-vbi zvbi 0.2.44 v
+revision            0
+categories          multimedia
+maintainers         nomaintainer
+license             GPL-2+
+
+description         Library to capture and decode vertical blanking interval data
+long_description    \
+        The Zapping VBI library, in short ZVBI, provides functions to capture \
+        and decode VBI data. The vertical blanking interval (VBI) \
+        is an interval in a television signal that temporarily suspends \
+        transmission of the signal before next screen field begins. The VBI \
+        can be used to carry data, since anything sent during the VBI would \
+        naturally not be displayed. This includes Closed Captions, Teletext, \
+        VPS, WSS and XDS.
+
+checksums           rmd160  10affdc61f4f59b30c9365aa791201f15c3443e5 \
+                    sha256  bca620ab670328ad732d161e4ce8d9d9fc832533cb7440e98c50e112b805ac5e \
+                    size    942350
+github.tarball_from archive
+
+patchfiles-append   patch-i386.diff
+
+# This patch breaks the build with Xcode gcc.
+# https://trac.macports.org/ticket/68520
+if {![string match *gcc-4.* ${configure.compiler}]} {
+    patchfiles-append \
+                    endian.patch
+}
+
+# We are patching configure.in.
+use_autoreconf      yes
+autoreconf.args     -fvi
+
+depends_build-append \
+                    port:gettext
+
+depends_lib-append  port:gettext-runtime \
+                    port:libiconv \
+                    port:libpng
+
+configure.args      --without-x
+
+# See: https://trac.macports.org/ticket/64212
+# Also: https://trac.macports.org/ticket/70160
+configure.args-append \
+                    --disable-rpath
+
+variant x11 {
+    depends_build-append \
+                    port:xorg-xorgproto
+
+    depends_lib-append \
+                    port:xorg-libice \
+                    port:xorg-libX11
+
+    configure.args-replace \
+                    --without-x --with-x
+    configure.args-append \
+                    --x-includes=${prefix}/include \
+                    --x-libraries=${prefix}/lib
+}

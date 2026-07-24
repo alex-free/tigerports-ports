@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           fortran 1.0
+
+name                powellopt
+github.setup        jacobwilliams PowellOpt 0987cd09d695cec968a3d02c8230d4ce5af33533
+version             2025.03.18
+revision            1
+categories-append   math
+license             BSD
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+description         Optimization algorithms by M.J.D. Powell
+long_description    This is a collection of derivative-free optimization algorithms by M.J.D. Powell.
+checksums           rmd160  4c9c5ad7b922aef5a0e4307f5c1ec6dd8995d7a8 \
+                    sha256  80eb370f64fd8da6d228ae93dc37bd9a267d35f85d7cef806bb5840b01cb6eef \
+                    size    87914
+github.tarball_from archive
+
+post-destroot {
+    set docdir ${prefix}/share/doc/${name}
+    xinstall -d ${destroot}${docdir}
+    xinstall -m 0644 -W ${worksrcpath} LICENSE.md README.md ${destroot}${docdir}
+}
+
+test.run            yes

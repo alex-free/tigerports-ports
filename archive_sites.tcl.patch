@@ -1,0 +1,14 @@
+--- _resources/port1.0/fetch/archive_sites.tcl.orig	2026-07-24 17:08:06.000000000 -0600
++++ _resources/port1.0/fetch/archive_sites.tcl	2026-07-24 17:08:57.000000000 -0600
+@@ -38,9 +38,11 @@
+ variable ykf.ca      http
+ variable fcix.net    http
+ variable sjtu.edu.cn ${letsencrypt_https_only}
++variable tigerports.com http
+ 
+ # Keep the primary packages server first in the list
+ set sites(macports_archives) [lsearch -all -glob -inline -not "
++    ${tigerports.com}://tigerports.com/macports/packages/:nosubdir
+     ${fastly}://packages.macports.org/:nosubdir
+     ${nue.de}://nue.de.packages.macports.org/:nosubdir
+     ${fcix.net}://mirror.fcix.net/macports/packages/:nosubdir

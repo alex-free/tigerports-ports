@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran draspiess propagate 1.0-7
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Propagation of uncertainty using higher-order Taylor expansion and Monte Carlo simulation
+long_description    {*}${description}
+checksums           rmd160  9a68eefe781d942cf0b14ae77b00f50bb5fadd7f \
+                    sha256  7fdd9ea33b35fd9c6aa56befbe79f8a9f3e675d8c42d26155438c1bf8ee52b48 \
+                    size    50405
+
+depends_lib-append  port:R-ff \
+                    port:R-minpack.lm \
+                    port:R-Rcpp \
+                    port:R-tmvtnorm
+
+compilers.setup     require_fortran
+
+test.run            yes

@@ -1,0 +1,50 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran ngreifer WeightIt 1.4.0
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Weighting for covariate balance in observational studies
+long_description    {*}${description}
+homepage            https://ngreifer.github.io/WeightIt
+checksums           rmd160  8449685aa7450fc2793ce168fe55332e1972573c \
+                    sha256  6c1f836125d63c015d034525e3ca3f4d8e084519e5c3f2868c1f3e08cf62dd8d \
+                    size    1007213
+supported_archs     noarch
+
+depends_lib-append  port:R-chk \
+                    port:R-cobalt \
+                    port:R-crayon \
+                    port:R-generics \
+                    port:R-ggplot2 \
+                    port:R-rlang \
+                    port:R-sandwich
+
+depends_test-append port:R-brglm2 \
+                    port:R-broom \
+                    port:R-CBPS \
+                    port:R-dbarts \
+                    port:R-dfidx \
+                    port:R-enrichwith \
+                    port:R-fwb \
+                    port:R-gbm \
+                    port:R-knitr \
+                    port:R-logistf \
+                    port:R-marginaleffects \
+                    port:R-mclogit \
+                    port:R-misaem \
+                    port:R-mlogit \
+                    port:R-MNP \
+                    port:R-optweight \
+                    port:R-osqp \
+                    port:R-rmarkdown \
+                    port:R-rootSolve \
+                    port:R-SuperLearner \
+                    port:R-testthat \
+                    port:R-waldo
+
+test.run            yes

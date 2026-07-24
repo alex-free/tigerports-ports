@@ -1,0 +1,19 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran ggb11111111 DLMRMV 0.2.0
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             Apache-2
+description         Distributed Linear Regression Models with Response Missing Variables
+long_description    {*}${description}
+checksums           rmd160  2a66b882fc3351a71fab63cf1851e42eeef4856a \
+                    sha256  f725ab9f7721c0a8eddc46eaa4eac278b6639e459c527c0fb850b4b3c4445eb7 \
+                    size    15231
+supported_archs     noarch
+
+test.run        yes

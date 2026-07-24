@@ -1,0 +1,51 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           conflicts_build 1.0
+PortGroup           R 1.0
+
+R.setup             github r-spatial lwgeom 34d30eb1742a2093272f47fbf6fba1f4506495bf
+version             0.2-16
+revision            1
+categories-append   math gis
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2
+description         Bindings to selected liblwgeom functions for simple features
+long_description    {*}${description}
+checksums           rmd160  d40f2f6eb7d85fe520fccb842844be167b9e5e6e \
+                    sha256  e9d64061c254d07578c68efda112114a9e41a315a6fe0670e958abcc68f9411a \
+                    size    468668
+github.tarball_from archive
+
+# The build may opportunistically pick wrong libs, in violation of configure args.
+conflicts_build     gdal geos
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+
+set deproot         ${prefix}/libexec/R
+
+depends_lib-append  port:geos-R \
+                    port:proj-R \
+                    port:R-Rcpp \
+                    port:R-sf \
+                    port:R-units \
+                    port:sqlite3
+
+# configure fails to do its job: https://github.com/r-spatial/sf/issues/2292
+build.env-append    CPPFLAGS=-I${deproot}/proj/include \
+                    DYLD_LIBRARY_PATH=${prefix}/lib/libgcc:${deproot}/proj/lib \
+                    PKG_CONFIG_PATH=${deproot}/proj/lib/pkgconfig
+
+build.args-append   --configure-args="--with-geos-config=${deproot}/geos/bin/geos-config \
+                        --with-proj-include=${deproot}/proj/include \
+                        --with-proj-lib=${deproot}/proj/lib \
+                        --with-proj-share=${deproot}/proj/share/proj"
+
+depends_test-append port:R-covr \
+                    port:R-geosphere \
+                    port:R-sp \
+                    port:R-testthat
+
+# Disable for now, need to find a less ugly way to pass args to testing than hard-patching configure.
+test.run            no

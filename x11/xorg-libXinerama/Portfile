@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem      1.0
+
+name            xorg-libXinerama
+version         1.1.6
+revision        0
+categories      x11 devel
+license         X11
+maintainers     {jeremyhu @jeremyhu} openmaintainer
+description     X.org libXinerama
+homepage        https://www.x.org
+platforms       darwin macosx
+long_description \
+                Xinerama protocol library
+master_sites    xorg:individual/lib/
+
+distname        libXinerama-${version}
+
+checksums       rmd160  41523aed6ad75217ff620c764f4986f071f5cb6b \
+                sha256  d00fc1599c303dc5cbc122b8068bdc7405d6fcb19060f4597fc51bd3a8be51d7 \
+                size    268440
+
+use_xz          yes
+
+depends_build   path:bin/pkg-config:pkgconfig
+
+depends_lib     port:xorg-libXext \
+                port:xorg-xorgproto
+
+configure.checks.implicit_function_declaration.whitelist-append strchr
+
+livecheck.type  regex
+livecheck.url   https://xorg.freedesktop.org/archive/individual/lib/?C=M&O=D
+livecheck.regex libXinerama-(\\d+(?:\\.\\d+)*)

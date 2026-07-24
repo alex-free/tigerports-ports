@@ -1,0 +1,56 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake   1.1
+PortGroup           github  1.0
+PortGroup           legacysupport 1.1
+
+# getline
+legacysupport.newest_darwin_requires_legacy 10
+
+github.setup        BLAKE3-team BLAKE3 1.8.5
+name                [string tolower ${github.project}]
+revision            0
+categories          security crypto
+license             Apache-2
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+description         ${name} is a cryptographic hash function
+long_description    {*}${description} that is much faster \
+                    than MD5, SHA-1, SHA-2, SHA-3 and BLAKE2, \
+                    secure, unlike MD5 and SHA-1, secure against \
+                    length extension, unlike SHA-2, highly parallelizable \
+                    and capable of verified streaming and incremental updates.
+checksums           rmd160  caff7cc5ac4fa3031fa7328ee740158ac6c35c05 \
+                    sha256  220bd81286e2a0585beac66d41ac3f4c2c33ae8a4e339fc88cf22d5e00514fe9 \
+                    size    269145
+github.tarball_from archive
+
+patch.pre_args-replace  -p0 -p1
+patchfiles          0001-Add-C-based-implementation-for-blake3-executable.patch \
+                    0002-cxx-standard.patch
+
+worksrcdir          ${worksrcpath}/c
+
+compiler.c_standard 1999
+
+depends_build-append    path:bin/pkg-config:pkgconfig
+
+configure.args-append   -DBLAKE3_BUILD_B3SUM=ON \
+                        -DBLAKE3_USE_TBB=OFF \
+                        -DBUILD_SHARED_LIBS=ON
+
+variant tbb description "Use TBB" {
+    depends_lib-append  port:onetbb
+
+    compiler.cxx_standard   2020
+
+    configure.args-replace \
+                        -DBLAKE3_USE_TBB=OFF \
+                        -DBLAKE3_USE_TBB=ON
+
+    # Undefined symbols for architecture ppc: "___atomic_fetch_add_8"
+    if {[string match *gcc* ${configure.compiler}] && ${configure.build_arch} in [list arm i386 ppc]} {
+        configure.ldflags-append \
+                        -latomic
+    }
+}

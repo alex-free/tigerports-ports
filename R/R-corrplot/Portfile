@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github taiyun corrplot 0.95 v
+revision            1
+categories-append   graphics
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Visualization of a correlation matrix
+long_description    {*}${description}
+checksums           rmd160  bb14f0967c613e3ca0eb39c295c9953b6d25e62b \
+                    sha256  da423e3d0d966d66ffd16ac87448035d3634e19e2500473265417b53395aa955 \
+                    size    249158
+github.tarball_from archive
+supported_archs     noarch
+
+depends_test-append port:R-knitr \
+                    port:R-magrittr \
+                    port:R-prettydoc \
+                    port:R-RColorBrewer \
+                    port:R-rmarkdown \
+                    port:R-seriation \
+                    port:R-testthat
+
+test.run            yes

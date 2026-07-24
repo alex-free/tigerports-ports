@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is outdated.
+R.setup             cran boettiger-lab sarsop 0.6.16
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2
+description         Approximate POMDP planning software
+long_description    {*}${description}
+homepage            https://github.com/boettiger-lab/sarsop
+checksums           rmd160  cc845180799406fe999c0f96a8bd157b89feb4ae \
+                    sha256  7892aa970f750c0e002e92bb0cd4d9e3209e5aab5d1f1841fb6f96d781e5a9ca \
+                    size    562756
+
+depends_lib-append  port:R-BH \
+                    port:R-digest \
+                    port:R-processx \
+                    port:R-xml2
+
+depends_test-append port:R-covr \
+                    port:R-knitr \
+                    port:R-roxygen2 \
+                    port:R-spelling \
+                    port:R-testthat
+
+test.run            yes

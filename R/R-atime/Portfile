@@ -1,0 +1,47 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran tdhock atime 2025.9.30
+revision            1
+categories-append   devel
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Asymptotic timing
+long_description    {*}${description}
+homepage            https://github.com/tdhock/atime
+checksums           rmd160  af142482c4ab154afbca483e91823c3a6e894da7 \
+                    sha256  061569f9afb0290d9ccf134e25cd4f7260e2f7744310786b68b20817efd09dc1 \
+                    size    697313
+supported_archs     noarch
+
+depends_lib-append  port:R-bench \
+                    port:R-data.table \
+                    port:R-git2r
+
+depends_test-append port:R-binsegRcpp \
+                    port:R-callr \
+                    port:R-changepoint \
+                    port:R-cumstats \
+                    port:R-directlabels \
+                    port:R-dplyr \
+                    port:R-fpop \
+                    port:R-ggplot2 \
+                    port:R-knitr \
+                    port:R-litedown \
+                    port:R-LOPART \
+                    port:R-markdown \
+                    port:R-nc \
+                    port:R-PeakSegDisk \
+                    port:R-RColorBrewer \
+                    port:R-re2 \
+                    port:R-readr \
+                    port:R-stringi \
+                    port:R-testthat \
+                    port:R-tibble \
+                    port:R-tidyr \
+                    port:R-wbs
+
+test.run            yes

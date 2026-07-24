@@ -1,0 +1,34 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+
+epoch               1
+github.setup        fontforge libuninameslist 20250909
+revision            0
+categories          devel textproc
+maintainers         nomaintainer
+license             Permissive
+
+description         Library of Unicode annotation data
+
+long_description    The Unicode consortium provides a file containing \
+                    annotations on many unicode characters. This library \
+                    contains a compiled version of this file so that programs \
+                    can access these data easily.
+
+checksums           rmd160  143a136514ee9f55862218716234adeee3db8754 \
+                    sha256  53ccad114c0a83ae2caace48e58b1b7f65d1a1f8010d7391a04e29938a40896b \
+                    size    1115461
+github.tarball_from archive
+
+use_autoreconf      yes
+
+post-destroot {
+    xinstall -m 755 -d ${destroot}${prefix}/share/doc/${name}
+    xinstall -m 644 -W ${worksrcpath} COPYING LICENSE README \
+        ${destroot}${prefix}/share/doc/${name}
+}
+
+test.run           yes
+test.target        check

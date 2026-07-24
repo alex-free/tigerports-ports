@@ -1,0 +1,72 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+
+name                    courier-authlib
+version                 0.73.1
+revision                0
+categories              security mail
+license                 GPL-3
+maintainers             nomaintainer
+description             Courier Authentication Library is a generic authentication API
+long_description        {*}${description}
+
+homepage                https://www.courier-mta.org/authlib
+master_sites            sourceforge:project/courier/authlib/${version}
+use_bzip2               yes
+checksums               rmd160  47233e6dd1bbc537eff7d2ee9b3dd8982b4c082f \
+                        sha256  2b65b6ef20de0ff0d8318bc3de7ccb4f77f8bf43e4f9adeacc7cad97fff3b297 \
+                        size    2768636
+
+depends_build-append    port:gmake \
+                        path:bin/pkg-config:pkgconfig
+
+set bdb_v               48
+
+depends_lib-append      port:db${bdb_v} \
+                        port:libidn2 \
+                        port:libtool \
+                        port:courier-unicode
+
+configure.args          --with-db=db \
+                        --without-authmysql \
+                        --without-authpgsql \
+                        --without-authldap \
+                        --without-authpam \
+                        -C
+
+configure.env-append    MAKE="gmake"
+configure.args-append   MAKE="gmake"
+
+configure.cflags-append -I${prefix}/include/db${bdb_v}
+configure.ldflags-append \
+                        -L${prefix}/lib/db${bdb_v}
+
+compiler.cxx_standard   2017
+configure.cxxflags-append \
+                        -std=gnu++17
+
+build.cmd               ${prefix}/bin/gmake
+
+post-extract {
+    foreach _file {install-sh config.guess config.sub} {
+        reinplace -E {s|#!/usr/bin/sh|#!/usr/bin/env sh|} ${_file}
+    }
+}
+
+# Configure still carries a defunct test which forces an invalid linker flag...
+patchfiles-append       patch-remove-dtag-configure.diff
+
+post-destroot {
+    system -W "${destroot}${prefix}/lib/courier-authlib" "rm -f *.a *.la"
+}
+
+startupitem.create      yes
+startupitem.start       "${prefix}/sbin/authdaemond start"
+startupitem.stop        "${prefix}/sbin/authdaemond stop"
+startupitem.restart     "${prefix}/sbin/authdaemond restart"
+startupitem.pidfile     clean ${prefix}/var/spool/authdaemon/pid
+
+# Limit the length of the minor and patch version components to avoid picking
+# up development versions (that contain a YYYYMMDD timestamp).
+livecheck.regex         "[quotemeta ${name}]-(\\d+(\\.\\d{1,7})*)[quotemeta ${extract.suffix}]"

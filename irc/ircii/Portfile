@@ -1,0 +1,47 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           openssl 1.0
+
+name                ircii
+conflicts           ircii-classic
+version             20240918
+revision            0
+categories          irc
+maintainers         nomaintainer
+license             BSD ISC
+
+description         IRC and ICB client
+long_description    The ircII program is a full screen, termcap based \
+                    interface to Internet Relay Chat. It gives full access to all \
+                    of the normal IRC functions, plus a variety of additional options.
+
+homepage            http://www.eterna23.net/ircii
+master_sites        https://ircii.warped.com/
+use_bzip2           yes
+checksums           rmd160  1b96f12395449545e099cd79c4d15832425976e4 \
+                    sha256  f4b9b380ba5143261a3ef219abfdef749c44ce4f669908da60bc3997af649ca9 \
+                    size    578232
+
+depends_lib-append  port:ncurses
+
+configure.env       COPY_DIRECTORY=tar
+configure.args-append \
+                    --with-default-server=irc.libera.chat:6697 \
+                    --with-default-ssl=VERIFY \
+                    --with-openssl
+
+# translat.h:24: error: redefinition of typedef ‘libiconv_t’
+compiler.c_standard 2011
+
+# TODO: switch this to legacy-support scandir workaround?
+# help.c:535:50: error: passing argument 3 of 'scandir' from incompatible pointer type [-Wincompatible-pointer-types]
+configure.cflags-append \
+                    -Wno-error=incompatible-pointer-types
+
+destroot.args-append \
+                    PREFIX=${prefix}
+
+livecheck.type      regex
+livecheck.url       ${homepage}
+livecheck.regex     current release is ircII (\[0-9\]+)

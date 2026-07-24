@@ -1,0 +1,51 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem                  1.0
+PortGroup                   cmake 1.1
+PortGroup                   github 1.0
+PortGroup                   legacysupport 1.1
+
+github.setup                strukturag libde265 1.1.1 v
+revision                    0
+categories                  multimedia
+license                     LGPL-3+
+maintainers                 {mcalhoun @MarcusCalhoun-Lopez} openmaintainer
+description                 open-source implementation of the h.265 video codec
+long_description            ${name} is an {*}${description}.
+
+checksums                   rmd160  d75082368db70c6653ba9d8492cc034eaa726de0 \
+                            sha256  fd48a927e94ed74fc7ce8829d222b9d8599fcbfe8b6448ba66705babc56ab219 \
+                            size    315566
+github.tarball_from         releases
+
+compiler.cxx_standard       2017
+# see https://trac.macports.org/ticket/59866
+legacysupport.newest_darwin_requires_legacy \
+                            9
+
+# dec265, a simple player for raw h.265 bitstreams.
+# sherlock265, a Qt-based video player.
+configure.args-append       -DBUILD_FRAMEWORK=OFF \
+                            -DBUILD_SHARED_LIBS=ON \
+                            -DENABLE_DECODER=OFF \
+                            -DENABLE_ENCODER=OFF \
+                            -DENABLE_SDL=OFF \
+                            -DENABLE_SHERLOCK265=OFF
+
+variant players description "Install example video players" {
+    PortGroup               active_variants 1.1
+
+    configure.args-replace  -DENABLE_DECODER=OFF -DENABLE_DECODER=ON \
+                            -DENABLE_SDL=OFF -DENABLE_SDL=ON
+
+    depends_lib-append      path:lib/pkgconfig/libswscale.pc:ffmpeg \
+                            port:libsdl2 \
+                            port:libvideogfx
+
+    if {${configure.build_arch} in [list ppc ppc64]} {
+        depends_lib-replace port:libsdl2 port:libsdl2-x11
+    }
+
+    require_active_variants path:lib/pkgconfig/libswscale.pc:ffmpeg x11
+    require_active_variants libvideogfx x11
+}

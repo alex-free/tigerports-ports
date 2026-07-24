@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran r-lib keyring 1.4.1 v
+revision            1
+categories-append   security
+maintainers         nomaintainer
+license             MIT
+description         Access the system credential store from R
+long_description    {*}${description}
+homepage            https://r-lib.github.io/keyring/index.html
+checksums           rmd160  c9b856ea769a4d52c4b0f85e754b7192aa38372e \
+                    sha256  fba2451fc8cd4494fc0025264b67be49a58e020e01c65e5d5d2c43f84f53ce84 \
+                    size    214959
+# github.tarball_from archive
+
+depends_lib-append  port:R-askpass \
+                    port:R-filelock \
+                    port:R-R6 \
+                    port:R-yaml
+
+patchfiles          patch-pre-Lion.diff
+
+depends_test-append port:R-callr \
+                    port:R-covr \
+                    port:R-openssl \
+                    port:R-testthat \
+                    port:R-withr
+test.run            yes

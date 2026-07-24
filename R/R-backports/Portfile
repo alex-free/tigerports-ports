@@ -1,0 +1,19 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is lagging behind.
+R.setup             cran r-lib backports 1.5.1
+revision            0
+categories-append   devel
+maintainers         nomaintainer
+license             {GPL-2 GPL-3}
+description         Reimplementations of functions introduced since R 3.0
+long_description    {*}${description}
+homepage            https://backports.r-lib.org
+checksums           rmd160  8d3b6284f6724291284831d718a67a4c7a260184 \
+                    sha256  b8eeeabe3c27e1486f43e0b18dae57f0e870dd7c6979d3668df76bf0d4735bad \
+                    size    30108
+
+test.run            yes

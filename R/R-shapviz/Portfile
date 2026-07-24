@@ -1,0 +1,36 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github ModelOriented shapviz 0.10.2
+revision            1
+categories-append   graphics
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         SHAP Visualizations
+long_description    {*}${description}
+homepage            https://modeloriented.github.io/shapviz
+checksums           rmd160  7ef421b3c217ecf7be7cc93f6c7fbc0e33d8333d \
+                    sha256  386eb9da7f278dee81a2d64cae01354cfb96221d7989bfc172459ff4b0c91aa9 \
+                    size    1160677
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-ggfittext \
+                    port:R-gggenes \
+                    port:R-ggplot2 \
+                    port:R-ggrepel \
+                    port:R-patchwork \
+                    port:R-rlang \
+                    port:R-xgboost
+
+depends_test-append port:R-fastshap \
+                    port:R-h2o \
+                    port:R-knitr \
+                    port:R-lightgbm \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

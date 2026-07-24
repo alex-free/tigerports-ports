@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran mwiggins DUToolkit 1.0.0
+revision            1
+categories-append   economics
+maintainers         nomaintainer
+license             GPL-2+
+description         Visualize and quantify decision uncertainty
+long_description    {*}${description}
+checksums           rmd160  2258cc920df18a868affe0d4697ef56c118cb752 \
+                    sha256  40a266413336641ca77384a0d98e7ee7dfe962f91d555e1e0c148f5d3ffd0c95 \
+                    size    1432549
+supported_archs     noarch
+
+depends_lib-append  port:R-ggdist \
+                    port:R-ggplot2 \
+                    port:R-ggtext \
+                    port:R-rlang \
+                    port:R-scales
+
+depends_test-append port:R-DT \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+# 4 tests fail due to ggplot2-related errors.
+# [ FAIL 4 | WARN 0 | SKIP 0 | PASS 101 ]
+test.run            yes

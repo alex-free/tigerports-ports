@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran bbr28 steadyICA 1.0.1
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         ICA and tests of independence via multivariate distance covariance
+long_description    {*}${description}
+checksums           rmd160  0614bff5c015c50fd96baf6446fbde173d279a89 \
+                    sha256  8c09e0aeca95fe0cdbf34fce5bc620c346e652c68101e75d08fe83cbb8cc7642 \
+                    size    25839
+
+depends_lib-append  port:R-clue \
+                    port:R-combinat \
+                    port:R-Rcpp
+
+depends_test-append port:R-energy \
+                    port:R-fastICA \
+                    port:R-irlba \
+                    port:R-JADE \
+                    port:R-ProDenICA
+
+test.run            yes

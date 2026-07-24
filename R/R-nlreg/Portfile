@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran alessandra.brazzale nlreg 1.2-4
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Higher-order inference for non-linear heteroscedastic models
+long_description    {*}${description}
+checksums           rmd160  d8d742d2b0aa08a5de6a8641320792e4de44cd4e \
+                    sha256  b3c08a9e8e9306cdb7700b930da09a22be3fb14e1b32ff6ac2d99539ea68c517 \
+                    size    288653
+supported_archs     noarch
+
+depends_lib-append  port:R-statmod
+
+depends_test-append port:R-cond \
+                    port:R-csampling \
+                    port:R-marg
+
+test.run            yes

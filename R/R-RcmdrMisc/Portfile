@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran r-project RcmdrMisc 2.10.1
+revision            1
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         R Commander Miscellaneous functions
+long_description    Various statistical, graphics and data-management functions \
+                    used by the Rcmdr package in the R Commander GUI for R.
+checksums           rmd160  2a240c383cff0ac054b79ffe85cacb5c38f901ff \
+                    sha256  a83b5055f0cc1591dbe7a6b95f2ef827585a0d31032b808a5a28cc2c079c4b7f \
+                    size    54456
+supported_archs     noarch
+
+depends_lib-append  port:R-abind \
+                    port:R-car \
+                    port:R-colorspace \
+                    port:R-e1071 \
+                    port:R-haven \
+                    port:R-Hmisc \
+                    port:R-nortest \
+                    port:R-readstata13 \
+                    port:R-readxl \
+                    port:R-sandwich
+
+depends_test-append port:R-carData
+
+test.run            yes

@@ -1,0 +1,46 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+
+name                openfst
+version             1.8.4
+categories          devel
+maintainers         nomaintainer
+license             Apache-2
+description         C++ finite-state transducers library
+long_description    OpenFst is a library for constructing, combining, \
+                    optimizing and searching weighted finite-state \
+                    transducers (FSTs).
+
+homepage            http://www.openfst.org
+master_sites        ${homepage}/twiki/pub/FST/FstDownload/
+
+checksums           rmd160  d3cc8dbd1648c18904431c51cf17bdce4e17b8fe \
+                    sha256  a8ebbb6f3d92d07e671500587472518cfc87cb79b9a654a5a8abb2d0eb298016 \
+                    size    1453382
+
+configure.args-append \
+                    --enable-grm
+
+compiler.cxx_standard   2017
+
+# dyld: lazy symbol binding failed: Symbol not found: ___atomic_load_8
+if {[string match *gcc* ${configure.compiler}] && ${configure.build_arch} in [list arm i386 ppc]} {
+    configure.ldflags-append \
+                    -latomic
+}
+
+post-destroot {
+    set dest_doc ${destroot}${prefix}/share/doc/${name}
+    xinstall -d ${dest_doc}
+    xinstall -m 644 -W ${worksrcpath} \
+        AUTHORS \
+        COPYING \
+        NEWS \
+        README \
+        ${dest_doc}
+}
+
+livecheck.type      regex
+livecheck.url       ${homepage}twiki/bin/view/FST/FstDownload
+livecheck.regex     ${name}-(\[0-9.\]+)\\.

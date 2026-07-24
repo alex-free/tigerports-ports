@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran JingyuHe bayeslm 1.0.1
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             LGPL-2+
+description         Efficient sampling for Gaussian linear regression \
+                    with arbitrary priors
+long_description    {*}${description}
+homepage            https://github.com/JingyuHe/bayeslm
+checksums           rmd160  4db0dff6b4cf18df920924ad3345f5d2396e8f5e \
+                    sha256  36b62f5443c6bc946133919fb290edb01c14d6b67023fab5ebd814f2dbefdf56 \
+                    size    74893
+
+depends_lib-append  port:R-coda \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-RcppParallel
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown
+
+test.run            yes

@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is archaic.
+R.setup             cran JohnCoene tippy 0.1.0 v
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Add tooltips to R markdown documents or Shiny apps
+long_description    {*}${description}
+homepage            https://tippy.john-coene.com
+checksums           rmd160  6fc625da99e0f36cd11b7e48693df8b8f075b262 \
+                    sha256  96c9477de8092e9d43b92fa2d284b943e3b631448a8d7e79e9809eae0ed88901 \
+                    size    30042
+supported_archs     noarch
+
+depends_lib-append  port:R-htmltools \
+                    port:R-htmlwidgets \
+                    port:R-jsonlite \
+                    port:R-shiny
+
+test.run            yes

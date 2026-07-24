@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+
+github.setup        cddlib cddlib 0.94n
+revision            0
+categories          devel math
+license             GPL-2+
+maintainers         nomaintainer
+description         C implementation of the Double Description Method
+long_description    A ${description}.
+checksums           rmd160  999668f74b8a1a23d7248084c21c064fa933ce38 \
+                    sha256  b87ee07ba2c1d0ab92a3e4eccacdf568f981a095a392e3b9efd7e7e4a9e125b1 \
+                    size    1381376
+github.tarball_from releases
+
+depends_lib-append  port:gmp
+
+# error: expected '=', ',', ';', 'asm' or '__attribute__' before 'uint64_t', etc.
+compiler.blacklist-append \
+                    *gcc-4.0 *gcc-4.2 {clang < 421}
+
+post-destroot {
+    xinstall -m 755 -d ${destroot}${prefix}/libexec/${name}
+    move ${destroot}${prefix}/bin ${destroot}${prefix}/libexec/${name}
+}
+
+notes "
+The ${name} binary files are now installed into ${prefix}/libexec/${name}/bin
+"

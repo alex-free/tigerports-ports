@@ -1,0 +1,10 @@
+--- CMakeLists.txt.orig	2025-05-06 12:13:56.211941690 -0400
++++ CMakeLists.txt	2025-05-06 12:14:10.546404659 -0400
+@@ -296,7 +296,6 @@
+ endif (MSVC)
+ 
+ include_directories(
+-  ${ZLIB_INCLUDE_DIRECTORIES}
+   ${protobuf_BINARY_DIR}
+   ${protobuf_SOURCE_DIR}/src)
+ 

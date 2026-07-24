@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github r-lib pkgconfig 2.0.3 v
+revision            5
+categories-append   devel
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Private configuration for R packages
+long_description    {*}${description}
+checksums           rmd160  11dc7cda3adb9e8b443022f456a5cbf79d4e3b9d \
+                    sha256  29751a8fe87416d76a99e6039013e74f7f1a5a233fa41e72616af28c37a14730 \
+                    size    6473
+github.tarball_from archive
+supported_archs     noarch
+
+depends_test-append port:R-covr \
+                    port:R-disposables \
+                    port:R-testthat
+
+test.run            yes

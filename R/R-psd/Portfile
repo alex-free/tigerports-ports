@@ -1,0 +1,39 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran abarbour psd 2.1.2
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Adaptive sine-multitaper power spectral density and cross-spectrum estimation
+long_description    {*}${description}
+homepage            https://github.com/abarbour/psd
+checksums           rmd160  acb0407c75cdfba5e34cc85176094e6fcdcc4fc3 \
+                    sha256  5db3c3f70476d832684f153c262bcef73584eafa07e8b999311896f8cdf5f434 \
+                    size    1909511
+
+depends_lib-append  port:R-RColorBrewer \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo
+
+compilers.setup     require_fortran
+
+# Test dependency on R-RSEIS is dropped.
+depends_test-append port:R-bspec \
+                    port:R-fftw \
+                    port:R-formatR \
+                    port:R-ggplot2 \
+                    port:R-knitr \
+                    port:R-multitaper \
+                    port:R-plyr \
+                    port:R-rbenchmark \
+                    port:R-reshape2 \
+                    port:R-rmarkdown \
+                    port:R-signal \
+                    port:R-testthat
+
+test.run            yes

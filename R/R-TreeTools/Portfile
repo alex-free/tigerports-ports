@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran ms609 TreeTools 2.0.0
+revision            1
+maintainers         nomaintainer
+license             GPL-3+
+description         Create, modify and analyse phylogenetic trees
+long_description    {*}${description}
+homepage            https://ms609.github.io/${R.package}
+checksums           rmd160  27291f3ccee66c588c8f8e9243edd171bb8cb4ba \
+                    sha256  b50f59c522364a995548743001e794680f9a1607f34c07ebbb308c6a82d23848 \
+                    size    1024201
+
+# Error : Stemwardness.Rd:66: figure margins too large
+patchfiles          patch-fix-Stemwardness.Rd
+
+depends_lib-append  port:R-ape \
+                    port:R-bit64 \
+                    port:R-fastmatch \
+                    port:R-PlotTools \
+                    port:R-Rcpp \
+                    port:R-RCurl \
+                    port:R-Rdpack \
+                    port:R-stringi

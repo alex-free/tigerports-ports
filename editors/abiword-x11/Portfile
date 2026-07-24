@@ -1,0 +1,118 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           gitlab 1.0
+PortGroup           gobject_introspection 1.0
+PortGroup           legacysupport 1.1
+
+# CLOCK_REALTIME
+legacysupport.newest_darwin_requires_legacy 15
+
+name                abiword-x11
+set dname           abiword
+gitlab.instance     https://gitlab.gnome.org
+gitlab.setup        World AbiWord 3.0.8 release-
+revision            1
+
+license             GPL-2+
+description         A word processor with Gnome support.
+long_description    ${description}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+categories          editors gnome textproc
+
+checksums           rmd160  4d6633d8c9640bee38abae718ce2d6ca754e4612 \
+                    sha256  085d80105799f11b0f0b2bf6256a7b47eae798646df76e61a23dbb57c1381f29 \
+                    size    7911405
+
+patchfiles          patch-configure.diff \
+                    patch-abs.diff \
+                    c++11.patch
+
+configure.cmd      ./autogen.sh
+
+depends_build-append \
+                    port:autoconf \
+                    port:autoconf-archive \
+                    port:automake \
+                    port:libtool \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  port:atk \
+                    path:lib/pkgconfig/cairo.pc:cairo \
+                    port:enchant \
+                    path:lib/pkgconfig/fontconfig.pc:fontconfig \
+                    path:lib/pkgconfig/freetype2.pc:freetype \
+                    port:fribidi \
+                    path:lib/pkgconfig/gdk-pixbuf-2.0.pc:gdk-pixbuf2 \
+                    path:lib/pkgconfig/glib-2.0.pc:glib2 \
+                    port:goffice \
+                    path:lib/pkgconfig/gtk+-3.0.pc:gtk3 \
+                    path:lib/pkgconfig/harfbuzz.pc:harfbuzz \
+                    port:libgcrypt \
+                    port:libgsf \
+                    port:libical \
+                    port:libiconv \
+                    path:include/turbojpeg.h:libjpeg-turbo \
+                    port:libpng \
+                    path:lib/pkgconfig/librsvg-2.0.pc:librsvg \
+                    port:libwmf \
+                    port:libxml2 \
+                    port:libxslt \
+                    path:lib/pkgconfig/pango.pc:pango \
+                    port:popt \
+                    port:psiconv \
+                    path:lib/pkgconfig/raptor2.pc:raptor2 \
+                    port:rasqal \
+                    port:redland \
+                    port:wv \
+                    port:Xft2 \
+                    port:xorg-libX11 \
+                    port:zlib
+
+depends_run         port:adwaita-icon-theme \
+                    port:desktop-file-utils
+
+# uses nullptr
+compiler.cxx_standard   2011
+
+gobject_introspection   yes
+
+# champlain seems to cause crashes on startup
+configure.args      --disable-default-plugins \
+                    --disable-silent-rules \
+                    --enable-clipart=yes \
+                    --enable-templates=yes \
+                    --with-champlain=no \
+                    --without-boost \
+                    --without-evolution-data-server
+
+# TODO: on the next update consider making this +boost variant, set it as default on 10.5+
+if {${os.platform} ne "darwin" || ${os.major} >= 9} {
+    PortGroup       boost 1.0
+
+    boost.version   1.81
+
+    configure.args-replace \
+                    --without-boost --with-boost=[boost::install_area]
+}
+
+variant evolution description "Enable Evolution data server" {
+    depends_lib-append \
+                    port:evolution-data-server
+    configure.args-replace \
+                    --without-evolution-data-server \
+                    --with-evolution-data-server
+}
+
+# Do not make it the default, until it is fixed.
+# https://trac.macports.org/ticket/69798
+# if {(${os.platform} eq "darwin" && ${os.major} > 12) \
+#     || ${os.platform} ne "darwin"} {
+#     default_variants-append \
+#                     +evolution
+# }
+
+post-activate {
+    system "${prefix}/bin/gtk-update-icon-cache -f -t ${prefix}/share/icons/hicolor"
+    system "${prefix}/bin/update-desktop-database ${prefix}/share/applications"
+}

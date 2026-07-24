@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           makefile 1.0
+
+set modname         buzzic
+name                lib${modname}
+github.setup        TTK-qmmp qmmp-${modname} 41beaba1396dc4e5e85b58252a566c808d0b765f
+version             20260506
+revision            0
+categories          audio
+license             GPL-3
+maintainers         nomaintainer
+description         Input plugin to play ${modname} modules
+long_description    {*}${description}
+checksums           rmd160  ccf0407ff1219e34c3d07c12357081adfffbab71 \
+                    sha256  bd413799c86a90f051e867cb333f2e657fe25e69d5add2b983d4a34cf2f659b7 \
+                    size    23046
+github.tarball_from archive
+
+post-extract {
+    copy ${filespath}/Makefile ${worksrcpath}
+}
+
+compiler.cxx_standard   2017

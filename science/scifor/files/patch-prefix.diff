@@ -1,0 +1,55 @@
+--- cmake/MainConfig.cmake	2025-10-19 22:23:51.000000000 +0800
++++ cmake/MainConfig.cmake	2025-12-01 15:30:10.000000000 +0800
+@@ -12,48 +12,10 @@
+ #DEFAULT LOCATION for installation is $HOME/opt/<libname>
+ SET(DEFAULT_LOCATION "$ENV{HOME}/opt")
+ 
++SET(PREFIX "@PREFIX@" CACHE PATH "Prefix prepended to install directories")
+ 
+-#IF CIP IS DEFAULT (i.e. /usr/local in Unix/Linux) then we use DEFAULT_LOCATION + possible addendum
+-#if LONG_PREFIX=on
+-IF (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+-  IF (LONG_PREFIX)
+-    SET(PATH_ID "${FC_ID}" CACHE INTERNAL "Default Path ID" FORCE)
+-    #IF not master branch, include simplified branch name
+-    IF( (NOT GIT_BRANCH MATCHES "master") )
+-      SET(PATH_ID  "${PATH_ID}/${GIT_BRANCH}")
+-    ENDIF()
+-    #IF DEBUG, add /debug to
+-    IF("${BUILD_TYPE}" MATCHES "debug")
+-      SET(PATH_ID  "${PATH_ID}/${BUILD_TYPE}")
+-    ENDIF()
+-    #set to $HOME/opt/<libname>(/<fc_id>/[<git_branch>{/<debug>}]/<version>)
+-    #set module name accordingly
+-    SET(DEFAULT_PREFIX "${DEFAULT_LOCATION}/${PROJECT_NAME}/${PATH_ID}/${VERSION}")    
+-    SET(MODULE_NAME "${PROJECT_NAME}/${PATH_ID}/${VERSION}")
+-    SET(FULL_VER "${PATH_ID}/${VERSION}")
+-  ELSE()
+-    SET(PATH_ID "custom" CACHE INTERNAL "Custom Path ID" FORCE)
+-    #set to $HOME/opt/<libname>
+-    #set module name accordingly
+-    SET(DEFAULT_PREFIX "${DEFAULT_LOCATION}/${PROJECT_NAME}/${PATH_ID}")
+-    SET(MODULE_NAME "${PROJECT_NAME}/${PATH_ID}")
+-    SET(FULL_VER "${PATH_ID}")
+-  ENDIF(LONG_PREFIX)
+-ELSE()
+-  SET(PATH_ID "custom" CACHE INTERNAL "Custom Path ID" FORCE)
+-  #set to user defined CMAKE_INSTALL_PREFIX
+-  #set module name accordingly
+-  SET(DEFAULT_PREFIX "${CMAKE_INSTALL_PREFIX}")
+-  SET(MODULE_NAME "${PROJECT_NAME}/${PATH_ID}")
+-  SET(FULL_VER "${PATH_ID}")
+-ENDIF()
++# Set the resulting DEFAULT_PREFIX to CMAKE_INSTALL_PREFIX
++SET(CMAKE_INSTALL_PREFIX "${PREFIX}" CACHE INTERNAL "Prefix prepended to install directories" FORCE)
+ 
+-
+-#SET the resulting DEFAULT_PREFIX to CMAKE_INSTALL_PREFIX
+-SET(CMAKE_INSTALL_PREFIX "${DEFAULT_PREFIX}" CACHE INTERNAL "Prefix prepended to install directories" FORCE)
+-
+-
+-#Set the module .version file name to be used later in PostConfig.cmake
++# Set the module .version file name to be used later in PostConfig.cmake
+ SET(VERSION_PATH "${PROJECT_NAME}/${PATH_ID}")
+-
+-

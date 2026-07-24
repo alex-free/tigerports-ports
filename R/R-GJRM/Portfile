@@ -1,0 +1,39 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran giampiero.marra GJRM 0.2-6.8
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Generalised Joint Regression Modelling
+long_description    {*}${description}
+checksums           rmd160  72405817f1408435a372fa6cefe9909abd87f614 \
+                    sha256  a9702d8fc8f0866c0626d2816211abd61af54a637b57fc7dc1fe8177e6b3569d \
+                    size    552477
+supported_archs     noarch
+
+depends_lib-append  port:R-copula \
+                    port:R-distrEx \
+                    port:R-evd \
+                    port:R-gamlss.dist \
+                    port:R-ggplot2 \
+                    port:R-ismev \
+                    port:R-magic \
+                    port:R-matrixStats \
+                    port:R-mnormt \
+                    port:R-numDeriv \
+                    port:R-psych \
+                    port:R-Rmpfr \
+                    port:R-scam \
+                    port:R-survey \
+                    port:R-trust \
+                    port:R-VGAM \
+                    port:R-VineCopula
+
+depends_test-append port:R-sp
+
+test.run            yes

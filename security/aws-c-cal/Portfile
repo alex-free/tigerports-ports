@@ -1,0 +1,43 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+
+github.setup        awslabs aws-c-cal 0.9.14 v
+revision            0
+categories          security crypto
+license             Apache-2
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+description         AWS Crypto Abstraction Layer
+long_description    {*}${description}
+checksums           rmd160  6edb955d513b3a76e4e6326162fe3df8c17c56ec \
+                    sha256  0e96e0067fa921768e07b5b4ebad82011ccf474903e9286419ef428d68f317ea \
+                    size    1700259
+github.tarball_from archive
+
+patchfiles-append   patch-aws-c-cal-config.cmake \
+                    patch-CMakeLists.txt \
+                    patch-openssl_platform_init.c.diff \
+                    patch-rsa_test.c.diff
+
+# Path dep instead of PG is intended: build system is evil and tries to pick libs from /usr/lib.
+# FIXME: do away with this nasty behavior, switch back to openssl PG.
+depends_lib-append  port:aws-c-common \
+                    path:lib/libcrypto.dylib:openssl
+
+# ___builtin_add_overflow, ___builtin_mul_overflow
+compiler.blacklist-append \
+                    *gcc-4.* {clang < 421}
+
+configure.args-append \
+                    -DBUILD_SHARED_LIBS=ON \
+                    -DBUILD_TESTING=ON
+
+# For tests:
+configure.pre_args-replace \
+                    -DCMAKE_BUILD_WITH_INSTALL_RPATH:BOOL=ON \
+                    -DCMAKE_BUILD_WITH_INSTALL_RPATH:BOOL=OFF
+
+# On powerpc: 97% tests passed, 5 tests failed out of 174.
+test.run            yes

@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+PortGroup               common_lisp 1.0
+PortGroup               github 1.0
+
+github.setup            fukamachi anypool 50f64a67bdbebf8d0a8ee48e422125ab81113934
+name                    cl-anypool
+version                 20260113
+revision                0
+
+categories-append       devel
+maintainers             nomaintainer
+license                 BSD
+
+description             General-purpose connection pooling library for Common Lisp
+long_description        {*}${description}
+
+checksums               rmd160  f5e8a659710eabd31279843428b142828d58371c \
+                        sha256  d92c63fe597f4cccb9a3de81d17fe3a6b7987d296636cc0d593848ecdedf19af \
+                        size    8716
+github.tarball_from     archive
+
+depends_lib-append      port:cl-bordeaux-threads \
+                        port:cl-rove \
+                        port:cl-speedy-queue
+
+common_lisp.threads     yes
+
+# See: https://github.com/fukamachi/anypool/issues/5
+test.run                no

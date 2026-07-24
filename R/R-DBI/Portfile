@@ -1,0 +1,47 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github r-dbi DBI 1.3.0 v
+revision            0
+categories-append   databases
+platforms           {darwin any}
+maintainers         {@krlmlr cynkra.com:kirill} \
+                    {@barracuda156 macos-powerpc.org:barracuda} \
+                    openmaintainer
+license             LGPL-2.1+
+description         A database interface (DBI) definition for communication \
+                    between R and RDBMSs
+long_description    {*}${description}
+homepage            https://dbi.r-dbi.org
+checksums           rmd160  8fbbacbf21bb7303e6f1cbfbe95a10231837af17 \
+                    sha256  4e0e6ecc8de71ac784c7171314e8dba4b45a894eca0c7178d4f5d1d93310a6b5 \
+                    size    308160
+github.tarball_from archive
+supported_archs     noarch
+
+# R-otelsdk is omitted until fixed.
+depends_test-append port:R-arrow \
+                    port:R-blob \
+                    port:R-callr \
+                    port:R-covr \
+                    port:R-DBItest \
+                    port:R-dbplyr \
+                    port:R-downlit \
+                    port:R-dplyr \
+                    port:R-glue \
+                    port:R-hms \
+                    port:R-knitr \
+                    port:R-magrittr \
+                    port:R-nanoarrow \
+                    port:R-otel \
+                    port:R-RMariaDB \
+                    port:R-rmarkdown \
+                    port:R-rprojroot \
+                    port:R-RSQLite \
+                    port:R-testthat \
+                    port:R-vctrs \
+                    port:R-xml2
+
+test.run            yes

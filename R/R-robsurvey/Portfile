@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran tobiasschoch robsurvey 0.7-3 v
+revision            1
+maintainers         nomaintainer
+license             GPL-2+
+description         Robust survey statistics estimation
+long_description    {*}${description}
+checksums           rmd160  cdcfc72e5ebd3da08f8f42148bbe146cdd3718a2 \
+                    sha256  5b90e55886a79e49cd9ee28f0f01d2eb2b4abe65629e25a3b7d3dfedd73bdea6 \
+                    size    1809264
+# github.tarball_from archive
+
+depends_lib-append  port:R-survey
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-hexbin \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-wbacon
+
+test.run            yes

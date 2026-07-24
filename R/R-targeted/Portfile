@@ -1,0 +1,57 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran kkholst targeted 0.7.1
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             Apache-2
+description         Various methods for targeted and semi-parametric inference
+long_description    {*}${description}
+homepage            https://kkholst.github.io/targeted
+checksums           rmd160  1ac4843e952f5f6945951abc91dd5f23f69ccf15 \
+                    sha256  62e58fe739d67d45733b6a32a4eb054fa0ced5694474ba47cea97cabc6a84d12 \
+                    size    1390046
+
+depends_lib-append  port:R-abind \
+                    port:R-cli \
+                    port:R-digest \
+                    port:R-futile.logger \
+                    port:R-future.apply \
+                    port:R-lava \
+                    port:R-mets \
+                    port:R-optimx \
+                    port:R-progressr \
+                    port:R-quadprog \
+                    port:R-R6 \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-rlang
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-cmprsk \
+                    port:R-data.table \
+                    port:R-e1071 \
+                    port:R-earth \
+                    port:R-glmnet \
+                    port:R-grf \
+                    port:R-hal9001 \
+                    port:R-knitr \
+                    port:R-optimx \
+                    port:R-polle \
+                    port:R-pracma \
+                    port:R-quarto \
+                    port:R-rmarkdown \
+                    port:R-randomForestSRC \
+                    port:R-ranger \
+                    port:R-riskRegression \
+                    port:R-scatterplot3d \
+                    port:R-SuperLearner \
+                    port:R-tinytest \
+                    port:R-viridisLite \
+                    port:R-xgboost
+
+test.run            yes

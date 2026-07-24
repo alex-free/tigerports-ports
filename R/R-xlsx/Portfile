@@ -1,0 +1,41 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           active_variants 1.1
+PortGroup           R 1.0
+
+R.setup             github colearendt xlsx 0.6.5 v
+revision            1
+categories-append   java
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Read, write, format Excel 2007 and Excel 97/2000/XP/2003 files
+long_description    {*}${description}
+checksums           rmd160  94c79c9d77e2dc866f6d6856c86deb6a39b36543 \
+                    sha256  09dec9a45867c38048cb293a171be944b178addec614cd5be9ea087caad5cbaf \
+                    size    580649
+github.tarball_from archive
+supported_archs     noarch
+
+require_active_variants R java
+
+if {${configure.build_arch} in [list ppc ppc64]} {
+    depends_run-append \
+                    port:openjdk8
+} else {
+    PortGroup       java 1.0
+
+}
+
+depends_lib-append  port:R-rJava \
+                    port:R-xlsxjars
+
+depends_test-append port:R-covr \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-rprojroot \
+                    port:R-testthat \
+                    port:R-tibble
+
+test.run            yes

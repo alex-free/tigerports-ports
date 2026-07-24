@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-jwt
+python.rootname     pyjwt
+version             2.12.1
+revision            0
+categories-append   devel
+platforms           any
+license             MIT
+maintainers         nomaintainer
+description         JSON Web Token implementation in Python
+long_description    {*}${description}
+homepage            https://pyjwt.readthedocs.io
+checksums           rmd160  0899bc92b74ba771bf6d99eaa36cea0bff88ba53 \
+                    sha256  c74a7a2adf861c04d002db713dd85f84beb242228e671280bf709d765b03672b \
+                    size    102564
+supported_archs     noarch
+
+python.versions     310 311 312 313 314
+
+if {${subport} ne ${name}} {
+    depends_run-append \
+                    port:py${python.version}-cryptography
+}

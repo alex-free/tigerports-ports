@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran andy ggx 0.1.1
+revision            1
+categories-append   graphics
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Natural language interface to R-ggplot2
+long_description    {*}${description}
+checksums           rmd160  7404f96241bc667a95c0164c04f2f07ed4c87125 \
+                    sha256  6fbede844a9ec6a04b02a572746c9c5add7406aa1d89f8603eeb2ce1ed64db8f \
+                    size    386426
+supported_archs     noarch
+
+depends_lib-append  port:R-ggplot2 \
+                    port:R-sets
+
+depends_test-append port:R-knitr \
+                    port:R-markdown \
+                    port:R-rmarkdown
+
+test.run            yes

@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github LCBC-UiO galamm 0.2.3 v
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3+
+description         Generalized Additive Latent and Mixed Models
+long_description    {*}${description}.
+homepage            https://lcbc-uio.github.io/galamm
+checksums           rmd160  dfd3c509caa409b14d5897da9f06ce47023c3d80 \
+                    sha256  5bfecf298f2fe8b90a19424b4a1e42c97ff720c70b3b7c8a0261230df373ffab \
+                    size    2540415
+github.tarball_from archive
+
+depends_lib-append  port:R-lme4 \
+                    port:R-memoise \
+                    port:R-Rcpp \
+                    port:R-RcppEigen \
+                    port:R-Rdpack
+
+depends_test-append port:R-covr \
+                    port:R-gamm4 \
+                    port:R-knitr \
+                    port:R-PLmixed \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

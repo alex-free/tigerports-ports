@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran MathsCell nlsic 1.2.0
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2
+description         Non-linear least squares with inequality constraints
+long_description    {*}${description}
+homepage            https://github.com/MathsCell/nlsic
+checksums           rmd160  b964c51911113bd69ab457f8ab0b8210609f7bc6 \
+                    sha256  d88ab35fb771f7f0959d0500cbbc7b106fb93e26c44cb34898878b3aced1b809 \
+                    size    25420
+supported_archs     noarch
+
+depends_lib-append  port:R-dotty \
+                    port:R-glue \
+                    port:R-nnls
+
+depends_test-append port:R-limSolve \
+                    port:R-numDeriv \
+                    port:R-RUnit
+
+test.run            yes

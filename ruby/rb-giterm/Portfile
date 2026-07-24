@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           ruby 1.0
+
+ruby.branches       3.4 3.3 3.2 3.1
+ruby.setup          giterm 2.0.5 gem {} rubygems
+license             Unlicense
+categories-append   devel
+platforms           any
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+description         GiTerm is a powerful terminal interface for Git and GitHub
+long_description    {*}${description}
+homepage            https://github.com/isene/GiTerm
+checksums           rmd160  4f52bdb2602c2b1a732a50f1613f861f7faa483b \
+                    sha256  a87a3b65307b8402110b0b853b90ec63b5feb98747b681b0ac932da1835f4e10 \
+                    size    46080
+supported_archs     noarch
+
+if {${subport} ne ${name}} {
+    depends_run-append \
+                    path:bin/git:git \
+                    port:rb${ruby.suffix}-rcurses
+}
+
+# See also: https://github.com/isene/GiTerm/issues/1
+notes "
+You may need a modern terminal with true color support to use this app.\
+For example, mlterm-minimal or mlterm.
+"

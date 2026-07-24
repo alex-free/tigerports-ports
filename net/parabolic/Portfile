@@ -1,0 +1,103 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           active_variants 1.1
+PortGroup           boost 1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+PortGroup           openssl 1.0
+
+boost.version       1.81
+
+name                parabolic
+github.setup        NickvisionApps Parabolic 2025.9.0
+revision            0
+categories          net gnome multimedia
+license             GPL-3
+maintainers         {@nlogozzo} {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+description         Download web video and audio
+long_description    GTK-based app to download video and audio \
+                    from the web.
+checksums           rmd160  4c21973200bb7d9c23ed059860821e189cf6b8f8 \
+                    sha256  a9fb963fed83bd0527d57865373c3fdd42539ec958d768834443cee862ff050a \
+                    size    6012554
+github.tarball_from archive
+
+# These are inherited from libnick; the build should find it:
+set sqlroot         ${prefix}/libexec/sqlcipher
+
+configure.pkg_config_path-prepend \
+                    ${sqlroot}/lib/pkgconfig
+
+depends_build-append \
+                    port:blueprint-compiler \
+                    port:gettext \
+                    port:itstool \
+                    port:maddy-parser \
+                    path:bin/pkg-config:pkgconfig \
+                    port:sqlcipher \
+                    port:yelp-tools
+
+depends_lib-append  port:gettext-runtime \
+                    path:lib/pkgconfig/glib-2.0.pc:glib2 \
+                    path:lib/pkgconfig/gtk4.pc:gtk4 \
+                    port:libadwaita \
+                    port:libepoxy \
+                    port:libnick \
+                    port:libxmlxx5
+
+depends_run-append  port:aria2 \
+                    port:desktop-file-utils \
+                    port:yt-dlp
+
+# https://github.com/NickvisionApps/Parabolic/issues/1094
+patchfiles-append   patch-Revert-to-Gtk.Spinner-to-fix-the-build.diff
+
+compiler.cxx_standard   2020
+
+configure.args-append \
+                    -DCMAKE_INSTALL_LIBDIR=${prefix}/libexec/${name} \
+                    -DUI_PLATFORM=gnome
+
+variant secret description "Use libsecret instead of Apple keychain" {
+    require_active_variants \
+                    libnick secret
+
+    depends_lib-append \
+                    port:libsecret
+    configure.args-append \
+                    -DUSE_LIBSECRET=ON
+}
+
+if {${os.platform} ne "darwin" || ${os.major} < 12} {
+    default_variants-append \
+                    +secret
+}
+
+post-destroot {
+    # In a case of libstdc++ we install our wrapper to fix malloc errors.
+    # Otherwise we just rename existing wrapper so that it is recognizable.
+    # The real binary sits in libexec.
+    if {${os.platform} eq "darwin" && ${configure.cxx_stdlib} ne "libc++"} {
+        delete ${destroot}${prefix}/bin/org.nickvision.tubeconverter
+        copy ${filespath}/${name} ${destroot}${prefix}/bin/
+        reinplace "s|@PREFIX@|${prefix}|g" ${destroot}${prefix}/bin/${name}
+        file attributes ${destroot}${prefix}/bin/${name} -permissions 0755
+    } else {
+        move ${destroot}${prefix}/bin/org.nickvision.tubeconverter \
+            ${destroot}${prefix}/bin/${name}
+    }
+}
+
+post-activate {
+    system "${prefix}/bin/update-desktop-database ${prefix}/share/applications"
+    system "${prefix}/bin/gtk4-update-icon-cache -f -t ${prefix}/share/icons/hicolor"
+}
+
+# https://trac.macports.org/ticket/70137
+notes "
+If you get an error upon launching the app,\
+try setting GSK_RENDERER=cairo in the environment.\
+Legacy macOS versions may also need LIBGL_ALLOW_SOFTWARE=true.\
+These can be set on a command line or via a shell config file.
+"

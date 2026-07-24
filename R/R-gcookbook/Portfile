@@ -1,0 +1,19 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran winston gcookbook 2.0.1
+revision            1
+categories-append   graphics
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2
+description         Data for R Graphics Cookbook
+long_description    {*}${description}
+checksums           rmd160  59c529734c176cdd97edc2f0d534eee69a12313b \
+                    sha256  337d64109577ad93f45c09a65c5830d70c293f5646d818790167c20930fbab09 \
+                    size    3214508
+supported_archs     noarch
+
+test.run            yes

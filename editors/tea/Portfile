@@ -1,0 +1,76 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+PortGroup               github 1.0
+
+name                    tea
+github.setup            psemiletov ${name}-qt 63.3.1
+revision                0
+maintainers             {ryandesign @ryandesign} openmaintainer
+categories              editors
+license                 GPL-3
+description             TEA is the powerful text editor for GNU/Linux and *BSD
+long_description        {*}${description}
+homepage                https://tea.ourproject.org
+checksums               rmd160  52e9b5b5d6e6ea8e45a6c6b87341d4994d850a14 \
+                        sha256  105a4d02164279d61f868d8e07b382f598fa34918a588b35010dcdd1fa27e540 \
+                        size    718500
+github.tarball_from     archive
+
+depends_build-append    path:bin/pkg-config:pkgconfig
+
+depends_lib-append      port:aspell \
+                        port:hunspell \
+                        port:zlib
+
+patchfiles-append       tea-qmake.pro.patch
+
+if {[string match *clang* ${configure.cxx}]} {
+    configure.ldflags-append \
+                        -stdlib=${configure.cxx_stdlib}
+}
+
+# https://github.com/psemiletov/tea-qt/issues/68
+if {[string match *gcc* ${configure.compiler}]} {
+    configure.cxxflags-append \
+                        -fpermissive
+}
+
+# atypes.hxx: error: ‘nullptr’ was not declared in this scope
+compiler.cxx_standard   2011
+
+destroot {
+    copy ${worksrcpath}/bin/tea.app ${destroot}${applications_dir}
+}
+
+if {![variant_isset qt4] && ![variant_isset qt5]} {
+    # Somewhat arbitrary cutoff but motivated by the facts that Tea is known to
+    # crash on startup at least on macOS 12 and 13 on x86_64 with Qt 4:
+    # https://github.com/psemiletov/tea-qt/issues/64
+    # and Qt 5 has dark mode support while Qt 4 does not.
+    if {${os.platform} eq "darwin" && ${os.major} < 17} {
+        default_variants-append +qt4
+    } else {
+        default_variants-append +qt5
+    }
+}
+
+if {![variant_isset qt4] && ![variant_isset qt5]} {
+    pre-fetch {
+        ui_error "Either the qt4 or qt5 variant must be selected."
+        return -code error "missing variant"
+    }
+}
+
+variant qt4 conflicts qt5 description {Use Qt 4} {}
+variant qt5 conflicts qt4 description {Use Qt 5} {}
+
+if {[variant_isset qt4]} {
+    PortGroup           qmake 1.0
+
+}
+
+if {[variant_isset qt5]} {
+    PortGroup           qmake5 1.0
+
+}

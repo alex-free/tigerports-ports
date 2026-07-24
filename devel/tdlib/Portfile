@@ -1,0 +1,64 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+PortGroup           openssl 1.0
+
+# The tdlib authors do not set tags for minor versions,
+github.setup        tdlib td a8f21f5230172634becc1739050ef23ecd6ea291
+name                tdlib
+version             1.8.65
+revision            0
+categories          devel net
+license             Boost-1
+maintainers         {doctashay @doctashay} \
+                    {l2dy @l2dy} openmaintainer
+homepage            https://core.telegram.org/tdlib
+
+description         Cross-platform library for building Telegram clients
+long_description    TDLib (Telegram Database library) is a cross-platform \
+                    library for building Telegram clients.
+
+checksums           rmd160  94e1cbb230d25ec25de2ad41c5f010a5aa32a160 \
+                    sha256  6ce3c64a811391d6d6c6f179cfd11ea8b4c72b701185e838eb8e854bebf7495b \
+                    size    5747439
+github.tarball_from archive
+
+set php_v           84
+
+depends_build-append \
+                    port:gperf \
+                    port:php${php_v} \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  port:readline \
+                    port:zlib
+
+# Build uses -std=c++14 atm, but should be using C++17:
+# tl_storers.h:35:8: warning: 'if constexpr' only available with '-std=c++17' or '-std=gnu++17' [-Wc++17-extensions]
+compiler.cxx_standard   2017
+
+configure.args-append \
+                    -DPHP_EXECUTABLE=${prefix}/bin/php${php_v} \
+                    -DTD_ENABLE_DOTNET=OFF \
+                    -DTD_ENABLE_JNI=OFF \
+                    -DTD_ENABLE_LTO=OFF
+
+# Upstream restricts to little-endian archs (https://github.com/tdlib/td/issues/364).
+
+# TDLib assumes a little-endian host throughout MTProto/TL. On big-endian PowerPC
+# the TL parsers/storers, TCP transport framing, the tl-parser crc32 generator
+# (CRC ids), and the encrypted-session header byte order all need to be made
+# endian-correct, and a new endian_load.h helper is added. Without these the client
+# cannot complete the auth handshake. Patch is a no-op on little-endian archs
+# but only applied on PPC to keep the upstream build untouched elsewhere.
+if {${configure.build_arch} in [list ppc ppc64]} {
+    patchfiles-append   patch-ppc-bigendian.diff
+}
+
+livecheck.type      regex
+livecheck.version   ${version}
+livecheck.url       "https://raw.githubusercontent.com/NixOS/nixpkgs/refs/heads/nixos-unstable/pkgs/by-name/td/tdlib/package.nix"
+livecheck.regex     {version = "(\d+(?:\.\d+)*)";}

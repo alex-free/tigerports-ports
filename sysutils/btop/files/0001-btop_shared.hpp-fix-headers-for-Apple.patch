@@ -1,0 +1,41 @@
+From 954345de7c216e2271ef36c1092d2a0214c9cd5b Mon Sep 17 00:00:00 2001
+From: Sergey Fedorov <barracuda@macos-powerpc.org>
+Date: Mon, 12 May 2025 17:42:43 +0800
+Subject: [PATCH] btop_shared.hpp: fix headers for Apple
+
+---
+ src/btop_shared.hpp | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git src/btop_shared.hpp src/btop_shared.hpp
+index ca8cdcb..8c3a874 100644
+--- src/btop_shared.hpp
++++ src/btop_shared.hpp
+@@ -32,6 +32,9 @@ tab-size = 4
+ 
+ // From `man 3 getifaddrs`: <net/if.h> must be included before <ifaddrs.h>
+ // clang-format off
++#if defined(__APPLE__)
++# include <sys/socket.h>
++#endif
+ #include <net/if.h>
+ #include <ifaddrs.h>
+ // clang-format on
+
+--- src/osx/btop_collect.cpp	2026-05-02 00:05:43.000000000 +0800
++++ src/osx/btop_collect.cpp	2026-05-03 14:45:14.000000000 +0800
+@@ -32,13 +32,13 @@
+ //     If both <net/if.h> and <ifaddrs.h> are being included, <net/if.h> must be
+ //     included before <ifaddrs.h>.
+ // from: https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man3/getifaddrs.3.html
++#include <sys/socket.h>
+ #include <net/if.h>
+ #include <ifaddrs.h>
+ #include <net/if_dl.h>
+ #include <netdb.h>
+ #include <netinet/tcp_fsm.h>
+ #include <pwd.h>
+-#include <sys/socket.h>
+ #include <sys/statvfs.h>
+ #include <sys/sysctl.h>
+ #include <sys/types.h>

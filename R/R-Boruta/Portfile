@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran mbq Boruta 9.0.0
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Wrapper algorithm for all relevant feature selection
+long_description    {*}${description}
+homepage            https://gitlab.com/mbq/Boruta
+checksums           rmd160  7464de71843722c5b982b3e3f3b1c36f3fbad487 \
+                    sha256  7deeee7ae76a96cb3a51b977379c0d66963a8e7b8a69af5cac73ad5b9965bfe5 \
+                    size    401076
+supported_archs     noarch
+
+depends_lib-append  port:R-ranger
+
+depends_test-append port:R-mlbench \
+                    port:R-rFerns \
+                    port:R-randomForest \
+                    port:R-testthat \
+                    port:R-xgboost
+
+test.run            yes

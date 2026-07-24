@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran theAeon HighFive 3.3.0
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             Boost-1
+description         C++ interface to HDF5
+long_description    HighFive {*}${description}.
+checksums           rmd160  879448f338506c4be0f2f3f84800298f5fdd8c25 \
+                    sha256  15b8c3b3788c27d75923167c3c7e9995415dbc962c7839128ef2c759a084fadb \
+                    size    78574
+# github.tarball_from archive
+supported_archs     noarch
+
+depends_run-append  port:hdf5
+
+test.run            yes

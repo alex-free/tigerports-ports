@@ -1,0 +1,45 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran guido-s meta 8.2-1
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         General package for meta-analysis
+long_description    {*}${description}
+homepage            https://github.com/guido-s/meta
+checksums           rmd160  8622f81ef2f998f13b2c0ed81edcca6ced575b23 \
+                    sha256  4d800d6f039b4dbf904eb72e38beed43906f5777ce76bd149bd51e5381f28546 \
+                    size    1002880
+supported_archs     noarch
+
+depends_lib-append  port:R-CompQuadForm \
+                    port:R-dplyr \
+                    port:R-ggplot2 \
+                    port:R-lme4 \
+                    port:R-magrittr \
+                    port:R-metadat \
+                    port:R-metafor \
+                    port:R-purrr \
+                    port:R-readr \
+                    port:R-scales \
+                    port:R-stringr \
+                    port:R-tibble \
+                    port:R-xml2
+
+depends_test-append port:R-BiasedUrn \
+                    port:R-brglm2 \
+                    port:R-estmeansd \
+                    port:R-ggpubr \
+                    port:R-gridExtra \
+                    port:R-netmeta \
+                    port:R-knitr \
+                    port:R-pimeta \
+                    port:R-rmarkdown \
+                    port:R-robvis \
+                    port:R-writexl
+
+test.run            yes

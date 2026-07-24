@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran nomahi NMA 3.1-1
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Network meta-analysis based on multivariate meta-analysis models
+long_description    {*}${description}
+homepage            https://github.com/nomahi/NMA
+checksums           rmd160  d1843f6f8547062dd55e69245d38f74f31897b52 \
+                    sha256  10b275d644dc4059cf5bee5b61a0688c31412e5d978131b25d586ea257ef173c \
+                    size    51472
+supported_archs     noarch
+
+depends_lib-append  port:R-forestplot \
+                    port:R-ggplot2 \
+                    port:R-metafor \
+                    port:R-nleqslv \
+                    port:R-stringr
+
+test.run            yes

@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+
+github.setup        libyal libcsplit 20260520
+revision            0
+categories          security devel
+maintainers         nomaintainer
+license             LGPL-3+
+description         Library for cross-platform C split strings functions
+long_description    ${description}
+distname            ${name}-beta-${version}
+checksums           rmd160  2f1df1721b19109b718ce382ffa67d47db8d9586 \
+                    sha256  33cfb574cee38d4cc10e275a2ec1444a2c1bd22bf9552b5d4a5dea2c51d84910 \
+                    size    534788
+github.tarball_from releases
+
+worksrcdir          ${name}-${version}
+
+depends_build-append \
+                    port:gettext \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  port:gettext-runtime \
+                    port:libcerror \
+                    port:libiconv
+
+configure.args-append \
+                    --with-libiconv-prefix=${prefix} \
+                    --with-libintl-prefix=${prefix}

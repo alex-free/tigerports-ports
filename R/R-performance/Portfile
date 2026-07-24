@@ -1,0 +1,91 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github easystats performance 0.16.0 v
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Assessment of regression models performance
+long_description    {*}${description}
+homepage            https://easystats.github.io/performance
+checksums           rmd160  0b124faccc5c98e72c3a12c5eca1958ca561d558 \
+                    sha256  c1bddd75d661ff382a292dff61cb24165e3cabaf6143260c4ee3847747a4a94a \
+                    size    4322805
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-bayestestR \
+                    port:R-datawizard \
+                    port:R-insight
+
+# Some optional deps are omitted.
+depends_test-append port:R-AER \
+                    port:R-afex \
+                    port:R-BayesFactor \
+                    port:R-bayesplot \
+                    port:R-betareg \
+                    port:R-bigutilsr \
+                    port:R-blavaan \
+                    port:R-brms \
+                    port:R-car \
+                    port:R-carData \
+                    port:R-CompQuadForm \
+                    port:R-correlation \
+                    port:R-cplm \
+                    port:R-curl \
+                    port:R-dbscan \
+                    port:R-DHARMa \
+                    port:R-estimatr \
+                    port:R-fixest \
+                    port:R-flextable \
+                    port:R-forecast \
+                    port:R-ftExtra \
+                    port:R-gamm4 \
+                    port:R-glmmTMB \
+                    port:R-Hmisc \
+                    port:R-httr2 \
+                    port:R-ICS \
+                    port:R-ICSOutlier \
+                    port:R-ISLR \
+                    port:R-ivreg \
+                    port:R-lavaan \
+                    port:R-lme4 \
+                    port:R-lmtest \
+                    port:R-loo \
+                    port:R-mclogit \
+                    port:R-mclust \
+                    port:R-metadat \
+                    port:R-metafor \
+                    port:R-mlogit \
+                    port:R-modelbased \
+                    port:R-multimode \
+                    port:R-nestedLogit \
+                    port:R-nonnest2 \
+                    port:R-ordinal \
+                    port:R-parameters \
+                    port:R-patchwork \
+                    port:R-pscl \
+                    port:R-psych \
+                    port:R-psychTools \
+                    port:R-quantreg \
+                    port:R-qqplotr \
+                    port:R-randomForest \
+                    port:R-RcppEigen \
+                    port:R-reformulas \
+                    port:R-rempsyc \
+                    port:R-rmarkdown \
+                    port:R-rstanarm \
+                    port:R-rstantools \
+                    port:R-sandwich \
+                    port:R-see \
+                    port:R-survey \
+                    port:R-testthat \
+                    port:R-tweedie \
+                    port:R-VGAM \
+                    port:R-withr
+
+test.run            yes

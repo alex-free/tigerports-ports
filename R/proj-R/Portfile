@@ -1,0 +1,74 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+
+set realname        proj
+name                ${realname}-R
+version             9.7.1
+revision            1
+categories          R gis science
+license             MIT
+maintainers         {@barracuda156 macos-powerpc.org:barracuda}
+description         PROJ is a generic coordinate transformation software
+long_description    {*}${description}. Dedicated port to use with R packages.
+homepage            https://${realname}.org
+master_sites        https://download.osgeo.org/${realname}/
+distname            ${realname}-${version}
+checksums           rmd160  6f2d45c0ad91b93a1591c57e622eb820d179f7f1 \
+                    sha256  6c097dc803c561929cdfcc46e4bf9945ea977611fb31493ad14e88edaeae260f \
+                    size    5915221
+
+depends_lib-append  port:curl \
+                    port:sqlite3 \
+                    port:tiff
+
+# DO NOT SET C++ STANDARD.
+# We need it to use the new C++ ABI, regardless of the runtime in use.
+
+compiler.blacklist-append \
+                    {clang < 602} *gcc-4.*
+
+# Install in a dedicated subprefix:
+cmake.install_prefix \
+                    ${prefix}/libexec/R/${realname}
+
+configure.args-append \
+                    -DBUILD_EXAMPLES=OFF \
+                    -DBUILD_TESTING=OFF \
+                    -DENABLE_CURL=ON \
+                    -DENABLE_IPO=OFF \
+                    -DENABLE_TIFF=ON \
+                    -DPROJ_DATA_ENV_VAR_TRIED_LAST=OFF
+
+post-destroot {
+    # proj(27325) malloc: *** error for object 0x4cfc08: pointer being freed was not allocated
+    # Cannot use legacysupport directly until this is fixed: https://trac.macports.org/ticket/72636
+    if {${os.platform} eq "darwin" && ${configure.cxx_stdlib} ne "libc++"} {
+        foreach rbin {proj projinfo} {
+            set dir [file dirname ${rbin}]
+            if {${dir} eq "."} {
+                set dir ${cmake.install_prefix}/bin
+            }
+            set bin ${dir}/[file tail ${rbin}]
+
+            move    ${destroot}${bin} \
+                    ${destroot}${bin}-orig
+
+            set  wrapper    [open "${destroot}${bin}" w 0755]
+            puts ${wrapper} "#!/bin/bash"
+            puts ${wrapper} ""
+            puts ${wrapper} {if [ -n "$DYLD_LIBRARY_PATH" ]; then}
+            puts ${wrapper} "   DYLD_LIBRARY_PATH=${prefix}/lib/libgcc:\${DYLD_LIBRARY_PATH}"
+            puts ${wrapper} {else}
+            puts ${wrapper} "   DYLD_LIBRARY_PATH=${prefix}/lib/libgcc"
+            puts ${wrapper} {fi}
+            puts ${wrapper} {export DYLD_LIBRARY_PATH}
+            puts ${wrapper} ""
+            puts ${wrapper} {exec "${0}-orig" "$@"}
+            close $wrapper
+        }
+    }
+}
+
+livecheck.type      none

@@ -1,0 +1,70 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:filetype=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           codeberg 1.0
+PortGroup           legacysupport 1.1
+PortGroup           wxWidgets 1.0
+
+# Original upstream is dead: https://github.com/anonbeat/guayadeque
+# See also: https://github.com/openmonk/guayadeque-scripts/issues/1
+codeberg.setup      thothix guayadeque 0.7.5 v
+revision            1
+categories          audio
+license             GPL-3
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+
+description         Guayadeque is a music management program
+long_description    {*}${description} designed for all music enthusiasts.
+checksums           rmd160  a498bcbe5446874c5507c3b603f2fe368cf72789 \
+                    sha256  1b0fa2f95270bf3ae4e33ffd676266e78426105f18d2317772e4b108dc947363 \
+                    size    2262085
+
+installs_libs       no
+
+wxWidgets.use       wxGTK-3.2
+
+# guayadeque(27054) malloc: *** error for object 0xa04da754: pointer being freed was not allocated
+legacysupport.redirect_bins ${name}
+
+depends_build-append \
+                    port:gettext \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  port:curl \
+                    port:dbus \
+                    path:lib/pkgconfig/gdk-pixbuf-2.0.pc:gdk-pixbuf2 \
+                    path:lib/pkgconfig/glib-2.0.pc:glib2 \
+                    port:gstreamer1 \
+                    port:gstreamer1-gst-libav \
+                    port:gstreamer1-gst-plugins-base \
+                    port:gstreamer1-gst-plugins-good \
+                    path:lib/pkgconfig/gtk+-3.0.pc:gtk3 \
+                    path:lib/pkgconfig/icu-uc.pc:icu \
+                    port:jsoncpp \
+                    port:libgpod \
+                    port:sqlite3 \
+                    port:taglib \
+                    port:wxsqlite3 \
+                    port:${wxWidgets.port}
+
+depends_run-append  port:desktop-file-utils
+
+compiler.cxx_standard   2017
+
+configure.args-append \
+                    -DENABLE_IPOD=ON \
+                    -DwxWidgets_CONFIG_EXECUTABLE=${wxWidgets.wxconfig}
+
+# FIXME: perhaps on wxGTK side, but there are a lot of these:
+# guayadeque[27435:903] *** __NSAutoreleaseNoPool(): Object 0xb0c6a80 of class NSCFString autoreleased with no pool in place - just leaking
+
+post-activate {
+    system "${prefix}/bin/gtk-update-icon-cache -f -t ${prefix}/share/icons/hicolor"
+    system "${prefix}/bin/update-desktop-database ${prefix}/share/applications"
+}
+
+notes "
+The app needs dbus session. Please run the following:\
+launchctl load -w /Library/LaunchAgents/org.freedesktop.dbus-session.plist
+"

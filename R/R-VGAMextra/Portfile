@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran victor.miranda VGAMextra 0.0-9
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2
+description         Additions and extensions of the VGAM package
+long_description    {*}${description}
+checksums           rmd160  427a3974ac744cf53b88f7e399cf7f68ddfbbf0e \
+                    sha256  1533c79faa148a9ec9a32077378fd1238e2c9f37365d71daa20430ab5e3ea760 \
+                    size    305294
+
+depends_lib-append  port:R-VGAM
+
+depends_test-append port:R-VGAMdata
+
+test.run            yes

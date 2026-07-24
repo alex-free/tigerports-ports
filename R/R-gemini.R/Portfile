@@ -1,0 +1,33 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran jhk0530 gemini.R 0.17.2 v
+revision            1
+categories-append   llm
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Interface to Google Gemini API
+long_description    {*}${description}
+homepage            https://github.com/jhk0530/gemini.R
+checksums           rmd160  bb1b4033e9b68379b03fc72e825325b6e6965c00 \
+                    sha256  086787527693608045cab426388d1049d9606f769533f136de95ceb046496b5f \
+                    size    5027895
+# github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-base64enc \
+                    port:R-cli \
+                    port:R-httr2 \
+                    port:R-jsonlite \
+                    port:R-knitr \
+                    port:R-rstudioapi
+
+depends_test-append port:R-quarto \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

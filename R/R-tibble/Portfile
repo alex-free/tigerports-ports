@@ -1,0 +1,55 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github tidyverse tibble 3.3.1.9017 v
+revision            0
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Modern re-imagining of the data frame
+long_description    Provides a 'tbl_df' class (the 'tibble') \
+                    with stricter checking and better formatting \
+                    than the traditional data frame.
+homepage            https://tibble.tidyverse.org
+checksums           rmd160  3b2aaa5b3251fd902a4efab5c87b572ec36a8c16 \
+                    sha256  0cb90d9219deebedc20cd663313a85af79955ecaf8cb67c1c3196af25b108932 \
+                    size    1292007
+github.tarball_from archive
+
+depends_lib-append  port:R-cli \
+                    port:R-lifecycle \
+                    port:R-magrittr \
+                    port:R-pillar \
+                    port:R-pkgconfig \
+                    port:R-rlang \
+                    port:R-vctrs
+
+depends_test-append port:R-bench \
+                    port:R-bit64 \
+                    port:R-blob \
+                    port:R-brio \
+                    port:R-callr \
+                    port:R-DiagrammeR \
+                    port:R-dplyr \
+                    port:R-evaluate \
+                    port:R-formattable \
+                    port:R-ggplot2 \
+                    port:R-here \
+                    port:R-hms \
+                    port:R-htmltools \
+                    port:R-knitr \
+                    port:R-lubridate \
+                    port:R-mockr \
+                    port:R-nycflights13 \
+                    port:R-pkgload \
+                    port:R-purrr \
+                    port:R-rmarkdown \
+                    port:R-stringi \
+                    port:R-testthat \
+                    port:R-tidyr \
+                    port:R-withr
+
+test.run            yes
+# https://github.com/tidyverse/tibble/issues/1575
+test.args-append    --ignore-vignettes

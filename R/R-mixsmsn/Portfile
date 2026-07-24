@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran marcosop mixsmsn 1.1-12
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Fit a finite mixture of scale mixture of skew-normal distributions
+long_description    {*}${description}
+checksums           rmd160  0611a7390ad4ac26a13452a1d393c18a8bde5595 \
+                    sha256  806a3b74353f9206217633e1c461f4118a61cf75baac0004a39dd20bb21ea890 \
+                    size    40629
+supported_archs     noarch
+
+depends_lib-append  port:R-mvtnorm
+
+test.run            yes

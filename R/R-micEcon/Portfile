@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran micEcon micEcon 0.6-20
+revision            1
+categories-append   economics
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Microeconomic analysis and modelling
+long_description    {*}${description}
+homepage            http://www.micEcon.org
+checksums           rmd160  edf505ae74390b1d49aa7c73c4a3abef148db1eb \
+                    sha256  8d333867cd7f31b008251bba64d6daac4a8b22100c2d611ff8de8ab7dc38a2c8 \
+                    size    178726
+supported_archs     noarch
+
+depends_lib-append  port:R-miscTools \
+                    port:R-plm
+
+depends_test-append port:R-Ecdat \
+                    port:R-systemfit
+
+test.run            yes

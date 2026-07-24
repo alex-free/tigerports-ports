@@ -1,0 +1,39 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran samhforbes eyetrackingR 0.2.2
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Eye-tracking data analysis
+long_description    {*}${description}
+homepage            https://samforbes.me/eyetrackingR
+checksums           rmd160  a8bf505f344b6efc448436fa72d48b0b10358c85 \
+                    sha256  5901e102bfe722aa6bbdcad59180fcc2f99186ec284facc8d751843eb604aa31 \
+                    size    804546
+supported_archs     noarch
+
+depends_lib-append  port:R-broom \
+                    port:R-broom.mixed \
+                    port:R-dplyr \
+                    port:R-ggplot2 \
+                    port:R-lazyeval \
+                    port:R-purrr \
+                    port:R-rlang \
+                    port:R-tidyr \
+                    port:R-zoo
+
+depends_test-append port:R-doMC \
+                    port:R-foreach \
+                    port:R-glmmTMB \
+                    port:R-knitr \
+                    port:R-lme4 \
+                    port:R-pbapply \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

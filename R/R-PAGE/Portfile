@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran jessica306a PAGE 0.4.0
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Predictor-assisted graphical models under error-in-variables
+long_description    {*}${description}
+checksums           rmd160  281e392cef27cb71a17abd94f9a6802083d262be \
+                    sha256  9d944616df5459c154da771be62c398fce7e320493acad684a0e7536a10497fa \
+                    size    11272
+
+depends_lib-append  port:R-caret \
+                    port:R-GGally \
+                    port:R-glasso \
+                    port:R-lars \
+                    port:R-metrica \
+                    port:R-network \
+                    port:R-randomForest \
+                    port:R-RSQLite
+
+depends_test-append port:R-sna
+
+test.run            yes

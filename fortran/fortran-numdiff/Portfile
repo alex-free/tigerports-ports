@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           fortran 1.0
+
+github.setup        jacobwilliams NumDiff 1.8.1
+name                fortran-numdiff
+revision            1
+categories-append   math
+license             BSD
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+description         Modern Fortran Numerical Differentiation Library
+long_description    NumDiff provides a modern Fortran interface for computing \
+                    the Jacobian (derivative) matrix of m nonlinear functions \
+                    which depend on n variables. The Jacobian matrix is required \
+                    for various applications, including numerical optimization. \
+                    It can also be used to test the accuracy of gradients \
+                    computed by other means. The library also provides \
+                    for computing the sparsity of this matrix, \
+                    and returning the Jacobian in sparse or dense form.
+checksums           rmd160  5699e32c43f2512bf1124d23b97c28a7d7a2017d \
+                    sha256  6389c28f076a4a4945fe3499afbec8ec0f07cca10ab81a1fd35ae83c6a3f2b12 \
+                    size    216739
+github.tarball_from archive
+
+post-destroot {
+    set docdir ${prefix}/share/doc/${name}
+    xinstall -d ${destroot}${docdir}
+    xinstall -m 0644 -W ${worksrcpath} LICENSE README.md ${destroot}${docdir}
+}
+
+test.run            yes

@@ -1,0 +1,42 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github          1.0
+PortGroup           legacysupport   1.1
+
+github.setup        vifm vifm 0.14.4 v
+revision            0
+categories          sysutils
+installs_libs       no
+license             GPL-2+
+maintainers         {gmail.com:herby.gillot @herbygillot} \
+                    openmaintainer
+description         ncurses-based file manager with vi like keybindings
+long_description    Vifm is an ncurses-based file manager with vi like \
+                    keybindings. If you use vi, vifm gives you complete \
+                    keyboard control over your files without having to \
+                    learn a new set of commands.
+homepage            https://vifm.info
+checksums           rmd160  fdd9b95e88f08769a99a2ba86754e35084a531be \
+                    sha256  eaabff68da048620e30b3131c8fbb0cdd60177591409acd28a7ad5339c166e80 \
+                    size    2492864
+github.tarball_from archive
+
+depends_lib-append  port:libmagic \
+                    port:ncurses
+
+# depends_run       port:desktop-file-utils
+
+# TODO: add variants for GTK and X.
+configure.args      --with-libmagic \
+                    --without-gtk \
+                    --without-X11
+
+# ops.c:586: error: unknown field ‘fast_file_cloning’ specified in initializer
+compiler.blacklist-append \
+                    *gcc-4.0 *gcc-4.2 {clang < 421}
+
+test.run            yes
+test.target         check
+
+github.livecheck.regex {([0-9.]+)}

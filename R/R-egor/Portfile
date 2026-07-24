@@ -1,0 +1,38 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is archaic.
+R.setup             cran tilltnet egor 1.24.2
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             AGPL-3
+description         Import and analyse ego-centered network data
+long_description    {*}${description}
+homepage            https://egor.tillt.net
+checksums           rmd160  64822fc207f1698211607ce89c84bb761ff8f106 \
+                    sha256  4cfebf23c719048684ee5608b697374d75379cd436ce9431894b01b1229e4fb7 \
+                    size    3145352
+supported_archs     noarch
+
+depends_lib-append  port:R-dplyr \
+                    port:R-pillar \
+                    port:R-purrr \
+                    port:R-rlang \
+                    port:R-srvyr \
+                    port:R-tibble \
+                    port:R-tidygraph \
+                    port:R-tidyr
+
+depends_test-append port:R-haven \
+                    port:R-igraph \
+                    port:R-knitr \
+                    port:R-network \
+                    port:R-rmarkdown \
+                    port:R-shiny \
+                    port:R-survey \
+                    port:R-testthat
+
+test.run            yes

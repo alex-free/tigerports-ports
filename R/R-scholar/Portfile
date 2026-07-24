@@ -1,0 +1,39 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is archaic.
+R.setup             cran YuLab-SMU scholar 0.2.5
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Analyse citation data from Google Scholar
+long_description    {*}${description}
+homepage            https://github.com/YuLab-SMU/scholar
+checksums           rmd160  56d3e5a8f477540a68c27422261422ce55f76df1 \
+                    sha256  b2608ea67818013b3335ca68fefd09e1e06eb7c91ba50bdcd80d30deda8ced97 \
+                    size    1280527
+supported_archs     noarch
+
+depends_lib-append  port:R-dplyr \
+                    port:R-ggplot2 \
+                    port:R-ggraph \
+                    port:R-httr \
+                    port:R-R.cache \
+                    port:R-rlang \
+                    port:R-rvest \
+                    port:R-stringr \
+                    port:R-tidygraph \
+                    port:R-xml2
+
+depends_test-append port:R-knitr \
+                    port:R-prettydoc \
+                    port:R-rmarkdown \
+                    port:R-roxygen2 \
+                    port:R-spelling \
+                    port:R-testthat \
+                    port:R-yulab.utils
+
+test.run            yes

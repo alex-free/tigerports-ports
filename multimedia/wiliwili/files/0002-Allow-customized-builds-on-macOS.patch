@@ -1,0 +1,65 @@
+From 34dee85cc0c5fe848ed70f5e0cba1f32e849e069 Mon Sep 17 00:00:00 2001
+From: Sergey Fedorov <vital.had@gmail.com>
+Date: Fri, 3 Oct 2025 09:16:37 +0800
+Subject: [PATCH] Allow customized builds on macOS
+
+---
+ CMakeLists.txt    | 1 +
+ cmake/extra.cmake | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git CMakeLists.txt CMakeLists.txt
+index 3c1b4f8..df31036 100644
+--- CMakeLists.txt
++++ CMakeLists.txt
+@@ -19,6 +19,7 @@ cmake_dependent_option(MAC_IntelChip "Build for x86_64 (10.15)" OFF "APPLE;NOT P
+ cmake_dependent_option(MAC_AppleSilicon "Build for arm64 (11.0)" OFF "APPLE;NOT PLATFORM_IOS" OFF)
+ cmake_dependent_option(MAC_Universal "Support x86_64;arm64 at the same time" OFF "APPLE;NOT PLATFORM_IOS" OFF)
+ cmake_dependent_option(MAC_DOWNLOAD_DYLIB "Using precompiled dylib instead of system provided" OFF "APPLE;NOT PLATFORM_IOS" OFF)
++cmake_dependent_option(MAC_CUSTOM_BUILD "Allow specifying build config for macOS" OFF "APPLE;NOT PLATFORM_IOS" OFF)
+ 
+ # Linux
+ # Using CMAKE_INSTALL_PREFIX to specify the location where the application is installed.
+diff --git cmake/extra.cmake cmake/extra.cmake
+index e31f12f..f88a1b4 100644
+--- cmake/extra.cmake
++++ cmake/extra.cmake
+@@ -51,9 +51,8 @@
+         set(USE_SYSTEM_CURL ON)
+         set(CPR_FORCE_DARWINSSL_BACKEND ON)
+         # Add this to avoid linker error imported from: https://github.com/xfangfang/borealis/pull/115
+-        # Delete after drop support for macOS < 10.7
+         set(CMAKE_OSX_DEPLOYMENT_TARGET ${MACOS_VERSION} CACHE STRING "" FORCE)
+-    else ()
++    elseif (NOT MAC_CUSTOM_BUILD)
+         message(STATUS "build for old system, using boost filesystem and compile curl")
+         set(USE_BOOST_FILESYSTEM ON)
+         set(USE_SYSTEM_CURL OFF)
+
+From 4f43bdb8e3f576c89551932e8e4716f09f621922 Mon Sep 17 00:00:00 2001
+From: Sergey Fedorov <vital.had@gmail.com>
+Date: Fri, 3 Oct 2025 02:57:50 +0800
+Subject: [PATCH] Allow not to force build settings for macOS
+
+---
+ CMakeLists.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git CMakeLists.txt CMakeLists.txt
+index 09183651..ce05fd5c 100644
+--- library/borealis/CMakeLists.txt
++++ library/borealis/CMakeLists.txt
+@@ -7,11 +7,12 @@ include(${BOREALIS_LIBRARY}/cmake/commonOption.cmake)
+ 
+ # Dependencies
+ option(USE_SHARED_LIB "Whether to use shared libs provided by system" OFF)
++cmake_dependent_option(MAC_CUSTOM_BUILD "Allow specifying build config for macOS" OFF "APPLE;NOT PLATFORM_IOS" OFF)
+ cmake_dependent_option(USE_SYSTEM_FMT "" OFF "NOT USE_SHARED_LIB" ON)
+ cmake_dependent_option(USE_SYSTEM_TINYXML2 "" OFF "NOT USE_SHARED_LIB" ON)
+ cmake_dependent_option(USE_SYSTEM_TWEENY "" OFF "NOT USE_SHARED_LIB" ON)
+ 
+-if (APPLE AND PLATFORM_DESKTOP)
++if (APPLE AND PLATFORM_DESKTOP AND NOT MAC_CUSTOM_BUILD)
+     option(BUNDLE_MACOS_APP "Bundle a app for macOS" OFF)
+     set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64" CACHE STRING "" FORCE)
+     set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15" CACHE STRING "" FORCE)

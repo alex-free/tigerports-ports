@@ -1,0 +1,19 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           nim 1.0
+
+nim.vcs_revision    db080b4e2432868e188efb4fb72c1ee6c6c28428
+nim.setup           github johnnovak illwill ${nim.vcs_revision}
+version             0.4.1
+revision            1
+categories-append   devel
+license             WTFPL
+maintainers         nomaintainer
+
+description         cross-platform console library for Nim
+long_description    A curses-inspired simple {*}${description}.
+
+checksums           rmd160  b9db82dd5b70f27a16b9adca9c651885c936ab5a \
+                    sha256  6a75943793da0640a40ef31e35c31513533270789ec77b23564ea680672d71a1 \
+                    size    444528

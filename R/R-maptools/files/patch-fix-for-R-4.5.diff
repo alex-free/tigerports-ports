@@ -1,0 +1,20 @@
+--- src/pip.c	2021-03-20 00:31:50.000000000 +0800
++++ src/pip.c	2025-07-07 18:24:52.000000000 +0800
+@@ -42,7 +42,7 @@
+ 	SEXP ret;
+ 
+ 	pol.lines = LENGTH(polx); /* check later that first == last */
+-	pol.p = (PLOT_POINT *) Calloc(pol.lines, PLOT_POINT); /* Calloc does error handling */
++	pol.p = (PLOT_POINT *) R_Calloc(pol.lines, PLOT_POINT); /* R_Calloc does error handling */
+ 	for (i = 0; i < LENGTH(polx); i++) {
+ 		pol.p[i].x = NUMERIC_POINTER(polx)[i];
+ 		pol.p[i].y = NUMERIC_POINTER(poly)[i];
+@@ -70,7 +70,7 @@
+ 			default: INTEGER_POINTER(ret)[i] = -1; break;
+ 		}
+ 	}
+-	Free(pol.p);
++	R_Free(pol.p);
+ 	return(ret);
+ }
+ 

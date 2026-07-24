@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran t.lumley svylme 1.5-1
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Linear mixed models for complex survey data
+long_description    {*}${description}
+checksums           rmd160  97d4f9fb2df9272a0b3d51a03a94e037db69be02 \
+                    sha256  3af0a216d0107fa656f5328dcd51f0a8179a3c55c540539031e1650614346fad \
+                    size    145572
+supported_archs     noarch
+
+depends_lib-append  port:R-lme4 \
+                    port:R-minqa \
+                    port:R-survey
+
+test.run            yes

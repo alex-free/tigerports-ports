@@ -1,0 +1,338 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           active_variants 1.1
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+PortGroup           mpi 1.0
+
+# clock_gettime
+legacysupport.newest_darwin_requires_legacy 15
+
+set realname        sundials
+set branch          7
+github.setup        LLNL ${realname} ${branch}.8.0 v
+name                ${realname}${branch}
+revision            0
+
+categories          math devel
+license             BSD
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+
+description         SUite of Nonlinear and DIfferential/ALgebraic equation Solvers
+long_description    SUNDIALS consists of the following five solvers: CVODE \
+                    solves initial value problems for ordinary differential \
+                    equation (ODE) systems. CVODES solves ODE systems and \
+                    includes sensitivity analysis capabilities (forward and \
+                    adjoint). IDA solves initial value problems for \
+                    differential-algebraic equation (DAE) systems. IDAS solves \
+                    DAE systems and includes sensitivity analysis capabilities \
+                    (forward and adjoint). KINSOL solves nonlinear algebraic systems.
+homepage            https://computing.llnl.gov/projects/sundials
+
+github.tarball_from releases
+dist_subdir         ${realname}
+
+checksums           rmd160  e96dc768e71d4a23a39106ab44c83f2314448c3e \
+                    sha256  69ec92653e998e4841b59d363b3abf21299251991390f52917402737164ca574 \
+                    size    26654455
+
+#------------------------------------------------------------------------------
+# Path-Related Variables - START
+#------------------------------------------------------------------------------
+
+# The "install name," meaning, the subdirectory name for this port.
+# Should correspond to the major version.
+set port_install_name \
+                    ${subport}
+
+# Define all of our base paths up-front
+set port_install_prefix \
+                    ${prefix}/libexec/${port_install_name}
+set port_install_cmake \
+                    ${port_install_prefix}/cmake
+set port_install_include \
+                    ${port_install_prefix}/include
+set port_install_lib \
+                    ${port_install_prefix}/lib
+set port_install_doc \
+                    ${prefix}/share/doc/${port_install_name}
+set port_install_examples \
+                    ${prefix}/share/examples/${port_install_name}
+
+# Populate CMake options currently available
+cmake.install_prefix \
+                    ${port_install_prefix}
+cmake_share_module_dir \
+                    ${port_install_cmake}
+cmake.install_rpath \
+                    ${port_install_lib}
+
+configure.args-append \
+                    -DCMAKE_INSTALL_LIBEXECDIR=${port_install_prefix} \
+                    -DCMAKE_INSTALL_BINDIR=${port_install_prefix}/bin \
+                    -DCMAKE_INSTALL_SBINDIR=${port_install_prefix}/sbin \
+                    -DCMAKE_INSTALL_SHAREDIR=${port_install_prefix}/share \
+                    -DCMAKE_INSTALL_INCLUDEDIR=${port_install_include} \
+                    -DCMAKE_INSTALL_LIBDIR=${port_install_lib} \
+                    -DCMAKE_INSTALL_NAME_DIR=${port_install_lib}
+
+#------------------------------------------------------------------------------
+# Path-Related Variables - END
+#------------------------------------------------------------------------------
+
+compiler.cxx_standard \
+                    2011
+
+mpi.setup           default \
+                    require_fortran
+
+depends_extract-append \
+                    path:bin/gnutar:gnutar
+
+# Ignore warnings regarding macOS-specific attribs in archive; examples:
+# - gnutar: Ignoring unknown extended header keyword 'LIBARCHIVE.xattr.com.apple.provenance'
+# - gnutar: Ignoring unknown extended header keyword 'SCHILY.fflags'
+extract.post_args   "| gnutar -x --warning=no-unknown-keyword"
+
+depends_lib-append  port:SuiteSparse_KLU
+
+configure.args-append \
+                    -DBUILD_FORTRAN_MODULE_INTERFACE=ON \
+                    -DENABLE_ADDRESS_SANITIZER=OFF \
+                    -DENABLE_CUDA=OFF \
+                    -DENABLE_GINKGO=OFF \
+                    -DENABLE_HIP=OFF \
+                    -DENABLE_HYPRE=OFF \
+                    -DENABLE_KLU=ON \
+                    -DENABLE_KOKKOS=OFF \
+                    -DENABLE_LAPACK=ON \
+                    -DENABLE_MPI=OFF \
+                    -DENABLE_ONEMKL=OFF \
+                    -DENABLE_OPENMP=OFF \
+                    -DENABLE_PETSC=OFF \
+                    -DENABLE_RAJA=OFF \
+                    -DENABLE_SUPERLUDIST=OFF \
+                    -DENABLE_SUPERLUMT=OFF \
+                    -DENABLE_SYCL=OFF \
+                    -DENABLE_TRILINOS=OFF \
+                    -DEXAMPLES_ENABLE_C=OFF \
+                    -DEXAMPLES_ENABLE_CXX=OFF \
+                    -DEXAMPLES_ENABLE_F77=OFF \
+                    -DEXAMPLES_ENABLE_F90=OFF \
+                    -DEXAMPLES_INSTALL=OFF \
+                    -DKLU_INCLUDE_DIR=${prefix}/include \
+                    -DKLU_LIBRARY_DIR=${prefix}/lib \
+                    -DSUNDIALS_BUILD_WITH_PROFILING=OFF
+
+# from CMakeLists.txt:
+#    LAPACK is not compatible with INT64_T precision
+configure.args-append \
+                    -DSUNDIALS_INDEX_SIZE=32
+
+post-extract {
+    # fix file perms; tarball contents deny group and world read
+    system "find ${worksrcpath} -type d -print0 | xargs -0 chmod a+rx"
+    system "find ${worksrcpath} -type f -print0 | xargs -0 chmod a+r"
+}
+
+pre-configure {
+    if {[mpi_variant_isset]} {
+        configure.args-replace \
+                    -DENABLE_MPI=OFF \
+                    -DENABLE_MPI=ON
+        configure.args-append \
+                    -DMPI_MPICC=${prefix}/bin/${mpi.cc} \
+                    -DMPI_MPICXX=${prefix}/bin/${mpi.cxx} \
+                    -DMPI_MPIF77=${prefix}/bin/${mpi.f77} \
+                    -DMPI_MPIF90=${prefix}/bin/${mpi.f90} \
+                    -DMPI_RUN_COMMAND=${prefix}/bin/${mpi.exec}
+    }
+}
+
+# without this, previously installed sundials headers are found first
+# this can cause problem when upgrading
+# see https://cmake.org/cmake/help/latest/variable/CMAKE_INCLUDE_DIRECTORIES_BEFORE.html
+configure.args-append \
+                    -DCMAKE_INCLUDE_DIRECTORIES_BEFORE=ON
+
+# cmake files (e.g. config/SundialsFortran.cmake) create CMakeLists.txt files
+#    to test for functionality (e.g. a Fortran compiler).
+# CMAKE_OSX_SYSROOT is not passed to the functionality test.
+# Because CMAKE_OSX_DEPLOYMENT_TARGET is set as an environment variable,
+#    -isysroot is added to the compiler flags.
+# Only Apple Clang compilers support tbd files.
+# See https://trac.macports.org/ticket/53151
+# See https://cmake.org/cmake/help/latest/variable/CMAKE_OSX_SYSROOT.html
+configure.env-append \
+                    SDKROOT=/
+
+# OpenMP
+variant omp conflicts ginkgo raja description "Enable OpenMP" {
+        configure.args-replace \
+                    -DENABLE_OPENMP=OFF \
+                    -DENABLE_OPENMP=ON
+}
+
+# BLAS/LAPACK variants
+variant accelerate conflicts blis openblas description "Use Apple Accelerate Libraries" {
+    configure.args-append \
+                    -DBLA_VENDOR=Apple
+}
+
+variant blis conflicts accelerate openblas description "Use BLIS Libraries" {
+    # This should rather use libflame, but it is not accepted by configure test.
+    depends_lib-append \
+                    port:blis \
+                    port:lapack
+    configure.args-append \
+                    -DBLA_VENDOR=FLAME \
+                    -DLAPACK_LIBRARIES=${prefix}/lib/lapack/liblapack.dylib
+}
+
+variant openblas conflicts accelerate blis description "Use OpenBLAS Libraries" {
+    depends_lib-append \
+                    path:lib/libopenblas.dylib:OpenBLAS
+    require_active_variants \
+                    path:lib/libopenblas.dylib:OpenBLAS lapack
+    configure.args-append \
+                    -DBLA_VENDOR=OpenBLAS
+}
+
+if {![variant_isset accelerate] && ![variant_isset blis] && ![variant_isset openblas]} {
+    default_variants-append +accelerate
+}
+pre-fetch {
+    if {![variant_isset accelerate] && ![variant_isset blis] && ![variant_isset openblas] } {
+        ui_error "You must select either the +accelerate, +blis or +openblas variant for linear algebra."
+        return -code error "No linear-algebra variant selected."
+    }
+}
+
+# Optional modules
+variant ginkgo conflicts omp description "Build with Ginkgo support" {
+    depends_lib-append \
+                    port:ginkgo
+    configure.args-replace \
+                    -DENABLE_OPENMP=OFF \
+                    -DENABLE_OPENMP=ON \
+                    -DENABLE_GINKGO=OFF \
+                    -DENABLE_GINKGO=ON
+    configure.args-append \
+                    -DGinkgo_DIR=${prefix}
+
+    if {![catch {set result [active_variants ginkgo mpich]}]} {
+        if {$result} {
+            if {![variant_isset mpich]} {
+                return -code error "Ginkgo has mpich enabled, please use the same variant."
+            }
+        }
+    }
+    if {![catch {set result [active_variants ginkgo openmpi]}]} {
+        if {$result} {
+            if {![variant_isset openmpi]} {
+                return -code error "Ginkgo has openmpi enabled, please use the same variant."
+            }
+        }
+    }
+}
+
+variant hypre description "Build with Hypre support" {
+    depends_lib-append \
+                    port:hypre
+    configure.args-replace \
+                    -DENABLE_HYPRE=OFF \
+                    -DENABLE_HYPRE=ON
+    configure.args-append \
+                    -DHYPRE_INCLUDE_DIR=${prefix}/include/HYPRE \
+                    -DHYPRE_LIBRARY_DIR=${prefix}/lib
+}
+
+variant kokkos description "Build with Kokkos support" {
+    depends_lib-append \
+                    path:lib/libkokkoscore.dylib:kokkos
+    configure.args-replace \
+                    -DENABLE_KOKKOS=OFF \
+                    -DENABLE_KOKKOS=ON
+    configure.args-append \
+                    -DKokkos_DIR=${prefix}
+}
+
+# FIXME: Raja supports OpenMP as its backend, but Sundials is not fully aware:
+# Value of SUNDIALS_RAJA_BACKENDS must be one of CUDA, HIP, SYCL
+variant raja conflicts omp description "Build with Raja support" {
+    depends_lib-append \
+                    port:raja
+    configure.args-replace \
+                    -DENABLE_OPENMP=OFF \
+                    -DENABLE_OPENMP=ON \
+                    -DENABLE_RAJA=OFF \
+                    -DENABLE_RAJA=ON
+    configure.args-append \
+                    -DSUNDIALS_RAJA_BACKENDS=OPENMP
+}
+
+variant superlu_dist description "Build with superlu_dist support" {
+    depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+    depends_lib-append \
+                    port:superlu_dist
+    configure.args-replace \
+                    -DENABLE_SUPERLUDIST=OFF \
+                    -DENABLE_SUPERLUDIST=ON
+
+    if {![catch {set result [active_variants superlu_dist mpich]}]} {
+        if {$result} {
+            if {![variant_isset mpich]} {
+                return -code error "superlu_dist has mpich enabled, please use the same variant."
+            }
+        }
+    }
+    if {![catch {set result [active_variants superlu_dist openmpi]}]} {
+        if {$result} {
+            if {![variant_isset openmpi]} {
+                return -code error "superlu_dist has openmpi enabled, please use the same variant."
+            }
+        }
+    }
+}
+
+# Examples
+variant examples description "Install Examples" {
+    set example_langs {C CXX F90 F77}
+    foreach lang ${example_langs} {
+        configure.args-replace \
+                    -DEXAMPLES_ENABLE_${lang}=OFF \
+                    -DEXAMPLES_ENABLE_${lang}=ON \
+                    -DEXAMPLES_INSTALL=OFF \
+                    -DEXAMPLES_INSTALL=ON
+    }
+    configure.args-append \
+                    -DEXAMPLES_INSTALL_PATH=${port_install_examples}
+    use_parallel_build  no
+}
+
+# Documentation
+set port_doc_dir ${destroot}${port_install_doc}
+
+variant doc description "Install pdf documentation" {
+    post-destroot {
+        xinstall -d ${port_doc_dir}
+        foreach f [glob ${worksrcpath}/doc/*] {
+            xinstall -m 0644 ${f} ${port_doc_dir}/
+        }
+    }
+}
+
+default_variants-append +hypre +kokkos
+
+# LICENSE file is installed in a bad location
+post-destroot {
+    xinstall -d ${port_doc_dir}
+    move ${destroot}${port_install_include}/sundials/LICENSE ${port_doc_dir}/
+}
+
+livecheck.url       https://api.github.com/repos/${github.author}/${github.project}/tags?per_page=200
+livecheck.curloptions
+livecheck.regex     "\"name\": \"v(${branch}\.\[0-9\.\]+)\","

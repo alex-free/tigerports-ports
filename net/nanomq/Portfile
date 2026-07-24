@@ -1,0 +1,66 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem             1.0
+PortGroup              cmake 1.1
+PortGroup              github 1.0
+PortGroup              legacysupport 1.1
+
+# _getline, _strnlen
+legacysupport.newest_darwin_requires_legacy 10
+
+github.setup           emqx nanomq 0.25.3
+revision               0
+categories             net
+license                MIT
+maintainers            {@sikmir disroot.org:sikmir} openmaintainer
+description            An ultra-lightweight and blazing-fast MQTT broker for IoT edge
+long_description       {*}${description}
+homepage               https://nanomq.io
+
+# TODO: see if this can be handled somehow.
+conflicts              nng
+
+# Fetch from git instead of distfile because it needs submodules
+fetch.type             git
+
+post-fetch {
+    system -W ${worksrcpath} "git submodule update --init"
+}
+
+patchfiles             patch-TCP_KEEP.diff
+
+compiler.c_standard    1999
+# dds_type.c:53: error: expected expression before ‘test_struct’
+compiler.blacklist-append \
+                       *gcc-4.0 *gcc-4.2
+
+depends_build-append   path:bin/pkg-config:pkgconfig
+
+depends_lib-append     port:cyclonedds \
+                       port:mbedtls3 \
+                       port:sqlite3 \
+                       path:lib/libzmq.dylib:zmq
+
+# FIXME: DDS_PROXY is broken: https://github.com/nanomq/nanomq/issues/2109
+configure.args-append  -DBUILD_BENCH=ON \
+                       -DBUILD_DDS_PROXY=OFF \
+                       -DBUILD_NANOMQ_CLI=ON \
+                       -DBUILD_NFTP=OFF \
+                       -DBUILD_NNG_PROXY=OFF \
+                       -DBUILD_QUIC_CLI=OFF \
+                       -DBUILD_ZMQ_GATEWAY=ON \
+                       -DENABLE_ACL=ON \
+                       -DENABLE_ICEORYX=OFF \
+                       -DENABLE_JWT=OFF \
+                       -DENABLE_MYSQL=OFF \
+                       -DENABLE_PARQUET=OFF \
+                       -DENABLE_POSTGRESQL=OFF \
+                       -DENABLE_SYSLOG=ON \
+                       -DENABLE_TIMESCALEDB=OFF \
+                       -DNANOMQ_TESTS=OFF \
+                       -DNNG_ENABLE_COVERAGE=OFF \
+                       -DNNG_ENABLE_SQLITE=ON \
+                       -DNNG_ENABLE_TLS=ON \
+                       -DNNG_PROTO_MQTT_BROKER=ON \
+                       -DNNG_TRANSPORT_MQTT_BROKER_TCP=ON \
+                       -DNNG_TRANSPORT_MQTT_BROKER_WS=ON

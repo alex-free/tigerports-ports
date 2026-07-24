@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github nathaneastwood poorman 0.2.7 v
+revision            3
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Replication of key functionality from R-dplyr \
+                    and the wider tidyverse using only base R
+long_description    {*}${description}
+homepage            https://nathaneastwood.github.io/poorman
+checksums           rmd160  fae582cd824eb1c20430e413a74893c55d29976f \
+                    sha256  051cc41b00dc0ae6f8be6da08994c31f056f6ed716114c72b64bc1cc4fa75d70 \
+                    size    165580
+github.tarball_from archive
+supported_archs     noarch
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-roxygen2 \
+                    port:R-tinytest
+
+test.run            yes

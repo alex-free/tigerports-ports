@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github RobinHankin weyl 0.0-7
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         A suite of routines for Weyl algebras
+long_description    {*}${description}
+homepage            https://robinhankin.github.io/weyl
+checksums           rmd160  17fee7a326ad704531a47b23ff138ff098b775e7 \
+                    sha256  a85c6ab17b3fc4d7c50c9c8daee87fdfa06a68ecbddb2c28d6ac79694cd86d4b \
+                    size    388569
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-disordR \
+                    port:R-freealg \
+                    port:R-spray
+
+depends_test-append port:R-covr \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

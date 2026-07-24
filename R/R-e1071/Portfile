@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran r-project e1071 1.7-17
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             {GPL-2 GPL-3}
+description         Misc Functions of the Department of Statistics, Probability Theory Group (Formerly: E1071), TU Wien
+long_description    Functions for latent class analysis, short time Fourier transform, fuzzy clustering, support vector machines, \
+                    shortest path computation, bagged clustering, naive Bayes classifier, generalized k-nearest neighbour.
+checksums           rmd160  9eeb30f8127e2ba8c612810b72129688254ed885 \
+                    sha256  6debc371ad478c2aa6de1f6510e254e80e797de4974b855f63b35509a3c2ac87 \
+                    size    318056
+
+depends_lib-append  port:R-proxy
+
+depends_test-append port:R-mlbench \
+                    port:R-randomForest \
+                    port:R-SparseM \
+                    port:R-slam \
+                    port:R-xtable
+
+test.run            yes

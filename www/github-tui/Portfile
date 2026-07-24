@@ -1,0 +1,33 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=portfile:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+
+# Only for wrappers
+legacysupport.newest_darwin_requires_legacy 0
+legacysupport.redirect_bins github-tui
+
+github.setup        barracuda156 github-tui 00b6a246d377c635613e6d2f94a7d813aa12db0f
+version             0.0.1
+revision            1
+categories          www devel
+license             BSD
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+description         TUI for GitHub
+long_description    {*}${description} in C++.
+checksums           rmd160  6b18bb7206a553a14144f069eda117af7fb33c0c \
+                    sha256  600d2af78166b1d7fa04d0dc9c4ee1c782f43327afe58a5b5d643bb543c16373 \
+                    size    25335
+github.tarball_from archive
+
+depends_build-append \
+                    port:cxxopts \
+                    port:nlohmann-json \
+                    port:tomlplusplus
+depends_lib-append  port:cpr \
+                    port:FTXUI
+depends_run-append  port:highlight
+
+compiler.cxx_standard   2017

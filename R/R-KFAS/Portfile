@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is outdated.
+R.setup             cran helske KFAS 1.6.0
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-2+
+description         Kalman filter and smoother for exponential family state space models
+long_description    {*}${description}
+homepage            https://github.com/helske/KFAS
+checksums           rmd160  181c8287fb7a989c86613c50e1d854973e7a03d5 \
+                    sha256  48268eb44fd548cacd93bdb16473d0869e4b87947b6c582c0fd8118bacf1e987 \
+                    size    482313
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-knitr \
+                    port:R-lme4 \
+                    port:R-testthat
+
+test.run            yes

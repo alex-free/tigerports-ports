@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran eddelbuettel RcppCCTZ 0.2.14
+revision            1
+maintainers         nomaintainer
+license             {GPL-2 GPL-3}
+description         Rcpp bindings for the CCTZ library
+long_description    {*}${description}
+homepage            https://dirk.eddelbuettel.com/code/rcpp.cctz.html
+checksums           rmd160  fba11566796a9fb694b641095419123884192af6 \
+                    sha256  2c3643b4218ef2008470a4b2d8feb519c217e5570d34a1ecf117e0f8d14a637e \
+                    size    81513
+
+depends_lib-append  port:R-Rcpp
+
+depends_test-append port:R-tinytest
+
+test.run            yes

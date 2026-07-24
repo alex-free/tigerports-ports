@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github HenrikBengtsson profmem 0.7.0
+revision            1
+categories-append   devel
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             LGPL-2.1+
+description         Simple memory profiling for R
+long_description    {*}${description}
+homepage            https://henrikbengtsson.github.io/profmem
+checksums           rmd160  7c5f0d1e1be2202584771a0002a64fe34c28b663 \
+                    sha256  782c124933df24e658bd0901198c6d38d682870a2624bd14e378764c02374052 \
+                    size    52550
+github.tarball_from archive
+supported_archs     noarch
+
+depends_test-append port:R-markdown \
+                    port:R-microbenchmark \
+                    port:R-R.rsp
+
+test.run            yes

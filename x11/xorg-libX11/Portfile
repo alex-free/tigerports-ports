@@ -1,0 +1,77 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem      1.0
+
+name            xorg-libX11
+version         1.8.13
+revision        0
+categories      x11 devel
+license         X11
+maintainers     {jeremyhu @jeremyhu} openmaintainer
+description     X.org libX11
+homepage        https://www.x.org
+platforms       darwin macosx
+long_description \
+                libX11 is the main library used by X Window System applications to communicate with the X server.
+master_sites    xorg:individual/lib/
+distname        libX11-${version}
+
+checksums       rmd160  6e502418d73e2ac1c0b8b4f49a04e825c056121e \
+                sha256  69606f485c2c07c14ef64f75b7bb326d48587af33795d9ab3e607c0b5f94f11c \
+                size    1803464
+
+# move pragmas outside functions to keep old gcc compilers happy
+patchfiles      patch-xorg-libX11-pragmas-inside-functions.diff
+
+use_xz          yes
+
+depends_build   path:bin/pkg-config:pkgconfig \
+                port:xorg-util-macros \
+                port:xorg-xorgproto \
+                port:xorg-xtrans
+
+depends_lib     port:xorg-libXau \
+                port:xorg-libxcb \
+                port:xorg-libXdmcp \
+                port:xorg-xorgproto
+
+configure.checks.implicit_function_declaration.whitelist-append strchr
+
+configure.env-append RAWCPP=${configure.cpp}
+
+configure.args \
+    --disable-selective-werror \
+    --disable-silent-rules \
+    --disable-specs \
+    --without-fop \
+    --without-xmlto
+
+# Depending on ghostscript for the PDF documentation creates a dependency
+# loop, so you may want to install first without the docs variant
+variant docs description "Install extra documentation" {
+    depends_build-append \
+        port:xmlto \
+        port:fop \
+        port:xorg-sgml-doctools
+
+    depends_skip_archcheck-append \
+        xmlto
+
+    configure.args-delete \
+        --without-xmlto \
+        --without-fop \
+        --disable-specs
+
+    configure.args-append \
+        --with-xmlto \
+        --with-fop \
+        --enable-specs
+
+    configure.env-append \
+        FOP=${prefix}/bin/fop \
+        XMLTO=${prefix}/bin/xmlto
+}
+
+livecheck.type  regex
+livecheck.url   https://xorg.freedesktop.org/archive/individual/lib/?C=M&O=D
+livecheck.regex libX11-(\\d+(?:\\.\\d+)*)

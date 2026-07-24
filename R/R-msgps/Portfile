@@ -1,0 +1,20 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran keihirose msgps 1.3.5
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-2+
+description         Degrees of freedom of elastic net, adaptive lasso \
+                    and generalized elastic net
+long_description    {*}${description}
+checksums           rmd160  2233f82ffb6ae763ba999f6a62431b2ccad1868f \
+                    sha256  2eda002d55ae47a544de2ed63e2853e1a17c7fae865e954deb796edbc27573bd \
+                    size    19619
+
+compilers.setup     require_fortran
+
+test.run            yes

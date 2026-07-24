@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran spatstat spatstat.random 3.4-4
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Random generation functionality
+long_description    {*}${description} for the R-spatstat family.
+homepage            https://github.com/spatstat/${R.package}
+checksums           rmd160  6e0df67167e92621a325e25721895a8971c8c654 \
+                    sha256  e78e1622e3da760bac2fdfb3cf3b0fb742a090672f569f6eda89df3c20cb03ab \
+                    size    276493
+
+depends_lib-append  port:R-spatstat.data \
+                    port:R-spatstat.geom \
+                    port:R-spatstat.univar \
+                    port:R-spatstat.utils
+
+depends_test-append port:R-gsl \
+                    port:R-spatstat \
+                    port:R-spatstat.explore \
+                    port:R-spatstat.linnet \
+                    port:R-spatstat.model
+
+test.run            yes

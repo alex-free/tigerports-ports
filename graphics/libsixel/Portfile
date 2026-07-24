@@ -1,0 +1,41 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+
+github.setup        saitoha libsixel 1.8.7-r2 v
+revision            0
+categories          graphics devel
+maintainers         nomaintainer
+license             MIT
+
+description         Encoder/decoder implementation for DEC SIXEL graphics
+long_description    {*}${description} and some converter programs.
+
+checksums           rmd160  4d2a3c1917b3e8f6b0e03972313b3a8890cdb4b0 \
+                    sha256  1b083d1d4e53b0017ca3b63d43207ce70001dd229d856a72f4f953c6958a1f0e \
+                    size    4909793
+github.tarball_from archive
+
+use_autoreconf      yes
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  port:curl \
+                    path:lib/libjpeg.dylib:libjpeg-turbo \
+                    port:libpng
+
+# stb_image.h:974: error: thread-local storage not supported for this target
+compiler.thread_local_storage yes
+
+configure.args-append \
+                    --disable-python \
+                    --disable-silent-rules \
+                    --enable-img2sixel \
+                    --enable-sixel2png \
+                    --with-libcurl \
+                    --with-jpeg \
+                    --with-png \
+                    --without-gd \
+                    --without-gdk-pixbuf2

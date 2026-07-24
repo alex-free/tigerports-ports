@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran fmendiburu agricolae 1.3-7
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL
+description         Statistical procedures for agricultural research
+long_description    {*}${description}
+checksums           rmd160  1e84510de8d1d383175215a7451649ab393ae9ba \
+                    sha256  c5ade90ee23299de1d20e93406d9f4cb39bd92c51094e29306ec74baa1b34a7d \
+                    size    575693
+supported_archs     noarch
+
+depends_lib-append  port:R-AlgDesign
+
+test.run            yes

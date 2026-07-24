@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran marco.geraci nlmm 1.1.1
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Generalized Laplace Mixed-Effects Models
+long_description    {*}${description}
+checksums           rmd160  5b0beb3d62b0e3be808403ad65f38e2f01531893 \
+                    sha256  712732adf2c0868fd805f91f42b8050eaa90817e478c8e1fb98ac0aed8a99be9 \
+                    size    38470
+
+depends_lib-append  port:R-BH \
+                    port:R-gsl \
+                    port:R-lqmm \
+                    port:R-mvtnorm \
+                    port:R-numDeriv \
+                    port:R-Qtools \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-statmod
+
+compilers.setup     require_fortran
+
+test.run            yes

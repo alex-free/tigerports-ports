@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is outdated.
+R.setup             cran SymbolixAU geojsonsf 2.0.3 v
+revision            1
+categories-append   gis
+maintainers         nomaintainer
+license             MIT
+description         GeoJSON to Simple Feature converter
+long_description    {*}${description}
+homepage            https://github.com/SymbolixAU/geojsonsf
+checksums           rmd160  7e13551679db01b6aed2336eeb270949e702eeb8 \
+                    sha256  275ca14672d982e6a95884515f49d8a0aad14f3be62ea01b675a91b0bffb46d1 \
+                    size    1483733
+
+depends_lib-append  port:R-geometries \
+                    port:R-jsonify \
+                    port:R-rapidjsonr \
+                    port:R-Rcpp \
+                    port:R-sfheaders
+
+depends_test-append port:R-covr \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-tinytest
+
+test.run            yes

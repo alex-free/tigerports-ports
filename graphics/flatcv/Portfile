@@ -1,0 +1,45 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+PortGroup               github 1.0
+PortGroup               makefile 1.0
+
+name                    flatcv
+github.setup            ad-si FlatCV 0.3.0 v
+revision                0
+categories              graphics devel
+maintainers             {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license                 ISC
+description             Image processing and computer vision library
+long_description        {*}${description} in pure C.
+homepage                https://flatcv.ad-si.com
+checksums               rmd160  1509008c37622d83e676e144d941d7be2f45d560 \
+                        sha256  1705ceac5cf0438ae4f73d9fb6d43f8f60886a77a48700439bf72a1c4ef95a2a \
+                        size    25627854
+github.tarball_from     archive
+
+# type redefinition
+compiler.c_standard     2011
+
+build.target            mac-build mac-lib
+
+build.cmd-prepend       CC=${configure.cc} \
+                        CFLAGS="${configure.cflags} [get_canonical_archflags cc]" \
+                        PREFIX=${prefix}
+
+variant tests description "Build tests" {
+    build.target-append test-units
+
+    test.run            yes
+    # Tests are run at the end of the build.
+    # No special target needed.
+    test                { }
+}
+
+destroot.target-append  install-lib
+
+platform darwin {
+    post-destroot {
+        system -W ${destroot}${prefix} "install_name_tool -id ${prefix}/lib/libflatcv_mac.dylib ./lib/libflatcv_mac.dylib"
+    }
+}

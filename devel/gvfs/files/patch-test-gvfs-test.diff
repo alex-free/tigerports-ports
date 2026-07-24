@@ -1,0 +1,11 @@
+--- test/gvfs-test	2026-03-13 18:15:46.000000000 +0800
++++ test/gvfs-test	2026-05-08 01:37:24.000000000 +0800
+@@ -68,7 +68,7 @@
+ sshd_path = shutil.which('sshd')
+ twistd_path = find_alternative(['twistd-3', 'twistd3'])
+ 
+-local_ip = subprocess.check_output("ip -4 addr | sed -nr '/127\.0\.0/ n; "
++local_ip = subprocess.check_output("ifconfig -a | gsed -nr '/127\.0\.0/ n; "
+                                    "/inet / {  s/^.*inet ([0-9.]+).*$/\\1/; p; q  }'"
+                                    "| tr -d '\n'",
+                                    shell=True, universal_newlines=True)

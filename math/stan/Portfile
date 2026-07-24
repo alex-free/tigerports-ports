@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+PortGroup               github 1.0
+
+github.setup            stan-dev stan 2.36.0 v
+revision                0
+categories              math
+maintainers             {@barracuda156 macos-powerpc.org:barracuda}
+license                 BSD
+description             C++ package for Bayesian inference, maximum likelihood estimation etc.
+long_description        {*}${description}
+homepage                https://mc-stan.org
+checksums               rmd160  ef170273b48eb59cabc60eb8d906288f0f54e704 \
+                        sha256  0f1fa4ff1ca5f029cedd0b3a8d9fa05b37204db319061c96f482e01d3956b6f8 \
+                        size    4674182
+github.tarball_from     archive
+supported_archs         noarch
+platforms               any
+
+depends_lib-append      path:lib/pkgconfig/RapidJSON.pc:rapidjson \
+                        port:stanmath
+
+use_configure           no
+
+build                   {}
+
+destroot {
+    copy ${worksrcpath}/src/stan ${destroot}${prefix}/include
+}

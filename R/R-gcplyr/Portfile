@@ -1,0 +1,36 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github mikeblazanin gcplyr 1.12.0 v
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Manipulate and analyze growth curve data
+long_description    {*}${description}
+homepage            https://mikeblazanin.github.io/gcplyr
+checksums           rmd160  a1b3946d48d68acd81401d485e151f7441014657 \
+                    sha256  d0570c63c6d38ba3269981906fadcb64994d7ff183d9ebef3afd9c06ffe84e99 \
+                    size    4598721
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-dplyr \
+                    port:R-rlang \
+                    port:R-tidyr
+
+depends_test-append port:R-caret \
+                    port:R-cowplot \
+                    port:R-ggplot2 \
+                    port:R-knitr \
+                    port:R-lubridate \
+                    port:R-readxl \
+                    port:R-rJava \
+                    port:R-rmarkdown \
+                    port:R-sf \
+                    port:R-testthat \
+                    port:R-xlsx
+
+test.run            yes

@@ -1,0 +1,42 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran gluc data.tree 1.2.0 v
+revision            1
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         General purpose hierarchical data structure
+long_description    {*}${description}
+homepage            https://gluc.github.io/data.tree
+checksums           rmd160  c86c378aedbcd3fc5b7c1a614a3ab8577e0877c7 \
+                    sha256  febb39f5878ad0d64b243d08d596116389ba1bc7a35807b2e851fda48e554f22 \
+                    size    1610346
+# github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-R6 \
+                    port:R-stringi
+
+depends_test-append port:R-ape \
+                    port:R-DiagrammeR \
+                    port:R-doParallel \
+                    port:R-foreach \
+                    port:R-Formula \
+                    port:R-htmlwidgets \
+                    port:R-igraph \
+                    port:R-jsonlite \
+                    port:R-knitr \
+                    port:R-mockery \
+                    port:R-networkD3 \
+                    port:R-party \
+                    port:R-partykit \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-treemap \
+                    port:R-yaml
+
+test.run            yes

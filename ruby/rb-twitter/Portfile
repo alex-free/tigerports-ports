@@ -1,0 +1,37 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           ruby 1.0
+
+ruby.branches       3.3 3.2 3.1
+ruby.setup          twitter 8.2.0 gem {} rubygems
+categories-append   www
+platforms           any
+license             MIT
+maintainers         nomaintainer
+description         Ruby interface to the Twitter API
+long_description    {*}${description}
+homepage            https://sferik.github.io/twitter
+checksums           rmd160  865be6bfa73e4b1000e3007194e285f9babc50a1 \
+                    sha256  e6cc09c3a1308c403f8952835158354e4bf05b208991a8043c1d3e900fb241b0 \
+                    size    76800
+supported_archs     noarch
+
+if {${name} ne ${subport}} {
+    depends_run-append \
+                    port:rb${ruby.suffix}-addressable \
+                    port:rb${ruby.suffix}-buftok \
+                    port:rb${ruby.suffix}-equalizer \
+                    port:rb${ruby.suffix}-http \
+                    port:rb${ruby.suffix}-http-form_data \
+                    port:rb${ruby.suffix}-llhttp-ffi \
+                    port:rb${ruby.suffix}-memoizable \
+                    port:rb${ruby.suffix}-multipart-post \
+                    port:rb${ruby.suffix}-naught \
+                    port:rb${ruby.suffix}-simple_oauth
+
+    post-destroot {
+        system -W ${destroot}${ruby.gemdir}/specifications \
+            "/usr/bin/patch -p0 < ${filespath}/patch-gemspec-${ruby.branch}.diff"
+    }
+}

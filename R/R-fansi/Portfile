@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran brodieG fansi 1.0.7 v
+revision            0
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             {GPL-2 GPL-3}
+description         ANSI control sequence-aware string functions
+long_description    {*}${description}
+checksums           rmd160  5706e4fbe8efa0a2d1c6a61b4929e4193fdaaad9 \
+                    sha256  32a43f073aeb5c1d31c804014b95c2cb644bb4132119fcea313838b7ea4eb792 \
+                    size    685932
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-unitizer
+
+test.run            yes

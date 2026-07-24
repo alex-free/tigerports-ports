@@ -1,0 +1,44 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran edubruell tidyllm 0.3.5
+revision            1
+categories-append   llm
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Tidy Integration of Large Language Models
+long_description    {*}${description}
+homepage            https://edubruell.github.io/tidyllm
+checksums           rmd160  091094210d61b00cda578f6165ba8670c80b6ab3 \
+                    sha256  5abcd5a1028c5f9ae775a911bf77734a6adf11f7a0b377d41c7a3b37f1a04bb0 \
+                    size    1344461
+supported_archs     noarch
+
+depends_lib-append  port:R-base64enc \
+                    port:R-cli \
+                    port:R-curl \
+                    port:R-glue \
+                    port:R-httr2 \
+                    port:R-jsonlite \
+                    port:R-lifecycle \
+                    port:R-lubridate \
+                    port:R-pdftools \
+                    port:R-png \
+                    port:R-purrr \
+                    port:R-rlang \
+                    port:R-S7 \
+                    port:R-stringr \
+                    port:R-tibble
+
+depends_test-append port:R-ellmer \
+                    port:R-httptest2 \
+                    port:R-httpuv \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-tidyverse
+
+test.run            yes

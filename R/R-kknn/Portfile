@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran KlausVigo kknn 1.4.1
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-2+
+description         Weighted k-nearest neighbors
+long_description    {*}${description}
+homepage            https://klausvigo.github.io/kknn
+checksums           rmd160  ef27f123507dadca4ccfed5abfd434af32bbb31e \
+                    sha256  5232ddc268c0f9d691b613c8767a9ce079dade75ee22051a3b928024ada46f34 \
+                    size    396633
+
+depends_lib-append  port:R-igraph
+
+depends_test-append port:R-tinytest
+
+test.run            yes

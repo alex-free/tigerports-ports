@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran vincentarelbundock Rdatasets 0.0.1
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3+
+description         Access datasets from the Rdatasets Archive
+long_description    {*}${description}
+homepage            https://vincentarelbundock.github.io/Rdatasetspkg
+checksums           rmd160  e681a35ccaab2d25f14ccfa2f7e7bda813824e62 \
+                    sha256  04c3275a4c842263da514513395afc82596c7ed59c92301d0561d326bb4f6ff3 \
+                    size    11497
+supported_archs     noarch
+
+# Dep on R-nanoparquet is dropped until fixed.
+depends_test-append port:R-data.table \
+                    port:R-rstudioapi \
+                    port:R-tibble \
+                    port:R-tinytable \
+                    port:R-tinytest
+
+test.run            no

@@ -1,0 +1,41 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran stephenslab ebnm 1.1-38
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3+
+description         Solve the Empirical Bayes Normal Means problem
+long_description    {*}${description}
+homepage            https://github.com/stephenslab/ebnm
+checksums           rmd160  5176e7eaefacdb141c105ec35bb4af105ec65a2a \
+                    sha256  21430b926c650a08456ade645ea0927f4719ef672a095cc3834e0d882a7c1830 \
+                    size    599175
+# github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-ashr \
+                    port:R-deconvolveR \
+                    port:R-dplyr \
+                    port:R-ggplot2 \
+                    port:R-horseshoe \
+                    port:R-magrittr \
+                    port:R-mixsqp \
+                    port:R-rlang \
+                    port:R-truncnorm \
+                    port:R-trust
+
+depends_test-append port:R-cowplot \
+                    port:R-knitr \
+                    port:R-mcmc \
+                    port:R-numDeriv \
+                    port:R-REBayes \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

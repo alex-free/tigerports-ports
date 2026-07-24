@@ -1,0 +1,36 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           makefile 1.0
+
+github.setup        jamiebullock LibXtract 1.0.0 v
+name                [string tolower ${github.project}]
+revision            0
+categories          audio
+maintainers         nomaintainer
+description         simple, portable, lightweight library of audio feature extraction functions
+long_description    ${name} is a {*}${description}.
+
+checksums           rmd160  afc1aeee7e054ed8fd358821fe69e23b2b8281f2 \
+                    sha256  9433483aa11c1650a616c975c85d0135c0ad4f7e055a5d7bdb58ce8303b253c8 \
+                    size    606600
+github.tarball_from archive
+
+patchfiles          patch-fix-install.diff
+
+compiler.cxx_standard   2011
+compiler.thread_local_storage yes
+
+# ld: library not found for -lxtract
+use_parallel_build  no
+
+platform darwin {
+    post-destroot {
+        set libpath ${prefix}/lib/libxtract.dylib
+        system "install_name_tool -id ${libpath} ${destroot}${libpath}"
+    }
+}
+
+test.run            yes
+test.target         check

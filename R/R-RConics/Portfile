@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is outdated.
+R.setup             cran emanuelhuber RConics 1.1.2 v
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Computations on conics
+long_description    {*}${description}
+homepage            https://github.com/emanuelhuber/RConics
+checksums           rmd160  edeff3d891fef476ad113c6fbc2665161ed14b92 \
+                    sha256  9edc9b419c899312a76c47d545cd5b2336193595263c108a151128ebeaa4ea87 \
+                    size    19104
+# github.tarball_from archive
+supported_archs     noarch
+
+test.run            yes

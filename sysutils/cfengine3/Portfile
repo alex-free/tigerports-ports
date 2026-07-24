@@ -1,0 +1,68 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+PortGroup           openssl 1.0
+
+# clock_gettime
+legacysupport.newest_darwin_requires_legacy 15
+
+name                cfengine3
+github.setup        cfengine core 3.26.0
+revision            1
+categories          sysutils
+license             GPL-3
+maintainers         nomaintainer
+
+description         Network configuration-management tool
+long_description    A suite of programs for integrated autonomic \
+                    management of either individual or networked \
+                    computers. Cfengine 3 is a significant rewrite \
+                    of underlying cfengine technology which \
+                    preserves the core principles and methodology \
+                    of cfengine2’s approach.
+
+homepage            https://cfengine.com
+
+# Unfortunately, tarball lacks needed components.
+# checksums           rmd160  3363c11274135af5a468639b1bddf5f315668385 \
+#                     sha256  66d4efdbba94700fdf545d0fc0585a03059149ad143eac31319037f739610afd \
+#                     size    2462218
+# github.tarball_from archive
+
+fetch.type          git
+
+post-fetch {
+    system -W ${worksrcpath} "git submodule update --init --recursive"
+}
+
+use_autoreconf      yes
+autoreconf.cmd      ./autogen.sh
+autoreconf.args     --enable-debug
+
+depends_build-append \
+                    port:autoconf \
+                    port:automake \
+                    port:bison \
+                    port:libtool
+
+depends_lib-append  port:curl \
+                    port:librsync \
+                    port:libxml2 \
+                    port:libyaml \
+                    port:lmdb \
+                    port:pcre2
+
+configure.args-append \
+                    --disable-silent-rules \
+                    --enable-fhs \
+                    --with-avahi=no \
+                    --with-libcurl=${prefix} \
+                    --with-librsync=${prefix} \
+                    --with-libxml2=${prefix} \
+                    --with-libyaml=${prefix} \
+                    --with-lmdb=${prefix} \
+                    --with-openssl=${prefix} \
+                    --with-pcre2=${prefix} \
+                    --with-postgresql=no

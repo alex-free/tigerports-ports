@@ -1,0 +1,80 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           ffmpeg 1.0
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+PortGroup           openssl 1.0
+
+# _dprintf
+legacysupport.newest_darwin_requires_legacy 10
+legacysupport.redirect_bins shairport-sync
+
+github.setup        mikebrady shairport-sync 5.1
+revision            0
+categories          multimedia
+license             MIT BSD ISC
+maintainers         gmail.com:ale275 \
+                    openmaintainer
+description         Shairport Sync is an AirPlay audio player
+long_description    AirTunes emulator. Shairport Sync adds multi-room capability with Audio Synchronisation.
+
+checksums           rmd160  836096ba6b622197a40575c28cdec0a14f860a49 \
+                    sha256  d85b5ad26449f3777518c4bfafeff0e4a6ebfb8333187df0ef462c199a4aba83 \
+                    size    647186
+github.tarball_from archive
+
+depends_build       port:autoconf \
+                    port:automake \
+                    path:bin/pkg-config:pkgconfig
+
+ffmpeg.version      8
+
+depends_lib         port:libao \
+                    port:libconfig-hr \
+                    port:libdaemon \
+                    port:libplist \
+                    port:libsodium \
+                    port:libgcrypt \
+                    port:popt \
+                    port:soxr
+
+use_autoreconf      yes
+autoreconf.args     -fvi
+
+compiler.c_standard 2011
+
+configure.args      --sysconfdir=${prefix}/etc/shairport-sync \
+                    --with-ao \
+                    --with-dns_sd \
+                    --with-piddir=${prefix}/var \
+                    --with-pipe \
+                    --with-soxr \
+                    --with-ssl=openssl \
+                    --with-stdout
+
+# airplay-2 is not supported on macOS
+# https://github.com/mikebrady/shairport-sync/issues/1860
+# https://github.com/mikebrady/shairport-sync/issues/1947
+platform darwin {
+  configure.args-append --with-os=darwin \
+                        --without-airplay-2 \
+                        --without-pulseaudio
+}
+
+variant metadata description "Enable metadata output" {
+  configure.args-append --with-metadata
+}
+
+default_variants    +metadata
+
+post-destroot {
+    delete ${destroot}${prefix}/etc/shairport-sync/shairport-sync.conf
+}
+
+post-activate {
+    if {![file exists ${prefix}/etc/shairport-sync/shairport-sync.conf]} {
+        file copy ${prefix}/etc/shairport-sync/shairport-sync.conf.sample \
+                  ${prefix}/etc/shairport-sync/shairport-sync.conf
+    }
+}

@@ -1,0 +1,45 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+
+github.setup        artivis manif 65166b3bfd15b1020c29f3eaf6888e1009c79aea
+version             2025.11.02
+revision            0
+categories          devel
+license             MIT
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+description         Small C++11 header-only library for Lie theory
+long_description    manif is a Lie theory library for state-estimation targeted at robotics applications. \
+                    It is developed as a header-only C++11 library with Python 3 wrappers.
+homepage            https://artivis.github.io/manif
+checksums           rmd160  f5eebb9cd1df5a01e90288d65c9df51e4d8f56a1 \
+                    sha256  c3106d309a25ef9d4d72fb83729539a8f633fda50f0d83e14c17efe50be6e1de \
+                    size    641326
+platforms           any
+supported_archs     noarch
+
+depends_lib-append  path:share/pkgconfig/eigen3.pc:eigen3
+depends_build-append \
+                    port:gtest
+
+# https://github.com/artivis/manif/issues/317
+patchfiles-append   0002-Fix-gtest_rn-for-32-bit-platforms.patch \
+                    0003-tests-CMakeLists.patch
+
+# Required for tests, see: https://github.com/artivis/manif/issues/269
+compiler.cxx_standard 2014
+compiler.blacklist-append {clang < 800}
+cmake.set_cxx_standard yes
+
+configure.args-append \
+                    -DBUILD_BENCHMARKING=OFF \
+                    -DBUILD_EXAMPLES=OFF \
+                    -DBUILD_PYTHON_BINDINGS=OFF \
+                    -DBUILD_TESTING=ON \
+                    -DBUILD_TESTING_PYTHON=OFF \
+                    -DENABLE_CPPCHECK=OFF \
+                    -DUSE_SYSTEM_WIDE_TL_OPTIONAL=OFF
+
+test.run            yes

@@ -1,0 +1,36 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github andrjohns StanEstimators 369fd03ce24259e6feb125cde4cfd27f839100ef
+version             0.2.0.9000
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         provides an estimation back-end for R functions
+long_description    ${name} {*}${description}, similar to those provided by R-optim package, \
+                    using the algorithms provided by the Stan probabilistic programming language.
+checksums           rmd160  04a7713476c2a497016188cd663a44bc98013586 \
+                    sha256  de99689f4bced28adeb72522d0cd6d75133c15881761959d3f2b6174f5117b2a \
+                    size    1182497
+github.tarball_from archive
+
+depends_lib-append  port:R-BH \
+                    port:R-loo \
+                    port:R-posterior \
+                    port:R-rapidjsonr \
+                    port:R-Rcpp \
+                    port:R-RcppEigen \
+                    port:R-RcppParallel
+
+depends_test-append port:R-callr \
+                    port:R-future \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-RTMB \
+                    port:R-testthat \
+                    port:R-withr
+
+test.run            yes

@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran hpages Rtwobitlib 0.3.10
+revision            1
+categories-append   devel
+maintainers         nomaintainer
+license             MIT
+description         2bit C Library
+long_description    {*}${description}
+homepage            https://github.com/hpages/Rtwobitlib
+checksums           rmd160  7bbf59e71fc9256244411ddf8d2ba0d690222386 \
+                    sha256  16977cdd27fbf2ba5e4d81f1766bce616a26605c9ba79a230d7815848cf23dd9 \
+                    size    3281063
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

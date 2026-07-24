@@ -1,0 +1,17 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran r-project tree 1.0-45
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             {GPL-2 GPL-3}
+description         Classification and regression trees
+long_description    {*}${description}
+checksums           rmd160  2e6a57fd57d478f34ad428d5221d68d8684e069d \
+                    sha256  b397f593fbd7c063bc17ca1b6601088d01297d443d865bd8ea6ff9d3641c0697 \
+                    size    49853
+
+test.run            yes

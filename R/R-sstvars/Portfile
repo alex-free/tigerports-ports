@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran saviviro sstvars 1.2.1
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3+
+description         Toolkit for reduced form and structural smooth transition vector autoregressive models
+long_description    {*}${description}
+homepage            https://github.com/saviviro/sstvars
+checksums           rmd160  8cc95a856f62e3b111ffd2fc388cc97059be0bc8 \
+                    sha256  2d821b587e5bcad6338248a05078d0a67813ec4f9cf13b3e20dae2ce3957ce70 \
+                    size    955587
+
+depends_lib-append  port:R-pbapply \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown
+
+test.run            yes

@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran ulrike.groemping FrF2 2.3-4
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Fractional factorial designs with 2-level factors
+long_description    {*}${description}
+checksums           rmd160  d9fe784c671588a698d1007d89d541bcbe72156e \
+                    sha256  aff4e9bf5fce1e0f91f380fb5fd1fb1425d14aa1dd880d9438c89ff0258eb911 \
+                    size    335404
+supported_archs     noarch
+
+depends_lib-append  port:R-DoE.base \
+                    port:R-igraph \
+                    port:R-scatterplot3d \
+                    port:R-sfsmisc

@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran spatstat spatstat.explore 3.7-0
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-2+
+description         Exploratory data analysis
+long_description    {*}${description} for the R-spatstat family.
+homepage            https://github.com/spatstat/${R.package}
+checksums           rmd160  e4d5c401cade7a539316a16440dbc309ac5aa3a4 \
+                    sha256  257da9c0007c09952e448d8007e3d9f773e2983cb4cd108cdfda8c42935ba23f \
+                    size    717634
+
+depends_lib-append  port:R-abind \
+                    port:R-goftest \
+                    port:R-spatstat.data \
+                    port:R-spatstat.geom \
+                    port:R-spatstat.random \
+                    port:R-spatstat.sparse \
+                    port:R-spatstat.univar \
+                    port:R-spatstat.utils
+
+depends_test-append port:R-fftwtools \
+                    port:R-gsl \
+                    port:R-locfit \
+                    port:R-sm \
+                    port:R-spatstat \
+                    port:R-spatstat.linnet \
+                    port:R-spatstat.model
+
+test.run            yes

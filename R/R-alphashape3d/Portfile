@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran beatriz.pateiro alphashape3d 1.3.3
+revision            1
+maintainers         nomaintainer
+license             GPL-2
+description         Implementation of the 3D alpha-shape \
+                    for the reconstruction of 3D sets from a point cloud
+long_description    {*}${description}
+checksums           rmd160  4bc6860fd122f2946418a49782a53befd19cae01 \
+                    sha256  743df657ad2a1fe085a6b739a76a5fc6a6b36ee092dad79e869fe4a63a8defe8 \
+                    size    20553
+
+depends_lib-append  port:R-geometry \
+                    port:R-RANN \
+                    port:R-rgl
+
+depends_test-append port:R-alphahull
+
+test.run            yes

@@ -1,0 +1,77 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           linear_algebra 1.0
+PortGroup           mpi 1.0
+PortGroup           muniversal 1.0
+
+github.setup        cburstedde p4est 2.8.7 v
+revision            0
+categories          science math
+maintainers         {mcalhoun @MarcusCalhoun-Lopez} openmaintainer
+license             GPL-2+
+homepage            https://www.p4est.org
+master_sites        https://p4est.github.io/release/
+
+description         Graph coloring algorithm package
+long_description    ${description}
+
+checksums           rmd160  5aa14207d95049f02db1b1cb78369dd427a36b2a \
+                    sha256  0a1e912f3529999ca6d62fee335d51f24b5650b586e95a03ef39ebf73936d7f4 \
+                    size    16233758
+github.tarball_from archive
+
+mpi.setup           require require_fortran
+
+# Do not attempt to use la files from libsc
+patchfiles-append   patch-libsc-lib.diff
+
+depends_lib-append  port:libsc \
+                    port:lua \
+                    port:metis \
+                    port:zlib
+
+mpi.enforce_variant libsc
+
+configure.args-append \
+    --enable-mpi \
+    --with-metis \
+    --with-petsc=no \
+    --with-sc=${prefix}
+
+pre-configure {
+    configure.args-append \
+        --with-blas="-L${prefix}/lib ${linalglib}" \
+        --with-lapack=""
+}
+
+variant petsc description {build with PETSc support} {
+    depends_lib-append  \
+        port:petsc
+
+    configure.args-replace \
+        --with-petsc=no \
+        --with-petsc=yes
+
+    configure.env-append \
+        PETSC_DIR=${prefix}/lib/petsc
+
+    mpi.enforce_variant petsc
+}
+
+if {!${universal_possible} || ![variant_isset universal]} {
+    # remove arch flags
+    post-destroot {
+        reinplace -E {s|-arch [a-z0-9_]+||g} ${destroot}${prefix}/etc/Makefile.p4est.mk
+        #reinplace -E {s|-m[0-9]+||g}         ${destroot}${prefix}/etc/Makefile.p4est.mk
+    }
+} else {
+    # remove arch flags
+    merger-post-destroot {
+        foreach arch ${configure.universal_archs} {
+            reinplace -E {s|-arch [a-z0-9_]+||g} ${destroot}-${arch}${prefix}/etc/Makefile.p4est.mk
+            #reinplace -E {s|-m[0-9]+||g}         ${destroot}-${arch}${prefix}/etc/Makefile.p4est.mk
+        }
+    }
+}

@@ -1,0 +1,18 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran mclements nltm 1.4.6
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-2
+description         Non-Linear Transformation Models
+long_description    {*}${description}
+homepage            https://github.com/mclements/nltm
+checksums           rmd160  ade539aed1ba812e1d95cb1a97540a6e64467e62 \
+                    sha256  d0a29a2f343d9a88ab0b5c5a1660c431bda07315b991c9e096b5e0fdf4bbc15d \
+                    size    35970
+
+test.run            yes

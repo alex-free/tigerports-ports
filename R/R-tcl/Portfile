@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran clemens.draxler tcl 0.2.1
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2
+description         Testing in Conditional Likelihood context
+long_description    {*}${description}
+checksums           rmd160  6d936d43886089b485c195f04f3dc51ecc1c7d51 \
+                    sha256  a9648bd7f69ef9a8f28e0a09f29e8638561e0ccec1d051b0c2cbc96bbde95c55 \
+                    size    71297
+supported_archs     noarch
+
+depends_lib-append  port:R-eRm \
+                    port:R-ltm \
+                    port:R-numDeriv \
+                    port:R-psychotools \
+                    port:R-rlang
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown
+
+test.run            yes

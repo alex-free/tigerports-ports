@@ -1,0 +1,614 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:filetype=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+PortGroup               conflicts_build 1.0
+PortGroup               github 1.0
+PortGroup               legacysupport 1.1
+PortGroup               meson 1.0
+
+# Please revbump mpv whenever ffmpeg is updated!
+name                    mpv-legacy
+github.setup            mpv-player mpv 0.36.0 v
+conflicts               mpv mpv-cocoa
+revision                2
+categories              multimedia
+# Use mpv-cocoa on 10.15+
+platforms               {darwin < 19}
+license                 GPL-2+
+maintainers             {@barracuda156 gmail.com:vital.had} openmaintainer
+
+description             mpv is a movie player based on MPlayer and mplayer2.
+long_description        {*}${description} It plays most MPEG/VOB, AVI, Ogg/OGM, \
+                        VIVO, ASF/WMA/WMV, QT/MOV/MP4, RealMedia, Matroska, \
+                        NUT, NuppelVideo, FLI, YUV4MPEG, FILM, RoQ, PVA files, \
+                        supported by many native, XAnim and Win32 DLL codecs. \
+                        You can watch VideoCD, SVCD, DVD, 3ivx, DivX 3/4/5, WMV \
+                        and even H.264 movies.
+homepage                https://www.mpv.io
+
+checksums               rmd160  9ff58a63048d9a18d233e40cdb4b529031086a54 \
+                        sha256  8e6fed056d6981a165bfbb6c6391109a81078aa8be94f1fbb7c95cb5587d446e \
+                        size    3409580
+# MacPorts upstream has broken port extract, heh.
+github.tarball_from     tarball
+
+if {![variant_isset libmpv]} {
+    installs_libs       no
+}
+
+set real_name           mpv
+
+set ffmpeg_ver          6
+
+depends_build-append    path:bin/pkg-config:pkgconfig
+
+configure.pkg_config_path-prepend \
+                        ${prefix}/libexec/ffmpeg${ffmpeg_ver}/lib/pkgconfig
+
+depends_lib-append      port:ffmpeg${ffmpeg_ver} \
+                        port:lcms2 \
+                        path:lib/pkgconfig/libass.pc:libass \
+                        port:libiconv \
+                        path:bin/perl:perl5 \
+                        port:zimg \
+                        port:zlib
+
+# Build system is a bit handicapped and cannot link correctly otherwise:
+conflicts_build         ffmpeg
+
+# mpv(18616,0xf0185000) malloc: *** error for object 0xe26e600:
+# incorrect checksum for freed object - object was probably modified after being freed.
+legacysupport.redirect_bins ${real_name}
+
+universal_variant       no
+
+default_variants        +audiocd +bluray +dvd +libarchive +libmpv +osd +sdl2
+#default_variants        +audiocd +bluray +dvd +libarchive +libmpv +opengl +osd +sdl2
+
+if {![variant_isset network]} {
+    default_variants-append     +ytdlp
+}
+
+platform darwin {
+    default_variants-append     +rubberband
+
+    if {${os.major} > 9} {
+        default_variants-append +coreaudio
+    } else {
+        default_variants-append +pulseaudio
+        notes-append {
+            On systems older than SnowLeopard (10.6), coreaudio output support is not available.\
+            The pulseaudio backend should have been enabled automatically.
+        }
+    }
+    if {${os.major} > 10} {
+        # current macOS bundle errors on < 10.7 due to unhandled -psn_* argument
+        default_variants-append +bundle
+    }
+}
+
+# mpv autodetects many support libs. To prevent undeclared
+# dependencies, explicitly disable everything optional first.
+# This list should be expanded each time the port is updated
+# to a new version, disabling any newly added options.
+
+# Misc build settings
+configure.args-append   --buildtype=release \
+                        -Dandroid-media-ndk=disabled \
+                        -Dcdda=disabled \
+                        -Dcplugins=disabled \
+                        -Dcuda-hwaccel=disabled \
+                        -Ddvbin=disabled \
+                        -Ddvdnav=disabled \
+                        -Dhtml-build=disabled \
+                        -Diconv=enabled \
+                        -Djavascript=disabled \
+                        -Djpeg=disabled \
+                        -Dlcms2=enabled \
+                        -Dlibarchive=disabled \
+                        -Dlibavdevice=disabled \
+                        -Dlibbluray=disabled \
+                        -Dlibmpv=false \
+                        -Dlua=disabled \
+                        -Dmanpage-build=disabled \
+                        -Dpdf-build=disabled \
+                        -Dpthread-debug=disabled \
+                        -Drubberband=disabled \
+                        -Duchardet=disabled \
+                        -Duwp=disabled \
+                        -Dvapoursynth=disabled \
+                        -Dvulkan=disabled \
+                        -Dsdl2=disabled \
+                        -Dtests=false \
+                        -Dzimg=enabled \
+                        -Dzlib=enabled
+
+# Mac-specific settings
+configure.args-append   -Daudiounit=disabled \
+                        -Dcocoa=disabled \
+                        -Dgl-cocoa=disabled \
+                        -Dios-gl=disabled \
+                        -Dmacos-cocoa-cb=disabled \
+                        -Dmacos-media-player=disabled \
+                        -Dswift-build=disabled \
+                        -Dvideotoolbox-gl=disabled
+
+# Audio
+configure.args-append   -Dalsa=disabled \
+                        -Dcoreaudio=disabled \
+                        -Djack=disabled \
+                        -Dopenal=disabled \
+                        -Dopensles=disabled \
+                        -Dpipewire=disabled \
+                        -Dpulse=disabled \
+                        -Dsdl2-audio=disabled \
+                        -Dsndio=disabled
+
+# Video
+configure.args-append   -Dcaca=disabled \
+                        -Dd3d11=disabled \
+                        -Ddirect3d=disabled \
+                        -Ddmabuf-wayland=disabled \
+                        -Ddrm=disabled \
+                        -Degl=disabled \
+                        -Degl-angle-lib=disabled \
+                        -Degl-angle-win32=disabled \
+                        -Degl-drm=disabled \
+                        -Degl-wayland=disabled \
+                        -Degl-x11=disabled \
+                        -Dgbm=disabled \
+                        -Dgl=disabled \
+                        -Dgl-x11=disabled \
+                        -Dlibplacebo=disabled \
+                        -Dplain-gl=disabled \
+                        -Dsdl2-video=disabled \
+                        -Dvulkan=disabled \
+                        -Dwayland=disabled \
+                        -Dx11=disabled \
+                        -Dxv=disabled
+
+# Fix picking up the correct talloc version.
+# -isystem has the added benefit of moving the include
+# directory specified to the end of the include path list.
+# This will help the build system respect custom include
+# paths correctly (i.e., searching them before the MP include
+# directory.)
+configure.cppflags-replace  -I${prefix}/include -isystem${prefix}/include
+
+# ao_coreaudio_exclusive.c:133:32: error: passing argument 3 of 'AudioObjectRemovePropertyListener'
+# from incompatible pointer type [-Wincompatible-pointer-types]
+configure.cflags-append     -Wno-error=incompatible-pointer-types
+
+# Clear CPATH and LIBRARY_PATH because a ncurses include file
+# conflicts with the one in MacPorts. It doesn't matter much anyway
+# because the swift module in mpv doesn't have any dependencies to
+# link against.
+compiler.cpath
+compiler.library_path
+
+patchfiles-append       patch-apple_utils.c-should-be-included-for-Darwin.diff \
+                        patch-fix-environ.diff \
+                        patch-fix-GL-search.diff \
+                        patch-python.diff
+
+platform macosx {
+    if {${os.major} > 14} {
+        # Disable Cocoa output.
+        # Users on old systems will need to embrace X11.
+        configure.args-replace      -Dcocoa=disabled \
+                                    -Dcocoa=enabled
+    } else {
+        default_variants-append     +x11
+    }
+}
+
+platform darwin {
+    notes-append [subst {
+                    The maintainer ships his personal config file in
+                    * ${prefix}/share/doc/${real_name}/examples/config-maintainer.
+
+                    You are strongly encouraged to copy this file to either
+                    * ${prefix}/etc/${real_name}/${real_name}.conf (globally for all users of the system) or
+                    * ~/.config/${real_name}/config (only for your current user)
+                    and adjust it to your needs.
+
+                    If you previously had your configuration file in
+                    * ~/.${real_name}/config
+                    please migrate it to
+                    * ~/.config/${real_name}/config
+                    which is the location preferred by upstream.
+    }]
+
+    # VideotoolBox, a new hardware acceleration framework, is supported on 10.8+ and "here to stay".
+    # It provides support for H265, H264, H263, MPEG1, MPEG2 and MPEG4.
+    if {${os.major} > 14} {
+        configure.args-replace  -Dvideotoolbox-gl=disabled \
+                                -Dvideotoolbox-gl=enabled
+    }
+
+    if {${os.major} > 11} {
+        notes-append {
+            This config file already defines the necessary video output settings to make\
+            use of the hardware acceleration features provided by your operating system.
+        }
+    } else {
+        notes-append {
+            Sadly, your system is incapable of utilizing mpv's hardware decoding features.\
+            The example config file will not include a hardware decoding option.\
+            Consult ``man mpv'' for further information.
+        }
+    }
+
+    # C11 atomics is mandatory from version 0.33.0
+    compiler.c_standard 2011
+    compiler.blacklist-append \
+                        {clang < 700}
+
+    # Shared build fixes for 10.6 and 10.7.
+    if {${os.major} < 12} {
+        patchfiles-append   patch-misc-import-CoreVideo.diff
+    }
+
+    # Make mpv work as good as possible on 10.6 and below. No Cocoa support, instead concentrate
+    # on getting the OpenGL output to work via X11.
+    # Also fix some other minor compile issues only manifesting on 10.6 and below along the way.
+    if {${os.major} < 11} {
+        patchfiles-append   patch-audio_out_ao_coreaudio_utils.c-add-missing-header-for-getpid.diff
+
+        notes-append {
+            On systems older than Lion (10.7) or on architectures other than x86_64, Cocoa output support is not available.\
+            The X11 backend should have been enabled automatically.
+        }
+    }
+
+    # Fix youtube-dl hook for streaming youtube videos
+    patchfiles-append       patch-youtubedl-edl-track-error.diff
+
+    post-extract {
+        xinstall -m 0644 -W "${filespath}" config-maintainer "${worksrcpath}/TOOLS/"
+    }
+
+    pre-configure {
+        if {${use_xcode}} {
+            if {[vercmp ${xcodeversion} 4.3] < 0} {
+                set sdks_dir ${developer_dir}/SDKs
+            } else {
+                set sdks_dir ${developer_dir}/Platforms/MacOSX.platform/Developer/SDKs
+            }
+            set sdks [glob -directory ${sdks_dir} MacOSX*.sdk]
+            configure.sdkroot [lindex [lsort -command vercmp ${sdks}] end]
+        }
+        if {${configure.sdkroot} ne "" && ${os.major} > 8} {
+            configure.sdk_version [exec /usr/libexec/PlistBuddy -c Print:ProductVersion ${configure.sdkroot}/System/Library/CoreServices/SystemVersion.plist]
+        }
+        if {${os.major} == 8} {
+            configure.sdk_version 10.4
+        }
+        if {[llength [split ${configure.sdk_version} .]] < 2} {
+            configure.sdk_version ${configure.sdk_version}.0
+        }
+        configure.env-append \
+                        MACOS_SDK=${configure.sdkroot} \
+                        MACOS_SDK_VERSION=${configure.sdk_version}
+
+        if {[variant_isset network]} {
+            reinplace -W "${worksrcpath}/TOOLS" "s/@@NETWORK@@//" config-maintainer
+        } else {
+            reinplace -W "${worksrcpath}/TOOLS" "/@@NETWORK@@/d" config-maintainer
+        }
+
+        if {${os.major} > 11} {
+            reinplace -W "${worksrcpath}/TOOLS" "s/@@HWDEC@@//" config-maintainer
+        } else {
+            reinplace -W "${worksrcpath}/TOOLS" "/@@HWDEC@@/d" config-maintainer
+        }
+
+        if {${os.major} > 12} {
+            reinplace -W "${worksrcpath}/TOOLS" "s/@@HWDEC_CUDA@@//" config-maintainer
+        } else {
+            reinplace -W "${worksrcpath}/TOOLS" "/@@HWDEC_CUDA@@/d" config-maintainer
+        }
+
+        if {${os.major} < 11 || ${configure.build_arch} ni [list x86_64 arm64]} {
+            reinplace -W "${worksrcpath}/TOOLS" "/@@VOGPU@@/d" config-maintainer
+            reinplace -W "${worksrcpath}/TOOLS" "s/@@BACKEND@@/x11/" config-maintainer
+        } else {
+            reinplace -W "${worksrcpath}/TOOLS" "s/@@VOGPU@@//" config-maintainer
+            reinplace -W "${worksrcpath}/TOOLS" "/@@BACKEND@@/d" config-maintainer
+        }
+    }
+}
+
+# Shameless copy from ipe-tools.
+set python.versions         {39 310 311 312}
+dict set python.legacy_versions 38 39
+
+set python.default_version  312
+set python.version          ""
+
+# Create python variants.
+foreach ver ${python.versions} {
+    set variant_line {variant python${ver} description }
+    set python_branch [string index $ver 0].[string range $ver 1 end]
+    append variant_line " {Use Python ${python_branch} to build ${name} and generate man pages}"
+
+    foreach over ${python.versions} {
+        if {${ver} == ${over}} {
+            continue
+        }
+        append variant_line " conflicts python${over}"
+    }
+
+    append variant_line " {
+        depends_build-append    port:py${ver}-docutils
+        license_noconflict      py${ver}-docutils
+    }"
+    eval $variant_line
+}
+
+# Create legacy python variants, mapping to the replacement version.
+dict for {legacy_ver replace_ver} ${python.legacy_versions} {
+    set variant_line {variant python${legacy_ver} description }
+    set legacy_branch [join [split ${legacy_ver} {}] "."]
+    set replace_branch [join [split ${replace_ver} {}] "."]
+    append variant_line " {Legacy variant for Python ${legacy_branch} mapping to Python ${replace_branch}}"
+    append variant_line " requires python${replace_ver}"
+
+    foreach over ${python.versions} {
+        if {${legacy_ver} == ${over} || ${replace_ver} == ${over}} {
+            continue
+        }
+        append variant_line " conflicts python${over}"
+    }
+
+    append variant_line " { }"
+    eval $variant_line
+}
+
+# Set default python variant.
+set variant_none true
+foreach ver ${python.versions} {
+    if {[variant_isset python${ver}]} {
+        set variant_none [expr $variant_none && ![variant_isset python${ver}]]
+    }
+}
+
+if {${variant_none}} {
+    default_variants-append "+python${python.default_version}"
+}
+
+# Set ${python.version} to the currently active variant.
+foreach ver ${python.versions} {
+    if {[variant_isset python${ver}]} {
+        set python.version ${ver}
+        set python_branch [string index ${python.version} 0].[string range ${python.version} 1 end]
+    }
+}
+
+if {[string length ${python.version}] == 0} {
+    ui_error "No python variant selected. You must select at least one. The highest value will be used."
+    error "Select a python variant."
+}
+
+set python_ver_dot [string index ${python.version} 0].[string range ${python.version} 1 end]
+meson.native.binaries-append \
+                    rst2man=${prefix}/bin/rst2man-${python_ver_dot}
+
+post-patch {
+    reinplace "s|@PYTHON@|${prefix}/bin/python${python_ver_dot}|" \
+                    ${worksrcpath}/meson.build
+
+    fs-traverse f ${worksrcpath} {
+        if {[string match *.py ${f}]} {
+            ui_info "patching testpath: ${f}"
+            reinplace -q "s|/usr/bin/env python3|${prefix}/bin/python${python_ver_dot}|g" ${f}
+        }
+    }
+}
+
+post-destroot {
+    # Since we don't have conffiles handling, install mpv.conf as mpv.conf.example
+    # to not overwrite this file on each (re-)build.
+    file rename ${worksrcpath}/etc/mpv.conf ${worksrcpath}/etc/mpv.conf.example
+
+    xinstall -d -m 0755 ${destroot}${prefix}/etc/${real_name}
+    foreach etcfile {encoding-profiles.conf mpv.conf.example input.conf} {
+        xinstall -m 0644 ${worksrcpath}/etc/${etcfile} \
+            ${destroot}${prefix}/etc/${real_name}/${etcfile}
+    }
+    xinstall -d -m 0755 ${destroot}${prefix}/share/doc/${real_name}/examples
+    copy {*}[glob ${worksrcpath}/TOOLS/lua ${worksrcpath}/TOOLS/*.pl \
+                  ${worksrcpath}/TOOLS/*.sh ${worksrcpath}/TOOLS/*.py \
+                  ${worksrcpath}/TOOLS/umpv ${worksrcpath}/TOOLS/lib] \
+         ${destroot}${prefix}/share/doc/${real_name}/examples
+
+    if {${os.platform} eq "darwin"} {
+        xinstall -m 0644 ${worksrcpath}/TOOLS/config-maintainer \
+                         ${destroot}${prefix}/share/doc/${real_name}/examples
+    }
+}
+
+# When enabling features, make sure to replace the "disable" flags with
+# "enable" flags in order to make the waf build system error out in case
+# a feature cannot be used/found. Problems like that indicate a missing
+# runtime dependency.
+
+variant bundle description {Enable the optional macOS bundle of mpv} {
+    post-build {
+        system -W "${worksrcpath}" "${waf.python} TOOLS/osxbundle.py -s build/mpv"
+    }
+
+    post-destroot {
+        xinstall -d -m 0755 ${destroot}${applications_dir}
+        copy ${worksrcpath}/build/mpv.app ${destroot}${applications_dir}
+    }
+}
+
+variant coreaudio description {Enable CoreAudio support} {
+    configure.args-replace  -Dcoreaudio=disabled \
+                            -Dcoreaudio=enabled
+}
+
+variant screenshot description {Enable optional screenshot support} {
+    depends_lib-append      path:include/turbojpeg.h:libjpeg-turbo
+    configure.args-replace  -Djpeg=disabled \
+                            -Djpeg=enabled
+}
+
+variant network conflicts ytdlp description {Enable networking support via youtube-dl (supports wide variety of pages)} {
+    depends_run-append      port:youtube-dl
+}
+
+variant ytdlp conflicts network description {Enable networking support via yt-dlp instead of youtube-dl (supports wide variety of pages)} {
+    depends_run-append      port:yt-dlp
+}
+
+variant bluray description {Enable Bluray and AACS/BD+ encryption support} {
+    depends_lib-append     port:libbluray
+    depends_run-append     port:libaacs \
+                           port:libbdplus
+    configure.args-delete  -Dlibbluray=disabled
+    notes-append "
+                    To play Bluray discs with AACS encryption, decryption key database file `keydb.cfg` needs to be placed at:
+                    * ~/Library/Preferences/aacs/ (on macOS, or)
+                    * ~/.config/aacs/ (on other darwin).
+                    You can easily find this file on the internet.
+    "
+}
+
+variant dvd description {Enable DVD and DeCSS support} {
+    depends_lib-append      port:libdvdread \
+                            port:libdvdnav
+    configure.args-replace  -Ddvdnav=disabled \
+                            -Ddvdnav=enabled
+}
+
+variant audiocd description {Enable Audio CD support via libcdio-paranoia} {
+    depends_lib-append      port:libcdio-paranoia
+    configure.args-replace  -Dcdda=disabled \
+                            -Dcdda=enabled
+}
+
+variant libarchive description {Enable transparent handling of Zip files and other compressed formats} {
+    depends_lib-append      port:libarchive
+    configure.args-replace  -Dlibarchive=disabled \
+                            -Dlibarchive=enabled
+}
+
+variant rubberband description {Enable support for the Rubber Band library, adding audio pitch and speed control} {
+    depends_lib-append      port:rubberband
+    configure.args-replace  -Drubberband=disabled \
+                            -Drubberband=enabled
+}
+
+variant pulseaudio description {Enable PulseAudio support} {
+    depends_lib-append      port:pulseaudio
+    configure.args-replace  -Dpulse=disabled \
+                            -Dpulse=enabled
+}
+
+variant jack description {Enable Jack Audio Connection Kit support} {
+    depends_lib-append      port:jack
+    configure.args-replace  -Djack=disabled \
+                            -Djack=enabled
+}
+
+# TODO: switch that to openal-soft? Leave it as-is?
+variant openal description {Enable OpenAL support} {
+    depends_lib-append      port:openal
+    configure.args-replace  -Dopenal=disabled \
+                            -Dopenal=enabled
+}
+
+# This implies sdl2 with +x11, which currently is libsdl2-x11 port.
+# TODO: add a logic to check for consistency.
+variant x11 {
+    depends_lib-append      port:xorg-libXext \
+                            port:xorg-libXinerama \
+                            port:xorg-libXpresent \
+                            port:xorg-libXrandr \
+                            port:xorg-libXScrnSaver \
+                            port:xorg-libXv
+
+    configure.args-delete   -Dx11=disabled \
+                            -Dxv=disabled
+    configure.args-append   -Dx11=enabled \
+                            -Dxv=enabled
+}
+
+variant opengl description {Enable OpenGL output support. Both the CoreVideo and X11 (GLX) outputs are supported} {
+    configure.args-replace      -Dgl=disabled \
+                                -Dgl=enabled \
+                                -Dplain-gl=disabled \
+                                -Dplain-gl=enabled
+    if {${os.platform} eq "darwin" && ${os.major} > 14} {
+        configure.args-replace  -Dgl-cocoa=disabled \
+                                -Dgl-cocoa=enabled
+    }
+    if {[variant_isset x11]} {
+        depends_lib-append      port:mesa
+        configure.args-replace  -Dgl-x11=disabled \
+                                -Dgl-x11=enabled
+        # FIXME: add EGL? Leave it disabled? Test!
+        # As far as testing went, EGL is not available on macOS yet.
+        #configure.args-replace  --disable-egl-x11 \
+        #                        --enable-egl-x11
+    }
+}
+
+variant sdl2 description {Enable SDL2 output} {
+    depends_lib-append      port:libsdl2
+
+    configure.args-delete   -Dsdl2=disabled \
+                            -Dsdl2-audio=disabled \
+                            -Dsdl2-video=disabled
+    configure.args-append   -Dsdl2=enabled \
+                            -Dsdl2-audio=enabled \
+                            -Dsdl2-video=enabled
+}
+
+variant caca description {Enable animated ASCII art video output} {
+    depends_lib-append      port:libcaca
+    configure.args-replace  -Dcaca=disabled \
+                            -Dcaca=enabled
+}
+
+variant osd description {Enable onscreen display and TrueType font support} {
+    depends_lib-append      port:lua52
+    configure.args-delete   -Dlua=disabled \
+    configure.args-append   -Dlua=enabled \
+                            --lua=52fbsd
+}
+
+variant debug description {Compile with debugging symbols} {
+    configure.args-delete   -Dpthread-debug=disabled
+}
+
+variant printable_doc description {Generate printable documents (PDF help)} {
+    # py27-pdfrw and py27-Pillow are needed by rst2pdf.
+    depends_build-append    port:rst2pdf \
+                            port:py27-pdfrw \
+                            port:py27-Pillow
+    configure.args-replace  -Dpdf-build=disabled \
+                            -Dpdf-build=enabled
+}
+
+variant uchardet description {Enable the uchardet encoding detector} {
+    depends_lib-append      port:uchardet
+    configure.args-replace  -Duchardet=disabled \
+                            -Duchardet=enabled
+}
+
+variant libmpv description {Enable the libmpv library} {
+    configure.args-replace  -Dlibmpv=false \
+                            -Dlibmpv=true \
+}
+
+if {![variant_isset bundle]} {
+    depends_lib-append      port:desktop-file-utils
+    post-activate {
+        system "${prefix}/bin/update-desktop-database ${prefix}/share/applications"
+    }
+}
+
+livecheck                   none

@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran GeoBosh Rdpack 2.6.6
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Update and manipulate Rd documentation objects
+long_description    {*}${description}
+homepage            https://geobosh.github.io/Rdpack
+checksums           rmd160  07bc78868581106ac2775c6e57e503ea46c75761 \
+                    sha256  b4e19d22bd5a2ec79cdb08ba209e79c66ea16dbc2fd2e7db8bca46412651cbdb \
+                    size    378731
+supported_archs     noarch
+
+depends_lib-append  port:R-rbibutils
+
+depends_test-append port:R-gbRd \
+                    port:R-rprojroot \
+                    port:R-rstudioapi \
+                    port:R-testthat
+
+test.run            yes

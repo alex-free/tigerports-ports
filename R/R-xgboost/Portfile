@@ -1,0 +1,55 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran dmlc xgboost 3.2.0.1
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             Apache-2
+description         Extreme Gradient Boosting
+long_description    {*}${description}
+checksums           rmd160  d0a75977574433cee48393e90e9d4106cf8b7413 \
+                    sha256  cffa84bb69bafd41ba80193379628b0822439941b991484da429d89a2f1c062a \
+                    size    1624855
+
+depends_build-append \
+                    path:bin/cmake:cmake
+depends_lib-append  port:R-data.table \
+                    port:R-jsonlite
+
+# See:
+# https://github.com/dmlc/xgboost/issues/8946
+# https://github.com/dmlc/xgboost/pull/8964
+patchfiles          patch-fix-OpenMP.diff
+
+post-patch {
+    reinplace "s,@OMP_PREFIX@,${prefix}," ${worksrcpath}/configure
+    if {[string match macports-clang* ${configure.compiler}]} {
+        reinplace "s,@OMP@,-lomp," ${worksrcpath}/configure
+        reinplace "s,@INC@,include/libomp," ${worksrcpath}/configure
+        reinplace "s,@LIB@,lib/libomp," ${worksrcpath}/configure
+    } elseif {[string match macports-gcc* ${configure.compiler}]} {
+        reinplace "s,@OMP@,-lgomp," ${worksrcpath}/configure
+        reinplace "s,@INC@,," ${worksrcpath}/configure
+        reinplace "s,@LIB@,lib/libgcc," ${worksrcpath}/configure
+    }
+}
+
+# R-DiagrammeRsvg is omitted due to dependency on V8.
+depends_test-append port:R-Ckmeans.1d.dp \
+                    port:R-DiagrammeR \
+                    port:R-float \
+                    port:R-ggplot2 \
+                    port:R-htmlwidgets \
+                    port:R-igraph \
+                    port:R-knitr \
+                    port:R-RhpcBLASctl \
+                    port:R-rmarkdown \
+                    port:R-rsvg \
+                    port:R-testthat \
+                    port:R-titanic \
+                    port:R-vcd
+
+test.run            yes

@@ -1,0 +1,55 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github r-lib httr2 1.2.3 v
+revision            0
+categories-append   devel net
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Perform HTTP requests and process the responses
+long_description    {*}${description}
+homepage            https://httr2.r-lib.org
+checksums           rmd160  05b40d71a126a71160905330210fa5fa50ba47b2 \
+                    sha256  b72b3088669630fee3c2884cd6a2ed4ff17be021e186289dfdcdbd024fa6e343 \
+                    size    395053
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-cli \
+                    port:R-curl \
+                    port:R-glue \
+                    port:R-lifecycle \
+                    port:R-magrittr \
+                    port:R-openssl \
+                    port:R-R6 \
+                    port:R-rappdirs \
+                    port:R-rlang \
+                    port:R-vctrs \
+                    port:R-withr
+
+# R-otelsdk is dropped until added to ports.
+depends_test-append port:R-askpass \
+                    port:R-bench \
+                    port:R-clipr \
+                    port:R-covr \
+                    port:R-digest \
+                    port:R-docopt \
+                    port:R-httpuv \
+                    port:R-jose \
+                    port:R-jsonlite \
+                    port:R-knitr \
+                    port:R-later \
+                    port:R-nanonext \
+                    port:R-otel \
+                    port:R-paws.common \
+                    port:R-promises \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-tibble \
+                    port:R-webfakes \
+                    port:R-xml2
+
+test.run            yes

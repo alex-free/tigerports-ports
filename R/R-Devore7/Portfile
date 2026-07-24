@@ -1,0 +1,18 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran jverzani Devore7 0.7.6
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Data-sets from Probability and Statistics for Engineering and the Sciences
+long_description    {*}${description} (7th ed.).
+checksums           rmd160  8c68ff8c153d6cfe01c9476a5eb0d17717bf826c \
+                    sha256  dca20848e10879b2a3839fadf555020aadbfd3905e4e27b0029bec9d20ba28d4 \
+                    size    493681
+supported_archs     noarch
+
+test.run            yes

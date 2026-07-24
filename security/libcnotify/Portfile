@@ -1,0 +1,33 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+
+github.setup        libyal libcnotify 20260601
+revision            0
+categories          security devel
+maintainers         nomaintainer
+license             LGPL-3+
+description         Library for cross-platform C notification functions
+long_description    ${description}
+distname            ${name}-beta-${version}
+checksums           rmd160  354e191e5cd16f427c6758d2608207cb3f76125b \
+                    sha256  7817c639a5dd7991753de0f1d437f2ac32b939c735a8eafecebdf9a4dc150a9f \
+                    size    530214
+github.tarball_from releases
+
+worksrcdir          ${name}-${version}
+
+patchfiles          libcnotify_extern.h-fix-macro.patch
+
+depends_build-append \
+                    port:gettext \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  port:gettext-runtime \
+                    port:libcerror \
+                    port:libiconv
+
+configure.args-append \
+                    --with-libiconv-prefix=${prefix} \
+                    --with-libintl-prefix=${prefix}

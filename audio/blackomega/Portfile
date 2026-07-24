@@ -1,0 +1,132 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           conflicts_build 1.0
+PortGroup           github 1.0
+PortGroup           qt4 1.0
+
+github.setup        bonezuk blackomega 2.5.0 v
+revision            5
+categories          audio
+license             BSD
+maintainers         {@barracuda156 macos-powerpc.org:barracuda}
+
+description         Black Omega, audiophile music player
+long_description    {*}${description}
+
+github.tarball_from archive
+
+# The patch is 22 MB otherwise. Just use my fork until it is merged:
+# https://github.com/bonezuk/blackomega/pull/10
+set omega_qt4_hash  15568805bbcd36bbc30acc2523bcb6d5d8301213
+distname            ${name}-${omega_qt4_hash}
+master_sites        https://github.com/barracuda156/blackomega/archive/${omega_qt4_hash}/
+# https://github.com/barracuda156/blackomega/commits/apple
+checksums           ${distname}${extract.suffix} \
+                    rmd160  699b43f4a92e8cd38b3ea88d255de10620f2d15e \
+                    sha256  2163db497afe70dc9f90fff301196ccb0a237ff0bc8b3fb3d6207c8b076ba977 \
+                    size    32768422
+
+cmake.out_of_source no
+
+if {${os.platform} eq "darwin" && ${os.major} < 10} {
+    patchfiles-append   patch-leopard.diff
+}
+
+post-patch {
+    reinplace "s|Qt6|Qt4|" ${worksrcpath}/CMakeLists.txt
+
+    # https://github.com/bonezuk/blackomega/issues/9
+    if {${os.platform} eq "darwin" && ${os.major} < 11} {
+        reinplace "s|CMAKE_CXX_STANDARD 11|CMAKE_CXX_STANDARD 98|" ${worksrcpath}/CMakeLists.txt
+    } else {
+        reinplace "s|CMAKE_CXX_STANDARD 11|CMAKE_CXX_STANDARD 14|" ${worksrcpath}/CMakeLists.txt
+    }
+}
+
+depends_build-append \
+                    port:gtest
+
+depends_lib-append  port:liblastfm \
+                    port:libxml2 \
+                    port:QJson4 \
+                    port:wavpack
+
+# https://github.com/bonezuk/blackomega/issues/15
+# depends_lib-append  port:mac \
+#                     port:musepack
+
+# Most certainly TIGER_MAC_STORE is not what we need,
+# however it may be worth reviewing if some code inside
+# this macro is actually useful.
+configure.args-append \
+                    -DBLACKOMEGA_PREFIX=${prefix} \
+                    -DOMEGA_QT4=ON \
+                    -DQT_HOME=${qt_dir} \
+                    -DTIGER_MAC_STORE=OFF \
+                    -DTIGER_SYSTEM_DEPS=ON
+
+# Installation:
+set app_root            ${applications_dir}/BlackOmega.app
+cmake.install_prefix    ${app_root}/Contents
+
+# This fixes dylib install names:
+pre-configure {
+    configure.pre_args-replace \
+                    -DCMAKE_INSTALL_NAME_DIR="${cmake.install_prefix}/lib" \
+                    -DCMAKE_INSTALL_NAME_DIR="${cmake.install_prefix}/PlugIns"
+}
+
+if {${os.platform} eq "darwin" && ${os.major} < 11} {
+    # Make it compatible with Xcode gcc:
+    compiler.cxx_standard       1998
+    configure.cxxflags-append   -std=gnu++98
+} else {
+    compiler.cxx_standard       2014
+    # Due to gtest:
+    configure.cxxflags-append   -std=gnu++14
+}
+
+# This was my initial approach, however the GUI app crashes, if built this way,
+# mixing gcc14 with gcc-4.2. See discussion in: https://github.com/bonezuk/blackomega/issues/6
+#
+# if {${os.platform} eq "darwin" && ${os.major} < 11 && ${configure.cxx_stdlib} ne "libc++"} {
+#     # Modern gcc chokes on several ObjC++ sources here.
+#     pre-configure {
+#         configure.pre_args-append \
+#                     -DCMAKE_OBJCXX_COMPILER=/usr/bin/g++-4.2
+#     }
+#     # Otherwise linking fails when Xcode gcc is used.
+#     configure.ldflags-append \
+#                     -L${prefix}/lib/libgcc -lstdc++
+#     # The closest to C++11 for Xcode gcc?
+#     configure.objcxxflags \
+#                     -std=gnu++98
+# }
+
+# This was an attempt to fix Qt bug with keywords conflicts,
+# but apparently it has no effect on the outcome.
+configure.cppflags-append \
+                    -DQT_NO_KEYWORDS
+
+pre-destroot {
+    xinstall -d ${destroot}${app_root}
+    xinstall -d ${destroot}${app_root}/Contents
+    xinstall -d ${destroot}${app_root}/Contents/Resources
+    copy ${worksrcpath}/source/player/Info.plist ${destroot}${app_root}/Contents/
+    copy ${worksrcpath}/source/player/omega.icns ${destroot}${app_root}/Contents/Resources/
+}
+
+post-destroot {
+    # Fix the bundle:
+    move ${destroot}${app_root}/Contents/bin ${destroot}${app_root}/Contents/MacOS
+    move ${destroot}${app_root}/Contents/lib ${destroot}${app_root}/Contents/PlugIns
+    move ${destroot}${app_root}/Contents/www ${destroot}${app_root}/Contents/Resources/www
+
+    # This assumes qt4-mac-devel. If you build with qt4-mac, you may need to fix the symlink.
+    ln -s ${qt_plugins_dir}/imageformats ${destroot}${app_root}/Contents/PlugIns/imageformats
+
+    ln -s ${app_root}/Contents/MacOS/Omega ${destroot}${prefix}/bin/blackomega
+    ln -s ${app_root}/Contents/MacOS/oplayer ${destroot}${prefix}/bin/oplayer
+}

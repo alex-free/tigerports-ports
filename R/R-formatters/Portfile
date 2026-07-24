@@ -1,0 +1,37 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github insightsengineering formatters 0.5.12 v
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             Apache-2
+description         ASCII formatting for values and tables
+long_description    {*}${description}
+homepage            https://insightsengineering.github.io/formatters
+checksums           rmd160  841a3875f55edfd10e0b4e474846fa8d4ebe2d60 \
+                    sha256  059266d9d4586122769a52ae5a85f87056a3b2a70313e2fdf11766034bd0746b \
+                    size    2624942
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-checkmate \
+                    port:R-htmltools \
+                    port:R-lifecycle \
+                    port:R-stringi
+
+depends_test-append port:R-digest \
+                    port:R-dplyr \
+                    port:R-gt \
+                    port:R-huxtable \
+                    port:R-knitr \
+                    port:R-processx \
+                    port:R-r2rtf \
+                    port:R-rmarkdown \
+                    port:R-sass \
+                    port:R-testthat \
+                    port:R-withr
+
+test.run            yes

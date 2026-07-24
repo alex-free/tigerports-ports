@@ -1,0 +1,36 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran stefanedwards lemon 0.5.2 v
+revision            1
+categories-append   graphics
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Freshing up your ggplot2 plots
+long_description    {*}${description}
+homepage            https://github.com/stefanedwards/lemon
+checksums           rmd160  7da685bab543d1fcb34344273b922ee0fbe0344d \
+                    sha256  0b7bf82cb859d38c795bff2015179c9d48ac42a8f18aac4448e1dcc2170110fd \
+                    size    2451619
+supported_archs     noarch
+
+depends_lib-append  port:R-ggplot2 \
+                    port:R-gridExtra \
+                    port:R-gtable \
+                    port:R-knitr \
+                    port:R-plyr \
+                    port:R-scales
+
+depends_test-append port:R-diffviewer \
+                    port:R-dplyr \
+                    port:R-ggh4x \
+                    port:R-rmarkdown \
+                    port:R-stringr \
+                    port:R-testthat \
+                    port:R-vdiffr
+
+test.run            yes

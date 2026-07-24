@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran jon.skoien automap 1.1-20
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL
+description         Automatic interpolation package
+long_description    {*}${description}
+homepage            https://github.com/jskoien/jskoien
+checksums           rmd160  c555a6572a866006544b8ca38fbc5cf89f1d1d61 \
+                    sha256  9f17322f57e5439df1a8cbaeacec605c6685558cf62f4dec0529bf900c6d98ed \
+                    size    24042
+supported_archs     noarch
+
+depends_lib-append  port:R-ggplot2 \
+                    port:R-gstat \
+                    port:R-reshape \
+                    port:R-sf \
+                    port:R-sp \
+                    port:R-stars
+
+test.run            yes

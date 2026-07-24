@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran tidymodels tailor 0.1.0
+revision            1
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Iterative steps for postprocessing model predictions
+long_description    {*}${description}
+homepage            https://tailor.tidymodels.org
+checksums           rmd160  9307be28a435a53f38612f021a4cf1289d6c0390 \
+                    sha256  3a20c19f1afb8814ad14f525142986daf36cfe0a9e9f1fdc00a822c1579c01ea \
+                    size    394839
+supported_archs     noarch
+
+depends_lib-append  port:R-cli \
+                    port:R-dplyr \
+                    port:R-generics \
+                    port:R-hardhat \
+                    port:R-purrr \
+                    port:R-rlang \
+                    port:R-tibble \
+                    port:R-tidyselect \
+                    port:R-vctrs
+
+depends_test-append port:R-betacal \
+                    port:R-dials \
+                    port:R-modeldata \
+                    port:R-probably \
+                    port:R-testthat
+
+test.run            yes

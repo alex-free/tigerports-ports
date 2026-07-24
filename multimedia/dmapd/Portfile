@@ -1,0 +1,46 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+
+name                dmapd
+version             0.0.96
+license             GPL-2+
+description         A server that provides DAAP and DPAP shares.
+long_description    The dmapd project provides a GObject-based, Open Source implementation of DMAP sharing.
+maintainers         {devans @dbevans} openmaintainer
+categories          multimedia
+
+homepage            https://www.flyn.org/projects/${name}
+master_sites        ${homepage}
+
+checksums           rmd160  e05a696ec7cecbd55d41ca49041ce2e5faa8f6c5 \
+                    sha256  09990f7e76f62245c42472c4d31ee65003666632fda87c4ce07d5321a32716d6 \
+                    size    453214
+
+depends_build       path:bin/pkg-config:pkgconfig
+
+depends_lib         port:db48 \
+                    path:lib/pkgconfig/glib-2.0.pc:glib2 \
+                    port:GraphicsMagick \
+                    port:gstreamer1 \
+                    port:libdmapsharing \
+                    port:libexif \
+                    port:totem-pl-parser \
+                    port:vips
+
+depends_run         port:gstreamer1-gst-plugins-base \
+                    port:gstreamer1-gst-plugins-good
+
+# dmapd.c:435: error: ‘for’ loop initial declaration used outside C99 mode
+# soup-message.h:18: error: redefinition of typedef ‘SoupMessage’
+compiler.c_standard 2011
+
+# Fails to build with tests:
+# dmapd-stress-test.c: error: invalid use of incomplete typedef 'SoupMessage' {aka 'struct _SoupMessage'}
+configure.args      --disable-check \
+                    --disable-silent-rules \
+                    --disable-tests
+
+livecheck.type      regex
+livecheck.url       https://www.flyn.org/projects/${name}/
+livecheck.regex     "${name}-(\\d+(?:\\.\\d+)*)${extract.suffix}"

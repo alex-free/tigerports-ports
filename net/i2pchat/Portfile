@@ -1,0 +1,42 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           openssl 1.0
+
+# 2026.07.16
+github.setup        vituperative i2pchat 6f9072a64ec6b7b6f9d1a6b3166f61b5d4995209
+version             0.2.41
+revision            0
+categories          net security aqua
+maintainers         nomaintainer
+
+description         Anonymous private secure open-source chat
+long_description    {*}${description} using end-to-end encrypted transport.
+license             GPL-2
+checksums           rmd160  bda7277fc8befb2d4d5cab570f796f8c891e6653 \
+                    sha256  b93d16effd88a7bb03ba2be18fce262936a12ebea176802ba6dd98bdf0fbc7b9 \
+                    size    1566780
+github.tarball_from archive
+
+patch.pre_args-replace  -p0 -p1
+
+# Qt4 builds on aarch64 but does not work correctly.
+# For Linux Qt4 is probably not supported at all.
+if {${os.platform} ne "darwin" || ${os.arch} eq "arm"} {
+    PortGroup       qmake5 1.0
+
+    qt5.depends_component qtmultimedia qtsvg
+} else {
+    PortGroup       qmake 1.0
+
+    # https://github.com/vituperative/i2pchat/issues/31
+    patchfiles-append \
+                    0001-Fix-build-with-Qt4.patch
+}
+
+compiler.cxx_standard   2011
+
+destroot {
+    copy ${worksrcpath}/I2PChat.app ${destroot}${applications_dir}
+}

@@ -1,0 +1,29 @@
+--- configure	2025-09-08 05:52:50.000000000 +0800
++++ configure	2025-12-28 01:34:40.000000000 +0800
+@@ -40,17 +40,6 @@
+   echo "Found pkg-config cflags and libs!"
+   PKG_CFLAGS=${PKGCONFIG_CFLAGS}
+   PKG_LIBS=${PKGCONFIG_LIBS}
+-elif [ `uname` = "Darwin" ]; then
+-  test ! "$CI" && brew --version 2>/dev/null
+-  if [ $? -eq 0 ]; then
+-    BREWDIR=`brew --prefix`
+-    INCLUDE_DIR="$BREWDIR/opt/imagemagick@6/include/ImageMagick-6"
+-    PKG_CFLAGS="-I$INCLUDE_DIR -DMAGICKCORE_QUANTUM_DEPTH=16 -DMAGICKCORE_HDRI_ENABLE=0"
+-    PKG_LIBS="-L$BREWDIR/opt/imagemagick@6/lib -lMagick++-6.Q16 -lMagickWand-6.Q16 -lMagickCore-6.Q16"
+-  else
+-    curl -sfL "https://autobrew.github.io/scripts/$PKG_BREW_NAME" > autobrew
+-    . ./autobrew
+-  fi
+ fi
+ 
+ # Find compiler
+@@ -75,7 +64,7 @@
+   echo "Configuration failed to find the $PKG_CONFIG_NAME library. Try installing:"
+   echo " - deb: $PKG_DEB_NAME (Debian, Ubuntu)"
+   echo " - rpm: $PKG_RPM_NAME (Fedora, CentOS, RHEL)"
+-  echo " - brew: imagemagick or imagemagick@6 (MacOS)"
++  echo " - port: ImageMagick (MacOS)"
+   echo "If $PKG_CONFIG_NAME is already installed, check that 'pkg-config' is in your"
+   echo "PATH and PKG_CONFIG_PATH contains a $PKG_CONFIG_NAME.pc file. If pkg-config"
+   echo "is unavailable you can set INCLUDE_DIR and LIB_DIR manually via:"

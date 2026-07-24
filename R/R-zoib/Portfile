@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran fang.liu.131 zoib 1.6.1
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3+
+description         Bayesian inference for beta regression and zero-or-one inflated beta regression
+long_description    {*}${description}
+checksums           rmd160  7c0be54bbc315488cb902fe828f2b05c5c7b8fae \
+                    sha256  ac92fc461ebdbca8c601d45cd13e1509e4f559985573be8fa499c56a0f3bf3d8 \
+                    size    54917
+supported_archs     noarch
+
+depends_lib-append  port:R-abind \
+                    port:R-coda \
+                    port:R-Formula \
+                    port:R-rjags
+
+test.run            yes

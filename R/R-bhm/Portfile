@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran bingshu.chen bhm 1.19
+revision            1
+categories-append   biology
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Biomarker threshold models
+long_description    {*}${description}
+checksums           rmd160  d100d4c3b4d4c7a6019f32dfc4cf9882690c39fb \
+                    sha256  f323f955096de0e4b1bce444f83cb857605d49d6e64f83130e7d2a03967111fc \
+                    size    59837
+supported_archs     noarch
+
+depends_lib-append  port:R-coda \
+                    port:R-ggplot2 \
+                    port:R-gridExtra \
+                    port:R-lpl
+
+test.run            yes

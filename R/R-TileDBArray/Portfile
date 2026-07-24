@@ -1,0 +1,42 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             bioconductor LTLA TileDBArray 1.18.0
+revision            1
+categories-append   bioconductor
+platforms           {darwin any}
+categories-append   databases
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Use TileDB as a DelayedArray backend
+long_description    {*}${description}
+homepage            https://github.com/LTLA/TileDBArray
+checksums           rmd160  7c69f7cafccaff485abee028484208e79e5f522f \
+                    sha256  82902b83955cf93559ec00ead065506950624e89b04211fba75a7f9d867ff0d0 \
+                    size    312601
+supported_archs     noarch
+
+depends_lib-append  port:R-DelayedArray \
+                    port:R-S4Vectors \
+                    port:R-SparseArray \
+                    port:R-tiledb
+
+depends_test-append port:R-BiocParallel \
+                    port:R-BiocStyle \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+ 
+# v. 1.14.0
+# Status of tests on ppc: [ FAIL 5 | WARN 0 | SKIP 0 | PASS 28 ]
+# Those failing spit out the same message: [TileDB::ArrayDirectory] Error: FilterCreate: Deserialization error; not enough data in buffer for metadata
+
+# v. 1.18.0
+# Status of tests on ppc: [ FAIL 6 | WARN 0 | SKIP 0 | PASS 10 ]
+# [2025-09-16 01:32:25.580] [Process: 12425] [error] [1757957545440120000-Global] [TileDB::Task] Error: Caught std::exception: ArrayDirectory: FilterCreate: Deserialization error; not enough data in buffer for metadata
+# [2025-09-16 01:32:25.581] [Process: 12425] [error] [1757957545440120000-Global] [TileDB::Array] Error: ArrayDirectory: FilterCreate: Deserialization error; not enough data in buffer for metadata
+
+# See notes in TileDB and R-tiledb ports; also: https://github.com/TileDB-Inc/TileDB/issues/4096
+test.run            yes

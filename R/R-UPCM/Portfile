@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran gunther.schauberger UPCM 0.0-3
+revision            1
+maintainers         nomaintainer
+license             GPL-2+
+description         Uncertainty in Partial Credit Models
+long_description    {*}${description}
+checksums           rmd160  99eec4f0ae8ccc3a9632de7637d1d50f5a339a19 \
+                    sha256  742f30d17b6f24d9a73f0e596d906e35b36bc2192577838deb7dbf860980eaaa \
+                    size    29822
+
+depends_lib-append  port:R-cubature \
+                    port:R-ltm \
+                    port:R-mvtnorm \
+                    port:R-numDeriv \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-statmod
+
+compilers.setup     require_fortran
+
+test.run            yes

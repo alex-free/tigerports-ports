@@ -1,0 +1,96 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           boost 1.0
+PortGroup           cmake 1.1
+PortGroup           conflicts_build 1.0
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+
+legacysupport.use_mp_libcxx yes
+legacysupport.newest_darwin_requires_legacy 19
+
+github.setup        rdkit rdkit 2025_09_6 Release_
+version             [join [split ${github.version} _] .]
+revision            0
+
+categories          science chemistry
+license             BSD
+maintainers         {reneeotten @reneeotten} openmaintainer
+
+description         RDKit: Open-Source Cheminformatics Software
+long_description    RDKit is a collection of cheminformatics and \
+                    machine-learning software written in C++ and Python.
+
+homepage            https://www.rdkit.org
+distname            Release_${github.version}
+# Tarball is broken: /usr/bin/gnutar: Unexpected EOF in archive
+# Upstream sees no problem: https://github.com/rdkit/rdkit/issues/9075
+use_zip             yes
+checksums           rmd160  f064d8baad2b8cff064dd06423e9a1c1c943f442 \
+                    sha256  b99ff86322afd5081105453964a8852c3508f3aa8fae791e95f897fdfa6c4b72 \
+                    size    86175932
+github.tarball_from archive
+
+# avoid errors for 'TARGET_OS_*' is not defined in External/ChemDraw
+patchfiles-append   patch-ChemDraw-CMakeLists.txt
+
+# Some of the vendored dependencies in the "External" directory fail to build
+# when the "boost" port is installed; likely because they pick up libraries in ${prefix}/lib
+# instead of the intended ones in ${prefix}/libexec/boost/${boost.version}
+conflicts_build     boost
+boost.version       1.88
+boost.require_numpy yes
+
+compiler.c_standard     1999
+compiler.cxx_standard   2020
+
+set py_ver          3.13
+set py_ver_nodot    [string map {. {}} ${py_ver}]
+set mypydir         ${frameworks_dir}/Python.framework/Versions/${py_ver}
+
+depends_build-append \
+                    path:bin/git:git \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  path:lib/pkgconfig/cairo.pc:cairo \
+                    port:catch2 \
+                    port:coordgen \
+                    path:share/pkgconfig/eigen3.pc:eigen3 \
+                    path:lib/pkgconfig/freetype2.pc:freetype \
+                    port:maeparser \
+                    port:py${py_ver_nodot}-cairo \
+                    port:py${py_ver_nodot}-numpy \
+                    port:python${py_ver_nodot} \
+                    path:lib/pkgconfig/RapidJSON.pc:rapidjson \
+                    port:sqlite3
+
+configure.args-append \
+                    -DCatch2_DIR=${prefix}/include/catch2 \
+                    -DCMAKE_REQUIRE_FIND_PACKAGE_coordgen=ON \
+                    -DCMAKE_REQUIRE_FIND_PACKAGE_maeparser=ON \
+                    -DPython3_EXECUTABLE=${mypydir}/bin/python${py_ver} \
+                    -DPython3_NumPy_INCLUDE_DIRS="${mypydir}/lib/python${py_ver}/site-packages/numpy/_core/include" \
+                    -DRDK_BUILD_AVALON_SUPPORT=ON \
+                    -DRDK_BUILD_CAIRO_SUPPORT=ON \
+                    -DRDK_BUILD_CHEMDRAW_SUPPORT=ON \
+                    -DRDK_BUILD_COMPRESSED_SUPPLIERS=ON \
+                    -DRDK_BUILD_CPP_TESTS=OFF \
+                    -DRDK_BUILD_FREESASA_SUPPORT=ON \
+                    -DRDK_BUILD_INCHI_SUPPORT=ON \
+                    -DRDK_BUILD_PYTHON_WRAPPERS=ON \
+                    -DRDK_BUILD_YAEHMOP_SUPPORT=ON \
+                    -DRDK_INSTALL_INTREE=OFF \
+                    -DRDK_INSTALL_PYTHON_TESTS=ON \
+                    -DRDK_INSTALL_STATIC_LIBS=OFF
+
+# https://trac.macports.org/ticket/73463
+if {[string match *gcc* ${configure.compiler}] && ${configure.build_arch} in [list arm i386 ppc]} {
+    configure.ldflags-append \
+                    -latomic
+}
+
+post-destroot {
+    # Conflicts with the file isntalled by the "expat" port
+    file delete ${destroot}${prefix}/lib/libexpat.a
+}

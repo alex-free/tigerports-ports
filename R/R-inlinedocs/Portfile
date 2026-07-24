@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran tdhock inlinedocs 2023.9.4
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             {GPL-2 GPL-3}
+description         Convert inline comments to documentation
+long_description    {*}${description}
+homepage            https://github.com/tdhock/inlinedocs
+checksums           rmd160  4b2a686eee501aafacaac4d7578706a6d82340cf \
+                    sha256  635a0e2619028ac5b07e11ea8c807dd7f9743e6eb52085ab584cc9eaccb3b584 \
+                    size    63172
+supported_archs     noarch
+
+depends_test-append port:R-future \
+                    port:R-future.apply \
+                    port:R-R.methodsS3
+
+test.run            yes

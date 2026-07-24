@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Keep this with CRAN.
+R.setup             cran kogalur randomForestSRC 3.5.1
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3+
+description         Fast unified random forests for survival, regression \
+                    and classification (RF-SRC)
+long_description    {*}${description}
+homepage            https://www.randomforestsrc.org
+checksums           rmd160  e089b6eff25470472573e65d258cd0b71eece109 \
+                    sha256  082eacb536f3c7a0f9c6f9f8ad339388d7bd9e2a9e1620a6a399fdf52b0fc2be \
+                    size    1258015
+
+depends_lib-append  port:R-data.tree \
+                    port:R-DiagrammeR
+
+depends_test-append port:R-caret \
+                    port:R-data.table \
+                    port:R-fst \
+                    port:R-imbalance \
+                    port:R-interp \
+                    port:R-mlbench \
+                    port:R-pec \
+                    port:R-prodlim
+
+test.run            yes

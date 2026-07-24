@@ -1,0 +1,19 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran komsta dtt 0.1-2.1
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Discrete Trigonometric Transforms
+long_description    {*}${description}
+checksums           rmd160  d97021101e104e960e85f1f060226a9c09066154 \
+                    sha256  e30045f012312184f0f3593b1ee4c8639ae94465033f4676650f812b9d597884 \
+                    size    3240
+supported_archs     noarch
+
+test.run            yes

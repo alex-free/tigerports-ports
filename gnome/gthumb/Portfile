@@ -1,0 +1,90 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           meson 1.0
+
+name                gthumb
+version             3.12.9
+revision            2
+license             GPL-2+
+set branch          [join [lrange [split ${version} .] 0 1] .]
+description         Image viewer and browser for the GNOME desktop
+long_description    ${description}.
+maintainers         nomaintainer
+categories          gnome
+homepage            https://wiki.gnome.org/Apps/gthumb
+master_sites        gnome:sources/gthumb/${branch}
+use_xz              yes
+
+checksums           sha256  d77f88b569de4925780730e7867b2907718da66068c242dde9bbda107e183ffa \
+                    rmd160  f45dba1e8c7dc0983244733bfd93ef63bd26f378 \
+                    size    7594032
+
+set py_ver          3.14
+set py_ver_nodot    [string map {. {}} ${py_ver}]
+configure.python    ${prefix}/bin/python${py_ver}
+
+post-patch {
+    fs-traverse f ${worksrcpath} {
+        if {[string match *.py ${f}]} {
+            ui_info "patching testpath: ${f}"
+            reinplace -q "s|/usr/bin/env python3|${configure.python}|" ${f}
+        }
+    }
+}
+
+depends_build       port:bison \
+                    port:flex \
+                    port:gnome-common \
+                    port:gsettings-desktop-schemas \
+                    port:intltool \
+                    port:itstool \
+                    path:bin/pkg-config:pkgconfig \
+                    port:python${py_ver_nodot}
+
+depends_lib-append  port:exiv2 \
+                    port:gstreamer1-gst-plugins-base \
+                    path:lib/pkgconfig/gtk+-3.0.pc:gtk3 \
+                    port:json-glib \
+                    port:lcms2 \
+                    port:libheif \
+                    path:include/turbojpeg.h:libjpeg-turbo \
+                    port:libjxl \
+                    port:libraw \
+                    path:lib/pkgconfig/librsvg-2.0.pc:librsvg \
+                    port:libsoup \
+                    port:tiff \
+                    port:webp \
+                    port:zlib
+
+depends_run-append  port:desktop-file-utils
+
+configure.args      -Dclutter=false \
+                    -Dcolord=false \
+                    -Dgstreamer=true \
+                    -Dlcms2=true \
+                    -Dlibbrasero=false \
+                    -Dlibchamplain=false \
+                    -Dlibheif=true \
+                    -Dlibjxl=true \
+                    -Dlibraw=true \
+                    -Dlibrsvg=true \
+                    -Dlibtiff=true \
+                    -Dlibwebp=true
+
+compiler.cxx_standard   2011
+
+universal_variant   no
+
+variant clutter description "Enable use of clutter in slide show feature" {
+    depends_lib-append    port:clutter-gtk
+    configure.args-delete -Dclutter=false
+}
+
+post-activate {
+    system "gtk-update-icon-cache -f -t ${prefix}/share/icons/hicolor"
+    system "${prefix}/bin/update-desktop-database ${prefix}/share/applications"
+    system "${prefix}/bin/glib-compile-schemas ${prefix}/share/glib-2.0/schemas"
+}
+
+livecheck.type      gnome

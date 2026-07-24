@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran dan.grose RcppEigenAD 1.1.0
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Compiles C++ code using Rcpp, Eigen and CppAD \
+                    to produce first and second order partial derivatives
+long_description    {*}${description}
+checksums           rmd160  e6b35ddd24ab05c6facadae7292b0cd76509b55c \
+                    sha256  08fd3fe79a2ded5de918970f290d184a3019a2b10bb77bba6f76d93b91779098 \
+                    size    678256
+
+depends_lib-append  port:R-BH \
+                    port:R-functional \
+                    port:R-memoise \
+                    port:R-Rcpp \
+                    port:R-RcppEigen \
+                    port:R-Rdpack \
+                    port:R-readr
+
+test.run            yes

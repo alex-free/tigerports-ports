@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github RobinHankin stokes 1.2-3
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2
+description         Exterior Calculus
+long_description    Provides functionality for working with tensors, alternating forms, \
+                    wedge products and related concepts from the exterior calculus.
+checksums           rmd160  b0b5fd4c4ac2a1f8308d887fd97adc3f7e5bff1b \
+                    sha256  91fa876ab721b0c575d81d9976cf37ca7d53251d000f74a1cdb455118428be80 \
+                    size    113647
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-disordR \
+                    port:R-partitions \
+                    port:R-permutations \
+                    port:R-spray
+
+depends_test-append port:R-covr \
+                    port:R-Deriv \
+                    port:R-knitr \
+                    port:R-magrittr \
+                    port:R-markdown \
+                    port:R-quadform \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

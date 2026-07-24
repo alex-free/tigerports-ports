@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran matrix-profile-foundation matrixprofiler 0.1.10
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Matrix profile for R
+long_description    This is the core functions needed by the tsmp package. \
+                    The low-level and carefully checked mathematical functions are here.
+checksums           rmd160  9ceb64f589f91cef8fa83db2ffb82bb4f5d7d81a \
+                    sha256  9ed39350cd8ef8041be6b3bceee7208d1fe5f0638127771b516fff20962b324a \
+                    size    282074
+
+depends_lib-append  port:R-checkmate \
+                    port:R-Rcpp \
+                    port:R-RcppParallel \
+                    port:R-RcppProgress \
+                    port:R-RcppThread
+
+depends_test-append port:R-debugme \
+                    port:R-spelling \
+                    port:R-testthat \
+                    port:R-xml2
+
+test.run            yes

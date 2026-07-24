@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran bwlewis threejs 0.3.4 CRAN-version-
+revision            1
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Interactive 3D scatter plots, networks and globes
+long_description    {*}${description}
+homepage            https://github.com/bwlewis/rthreejs
+checksums           rmd160  31a7f87d6b222d6b94089d070108d35af1066b63 \
+                    sha256  1c6ba5d78702051ee1dbbcff2866074ddc8ac49f2f3abd4418e608d7c86eb484 \
+                    size    735513
+supported_archs     noarch
+
+depends_lib-append  port:R-base64enc \
+                    port:R-crosstalk \
+                    port:R-htmlwidgets \
+                    port:R-igraph
+
+depends_test-append port:R-knitr \
+                    port:R-maps \
+                    port:R-shiny
+
+test.run            yes

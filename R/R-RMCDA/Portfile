@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran annicenajafi27 RMCDA 0.3
+revision            1
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Multi-Criteria Decision Analysis
+long_description    {*}${description}
+checksums           rmd160  ec0eeaf7b4f06b00b3e29601f6d8b6dc80469c84 \
+                    sha256  b0d85f7358470d8a15777d881598cf204e114469b1816558bb9f6367faca5165 \
+                    size    71401
+supported_archs     noarch
+
+depends_lib-append  port:R-dplyr \
+                    port:R-fmsb \
+                    port:R-igraph \
+                    port:R-lpSolve \
+                    port:R-matlib \
+                    port:R-matrixStats \
+                    port:R-nloptr \
+                    port:R-pracma
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

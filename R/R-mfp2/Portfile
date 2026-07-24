@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran EdwinKipruto mfp2 1.0.1
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Multivariable fractional polynomial models with extensions
+long_description    {*}${description}
+homepage            https://github.com/EdwinKipruto/mfp2
+checksums           rmd160  5b51631a00e48b098c365a987205999c9bc97b6f \
+                    sha256  eafca956723c65a7979fdd15763f3499cb74563d5acdc58934740ea41b944523 \
+                    size    622510
+supported_archs     noarch
+
+depends_lib-append  port:R-ggplot2
+
+depends_test-append port:R-formatR \
+                    port:R-knitr \
+                    port:R-patchwork \
+                    port:R-rmarkdown \
+                    port:R-spelling \
+                    port:R-testthat \
+                    port:R-xfun
+
+test.run            yes

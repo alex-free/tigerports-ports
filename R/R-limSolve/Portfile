@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran karline.soetaert limSolve 2.0.3
+revision            0
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL
+description         Solving linear inverse models
+long_description    {*}${description}
+checksums           rmd160  d581976c3e08183ab975744b11cc8565342dce3d \
+                    sha256  8a78f7ca70c8af34f297658cded2ea925c63864dfbe7843e8a8213c2a322de6a \
+                    size    724623
+
+depends_lib-append  port:R-lpSolve \
+                    port:R-quadprog
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown
+
+# Tests may fail, apparently related to: https://trac.macports.org/ticket/67059
+test.run            yes

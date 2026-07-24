@@ -1,0 +1,52 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github easystats easystats 0.7.5 v
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Framework for easy statistical modelling, \
+                    visualization and reporting
+long_description    {*}${description}
+homepage            https://easystats.github.io/easystats
+checksums           rmd160  6c3b18f05265c2e04c4dc523d575702c25ee6cc3 \
+                    sha256  6ca45c476b3077a0454421ca998cb95dae133fcdbff92b098e4bf9e750b0fbf7 \
+                    size    160343500
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-bayestestR \
+                    port:R-correlation \
+                    port:R-datawizard \
+                    port:R-effectsize \
+                    port:R-insight \
+                    port:R-modelbased \
+                    port:R-parameters \
+                    port:R-performance \
+                    port:R-report \
+                    port:R-see
+
+depends_test-append port:R-collapse \
+                    port:R-DHARMa \
+                    port:R-DT \
+                    port:R-flexdashboard \
+                    port:R-Formula \
+                    port:R-ggplot2 \
+                    port:R-glmmTMB \
+                    port:R-httr \
+                    port:R-jsonlite \
+                    port:R-knitr \
+                    port:R-marginaleffects \
+                    port:R-mockery \
+                    port:R-pak \
+                    port:R-patchwork \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-withr \
+                    port:R-xml2
+
+test.run            yes

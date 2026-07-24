@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran maiermarco DirichletReg 0.7-2 v
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Dirichlet Regression
+long_description    ${name} implements Dirichlet regression models.
+homepage            https://github.com/maiermarco/DirichletReg
+checksums           rmd160  9d85cd1e45babe256daa03ab831b96cf2840448b \
+                    sha256  088b4c8cf4c87e661c741a87791f8bbbbe55175d76d4ed0a7b24e7fe76782d9b \
+                    size    248756
+# github.tarball_from archive
+
+depends_lib-append  port:R-Formula \
+                    port:R-maxLik
+
+depends_test-append port:R-formatR \
+                    port:R-knitr \
+                    port:R-rgl \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

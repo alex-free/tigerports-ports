@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran lenarddome psp 1.0.5 v
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3+
+description         Parameter Space Partitioning MCMC for global model evaluation
+long_description    {*}${description}
+homepage            https://github.com/lenarddome/psp
+checksums           rmd160  d02ef191ae81e4fbd26bfda2437712742bae9d61 \
+                    sha256  9a9c27a7679643f98521d82d16a18b1abad5440a932fe333ea2c742cc672831d \
+                    size    13345
+
+depends_lib-append  port:R-data.table \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-testthat
+
+test.run            yes

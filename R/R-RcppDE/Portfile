@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran eddelbuettel RcppDE 0.1.9
+revision            0
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Global optimization by differential evolution in C++
+long_description    {*}${description}
+homepage            https://dirk.eddelbuettel.com/code/rcpp.de.html
+checksums           rmd160  e464503a6f27245fa5cad73d19567b2f36dae381 \
+                    sha256  f48aeea87e379beb1a408aef11d65c3f2b8ce09e97c2add6f42f9446ea92fe3b \
+                    size    291113
+
+depends_lib-append  port:R-Rcpp \
+                    port:R-RcppArmadillo
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-DEoptim \
+                    port:R-inline
+
+test.run            yes

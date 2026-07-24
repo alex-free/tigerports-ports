@@ -1,0 +1,38 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran spatstat spatstat.model 3.6-1
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-2+
+description         Parametric statistical modelling and inference
+long_description    {*}${description} for the R-spatstat family.
+homepage            https://github.com/spatstat/${R.package}
+checksums           rmd160  6aab4372dcd989cc8ba7d90d2b25b1c55efeeb5c \
+                    sha256  9e59e5ddd75301b5a5eaf12ba12a44f7318dbd75f5f7b95feb633fa72fa57900 \
+                    size    857259
+
+depends_lib-append  port:R-abind \
+                    port:R-goftest \
+                    port:R-spatstat.data \
+                    port:R-spatstat.explore \
+                    port:R-spatstat.geom \
+                    port:R-spatstat.random \
+                    port:R-spatstat.sparse \
+                    port:R-spatstat.univar \
+                    port:R-spatstat.utils \
+                    port:R-tensor
+
+depends_test-append port:R-fftwtools \
+                    port:R-glmnet \
+                    port:R-gsl \
+                    port:R-locfit \
+                    port:R-nleqslv \
+                    port:R-sm \
+                    port:R-spatstat \
+                    port:R-spatstat.linnet
+
+test.run            yes

@@ -1,0 +1,53 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+
+github.setup        mackron c89atomic 4ee984fc4f1d85ef47b1f8b92d5ff8503279427b
+version             2025.08.24
+revision            0
+categories          devel
+license             Permissive
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+description         C89-compatible atomics
+long_description    This library aims to implement an equivalent to the C11 atomics library.
+checksums           rmd160  972baa0fe653266d589287fac5c7b607798dbe55 \
+                    sha256  7bf0245aae883ba5e1623c01fc55f563d9dc75f9d2713a9b13069fd5151efa21 \
+                    size    37747
+github.tarball_from archive
+
+post-patch {
+    reinplace "s|-Wpedantic|-pedantic|g" ${worksrcpath}/CMakeLists.txt
+}
+
+configure.args-append   -DC89ATOMIC_BUILD_EXAMPLES=ON \
+                        -DC89ATOMIC_BUILD_TESTS=ON \
+                        -DC89ATOMIC_BUILD_TOOLS=OFF \
+                        -DC89ATOMIC_FORCE_C89=OFF \
+                        -DC89ATOMIC_FORCE_CXX=OFF
+
+# Discussion: https://github.com/mackron/c89atomic/issues/10
+
+variant c11 description "Build with modern C11 atomics" {
+    compiler.c_standard     2011
+}
+
+variant cxx11 description "Build with modern C++11 atomics" {
+    compiler.cxx_standard   2011
+
+    configure.args-replace  -DC89ATOMIC_FORCE_CXX=OFF \
+                            -DC89ATOMIC_FORCE_CXX=ON
+}
+
+if {[variant_isset c11] || [variant_isset cxx11]} {
+    configure.ldflags-append \
+                        -latomic
+}
+
+destroot {
+    copy ${cmake.build_dir}/libc89atomic.a ${destroot}${prefix}/lib
+    copy ${worksrcpath}/c89atomic.h ${destroot}${prefix}/include
+}
+
+test.run            yes

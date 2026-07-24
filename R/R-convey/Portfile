@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is archaic.
+R.setup             cran ajdamico convey 1.0.1
+revision            1
+categories-append   economics
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Income concentration analysis with complex survey samples
+long_description    {*}${description}
+homepage            https://www.convey-r.org
+checksums           rmd160  53c079b3828652ff6763a09cdaab9dec46923703 \
+                    sha256  09ba0ef5d6adbc7d74be2f80c84113f01503600f284bebebd431a0aa389105c5 \
+                    size    229999
+supported_archs     noarch
+
+depends_lib-append  port:R-survey
+
+depends_test-append port:R-DBI \
+                    port:R-knitr \
+                    port:R-laeken \
+                    port:R-rmarkdown \
+                    port:R-RSQLite \
+                    port:R-testthat \
+                    port:R-vardpoor
+
+test.run            yes

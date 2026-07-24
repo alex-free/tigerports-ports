@@ -1,0 +1,51 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github sinhrks ggfortify 0.4.19 v
+revision            1
+categories-append   graphics
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Data visualization tools for statistical analysis results
+long_description    {*}${description}
+checksums           rmd160  cc9bcc854c1303ad2431322efe24dced8251d930 \
+                    sha256  4ba794ef548847674e77252d292407a688b1d51112fcc2dd1d3a604f0042db52 \
+                    size    93899
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-dplyr \
+                    port:R-ggplot2 \
+                    port:R-gridExtra \
+                    port:R-scales \
+                    port:R-stringr \
+                    port:R-tibble \
+                    port:R-tidyr
+
+depends_test-append port:R-changepoint \
+                    port:R-fGarch \
+                    port:R-forecast \
+                    port:R-ggrepel \
+                    port:R-glmnet \
+                    port:R-KFAS \
+                    port:R-knitr \
+                    port:R-lfda \
+                    port:R-lintr \
+                    port:R-mapdata \
+                    port:R-markdown \
+                    port:R-MSwM \
+                    port:R-raster \
+                    port:R-ROCR \
+                    port:R-sp \
+                    port:R-strucchange \
+                    port:R-testthat \
+                    port:R-timeSeries \
+                    port:R-tseries \
+                    port:R-vars \
+                    port:R-xts \
+                    port:R-zoo
+
+test.run            yes

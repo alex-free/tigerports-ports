@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran tarn.duong ks 1.15.0
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             {GPL-2 GPL-3}
+description         Kernel Smoothing
+long_description    {*}${description}
+checksums           rmd160  f0a53715b297c7851e7f4159dd1e0a6026d6a45b \
+                    sha256  da5ba3b24015071563c51a82a6e322631f2ce0112f5a3103d40f65e7e487a1f2 \
+                    size    1125580
+
+depends_lib-append  port:R-FNN \
+                    port:R-kernlab \
+                    port:R-mclust \
+                    port:R-multicool \
+                    port:R-mvtnorm \
+                    port:R-pracma
+
+depends_test-append port:R-geometry \
+                    port:R-misc3d \
+                    port:R-oz \
+                    port:R-plot3D \
+                    port:R-rgl
+
+test.run            yes

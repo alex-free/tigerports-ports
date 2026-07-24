@@ -1,0 +1,42 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is outdated.
+R.setup             cran tidyverts tsibble 1.2.0 v
+revision            1
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Tidy temporal data frames and tools
+long_description    {*}${description}
+homepage            https://tsibble.tidyverts.org
+checksums           rmd160  5681ae9003dfd5d46c57a56319d359b6747d18fb \
+                    sha256  60a7e2fd99dd4ada3334573991c3e16dff597ed72c53d5b584ee4e71ae1b49ef \
+                    size    1339382
+supported_archs     noarch
+
+depends_lib-append  port:R-anytime \
+                    port:R-dplyr \
+                    port:R-generics \
+                    port:R-lifecycle \
+                    port:R-lubridate \
+                    port:R-rlang \
+                    port:R-tibble \
+                    port:R-tidyselect \
+                    port:R-vctrs
+
+depends_test-append port:R-ggplot2 \
+                    port:R-hms \
+                    port:R-knitr \
+                    port:R-nanotime \
+                    port:R-nycflights13 \
+                    port:R-rmarkdown \
+                    port:R-scales \
+                    port:R-spelling \
+                    port:R-testthat \
+                    port:R-tidyr \
+                    port:R-timeDate
+
+test.run            yes

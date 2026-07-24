@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             bioconductor Bioconductor S4Arrays 1.8.1
+revision            1
+categories-append   bioconductor devel
+maintainers         nomaintainer
+license             Artistic-2
+description         Foundation of array-like containers in Bioconductor
+long_description    {*}${description}
+checksums           rmd160  e1c5466bc4d2cad64dc29a443e6141524d1c2d04 \
+                    sha256  f1fda8034c60c08e82b9c5db314d72242e16ead89531c0c093c0f752bdf3c70f \
+                    size    294497
+
+depends_lib-append  port:R-abind \
+                    port:R-BiocGenerics \
+                    port:R-crayon \
+                    port:R-IRanges \
+                    port:R-S4Vectors
+
+depends_test-append port:R-BiocParallel \
+                    port:R-BiocStyle \
+                    port:R-DelayedArray \
+                    port:R-HDF5Array \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-SparseArray \
+                    port:R-testthat
+
+test.run            yes

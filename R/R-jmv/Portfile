@@ -1,0 +1,50 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is archaic.
+R.setup             cran jamovi jmv 2.7.0
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         The Jamovi analyses
+long_description    {*}${description}
+homepage            https://www.jamovi.org
+checksums           rmd160  2ee25b2c76ea548600fd98ee6823ce15e546d16b \
+                    sha256  ab6ffec88c668f10ed984b68c339e37437d5b36d1e91eaf84b9bd49dda302d78 \
+                    size    1351669
+supported_archs     noarch
+
+depends_lib-append  port:R-afex \
+                    port:R-BayesFactor \
+                    port:R-car \
+                    port:R-dplyr \
+                    port:R-emmeans \
+                    port:R-GGally \
+                    port:R-ggplot2 \
+                    port:R-ggrepel \
+                    port:R-ggridges \
+                    port:R-GPArotation \
+                    port:R-jmvcore \
+                    port:R-lavaan \
+                    port:R-magrittr \
+                    port:R-multcomp \
+                    port:R-mvnormtest \
+                    port:R-PMCMR \
+                    port:R-psych \
+                    port:R-R6 \
+                    port:R-ROCR \
+                    port:R-vcd \
+                    port:R-vcdExtra
+
+depends_test-append port:R-carData \
+                    port:R-exact2x2 \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-semPlot \
+                    port:R-testthat
+
+test.run            yes

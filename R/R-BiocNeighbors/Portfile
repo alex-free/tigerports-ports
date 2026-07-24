@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             bioconductor Bioconductor BiocNeighbors 2.2.0
+revision            1
+categories-append   bioconductor
+maintainers         nomaintainer
+license             GPL-3
+description         Nearest neighbor detection for Bioconductor packages
+long_description    {*}${description}
+checksums           rmd160  ee0dba0285bd4017107e11b879c8f8365f1a417f \
+                    sha256  3c5a6b91c7318702e51d3defc47591eee0a3f6babfc4c91a4b28f953e0a2d605 \
+                    size    336674
+
+depends_lib-append  port:R-assorthead \
+                    port:R-Rcpp
+
+depends_test-append port:R-BiocParallel \
+                    port:R-BiocStyle \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+# Tests may freeze due to: https://trac.macports.org/ticket/67059
+test.run            no

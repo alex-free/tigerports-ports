@@ -1,0 +1,40 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github thomasp85 reqres 1.0.0 v
+revision            1
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Powerful classes for HTTP requests and responses
+long_description    {*}${description}
+checksums           rmd160  49fa77e2d9cfc46ce047f7fb7cd73e73ecfd38a0 \
+                    sha256  f851f3bf9fbd3f5b656a65791eb4cd95bd72b2726c351faf0e5d68de04b7d921 \
+                    size    144956
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-base64enc \
+                    port:R-brotli \
+                    port:R-R6 \
+                    port:R-stringi \
+                    port:R-urltools \
+                    port:R-jsonlite \
+                    port:R-xml2 \
+                    port:R-webutils \
+                    port:R-cli \
+                    port:R-rlang \
+                    port:R-lifecycle \
+                    port:R-sodium \
+                    port:R-promises \
+                    port:R-mirai
+
+depends_test-append port:R-covr \
+                    port:R-fiery \
+                    port:R-keyring \
+                    port:R-shiny \
+                    port:R-testthat
+
+test.run            yes

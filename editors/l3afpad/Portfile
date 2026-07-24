@@ -1,0 +1,41 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem      1.0
+PortGroup       github 1.0
+
+github.setup    stevenhoneyman l3afpad 0.8.18.1.11 v
+license         GPL-2+
+description     A simple GTK+ 3 text editor that emphasizes simplicity.
+long_description \
+                {*}${description}
+maintainers     physics.ox.ac.uk:russell.jones openmaintainer
+categories      editors gnome
+
+checksums       rmd160  a692c138373df07b69c980377a694653daadc1db \
+                sha256  86f374b2f950b7c60dda50aa80a5034b8e3c80ded5cd3284c2d5921b31652793 \
+                size    194318
+github.tarball_from archive
+
+# reconfigure using intltoolize and autoreconf (no autogen.sh available) for intltool 0.51 compatibility
+use_autoreconf  yes
+autoreconf.args -fvi
+
+pre-configure {
+    system -W ${worksrcpath} "${prefix}/bin/intltoolize --force --copy --automake"
+}
+
+depends_build-append \
+                port:gettext \
+                port:intltool \
+                path:bin/pkg-config:pkgconfig
+
+depends_lib-append \
+                port:desktop-file-utils \
+                port:freetype \
+                port:gettext-runtime \
+                path:lib/pkgconfig/gtk+-3.0.pc:gtk3
+
+post-activate {
+    system "${prefix}/bin/update-desktop-database ${prefix}/share/applications"
+    system "${prefix}/bin/gtk-update-icon-cache -f -t ${prefix}/share/icons/hicolor"
+}

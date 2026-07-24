@@ -1,0 +1,33 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github r-cas Ryacas 1.1.6 v
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL
+description         R interface to the Yacas Computer Algebra System
+long_description    {*}${description}
+checksums           rmd160  711942dfcc4a0fc460a78c6a65b2178383a497cd \
+                    sha256  8e7767f5733e092aca98737b8397c449ef07e7d7ef10c60f8ad4882b35428e94 \
+                    size    773142
+github.tarball_from archive
+
+depends_lib-append  port:R-magrittr \
+                    port:R-Rcpp
+
+compiler.cxx_standard 2014
+
+depends_test-append port:R-devtools \
+                    port:R-exams \
+                    port:R-igraph \
+                    port:R-knitr \
+                    port:R-pkgload \
+                    port:R-rmarkdown \
+                    port:R-Rmpfr \
+                    port:R-testthat \
+                    port:R-unix
+
+test.run            yes

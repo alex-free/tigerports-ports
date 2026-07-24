@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran USEPA spmodel 0.12.0 v
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Spatial statistical modelling and prediction
+long_description    {*}${description}
+homepage            https://usepa.github.io/spmodel
+checksums           rmd160  a10c092be924312b38c898b2151b09aa9bbac9dc \
+                    sha256  92925c72cd3ba0296f1cf4746ce5301ce0d7100233447a7d859c3aa7e061d5e5 \
+                    size    3105746
+supported_archs     noarch
+
+depends_lib-append  port:R-generics \
+                    port:R-sf \
+                    port:R-tibble
+
+depends_test-append port:R-emmeans \
+                    port:R-estimability \
+                    port:R-ggplot2 \
+                    port:R-knitr \
+                    port:R-pROC \
+                    port:R-ranger \
+                    port:R-rmarkdown \
+                    port:R-statmod \
+                    port:R-testthat
+
+test.run            yes

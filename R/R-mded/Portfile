@@ -1,0 +1,18 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran azk-r mded 0.1-2
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             CC0
+description         Measure the difference between two empirical distributions
+long_description    {*}${description}
+checksums           rmd160  98aa176270505583aaf63bee4697c0b24062a87f \
+                    sha256  8cc2852314b790550ec4377ca46f63ba08b382ec20009a1a4e171ce6cb670ec9 \
+                    size    3266
+supported_archs     noarch
+
+test.run            yes

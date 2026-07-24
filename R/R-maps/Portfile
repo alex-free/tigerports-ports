@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran alex.deckmyn maps 3.4.3
+revision            1
+categories-append   gis
+maintainers         nomaintainer
+license             GPL-2
+description         Draw geographical maps
+long_description    {*}${description}
+checksums           rmd160  f65be106e328196d8139480ada63b44f84eb3587 \
+                    sha256  3b6d4945330041280ddb3f89fbe0d7dbcf124befef94e8d77e809122d8d588b8 \
+                    size    2276142
+
+depends_test-append port:R-mapdata \
+                    port:R-mapproj \
+                    port:R-rnaturalearth \
+                    port:R-sp
+
+test.run            yes

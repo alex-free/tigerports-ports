@@ -1,0 +1,22 @@
+--- configure	2025-07-22 22:55:43.000000000 +0800
++++ configure	2025-07-26 19:58:11.000000000 +0800
+@@ -591,7 +591,7 @@
+ #
+ # Initializations.
+ #
+-ac_default_prefix=/usr/local
++ac_default_prefix=@PREFIX@
+ ac_clean_files=
+ ac_config_libobj_dir=.
+ LIBOBJS=
+@@ -2258,8 +2258,8 @@
+    UD_CPPFLAGS="-I${udunits2_include_path}"
+ elif test  -n "${UDUNITS2_INCLUDE}" ; then
+    UD_CPPFLAGS="-I{UDUNITS2_INCLUDE}"
+-elif test -d /usr/include/udunits2; then
+-   UD_CPPFLAGS="-I/usr/include/udunits2"
++elif test -d @PREFIX@/include/udunits2; then
++   UD_CPPFLAGS="-I@PREFIX@/include/udunits2"
+ fi
+ 
+ 

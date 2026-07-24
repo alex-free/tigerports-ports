@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran susanacamposmartins tvgarch 2.4.3
+revision            1
+categories-append   finance
+maintainers         nomaintainer
+license             GPL-2+
+description         Time-varying GARCH modelling
+long_description    {*}${description}
+homepage            https://sites.google.com/site/susanacamposmartins
+checksums           rmd160  a6e51898336ec753c4ccdba1cca38cd88af71734 \
+                    sha256  ae603bc10250ca3bbb09b90e4077780a9fc4ebff0cefb21dd160d05f1589b707 \
+                    size    36811
+supported_archs     noarch
+
+depends_lib-append  port:R-garchx \
+                    port:R-numDeriv \
+                    port:R-zoo
+
+test.run            yes

@@ -1,0 +1,113 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+PortGroup           legacysupport 1.1
+PortGroup           wxWidgets 1.0
+
+# At least for wcscasecmp
+legacysupport.newest_darwin_requires_legacy 10
+
+wxWidgets.use       wxGTK-3.2
+
+name                py-wxpython-4.0
+python.rootname     wxpython
+version             4.2.4
+revision            0
+
+categories-append   graphics devel
+license             wxwidgets-3.1
+maintainers         nomaintainer
+
+description         Python interface to the wxWidgets 3.2 cross platform GUI
+long_description    wxPython is a GUI toolkit for the Python programming \
+                    language. It allows Python programmers to create \
+                    programs with a robust, highly functional graphical \
+                    user interface, simply and easily. It is implemented \
+                    as a Python extension module (native code) that wraps \
+                    the wxWidgets cross platform GUI library, written in C++.
+
+homepage            https://www.wxpython.org
+checksums           rmd160  66265daa26366a13a888bfaed26150e6d9d10624 \
+                    sha256  2eb123979c87bcb329e8a2452269d60ff8f9f651e9bf25c67579e53c4ebbae3c \
+                    size    58583054
+
+python.versions     39 310 311 312 313
+
+if {${subport} ne ${name}} {
+    if {${os.platform} eq "darwin" && [vercmp ${macosx_deployment_target} >= 15.0]} {
+        macosx_deployment_target 14.0
+    }
+
+    compiler.cxx_standard   2011
+
+    # https://github.com/wxWidgets/Phoenix/issues/2824
+    # https://github.com/wxWidgets/Phoenix/issues/2825
+    patchfiles-append \
+        patch-fix-wxgtk.diff \
+        patch-no-webview.diff
+
+    if {${configure.cxx_stdlib} ne "libc++"} {
+        patchfiles-append \
+            patch-cxxabi.diff
+    }
+
+    # Should match the actual requirement:
+    if {${os.platform} eq "darwin" && ${os.major} < 11} {
+        patchfiles-append \
+            patch-legacy-support.diff
+    }
+
+    # The build is supposed to accept --wx_config, but it doesn’t.
+    # Patch the script, like FreeBSD does:
+    # https://github.com/freebsd/freebsd-ports/blob/c3eb8b809d5ee25fda352a5ddf61b8a08a3c8fe6/x11-toolkits/py-wxPython4/Makefile#L32
+    post-patch {
+        reinplace "s|WX_CONFIG = 'wx-config'|WX_CONFIG = '${wxWidgets.wxconfig}'|" ${worksrcpath}/build.py
+        reinplace "s|@PREFIX@|${prefix}|g" ${worksrcpath}/wscript
+    }
+
+    depends_build-append \
+        path:bin/doxygen:doxygen \
+        port:py${python.version}-cython \
+        port:py${python.version}-requests \
+        port:py${python.version}-setuptools \
+        port:py${python.version}-sip
+
+    depends_lib-append \
+        port:libGLU \
+        port:mesa \
+        port:tiff \
+        port:${wxWidgets.port}
+
+    depends_run-append \
+        port:py${python.version}-numpy \
+        port:py${python.version}-Pillow
+
+    # FIXME: doxygen fails to get picked correctly from the env: https://github.com/wxWidgets/Phoenix/issues/2826
+    build.env-append \
+        PATH=${python.prefix}/bin:$env(PATH) \
+        SIP=${python.prefix}/bin/sip \
+        WX_SKIP_DOXYGEN_VERSION_CHECK=1
+
+    set wxpython_options "--release --python ${python.bin} --use_syswx --gtk3 --nodoc --prefix=${python.prefix} --verbose"
+    build {
+        system -W ${worksrcpath} "${python.bin} build.py ${wxpython_options}"
+        system -W ${worksrcpath} "DOXYGEN=${prefix}/bin/doxygen CXX=${configure.cxx} ${python.bin} build.py dox etg sip ${wxpython_options}"
+        system -W ${worksrcpath} "CXX=${configure.cxx} ${python.bin} build.py build_py ${wxpython_options}"
+    }
+
+    destroot.cmd ${python.bin} build.py
+    destroot.target install
+    destroot.destdir --destdir=${destroot} ${wxpython_options}
+
+    post-patch {
+        reinplace "s|MACOSX_DEPLOYMENT_TARGET = \"10\\.10\"|MACOSX_DEPLOYMENT_TARGET = \"${macosx_deployment_target}\"|" \
+            ${worksrcpath}/wscript
+        reinplace "s|--with-macosx-version-min=10\\.10|--with-macosx-version-min=${macosx_deployment_target}|" \
+            ${worksrcpath}/buildtools/build_wxwidgets.py
+    }
+
+    test.run yes
+    test.cmd "${python.bin} -c 'import wx ; print(wx.__version__)'"
+    test.target
+}

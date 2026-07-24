@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             bioconductor Bioconductor IRanges 2.42.0
+revision            1
+categories-append   bioconductor math
+maintainers         nomaintainer
+license             Artistic-2
+description         Foundation of integer range manipulation
+long_description    {*}${description}
+checksums           rmd160  e01fdc2b85ae76a18e162ba5f03a15b3bf26f23b \
+                    sha256  0abb01ee93111c5fc678f9aa2f93d00d8d1548263cb60daa52645a6061b603fc \
+                    size    483034
+
+depends_lib-append  port:R-BiocGenerics \
+                    port:R-S4Vectors
+
+patchfiles-append   patch-remove-unavailable-suggests.diff
+
+depends_test-append port:R-BiocStyle \
+                    port:R-GenomicAlignments \
+                    port:R-GenomicFeatures \
+                    port:R-GenomicRanges \
+                    port:R-Rsamtools \
+                    port:R-RUnit \
+                    port:R-XVector
+
+test.run            yes

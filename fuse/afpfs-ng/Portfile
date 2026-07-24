@@ -1,0 +1,39 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           fuse 1.0
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+PortGroup           meson 1.0
+
+# strnlen
+legacysupport.newest_darwin_requires_legacy 10
+
+github.setup        Netatalk afpfs-ng 0.9.3
+revision            0
+categories          fuse net
+license             GPL-2
+maintainers         nomaintainer
+description         AFPFS-NG is a client implementation of the Apple Filing Protocol written in C
+long_description    {*}${description} which can be used to access AFP shares exposed by multiple devices.
+checksums           rmd160  8fcd48d946bbf7a03ab21a8e5a5d6883ce950785 \
+                    sha256  a95f3c9b27c77ab5ae61865295292c14f1cf0758558a983109c65105b04c1551 \
+                    size    204056
+github.tarball_from archive
+
+meson.wrap_mode     nodownload
+
+patchfiles-append   patch-10.5-compat.diff
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  port:libevent \
+                    port:libgcrypt \
+                    port:libiconv \
+                    port:readline
+
+compiler.c_standard 2011
+
+configure.args-append   -Denable-fuse=true \
+                        -Dforce-fuse-v2=true

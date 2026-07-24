@@ -1,0 +1,47 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran easystats report 0.6.3 v
+revision            1
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Automated reporting of results and statistical models
+long_description    {*}${description}
+homepage            https://easystats.github.io/report
+checksums           rmd160  a02f6e16284bcd93fff2957386f7172b087e7f49 \
+                    sha256  0fb46811a265349836e289069d865acdd0d2517aa16e6de76ff263fcf61ec4ec \
+                    size    1910189
+# github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-bayestestR \
+                    port:R-datawizard \
+                    port:R-effectsize \
+                    port:R-insight \
+                    port:R-parameters \
+                    port:R-performance
+
+depends_test-append port:R-BayesFactor \
+                    port:R-BH \
+                    port:R-brms \
+                    port:R-collapse \
+                    port:R-dplyr \
+                    port:R-emmeans \
+                    port:R-GLMMadaptive \
+                    port:R-glmmTMB \
+                    port:R-ivreg \
+                    port:R-knitr \
+                    port:R-lavaan \
+                    port:R-lme4 \
+                    port:R-marginaleffects \
+                    port:R-modelbased \
+                    port:R-RcppEigen \
+                    port:R-rmarkdown \
+                    port:R-rstanarm \
+                    port:R-testthat
+
+test.run            yes

@@ -1,0 +1,54 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran InfiniteCuriosity NumericEnsembles 0.10.1
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Automatically run 18 individual and 14 ensembles of models
+long_description    {*}${description}
+homepage            http://www.NumericEnsembles.com
+checksums           rmd160  58c114cc2860ae9d4717f50788cc2700e6154969 \
+                    sha256  b736a2b1565126156575bef18c7781f43bd1c58b3fb0128bafbf4c0c82ee77a5 \
+                    size    1941471
+supported_archs     noarch
+
+depends_lib-append  port:R-arm \
+                    port:R-brnn \
+                    port:R-broom \
+                    port:R-car \
+                    port:R-caret \
+                    port:R-corrplot \
+                    port:R-Cubist \
+                    port:R-doParallel \
+                    port:R-dplyr \
+                    port:R-e1071 \
+                    port:R-earth \
+                    port:R-gam \
+                    port:R-gbm \
+                    port:R-ggplot2 \
+                    port:R-glmnet \
+                    port:R-gridExtra \
+                    port:R-ipred \
+                    port:R-leaps \
+                    port:R-Metrics \
+                    port:R-olsrr \
+                    port:R-pls \
+                    port:R-purrr \
+                    port:R-randomForest \
+                    port:R-reactable \
+                    port:R-reactablefmtr \
+                    port:R-readr \
+                    port:R-tidyr \
+                    port:R-tree \
+                    port:R-xgboost
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

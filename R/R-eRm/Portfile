@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran mair eRm 1.0-10
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-3
+description         Extended Rasch Modelling
+long_description    {*}${description}
+checksums           rmd160  7913bfd748d269196934a41bd8a05509ba4f34df \
+                    sha256  e745ed5c2ff0918ef2af85dcf9272495433af94cd4838fffbbfc9d79f3ded652 \
+                    size    759613
+
+depends_lib-append  port:R-colorspace \
+                    port:R-psych
+
+compilers.setup     require_fortran
+
+test.run            yes

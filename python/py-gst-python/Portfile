@@ -1,0 +1,62 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           meson 1.0
+
+set my_name         gst-python
+name                py-${my_name}
+version             1.28.5
+revision            0
+license             LGPL-2+
+categories          python audio gnome multimedia
+maintainers         nomaintainer
+description         GStreamer Python bindings
+long_description    ${my_name} allows Python programs built with the Gnome toolkit \
+                    to use GStreamer for multimedia input/output.
+homepage            https://gstreamer.freedesktop.org/modules/${my_name}.html
+master_sites        https://gstreamer.freedesktop.org/src/${my_name}/
+distname            ${my_name}-${version}
+use_xz              yes
+checksums           rmd160  47b339c59a02f91d4ab25879c33b1d968af462e6 \
+                    sha256  0ac461b5700b9766998aa686439064caf58ca4fdaf848dfd477b5a7700b176cc \
+                    size    151088
+
+# This should match gstreamer1* ports in gnome:
+set python.version  314
+
+set python.branch   [string index ${python.version} 0].[string range ${python.version} 1 end]
+set python.prefix   ${frameworks_dir}/Python.framework/Versions/${python.branch}
+set python.bin      ${python.prefix}/bin/python${python.branch}
+set python.libdir   ${python.prefix}/lib
+set python.pkgd     ${python.libdir}/python${python.branch}/site-packages
+
+patchfiles          patch-find-python.diff
+
+post-patch {
+    reinplace "s|@PYTHON@|${python.bin}|" ${worksrcpath}/meson.build
+}
+
+configure.pkg_config_path-prepend \
+                    ${python.prefix}/lib/pkgconfig
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+depends_lib-append  path:lib/pkgconfig/glib-2.0.pc:glib2 \
+                    port:gstreamer1 \
+                    port:py${python.version}-gobject3
+depends_run-append  port:gstreamer1-gst-plugins-bad \
+                    port:gstreamer1-gst-plugins-base \
+                    port:gstreamer1-gst-plugins-good \
+                    port:gstreamer1-gst-plugins-ugly
+
+configure.pre_args-delete \
+                    --prefix=${prefix}
+
+configure.args-append \
+                    -Dlibpython-dir=${python.libdir} \
+                    -Dpygi-overrides-dir=${python.pkgd}/gi/overrides \
+                    -Dprefix=${python.libdir} \
+                    -Dpython=${python.bin} \
+                    -Dtests=disabled
+
+compiler.c_standard 2011

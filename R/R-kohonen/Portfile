@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran ron.wehrens kohonen 3.0.13
+revision            1
+maintainers         nomaintainer
+license             GPL-2+
+description         Supervised and unsupervised self-organising maps
+long_description    {*}${description}
+checksums           rmd160  78daf052908bd5a55fa76b52696e65079b8498dc \
+                    sha256  056db0d8333ae37de6ca0af7056f401db61adcce2aaa982b63340a9b9af0a350 \
+                    size    1541743
+
+depends_lib-append  port:R-Rcpp
+
+depends_test-append port:R-RColorBrewer \
+                    port:R-vegan
+
+test.run            yes

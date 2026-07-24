@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran TDJorgensen lavaan.mi 0.1-0
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Fit structural equation models to multiply imputed data
+long_description    {*}${description}
+homepage            https://github.com/TDJorgensen/lavaan.mi
+checksums           rmd160  58ce6046ea7940f0869472edf28b37435a12b3b2 \
+                    sha256  229eeae01cbfbfe42e874b4c7120488f0b0572e3cb3acf0f09d925ad553115ad \
+                    size    145563
+supported_archs     noarch
+
+depends_lib-append  port:R-lavaan
+
+depends_test-append port:R-Amelia \
+                    port:R-mice \
+                    port:R-testthat
+
+test.run            yes

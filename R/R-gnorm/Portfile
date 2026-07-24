@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran maryclare gnorm 1.0.0
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Generalized normal/exponential power distribution
+long_description    {*}${description}
+homepage            http://github.com/maryclare/gnorm
+checksums           rmd160  8a80c62ec95d3a4a0baddffbe871ca7c35dd988a \
+                    sha256  173399d6b810b6455799c34be11dd66d2d635f33332117232c931fb0381e049e \
+                    size    69690
+supported_archs     noarch
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown
+
+test.run            yes

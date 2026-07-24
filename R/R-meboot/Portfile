@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran ovvo.open.source meboot 1.5
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Maximum entropy bootstrap for time series
+long_description    {*}${description}
+checksums           rmd160  61d7bd8be2eba66056fac457de646b93b8c186d9 \
+                    sha256  0aa4f7bffc48bcf9ceebe7acf160490692e9bef194f6ed7f031a9f7727fcd446 \
+                    size    420118
+
+depends_lib-append  port:R-dynlm \
+                    port:R-hdrcde
+
+depends_test-append port:R-car \
+                    port:R-ConvergenceConcepts \
+                    port:R-geepack \
+                    port:R-lmtest \
+                    port:R-plm \
+                    port:R-strucchange \
+                    port:R-zoo
+
+test.run            yes

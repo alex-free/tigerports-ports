@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran tom.snijders RSiena 1.5.0
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             {GPL-2 GPL-3}
+description         Siena – Simulation Investigation for Empirical Network Analysis
+long_description    {*}${description}
+homepage            https://github.com/stocnet/rsiena
+checksums           rmd160  ee6c9eda32ab1e07fa085e8138fb0e3807e48e52 \
+                    sha256  c86275b5fa2ec3c542c03c883ab7a5c9cdfb939ba48a75efad44e5644ef1939d \
+                    size    2471298
+
+depends_lib-append  port:R-xtable
+
+depends_test-append port:R-network
+
+test.run            yes

@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Do not upgrade to 2.x unless this is addressed:
+# https://github.com/lucadanese/BayesChange/issues/6
+R.setup             cran lucadanese BayesChange 1.1.2
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3+
+description         Bayesian methods for change points analysis
+long_description    {*}${description}.
+homepage            https://github.com/lucadanese/BayesChange
+checksums           rmd160  c5dc2fbd3d58f2c9da6b8e8953e779f45d136ade \
+                    sha256  48dd7a1a87ada9359aad60b315d37aabae15426a221acfd512d495c0299ff1a4 \
+                    size    43691
+
+depends_lib-append  port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-RcppGSL
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

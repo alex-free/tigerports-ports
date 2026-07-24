@@ -1,0 +1,50 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran tidyverse dplyr 1.2.1
+revision            0
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Grammar of data manipulation
+long_description    {*}${description}
+homepage            https://dplyr.tidyverse.org
+checksums           rmd160  e6aefad705e374a89b2a77d2d35a1012e03a702c \
+                    sha256  18d66fe2f24cda8b619c177326d39dd015229ab99695fa67d3fa31e4569390e0 \
+                    size    923509
+
+depends_lib-append  port:R-cli \
+                    port:R-generics \
+                    port:R-glue \
+                    port:R-lifecycle \
+                    port:R-magrittr \
+                    port:R-pillar \
+                    port:R-R6 \
+                    port:R-rlang \
+                    port:R-tibble \
+                    port:R-tidyselect \
+                    port:R-vctrs
+
+depends_test-append port:R-broom \
+                    port:R-covr \
+                    port:R-DBI \
+                    port:R-dbplyr \
+                    port:R-ggplot2 \
+                    port:R-knitr \
+                    port:R-Lahman \
+                    port:R-lobstr \
+                    port:R-microbenchmark \
+                    port:R-nycflights13 \
+                    port:R-purrr \
+                    port:R-rmarkdown \
+                    port:R-RMySQL \
+                    port:R-RPostgreSQL \
+                    port:R-RSQLite \
+                    port:R-stringi \
+                    port:R-testthat \
+                    port:R-tidyr \
+                    port:R-withr
+
+test.run            yes

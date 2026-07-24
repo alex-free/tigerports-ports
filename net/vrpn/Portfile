@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+PortGroup               cmake 1.1
+PortGroup               conflicts_build 1.0
+PortGroup               github 1.0
+
+github.setup            vrpn vrpn 07.36 version_
+revision                0
+categories              net devel multimedia
+license                 Boost-1
+maintainers             nomaintainer
+description             Virtual-Reality Peripheral Network
+long_description        The Virtual-Reality Peripheral Network (VRPN) is \
+                        a set of classes that implement an interface between \
+                        application programs and the set of physical devices \
+                        (tracker etc.) used in a virtual-reality (VR) system.
+homepage                http://vrpn.org
+distname                ${name}_${version}
+checksums               rmd160  e4015da7bca95efb389cbbc22af445fbee1d7fd4 \
+                        sha256  69e24afe304d421d93f59ab150c061597799077fedec49c4302316bf46d5052c \
+                        size    3088080
+github.tarball_from     archive
+
+conflicts_build         gnu-classpath
+
+# vrpn_OwningPtr.h:103: error: ‘swap’ is not a member of ‘std’
+compiler.cxx_standard   2011

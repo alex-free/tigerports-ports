@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran jonathan.bartlett1 bootImpute 1.2.2
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Bootstrap inference for multiple imputation
+long_description    {*}${description}
+checksums           rmd160  97506c4a3bb316d31d531a5e9d6d40fb449f82c8 \
+                    sha256  9a105f6568c62551eef6f93561ef4b5e3c77884d2f29a6f8ef9451a4e5d6f0e3 \
+                    size    38425
+supported_archs     noarch
+
+depends_lib-append  port:R-mice \
+                    port:R-smcfcs
+
+depends_test-append port:R-testthat
+
+test.run            yes

@@ -1,0 +1,44 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub tarball lies about its version.
+R.setup             cran ipeaGIT censobr 0.5.0 v
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Download data from Brazilʼs Population Census
+long_description    {*}${description}
+homepage            https://ipeagit.github.io/censobr
+checksums           rmd160  387eda4d7488b4b6770a672fb405d872d1dce5e6 \
+                    sha256  9311a1c474847c6b1a12169995678948ba1139ded37e19717ed085140b48f912 \
+                    size    273516
+# github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-arrow \
+                    port:R-checkmate \
+                    port:R-cli \
+                    port:R-curl \
+                    port:R-dplyr \
+                    port:R-duckdb \
+                    port:R-fs \
+                    port:R-glue \
+                    port:R-rlang
+
+depends_test-append port:R-covr \
+                    port:R-DBI \
+                    port:R-dbplyr \
+                    port:R-geobr \
+                    port:R-ggplot2 \
+                    port:R-kableExtra \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-scales \
+                    port:R-testthat
+
+test.run            yes
+# https://github.com/ipeaGIT/censobr/issues/48
+test.args-append    --ignore-vignettes

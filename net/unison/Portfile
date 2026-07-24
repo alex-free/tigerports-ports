@@ -1,0 +1,84 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+
+github.setup        bcpierce00 unison 2.54.0 v
+revision            0
+categories          net ocaml sysutils
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Unison File Synchronizer
+long_description    Unison is a file-synchronization tool for Unix and \
+                    Windows. It allows two replicas of a collection of \
+                    files and directories to be stored on different \
+                    hosts (or different disks on the same host), \
+                    modified separately, and then brought up to date by \
+                    propagating the changes in each replica to the other.
+homepage            http://www.cis.upenn.edu/~bcpierce/unison
+
+checksums           rmd160  7b36d0dfd8bdb51e179de881c656a57cf02fa20c \
+                    sha256  0f14154611a2dfebb8c229be85ceda29a750eace4fb75d06e0d43fe5b58a6e87 \
+                    size    1141341
+github.tarball_from archive
+
+compiler.c_standard 1999
+
+universal_variant   no
+
+set py_ver          3.14
+set py_ver_nodot    [string map {. {}} ${py_ver}]
+
+depends_build       port:ocaml \
+                    port:ocaml-findlib
+depends_run         port:python${py_ver_nodot}
+
+installs_libs       no
+
+use_parallel_build  no
+
+# Related: https://github.com/bcpierce00/unison/issues/1159
+patchfiles-append   patch-makefile.diff
+
+post-patch {
+    reinplace "s|/usr/bin/python|${prefix}/bin/python${py_ver}|" ${worksrcpath}/src/fsmonitor.py
+}
+
+platform darwin 8 {
+    depends_build-append port:gmake
+    build.cmd ${prefix}/bin/gmake
+}
+
+use_configure       no
+
+build.env-append    CC=${configure.cc}
+destroot.env-append PREFIX=${prefix}
+
+# ocamlopt not supported on powerpc. Notice, that OCaml 5
+# drops support for all 32-bit platforms in its native compiler.
+# So once OCaml is updated, i386 should be added here.
+if {${configure.build_arch} in [list ppc ppc64]} {
+    build.args-append \
+                    NATIVE=false
+    destroot.args-append \
+                    NATIVE=false
+}
+
+build.target        tui fsmonitor
+
+variant gtk description "Build GTK front-end" {
+    depends_lib-append  port:lablgtk3 \
+                        port:ocaml-cairo2
+
+    build.target-append gui
+}
+
+default_variants    +gtk
+
+notes "
+Unison has always suggested using the same version across machines accessing\
+the same files. If you want to keep the previous version, you can reactivate\
+the previous version; see:
+
+https://trac.macports.org/wiki/howto/InstallingOlderPort
+"

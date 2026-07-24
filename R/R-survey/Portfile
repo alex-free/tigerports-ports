@@ -1,0 +1,36 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran r-project survey 4.5
+revision            0
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             {GPL-2 GPL-3}
+description         Analysis of complex survey samples
+long_description    Summary statistics, two-sample tests, rank tests, generalised linear models, \
+                    cumulative link models, Cox models, loglinear models and general maximum pseudolikelihood \
+                    estimation for multistage stratified, cluster-sampled, unequally weighted survey samples.
+homepage            https://r-survey.r-forge.r-project.org/survey
+checksums           rmd160  e3b0d3f1454c6e604d156109673fd4de78ef9be7 \
+                    sha256  8a2ab01759f9acf6000274255edf00e342dfbf320a39fb76d42594e4d262b519 \
+                    size    2417046
+
+depends_lib-append  port:R-minqa \
+                    port:R-mitools \
+                    port:R-numDeriv \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo
+
+depends_test-append port:R-AER \
+                    port:R-CompQuadForm \
+                    port:R-DBI \
+                    port:R-hexbin \
+                    port:R-knitr \
+                    port:R-quantreg \
+                    port:R-RSQLite \
+                    port:R-R.rsp \
+                    port:R-SUMMER \
+                    port:R-testthat
+
+test.run            yes

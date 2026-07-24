@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is old.
+R.setup             cran Prof-ThiagoOliveira matrixCorr 0.8.3
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Collection of Correlation and Association Estimators
+long_description    {*}${description}
+homepage            https://github.com/Prof-ThiagoOliveira/matrixCorr
+checksums           rmd160  2fbf7db01ece96d7d3b7a19d338e0e08756dce84 \
+                    sha256  9d4579245d42c2eaea25b56ffcd45722470a423934913dc13a57a2c9f0cba116 \
+                    size    213081
+
+depends_lib-append  port:R-cpp11 \
+                    port:R-ggplot2 \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-rlang
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-knitr \
+                    port:R-plotly \
+                    port:R-rmarkdown \
+                    port:R-shiny \
+                    port:R-shinyWidgets \
+                    port:R-testthat \
+                    port:R-viridisLite
+
+test.run            yes

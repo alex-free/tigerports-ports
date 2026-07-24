@@ -1,0 +1,36 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran khliland RcmdrPlugin.NMBU 1.8.15
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         R Commander plug-in for university level applied statistics
+long_description    {*}${description}
+homepage            https://github.com/khliland/RcmdrPlugin.NMBU
+checksums           rmd160  4dc869e947c807cf09549944820035a31278495c \
+                    sha256  9e8c56fa9f4fd8344f7495914381d1a18803697edbcab9b8518235bc1de7b778 \
+                    size    68642
+supported_archs     noarch
+
+depends_lib-append  port:R-car \
+                    port:R-mixlm \
+                    port:R-phia \
+                    port:R-pls \
+                    port:R-Rcmdr \
+                    port:R-xtable
+
+depends_test-append port:R-abind \
+                    port:R-e1071 \
+                    port:R-gmodels \
+                    port:R-leaps \
+                    port:R-lme4 \
+                    port:R-multcomp \
+                    port:R-mvtnorm \
+                    port:R-pbkrtest \
+                    port:R-vcd
+
+test.run            yes

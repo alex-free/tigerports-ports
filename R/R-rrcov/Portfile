@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran valentint rrcov 1.7-7
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3+
+description         Scalable robust estimators with high breakdown point
+long_description    {*}${description}
+homepage            https://github.com/valentint/rrcov
+checksums           rmd160  1da7a1789ebb02c5f43e7b1119e4f66558a32540 \
+                    sha256  0b2f5a047903db0ace8f260d97e5aba56790619524883c0782c4aeb1eacd70f5 \
+                    size    1542260
+
+depends_lib-append  port:R-mvtnorm \
+                    port:R-pcaPP \
+                    port:R-robustbase
+
+compilers.setup     require_fortran
+
+test.run            yes

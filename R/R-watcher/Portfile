@@ -1,0 +1,37 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github r-lib watcher 0.1.4 v
+revision            1
+categories-append   sysutils
+maintainers         nomaintainer
+license             GPL-3
+description         Watch the file system for changes
+long_description    {*}${description}
+homepage            https://r-lib.github.io/watcher
+checksums           rmd160  1f0dffba22792342a6def3f4f347286d970501cf \
+                    sha256  f4ee99b6ac6997fd5d88b4d47bdd6a709f48e7d5fa11839f27cb7487c8f40135 \
+                    size    80689
+github.tarball_from archive
+
+depends_lib-append  port:fswatch \
+                    port:R-later \
+                    port:R-R6 \
+                    port:R-rlang
+
+# Configure script looks in all wrong places.
+patchfiles          patch-fix-configure.diff
+
+post-patch {
+    reinplace "s|@PREFIX@|${prefix}|g" ${worksrcpath}/configure
+}
+
+# FIXME: expect_gte tests in callbacks category fail:
+# ── Failure ('test-watch.R:36:3'): watcher() callbacks
+# `x` is not more than 1L. Difference: -1
+# [ FAIL 5 | WARN 0 | SKIP 0 | PASS 18 ]
+depends_test-append port:R-testthat
+
+test.run            yes

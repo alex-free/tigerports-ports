@@ -1,0 +1,39 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran asael.alonzo bayesforecast 1.0.5
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2
+description         Bayesian time series modeling with Stan
+long_description    {*}${description}
+checksums           rmd160  100740d795f5db6a9a02d1c887fcf80309311112 \
+                    sha256  89d5b3adf3cec44f64211bc6854b8fc95db794b35e355d159d3c28e960472c5d \
+                    size    1836333
+
+depends_lib-append  port:R-bayesplot \
+                    port:R-BH \
+                    port:R-bridgesampling \
+                    port:R-forecast \
+                    port:R-ggplot2 \
+                    port:R-gridExtra \
+                    port:R-loo \
+                    port:R-lubridate \
+                    port:R-prophet \
+                    port:R-Rcpp \
+                    port:R-RcppEigen \
+                    port:R-RcppParallel \
+                    port:R-rstan \
+                    port:R-rstantools \
+                    port:R-StanHeaders \
+                    port:R-zoo
+
+depends_test-append port:R-ggfortify \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-StanHeaders
+
+test.run            yes

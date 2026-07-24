@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran AnacletoLAB clusterv 1.1.1
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Assessment of cluster stability by randomized maps
+long_description    {*}${description}
+homepage            https://valentini.di.unimi.it/SW/clusterv
+checksums           rmd160  e496e79f97b02b4e1c4269feaf75b8a30b60fa18 \
+                    sha256  6403f070b69589148261ecfcc48e0907c3cf723dedb7a36ccae2bbe37cae54a1 \
+                    size    601983
+supported_archs     noarch
+
+depends_test-append port:R-R.rsp
+
+test.run            yes

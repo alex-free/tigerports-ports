@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           common_lisp 1.0
+PortGroup           github 1.0
+
+github.setup        AccelerationNet arnesi 93dc9061743b6d816d96074f25abea872e2e229c
+name                cl-arnesi
+version             20241211
+revision            0
+
+checksums           rmd160  cefd5c667d4fad7dfa6a09d2ff22073f80c6e687 \
+                    sha256  797f1d0b34eef6b311b4781ae5f7115d3ef90d655748d4e8adad93d2d32d8cb9 \
+                    size    85298
+github.tarball_from archive
+
+categories-append   www devel
+maintainers         nomaintainer
+license             BSD
+
+description         ${name} is a Common Lisp utility suite
+long_description    {*}${description}
+
+depends_lib-append  port:cl-collectors \
+                    port:cl-fiveam \
+                    port:cl-swank
+
+# See: https://github.com/AccelerationNet/arnesi/issues/2
+test.run            no

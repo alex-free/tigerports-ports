@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran r-forge skmeans 0.2-19
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2
+description         Spherical k-means clustering
+long_description    {*}${description}
+checksums           rmd160  f44f3a0caef65567046d365c6701422accc9e719 \
+                    sha256  c92b29ad8e3028c7519673e4bae92f5dc7259276edfca4836b11370e5a658ae2 \
+                    size    221159
+supported_archs     noarch
+
+depends_lib-append  port:R-clue \
+                    port:R-slam
+
+depends_test-append port:R-kmndirs
+
+test.run            yes

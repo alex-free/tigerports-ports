@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           bitbucket 1.0
+PortGroup           cmake 1.1
+
+bitbucket.setup     smil3y ariya-icons a43cf5ef6e4708e724fcfe78f168b678af7c1cf0
+version             20260209
+revision            0
+categories          katana kde
+platforms           any
+license             BSD
+maintainers         nomaintainer
+description         ${name} is a fork of Oxygen icon theme
+long_description    {*}${description} with adjustments for use \
+                    with Katana Desktop environment.
+
+checksums           rmd160  c2b3aff36716f6925e37f3ef9bc52b8dbeb0b4d1 \
+                    sha256  59a615845b50a1777a54257b78234a9475672c6bf75e7be6fc14310db8372b4d \
+                    size    11596334
+supported_archs     noarch

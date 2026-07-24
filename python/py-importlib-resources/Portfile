@@ -1,0 +1,64 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-importlib-resources
+python.rootname     importlib_resources
+
+# 7.x are broken due to: https://github.com/python/importlib_resources/issues/336
+version             6.5.2
+revision            0
+
+platforms           {darwin any}
+supported_archs     noarch
+license             PSF
+maintainers         {@rdbisme gmail.com:rubendibattista} openmaintainer
+
+description         A backport of Python standard library importlib.resources module for \
+                    Python 2.7, and 3.4 through 3.8.
+long_description    {*}${description}
+
+homepage            https://importlib-resources.readthedocs.io
+
+checksums           rmd160  f88d8d73f42bdd5ccb3fc74b3f63b7f6760ac021 \
+                    sha256  185f87adef5bcc288449d98fb4fba07cea78bc036455dd44c5fc4a2fe78fed2c \
+                    size    44693
+
+# keep version for Python 2.7, which is an (indirect) dependency of py-virtualenv
+# See <https://trac.macports.org/wiki/Python#VersionPolicy>
+python.versions     27 310 311 312 313 314
+
+if {${subport} ne ${name}} {
+    depends_build-append \
+                    port:py${python.version}-setuptools \
+                    port:py${python.version}-setuptools_scm
+
+    if {${python.version} == 27} {
+        version     3.3.1
+        revision    0
+        checksums   rmd160  6b0e6b482a5cb45430243e78317731efcf7eb84b \
+                    sha256  0ed250dbd291947d1a298e89f39afcc477d5a6624770503034b72588601bcc05 \
+                    size    29012
+
+        depends_build-append \
+                    port:py${python.version}-toml
+
+        depends_lib-append \
+                    port:py${python.version}-contextlib2 \
+                    port:py${python.version}-pathlib2 \
+                    port:py${python.version}-singledispatch \
+                    port:py${python.version}-typing
+    }
+
+    if {${python.version} < 310} {
+        depends_lib-append \
+                    port:py${python.version}-zipp
+    }
+
+    test.run        yes
+    test.cmd        ${python.bin} -m unittest discover
+    test.target
+
+    livecheck.type  none
+}

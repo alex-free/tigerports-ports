@@ -1,0 +1,46 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran giabaio BCEA 2.4.8
+revision            1
+categories-append   economics
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Bayesian Cost Effectiveness Analysis
+long_description    {*}${description}
+homepage            https://gianluca.statistica.it/software/bcea
+checksums           rmd160  88f9dcfc6a0e2106fff34adc9c8c351a2dc3ce3c \
+                    sha256  0b608f272664699a7a6bb67ecf3e6f1d3531c5f7dfdb2801466f48da10374dd4 \
+                    size    2920199
+supported_archs     noarch
+
+depends_lib-append  port:R-cli \
+                    port:R-dplyr \
+                    port:R-ggplot2 \
+                    port:R-gridExtra \
+                    port:R-MCMCvis \
+                    port:R-plotly \
+                    port:R-purrr \
+                    port:R-Rdpack \
+                    port:R-reshape2 \
+                    port:R-rlang \
+                    port:R-rstan \
+                    port:R-scales \
+                    port:R-voi
+
+depends_test-append port:R-coda \
+                    port:R-knitr \
+                    port:R-markdown \
+                    port:R-plotrix \
+                    port:R-RColorBrewer \
+                    port:R-rjags \
+                    port:R-rmarkdown \
+                    port:R-splancs \
+                    port:R-testthat \
+                    port:R-vdiffr \
+                    port:R-withr
+
+test.run            yes

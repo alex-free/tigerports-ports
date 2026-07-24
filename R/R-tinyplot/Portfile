@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran grantmcdermott tinyplot 0.4.2 v
+revision            1
+categories-append   graphics
+platforms           {darwin any}
+maintainers         nomaintainer
+license             Apache-2
+description         Lightweight extension of the base R graphics system
+long_description    {*}${description}
+homepage            https://grantmcdermott.com/tinyplot
+checksums           rmd160  b4b5fb4a74eac83561b82302dc8c2c638b1113ee \
+                    sha256  029c675159811df930e1ca04e30760a1c38b84f7c83891c89c3d621b3243320a \
+                    size    939354
+# github.tarball_from archive
+supported_archs     noarch
+
+depends_test-append port:R-altdoc \
+                    port:R-fontquiver \
+                    port:R-knitr \
+                    port:R-png \
+                    port:R-rsvg \
+                    port:R-svglite \
+                    port:R-tinysnapshot \
+                    port:R-tinytest
+
+test.run            yes

@@ -1,0 +1,52 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           openssl 1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran r-spatial s2 1.1.11
+# Revbump upon updates of abseil.
+revision            0
+categories-append   math geometry
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             Apache-2
+description         Spherical geometry operators using the S2 geometry library
+long_description    {*}${description}
+homepage            https://r-spatial.github.io/s2
+checksums           rmd160  8b194225f6fad910f9c33bcf5fb651dd984d7c42 \
+                    sha256  5fa4abaf21a8c4b34e811f75c0c5a13044afc5704f1b04af88a0e0bd541f9b5b \
+                    size    2974506
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  port:abseil \
+                    port:R-Rcpp \
+                    port:R-wk
+
+patch.pre_args-replace  -p0 -p1
+patchfiles          0001-patch-constexpr.diff \
+                    0002-patch-fix-bool-error.diff
+
+if {[string match *gcc* ${configure.compiler}]} {
+    patchfiles-append \
+                    0003-patch-libatomic.diff
+}
+
+# Just in case at some point we need to use the bundled copy, keep a patch for it.
+# Ideally this is not used, but patching abseil source does not hurt anyway.
+# Related: https://github.com/r-spatial/s2/issues/293
+patchfiles-append   0004-patch-bundled-abseil.diff
+
+depends_test-append port:R-bit64 \
+                    port:R-testthat \
+                    port:R-vctrs
+
+test.run            yes
+
+# Some PowerPC-related issues:
+# https://github.com/r-spatial/s2/issues/235
+# https://github.com/google/s2geometry/issues/315
+# https://github.com/google/s2geometry/issues/316
+# Notice, that for an unknown reason build on Rosetta fails.

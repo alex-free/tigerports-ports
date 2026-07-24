@@ -1,0 +1,19 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran kjetil1001 Fahrmeir 2016.5.31
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Data from the book Multivariate Statistical Modelling \
+                    based on Generalized Linear Models
+long_description    {*}${description} (1st ed.).
+checksums           rmd160  eb2c2b24d317140e71aba59a9b1c1f74cbc061f6 \
+                    sha256  aff8741091b9e31526850c6307475b46c15bce68b6f843170137f5b47e60cb99 \
+                    size    18330
+supported_archs     noarch
+
+test.run            yes

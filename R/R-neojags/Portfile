@@ -1,0 +1,37 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran madsyair neojags 0.1.6
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2
+description         Neo-normal distributions family for Markov Chain Monte Carlo \
+                    (MCMC) models in JAGS
+long_description    {*}${description}
+checksums           rmd160  a68cc29e24612344d336b0ccec034c8da9205a65 \
+                    sha256  d30e29479cda2ca9cf8998aa9248af753913963139213804a6ce62b8bef8af26 \
+                    size    507811
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  port:jags \
+                    port:R-coda \
+                    port:R-rjags \
+                    port:R-runjags
+
+# Notice, JAGS 4.x is assumed.
+if {${os.platform} eq "darwin" && ${configure.cxx_stdlib} ne "libc++"} {
+    patchfiles-append   patch-fix-Makevars.diff
+}
+
+depends_test-append port:R-knitr \
+                    port:R-markdown \
+                    port:R-rmarkdown \
+                    port:R-spelling \
+                    port:R-testthat
+
+test.run            yes

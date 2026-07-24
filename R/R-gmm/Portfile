@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran pchausse gmm 1.9-1
+revision            1
+categories-append   finance math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Generalized Method of Moments and Generalized Empirical Likelihood
+long_description    {*}${description}
+checksums           rmd160  1da8d0f8e8b30d5ca443ffe17fdf865cc4cda9e3 \
+                    sha256  9290674d09403f401718dd9c2131a425dba5727b9dcd6698d2f68a9f5ab83c1f \
+                    size    941224
+
+depends_lib-append  port:R-sandwich
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-car \
+                    port:R-knitr \
+                    port:R-mvtnorm \
+                    port:R-stabledist \
+                    port:R-timeDate \
+                    port:R-timeSeries
+
+test.run            yes

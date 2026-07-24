@@ -1,0 +1,208 @@
+diff --git cmake/compilers/AppleClang.cmake cmake/compilers/AppleClang.cmake
+index 5ebbdbd1..f0681744 100644
+--- cmake/compilers/AppleClang.cmake
++++ cmake/compilers/AppleClang.cmake
+@@ -37,7 +37,7 @@ if (CMAKE_OSX_ARCHITECTURES)
+ else()
+     set(_tbb_target_architectures "${CMAKE_SYSTEM_PROCESSOR}")
+ endif()
+-if ("${_tbb_target_architectures}" MATCHES "(x86_64|amd64|AMD64)") # OSX systems are 64-bit only
++if ("${_tbb_target_architectures}" MATCHES "(i.86|x86|x86_64|amd64|AMD64)") # Clang is not supported on PowerPC
+     set(TBB_COMMON_COMPILE_FLAGS ${TBB_COMMON_COMPILE_FLAGS} -mrtm $<$<NOT:$<VERSION_LESS:${CMAKE_CXX_COMPILER_VERSION},12.0>>:-mwaitpkg>)
+ endif()
+ unset(_tbb_target_architectures)
+diff --git cmake/compilers/GNU.cmake cmake/compilers/GNU.cmake
+index 34c10db0..2496580d 100644
+--- cmake/compilers/GNU.cmake
++++ cmake/compilers/GNU.cmake
+@@ -36,7 +36,13 @@ if (NOT CMAKE_GENERATOR MATCHES "Ninja" AND NOT CMAKE_CXX_DEPENDS_USE_COMPILER)
+ endif()
+ 
+ # Enable Intel(R) Transactional Synchronization Extensions (-mrtm) and WAITPKG instructions support (-mwaitpkg) on relevant processors
+-if (CMAKE_SYSTEM_PROCESSOR MATCHES "(AMD64|amd64|i.86|x86)" AND NOT EMSCRIPTEN)
++# Like with Apple Clang case, use CMAKE_OSX_ARCHITECTURES if it is defined. Defaulting to CMAKE_SYSTEM_PROCESSOR breaks build on Rosetta.
++if (CMAKE_OSX_ARCHITECTURES)
++    set(_tbb_target_architectures "${CMAKE_OSX_ARCHITECTURES}")
++else()
++    set(_tbb_target_architectures "${CMAKE_SYSTEM_PROCESSOR}")
++endif()
++if ("${_tbb_target_architectures}" MATCHES "(AMD64|amd64|i.86|x86)" AND NOT EMSCRIPTEN)
+     set(TBB_COMMON_COMPILE_FLAGS ${TBB_COMMON_COMPILE_FLAGS} -mrtm $<$<AND:$<NOT:$<CXX_COMPILER_ID:Intel>>,$<NOT:$<VERSION_LESS:${CMAKE_CXX_COMPILER_VERSION},11.0>>>:-mwaitpkg>)
+ endif()
+ 
+diff --git include/oneapi/tbb/task_group.h include/oneapi/tbb/task_group.h
+index 2bbacd55..d282a5af 100644
+--- include/oneapi/tbb/task_group.h
++++ include/oneapi/tbb/task_group.h
+@@ -217,14 +217,14 @@
+ 
+     //! The context traits.
+     struct context_traits {
+-        bool fp_settings        : 1;
+-        bool concurrent_wait    : 1;
+-        bool bound              : 1;
+-        bool reserved1          : 1;
+-        bool reserved2          : 1;
+-        bool reserved3          : 1;
+-        bool reserved4          : 1;
+-        bool reserved5          : 1;
++        uint8_t fp_settings        : 1;
++        uint8_t concurrent_wait    : 1;
++        uint8_t bound              : 1;
++        uint8_t reserved1          : 1;
++        uint8_t reserved2          : 1;
++        uint8_t reserved3          : 1;
++        uint8_t reserved4          : 1;
++        uint8_t reserved5          : 1;
+     } my_traits;
+ 
+     static_assert(sizeof(context_traits) == 1, "Traits shall fit into one byte.");
+diff --git src/tbb/tools_api/ittnotify_config.h src/tbb/tools_api/ittnotify_config.h
+index 0f5d80f6..60cde151 100644
+--- src/tbb/tools_api/ittnotify_config.h
++++ src/tbb/tools_api/ittnotify_config.h
+@@ -184,6 +184,10 @@
+ #  define ITT_ARCH_RISCV64  10
+ #endif /* ITT_ARCH_RISCV64 */
+ 
++#ifndef ITT_ARCH_PPC
++#  define ITT_ARCH_PPC  11
++#endif /* ITT_ARCH_PPC */
++
+ #ifndef ITT_ARCH
+ #  if defined _M_IX86 || defined __i386__
+ #    define ITT_ARCH ITT_ARCH_IA32
+@@ -195,7 +199,9 @@
+ #    define ITT_ARCH ITT_ARCH_ARM
+ #  elif defined __aarch64__
+ #    define ITT_ARCH ITT_ARCH_ARM64
+-#  elif defined __powerpc64__
++#  elif defined __powerpc__ || defined __ppc__
++#    define ITT_ARCH ITT_ARCH_PPC
++#  elif defined __powerpc64__ || defined __ppc64__
+ #    define ITT_ARCH ITT_ARCH_PPC64
+ #  elif defined __loongarch__
+ #    define ITT_ARCH ITT_ARCH_LOONGARCH64
+diff --git src/tbb/tools_api/ittnotify_static.c src/tbb/tools_api/ittnotify_static.c
+index 0b9aa492..0144ebee 100644
+--- src/tbb/tools_api/ittnotify_static.c
++++ src/tbb/tools_api/ittnotify_static.c
+@@ -125,7 +125,7 @@ static const char* ittnotify_lib_name = "libittnotify.dylib";
+ 
+ 
+ #ifndef LIB_VAR_NAME
+-#if ITT_ARCH==ITT_ARCH_IA32 || ITT_ARCH==ITT_ARCH_ARM
++#if ITT_ARCH==ITT_ARCH_IA32 || ITT_ARCH==ITT_ARCH_ARM || ITT_ARCH==ITT_ARCH_PPC
+ #define LIB_VAR_NAME INTEL_LIBITTNOTIFY32
+ #else
+ #define LIB_VAR_NAME INTEL_LIBITTNOTIFY64
+diff --git src/tbbmalloc_proxy/proxy_overload_osx.h src/tbbmalloc_proxy/proxy_overload_osx.h
+index 69582983..bf4df54f 100644
+--- src/tbbmalloc_proxy/proxy_overload_osx.h
++++ src/tbbmalloc_proxy/proxy_overload_osx.h
+@@ -76,11 +76,13 @@
+     s->size_in_use = s->max_size_in_use = s->size_allocated = 0;
+ }
+ 
++#if MAC_OS_X_VERSION_MAX_ALLOWED >= 1060 && !defined(__POWERPC__) // zone_locked is not defined on macOS < 10.6 and any PPC
+ static boolean_t zone_locked(malloc_zone_t *)
+ {
+     return false;
+ }
+ 
++#if MAC_OS_X_VERSION_MAX_ALLOWED >= 1070 // Only available on macOS > 10.6
+ static boolean_t impl_zone_enable_discharge_checking(malloc_zone_t *)
+ {
+     return false;
+@@ -88,6 +90,8 @@
+ 
+ static void impl_zone_disable_discharge_checking(malloc_zone_t *) {}
+ static void impl_zone_discharge(malloc_zone_t *, void *) {}
++#endif
++#endif
+ static void impl_zone_destroy(struct _malloc_zone_t *) {}
+ 
+ /* note: impl_malloc_usable_size() is called for each free() call, so it must be fast */
+@@ -103,19 +107,26 @@
+ static void *impl_valloc(struct _malloc_zone_t *, size_t size);
+ static void impl_free(struct _malloc_zone_t *, void *ptr);
+ static void *impl_realloc(struct _malloc_zone_t *, void *ptr, size_t size);
++
++#if MAC_OS_X_VERSION_MAX_ALLOWED >= 1060
+ static void *impl_memalign(struct _malloc_zone_t *, size_t alignment, size_t size);
+ 
++#ifndef __POWERPC__ // zone_locked is not defined on macOS < 10.6 and any PPC
+ /* ptr is in zone and have reported size */
+ static void impl_free_definite_size(struct _malloc_zone_t*, void *ptr, size_t size)
+ {
+     __TBB_malloc_free_definite_size(ptr, size);
+ }
+ 
++#if MAC_OS_X_VERSION_MAX_ALLOWED >= 1070 // Only available on macOS > 10.6
+ /* Empty out caches in the face of memory pressure. */
+ static size_t impl_pressure_relief(struct _malloc_zone_t *, size_t  /* goal */)
+ {
+     return 0;
+ }
++#endif
++#endif
++#endif
+ 
+ static malloc_zone_t *system_zone = nullptr;
+ 
+@@ -134,10 +145,14 @@
+         introspect.force_lock = &zone_force_lock;
+         introspect.force_unlock = &zone_force_unlock;
+         introspect.statistics = zone_statistics;
++    #if MAC_OS_X_VERSION_MAX_ALLOWED >= 1060 && !defined(__POWERPC__) // zone_locked is not defined on macOS < 10.6 and any PPC
+         introspect.zone_locked = &zone_locked;
++    #if MAC_OS_X_VERSION_MAX_ALLOWED >= 1070 // Only available on macOS > 10.6
+         introspect.enable_discharge_checking = &impl_zone_enable_discharge_checking;
+         introspect.disable_discharge_checking = &impl_zone_disable_discharge_checking;
+         introspect.discharge = &impl_zone_discharge;
++    #endif
++    #endif
+ 
+         zone.size = &impl_malloc_usable_size;
+         zone.malloc = &impl_malloc;
+@@ -149,12 +164,19 @@
+         zone.zone_name = "tbbmalloc";
+         zone.introspect = &introspect;
+         zone.version = 8;
++    #if MAC_OS_X_VERSION_MAX_ALLOWED >= 1060
+         zone.memalign = impl_memalign;
++    #ifndef __POWERPC__ // Unavailable on macOS < 10.6 and any PPC
+         zone.free_definite_size = &impl_free_definite_size;
++    #if MAC_OS_X_VERSION_MAX_ALLOWED >= 1070 // Only available on macOS > 10.6
+         zone.pressure_relief = &impl_pressure_relief;
++    #endif
++    #endif
+ 
+         // make sure that default purgeable zone is initialized
++        // Unavailable in 10.5
+         malloc_default_purgeable_zone();
++    #endif
+         void* ptr = malloc(1);
+         // get all registered memory zones
+         unsigned zcount = 0;
+diff --git test/conformance/conformance_allocators.cpp test/conformance/conformance_allocators.cpp
+index 60ec5cae..0c1b9a6c 100644
+--- test/conformance/conformance_allocators.cpp
++++ test/conformance/conformance_allocators.cpp
+@@ -31,6 +31,7 @@ TEST_CASE("Allocator concept") {
+     TestAllocator<oneapi::tbb::cache_aligned_allocator<void>>(Concept);
+     TestAllocator<oneapi::tbb::tbb_allocator<void>>(Concept);
+ 
++  #if !(defined(__APPLE__) && defined(__POWERPC__)) // This test fails to build on Darwin PPC.
+     // max_size case for cache_aligned allocator
+     using Allocator = oneapi::tbb::cache_aligned_allocator<int>;
+     Allocator allocator;
+@@ -38,6 +39,7 @@ TEST_CASE("Allocator concept") {
+     // Following assertion catches case where max_size() is so large that computation of
+     // number of bytes for such an allocation would overflow size_type.
+     REQUIRE_MESSAGE((allocator.max_size() * typename std::allocator_traits<Allocator>::size_type(sizeof(int)) >= allocator.max_size()), "max_size larger than reasonable");
++  #endif
+ 
+     // operator==
+     TestAllocator<oneapi::tbb::cache_aligned_allocator<void>>(Comparison);
+

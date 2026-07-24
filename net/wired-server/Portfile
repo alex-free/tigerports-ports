@@ -1,0 +1,48 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+PortGroup               github 1.0
+PortGroup               openssl 1.0
+
+openssl.branch          1.0
+
+github.setup            ProfDrLuigi wired 72bbdc3be7946d38eeece84296fdd9f88e8a26ed
+version                 2.5.2
+name                    wired-server
+revision                3
+categories              net
+maintainers             {@barracuda156 gmail.com:vital.had} openmaintainer
+license                 BSD
+description             Wired Server is BBS-oriented server for UNIX-based operating systems
+long_description        {*}${description}
+homepage                https://wired.read-write.fr/products/wired
+checksums               rmd160  ea32df74775eeec51e827571c9baf156f0ab4425 \
+                        sha256  e1cb4659074347acfe12cbfdd978d9c6e4a38ed8855f2a7cef5f392cd814ba46 \
+                        size    246075
+github.tarball_from     archive
+
+use_autoreconf          yes
+autoreconf.args         -fvi
+
+depends_build-append    path:bin/pkg-config:pkgconfig
+depends_lib-append      port:libiconv \
+                        port:libwired \
+                        port:libxml2 \
+                        port:miniupnpc \
+                        port:ncurses \
+                        port:sqlite3 \
+                        port:zlib
+
+patchfiles              patch-configure.ac.diff \
+                        patch-makefile.in.diff
+
+post-extract {
+    copy ${filespath}/config.m4 ${worksrcpath}/libwired
+}
+
+post-patch {
+    reinplace -W ${worksrcpath} "s|__PREFIX__|${prefix}|g" configure.ac Makefile.in libwired/config.m4
+    reinplace -W ${worksrcpath} "s|__DESTROOT__|${destroot}|g" Makefile.in
+}
+
+configure.args-append   --with-wireddir="var/wired"

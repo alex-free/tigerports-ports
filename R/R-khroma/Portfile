@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github tesselle khroma 1.16.0 v
+revision            1
+categories-append   graphics
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3+
+description         Color schemes for scientific data visualization
+long_description    {*}${description}
+homepage            https://packages.tesselle.org/khroma
+checksums           rmd160  5ac9307e01a841ccb4cc5c57bba7951066eec03a \
+                    sha256  81fdaf66506c19d0e7db223686f6201b4b501920eef70c3c8d6a10883368dca2 \
+                    size    519547
+github.tarball_from archive
+supported_archs     noarch
+
+depends_test-append port:R-ggplot2 \
+                    port:R-ggraph \
+                    port:R-knitr \
+                    port:R-markdown \
+                    port:R-rsvg \
+                    port:R-scales \
+                    port:R-spacesXYZ \
+                    port:R-svglite \
+                    port:R-tinysnapshot \
+                    port:R-tinytest
+
+test.run            yes

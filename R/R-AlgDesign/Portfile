@@ -1,0 +1,19 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran jvbraun AlgDesign 1.2.1.2 v
+revision            1
+maintainers         nomaintainer
+license             GPL-2+
+description         Algorithmic experimental design
+long_description    {*}${description}
+homepage            https://github.com/jvbraun/AlgDesign
+checksums           rmd160  affde5dbce76c05d8273bfb330ed556734ac4671 \
+                    sha256  692dc7a02a6c5eb2421a7398488e9fb8700174187bda37ff820548654d0b7625 \
+                    size    509327
+# github.tarball_from archive
+
+test.run            yes

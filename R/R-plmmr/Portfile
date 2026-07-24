@@ -1,0 +1,36 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran pbreheny plmmr 4.2.3 plmmr_
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Penalized Linear Mixed Models for Correlated Data
+long_description    Fits penalized linear mixed models that correct for unobserved confounding factors.
+homepage            https://pbreheny.github.io/plmmr
+checksums           rmd160  664af846af3c2ce051f39202669aaa21667fff99 \
+                    sha256  2ec11b825a40bd14656b2648a2aa2fbc5e5c44485fb2671297a31c4c4ea09fb0 \
+                    size    2499759
+
+depends_lib-append  port:R-BH \
+                    port:R-bigalgebra \
+                    port:R-bigmemory \
+                    port:R-biglasso \
+                    port:R-data.table \
+                    port:R-glmnet \
+                    port:R-ncvreg \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-bigsnpr \
+                    port:R-bigstatsr \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-tinytest
+
+test.run            yes

@@ -1,0 +1,34 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran AlJacq LorenzRegression 2.3.0
+revision            1
+categories-append   economics math
+maintainers         nomaintainer
+license             GPL-3
+description         Lorenz and penalized Lorenz regressions
+long_description    Inference for the Lorenz and penalized Lorenz regressions. More broadly, \
+                    the package proposes functions to assess inequality and graphically represent it.
+homepage            https://github.com/AlJacq/LorenzRegression
+checksums           rmd160  9cb612f27ef6534bf044c2f0619fd3e4094d0af1 \
+                    sha256  db8b01c70f3dcdddd2a4cb408b6eb46e65fad515adbb6c57805347c5c6b05fe1 \
+                    size    83312
+
+depends_lib-append  port:R-doParallel \
+                    port:R-foreach \
+                    port:R-GA \
+                    port:R-ggplot2 \
+                    port:R-knitr \
+                    port:R-parsnip \
+                    port:R-progress \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-Rearrangement \
+                    port:R-rsample \
+                    port:R-scales
+
+depends_test-append port:R-rmarkdown
+
+test.run            yes

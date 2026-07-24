@@ -1,0 +1,34 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           fortran 1.0
+
+github.setup        vmagnin cairo-fortran 89c31edd87ac1a5ad37db71165965a30cc9b7d61
+name                fortran-cairo
+version             2024.06.30
+revision            1
+categories-append   graphics
+license             GPL-3+
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+description         Cairo bindings for Fortran
+long_description    {*}${description}
+checksums           rmd160  6a030cd9170f3848bf4d5435e65da6f3634d0c60 \
+                    sha256  eff681f28ed3f725f0bd2d23414883c4ed7a3f6eafc171030d3d321d7a2e84a7 \
+                    size    84842
+github.tarball_from archive
+
+depends_lib-append  path:lib/pkgconfig/cairo.pc:cairo
+
+# Fix install:
+post-patch {
+    reinplace "s|library = false|library = true|" ${worksrcpath}/fpm.toml
+}
+
+post-destroot {
+    set docdir ${prefix}/share/doc/${name}
+    xinstall -d ${destroot}${docdir}
+    xinstall -m 0644 -W ${worksrcpath} LICENSE README.md ${destroot}${docdir}
+}
+
+# Tests generate png files but do not produce textual output: https://github.com/vmagnin/cairo-fortran/issues/1
+test.run            yes

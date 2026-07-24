@@ -1,0 +1,37 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran OakleyJ SHELF 1.12.0
+revision            1
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             {GPL-2 GPL-3}
+description         Tools to support the Sheffield Elicitation Framework
+long_description    {*}${description} (SHELF).
+homepage            https://github.com/OakleyJ/SHELF
+checksums           rmd160  45feff5478450115601fed796112319a54d32e1f \
+                    sha256  cf66a7bf913e14b85209ef71515ac802fa1ea8e200bd2772e708c57802d88a1c \
+                    size    320565
+supported_archs     noarch
+
+depends_lib-append  port:R-flexsurv \
+                    port:R-ggExtra \
+                    port:R-ggplot2 \
+                    port:R-ggridges \
+                    port:R-Hmisc \
+                    port:R-rmarkdown \
+                    port:R-scales \
+                    port:R-shiny \
+                    port:R-shinyMatrix \
+                    port:R-sn \
+                    port:R-survminer \
+                    port:R-tidyr
+
+depends_test-append port:R-GGally \
+                    port:R-knitr \
+                    port:R-testthat \
+                    port:R-vdiffr
+
+test.run            yes

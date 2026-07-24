@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github HenrikBengtsson future 1.70.0
+revision            0
+platforms           {darwin any}
+categories-append   devel parallel
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             LGPL-2.1+
+description         Unified parallel and distributed processing in R
+long_description    {*}${description} for everyone.
+homepage            https://future.futureverse.org
+checksums           rmd160  f72d962661812bdaa9e55d43688e90c9758b8cb1 \
+                    sha256  fe189eb9ac66cc0ef2cf03ef65289ca8bb11ca6591357a452ff4735c5cacf8d9 \
+                    size    554599
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-digest \
+                    port:R-globals \
+                    port:R-listenv \
+                    port:R-parallelly 
+
+depends_test-append port:R-markdown \
+                    port:R-R.rsp \
+                    port:R-RhpcBLASctl
+
+test.run            yes

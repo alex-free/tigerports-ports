@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran wilhelm tmvtnorm 1.7
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Truncated multivariate normal and Student t distributions
+long_description    {*}${description}
+checksums           rmd160  9a6957bd5dfd9c32b01da59766c51891f38a9790 \
+                    sha256  4b180b31e3bc4eb5009f5d7d83b7f2dd377989341ef27502113127d60f531bd8 \
+                    size    200587
+
+depends_lib-append  port:R-gmm \
+                    port:R-mvtnorm
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-rgl
+
+test.run            yes

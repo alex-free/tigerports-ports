@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran takeshiemura compound.Cox 3.33
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2
+description         Univariate feature selection and compound covariate for predicting survival
+long_description    Univariate feature selection and compound covariate methods under the Cox model \
+                    with high-dimensional features.
+checksums           rmd160  6072a70f820dd614bca49c0dbbd90622a760ae09 \
+                    sha256  30c0a67b67e1ae5cf943ec24afbf42707859c62852527c976a039d7d7c7f9150 \
+                    size    45546
+supported_archs     noarch
+
+depends_lib-append  port:R-numDeriv
+
+test.run            yes

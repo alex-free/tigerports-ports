@@ -1,0 +1,19 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran busing fmds 0.1.5
+revision            1
+maintainers         nomaintainer
+license             BSD
+description         Multidimensional scaling development kit
+long_description    {*}${description}
+checksums           rmd160  f0fd65f5db82967a3fc8ba39ddee3ce97a068717 \
+                    sha256  917e93e15dcbac4120882d256d7badc8d11261d5960452d1a87e2e76f2611019 \
+                    size    135971
+
+depends_test-append port:R-ggplot2 \
+                    port:R-microbenchmark
+
+test.run            yes

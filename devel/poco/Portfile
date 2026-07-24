@@ -1,0 +1,162 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+
+github.setup        pocoproject poco 1.15.3 poco- -release
+
+categories          devel
+maintainers         {gmail.com:vandervelde.ag @arjanvandervelde} openmaintainer
+
+license             Boost-1
+
+description         POCO C++ Libraries
+
+long_description \
+    POCO aims to be for network-centric, cross-platform C++ software development \
+    what Apple’s Cocoa is for Mac development, or Ruby on Rails is for Web \
+    development – a powerful, yet easy to use platform to build your applications upon.
+
+homepage            https://pocoproject.org
+master_sites        ${homepage}/releases/poco-[strsed ${version} {s/[^0-9.].*$//}]/
+distname            ${name}-${version}-all
+github.tarball_from archive
+
+set docdir          ${prefix}/share/doc/${name}
+
+if {${subport} eq ${name}} {
+    PortGroup           cmake 1.1
+    PortGroup           legacysupport 1.1
+    PortGroup           openssl 1.0
+
+    # strnlen
+    legacysupport.newest_darwin_requires_legacy 10
+
+    revision            0
+    checksums           rmd160  b5ed3fda493d5875013bef6979d2eda79fd5426b \
+                        sha256  562a1ba1a6db4665f81091c35e997b73f87e1b45e2ab2854cd720d2349518abc \
+                        size    7365479
+
+    use_bzip2           yes
+
+    depends_lib-append  port:expat \
+                        port:libpng \
+                        port:libutf8proc \
+                        port:pcre2 \
+                        port:zlib
+
+    conflicts           arc
+
+    compiler.c_standard 1999
+    compiler.cxx_standard \
+                        2017
+
+    # TODO: patch CMakeLists to prevent opportunistic usage of libs.
+    configure.args-append \
+                        -DBUILD_SHARED_LIBS=ON \
+                        -DENABLE_APACHECONNECTOR=OFF \
+                        -DENABLE_CPPPARSER=OFF \
+                        -DENABLE_CRYPTO=ON \
+                        -DENABLE_DATA_MYSQL=OFF \
+                        -DENABLE_DATA_ODBC=OFF \
+                        -DENABLE_DATA_POSTGRESQL=OFF \
+                        -DENABLE_DATA_SQLITE=OFF \
+                        -DENABLE_DNSSD=OFF \
+                        -DENABLE_DNSSD_AVAHI=OFF \
+                        -DENABLE_DNSSD_BONJOUR=OFF \
+                        -DENABLE_DNSSD_DEFAULT=OFF \
+                        -DENABLE_FASTLOGGER=ON \
+                        -DENABLE_JWT=ON \
+                        -DENABLE_MONGODB=OFF \
+                        -DENABLE_NETSSL=ON \
+                        -DENABLE_PDF=ON \
+                        -DENABLE_REDIS=OFF \
+                        -DENABLE_SEVENZIP=OFF \
+                        -DENABLE_TESTS=ON \
+                        -DENABLE_XML=ON \
+                        -DPOCO_UNBUNDLED=ON
+
+    if {(${configure.build_arch} in [list i386 ppc]) && [string match *gcc* ${configure.compiler}]} {
+        # ___atomic_load_8
+        configure.ldflags-append \
+                        -latomic
+    }
+
+    post-destroot {
+        xinstall -d ${destroot}${docdir}/html
+        xinstall -m 0644 -W ${worksrcpath} CHANGELOG CONTRIBUTORS LICENSE README VERSION \
+            ${destroot}${docdir}
+        xinstall -m 0644 -W ${worksrcpath}/doc Acknowledgements.html ${destroot}${docdir}/html
+        copy ${worksrcpath}/CppUnit/doc ${destroot}${docdir}/html/CppUnit
+    }
+
+    test.run            yes
+
+    # Make sure the built libraries are found:
+    if {${configure.cxx_stdlib} eq "libc++"} {
+        test.env-append DYLD_LIBRARY_PATH=${cmake.build_dir}/lib:${prefix}/lib
+    } else {
+        test.env-append DYLD_LIBRARY_PATH=${cmake.build_dir}/lib:${prefix}/lib/libgcc:${prefix}/lib
+    }
+
+    variant odbc description "Build ODBC backend for Data library" {
+        depends_lib-append      port:libiodbc
+        configure.args-replace  -DENABLE_DATA_ODBC=OFF \
+                                -DENABLE_DATA_ODBC=ON
+        configure.args-append   -DODBC_INCLUDE_DIR=${prefix}/include/libiodbc \
+                                -DODBC_LIBRARY=${prefix}/lib/libiodbc.dylib
+    }
+
+    variant mongodb description "Build MongoDB backend for Data library" {
+        depends_lib-append      port:mongodb
+        configure.args-replace  -DENABLE_MONGODB=OFF \
+                                -DENABLE_MONGODB=ON
+    }
+
+    variant mysql description "Build MySQL backend for Data library" {
+        depends_lib-append      path:bin/mysql_config5:mysql5
+        configure.args-replace  -DENABLE_DATA_MYSQL=OFF \
+                                -DENABLE_DATA_MYSQL=ON
+        configure.args-append   -DMYSQL_INCLUDE_DIR=${prefix}/include/mysql5/mysql \
+                                -DMYSQL_LIBRARY=${prefix}/lib/mysql5/mysql/libmysqlclient.dylib
+    }
+
+    variant redis description "Build Redis backend for Data library" {
+        depends_lib-append      port:redis
+        configure.args-replace  -DENABLE_REDIS=OFF \
+                                -DENABLE_REDIS=ON
+    }
+
+    variant sqlite description "Build SQLite backend for Data library" {
+        depends_lib-append      port:sqlite3
+        configure.args-replace  -DENABLE_DATA_SQLITE=OFF \
+                                -DENABLE_DATA_SQLITE=ON
+    }
+
+    default_variants    +sqlite
+}
+
+subport ${name}-docs {
+    revision            0
+    checksums           rmd160  43b029b3f2abc077b13d515b0b57d3a6d4b1fc13 \
+                        sha256  ac411c75c29ef494ab41d103692d82beda96a6f5ceb421676fdd6e8b50dc23c3 \
+                        size    1833693
+
+    supported_archs     noarch
+    platforms           any
+    description         Documentation for POCO
+    long_description    This port contains an offline copy of the POCO documentation.
+    homepage            ${homepage}/documentation
+    distname            ${distname}-doc
+
+    use_configure       no
+
+    build               {}
+
+    destroot {
+        xinstall -d ${destroot}${docdir}
+        copy ${worksrcpath} ${destroot}${docdir}/html
+    }
+
+    livecheck.type      none
+}

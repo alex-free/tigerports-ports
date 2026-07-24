@@ -1,0 +1,56 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+# also update py-pycryptodomex
+name                py-pycryptodome
+version             3.23.0
+revision            0
+
+homepage            https://www.pycryptodome.org
+
+license             BSD
+maintainers         nomaintainer
+
+description         Cryptographic library for Python
+long_description    PyCryptodome is a self-contained Python package \
+                    of low-level cryptographic primitives. \
+                    PyCryptodome is a fork of PyCrypto.
+
+python.versions     27 310 311 312 313 314
+
+checksums           rmd160  8bd30e694455dda13d11d1fff165bb16e2b04c9b \
+                    sha256  447700a657182d60338bab09fdb27518f8856aecd80ae4c6bdddb67ff5da44ef \
+                    size    4921276
+
+if {${name} ne ${subport}} {
+    PortGroup       legacysupport 1.1
+
+    # posix_memalign
+    legacysupport.newest_darwin_requires_legacy 9
+
+    depends_build-append \
+                    port:py${python.version}-setuptools
+
+    # Unfortunately, it does not work the way we think it does.
+    # While legacysupport supplies posix_memalign, it is not detected,
+    # and the build just fails. Cheat the build system:
+    if {${os.platform} eq "darwin" && ${os.major} < 10} {
+        patchfiles-append   patch-fix-flags.diff
+
+        post-patch {
+            reinplace "s|@PREFIX@|${prefix}|g" ${worksrcpath}/compiler_opt.py
+        }
+    }
+
+    # src/ec_ws.c: error: ‘for’ loop initial declaration used outside C99 mode
+    # For 3.12 python PG does this, and 3.13+ use modern gcc.
+    if {${python.version} < 312} {
+        build.cmd-prepend   CFLAGS="${configure.cflags} [get_canonical_archflags cc] -std=c99"
+    }
+
+    test.run        yes
+    python.test_framework
+    test.cmd        ${python.bin} setup.py test
+}

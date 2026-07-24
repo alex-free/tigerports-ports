@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           compilers 1.0
+PortGroup           github 1.0
+
+github.setup        toml-f toml-f 0.4.3 v
+revision            0
+categories          fortran devel
+license             {Apache-2 MIT}
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+description         TOML parser implementation for data serialization and deserialization in Fortran
+long_description    {*}${description}
+homepage            https://toml-f.readthedocs.io
+checksums           rmd160  665a7307346cb71b48d20625f0321a5d0eaa9195 \
+                    sha256  0b53cf9ec98eff01a81d956e9ef851c16b3c6b49c934d0665b43db9f6ee39953 \
+                    size    376920
+github.tarball_from releases
+
+use_xz              yes
+
+compilers.choose    fc f90
+compilers.setup     require_fortran
+
+test.run            yes

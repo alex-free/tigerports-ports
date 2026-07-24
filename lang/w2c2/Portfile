@@ -1,0 +1,51 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+PortGroup               cmake 1.1
+PortGroup               github 1.0
+
+github.setup            turbolent w2c2 2a31254683de4a3f6a750c123daa7ddf97631c69
+version                 2025.10.01
+revision                0
+
+categories              lang devel
+license                 MIT
+maintainers             {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+
+description             Translates WebAssembly modules to portable C
+long_description        {*}${description}
+
+checksums               rmd160  780aae7f35ed04869f02e3ef97bae72b678b45fe \
+                        sha256  cf743c8a2c42b9ac15b2aa4affadaabc310c43a4e70f8a10b457da88be956677 \
+                        size    40562072
+github.tarball_from     archive
+
+patchfiles              0001-Use-warning-flags-compatible-with-Apple-gcc.patch
+# https://github.com/turbolent/w2c2/issues/120
+# https://github.com/turbolent/w2c2/issues/130
+patchfiles-append       0002-Drop-Werror-conversion-for-now.patch
+
+compiler.c_standard     1990
+
+depends_lib-append      port:libdwarf-code
+
+# Default is static, and dynamic lib fails to link:
+# Undefined symbols for architecture arm64: "_wasiMemory"
+configure.args-append   -DSHARED_LIB:BOOL=OFF
+
+destroot {
+    # This assumes static build, see above:
+    set runtime lib${name}wasi.a
+    copy ${cmake.build_dir}/wasi/${runtime} ${destroot}${prefix}/lib/
+    copy ${cmake.build_dir}/${name}/${name} ${destroot}${prefix}/bin/
+    set incdir ${prefix}/include/${name}
+    xinstall -d ${destroot}${incdir}
+    fs-traverse h ${worksrcpath}/${name} {
+        if {[file isfile ${h}] && [file extension ${h}] == ".h"} {
+            copy ${h} ${destroot}${incdir}/
+        }
+    }
+    set docdir ${prefix}/share/doc/${name}
+    xinstall -d ${destroot}${docdir}
+    xinstall -m 0644 -W ${worksrcpath} LICENSE README.md ${destroot}${docdir}
+}

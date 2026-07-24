@@ -1,0 +1,37 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran yxlin ggdmc 0.2.6.2
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2
+description         Cognitive Models
+long_description    Hierarchical Bayesian models. The package provides tools to fit \
+                    two response time models, using the population-based Markov Chain Monte Carlo. 
+homepage            https://github.com/yxlin/ggdmc
+checksums           rmd160  3e05940efe910e4cdb5bc4164e33a545c7c23019 \
+                    sha256  a9a06afb43a8063afebe5bcc05bbff4c9cf9af02bccf7429f863a0b21293aeb6 \
+                    size    4158478
+
+depends_lib-append  port:R-coda \
+                    port:R-data.table \
+                    port:R-ggplot2 \
+                    port:R-matrixStats \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo
+
+patchfiles          patch-fix-tests.diff
+
+# Place testthat.R into a correct location so that it is actually found.
+post-patch {
+    move ${worksrcpath}/tests/testthat/testthat.R ${worksrcpath}/tests/testthat.R
+}
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-testthat
+
+test.run            yes

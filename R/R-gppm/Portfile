@@ -1,0 +1,40 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is old.
+R.setup             cran karchjd gppm 0.3.0 v
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Implementation of Gaussian process panel modelling
+long_description    {*}${description} in R.
+homepage            https://github.com/karchjd/gppm
+checksums           rmd160  99eb8958339a6a08a2abdeb32e71cac896fcd811 \
+                    sha256  5491dcf1fd031739e5a377b4957329d7b18e9017f9210161162424e750c2276b \
+                    size    80186
+# github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-BH \
+                    port:R-ggplot2 \
+                    port:R-ggthemes \
+                    port:R-mvtnorm \
+                    port:R-Rcpp \
+                    port:R-RcppEigen \
+                    port:R-RcppParallel \
+                    port:R-rstan \
+                    port:R-rstantools \
+                    port:R-StanHeaders
+
+depends_test-append port:R-covr \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-roxygen2 \
+                    port:R-testit \
+                    port:R-testthat
+
+test.run            yes

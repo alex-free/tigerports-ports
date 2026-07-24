@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is outdated.
+R.setup             cran richfitz thor 1.2.0
+revision            1
+categories-append   databases devel
+maintainers         nomaintainer
+license             MIT
+description         Interface to LMDB
+long_description    {*}${description}
+checksums           rmd160  e5ad608976d2bf1d78383cb8804617f78cd492b2 \
+                    sha256  8f70759dc2b1a486959895dd2f589926a5eb985fb052ee629aa1c2692c0122bd \
+                    size    190056
+
+depends_lib-append  port:R-R6 \
+                    port:R-storr
+
+depends_test-append port:R-ids \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

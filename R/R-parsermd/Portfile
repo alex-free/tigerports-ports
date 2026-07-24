@@ -1,0 +1,45 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran rundel parsermd 0.2.0
+revision            1
+categories-append   devel
+maintainers         nomaintainer
+license             MIT
+description         Formal parser and related tools for R markdown documents
+long_description    {*}${description}
+homepage            https://rundel.github.io/parsermd
+checksums           rmd160  0d84d9396222b71bd2c81a7d53000e16c201bf09 \
+                    sha256  0c00c0d6270bbedb4c99a43e66e8b50ce0d4c7ecce3bfa2965fd6be72b662aaf \
+                    size    443472
+
+depends_lib-append  port:R-BH \
+                    port:R-checkmate \
+                    port:R-cli \
+                    port:R-dplyr \
+                    port:R-fs \
+                    port:R-lifecycle \
+                    port:R-magrittr \
+                    port:R-pillar \
+                    port:R-purrr \
+                    port:R-quarto \
+                    port:R-Rcpp \
+                    port:R-readr \
+                    port:R-rlang \
+                    port:R-rmarkdown \
+                    port:R-S7 \
+                    port:R-tibble \
+                    port:R-tidyr \
+                    port:R-tidyselect \
+                    port:R-withr \
+                    port:R-yaml
+
+depends_test-append port:R-knitr \
+                    port:R-stringr \
+                    port:R-styler \
+                    port:R-testthat
+
+test.run            yes

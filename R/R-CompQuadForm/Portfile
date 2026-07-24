@@ -1,0 +1,17 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran lafaye CompQuadForm 1.4.4
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-2+
+description         Distribution function of quadratic forms in normal variables
+long_description    {*}${description}
+checksums           rmd160  4385a378c819cd2ebcb92c31cf1c2a8fc7e847bb \
+                    sha256  84af2087bf7cd6dfb7aa9468fd88939267559f46c0dc7bea9d010314f42fa143 \
+                    size    19797
+
+test.run            yes

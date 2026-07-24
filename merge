@@ -1,0 +1,59 @@
+#!/bin/bash
+
+cd "$(dirname "$0")"
+
+cleanup()
+{
+    if [[ -e "$tmp" ]]; then
+        rm -r "$tmp"
+    fi
+}
+trap cleanup EXIT
+
+# BSD mktemp syntax.
+tmp=$(mktemp -d /var/tmp/"$(basename "$0")".XXXXXX)
+
+echo "Pulling macports-ports"
+git clone --recursive https://github.com/macports/macports-ports $tmp/macports-ports
+macports_ports_commit="$(git -C $tmp/macports-ports rev-parse HEAD)"
+# Recursively delete .git and .gitmodules files inside macports-ports (currently it doesn't have any but its good incase for some reason this changes to be consistent).
+find "$tmp/macports-ports" -name .git -exec rm -rf {} +
+find "$tmp/macports-ports" -name .gitmodules -exec rm -f {} +
+mv $tmp/macports-ports/README.md macports-ports-readme.md
+
+echo "Pulling powerpc-ports"
+git clone --recursive https://github.com/alex-free/powerpc-ports $tmp/powerpc-ports
+powerpc_ports_commit="$(git -C $tmp/powerpc-ports rev-parse HEAD)"
+mv $tmp/powerpc-ports/README.md powerpc-ports-readme.md
+# Recursively delete .git and .gitmodules files inside powerpc-ports.
+find "$tmp/powerpc-ports" -name .git -exec rm -rf {} +
+find "$tmp/powerpc-ports" -name .gitmodules -exec rm -f {} +
+
+# Nuke everything currently in this repo except these files:
+find . -maxdepth 1 ! \( -name . -o -name merge -o -name readme.md -o -name macports-ports-readme.md -o -name powerpc-ports-readme.md -o -name archive_sites.tcl.patch -o -name mirror_sites.tcl.patch \) -exec rm -rf {} +
+
+# Delete any folders that macports-ports and powerpc-ports both have from macports-ports.
+
+# Dump it into this repo.
+mv $tmp/macports-ports/* .
+cp -r $tmp/powerpc-ports/* .
+
+# Create patch for archive_sites.tcl.
+# cp _resources/port1.0/fetch/archive_sites.tcl _resources/port1.0/fetch/archive_sites.tcl.orig
+# open -e _resources/port1.0/fetch/archive_sites.tcl
+# diff -u _resources/port1.0/fetch/archive_sites.tcl.orig _resources/port1.0/fetch/archive_sites.tcl > archive_sites.tcl.patch
+
+# Create patch for mirror_sites.tcl.
+# cp _resources/port1.0/fetch/mirror_sites.tcl _resources/port1.0/fetch/mirror_sites.tcl.orig
+# open -e _resources/port1.0/fetch/mirror_sites.tcl
+# diff -u _resources/port1.0/fetch/mirror_sites.tcl.orig _resources/port1.0/fetch/mirror_sites.tcl > mirror_sites.tcl.patch
+
+
+echo "Patching _resources/port1.0/fetch/archive_sites.tcl to use tigerports.com binary archives..."
+patch _resources/port1.0/fetch/archive_sites.tcl < archive_sites.tcl.patch
+
+echo "Patching _resources/port1.0/fetch/mirror_sites.tcl  to use tigerports.com distfiles..."
+patch _resources/port1.0/fetch/mirror_sites.tcl < mirror_sites.tcl.patch
+
+# Gen readme.md
+echo -e "TigerPorts Ports Tree\n$(date)\nhttps://github.com/macports/macports-ports: $macports_ports_commit\nhttps://github.com/alex-free/powerpc-ports: $powerpc_ports_commit\n" > readme.md

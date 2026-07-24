@@ -1,0 +1,88 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           conflicts_build 1.0
+PortGroup           openssl 1.0
+PortGroup           R 1.0
+
+# GitHub version is old.
+R.setup             cran r-spatial sf 1.0-24
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             {GPL-2 MIT}
+description         Simple features for R
+long_description    {*}${description}
+homepage            https://r-spatial.github.io/sf
+checksums           rmd160  87b878857b9a18a6d87bc97c5309bccac1b45893 \
+                    sha256  4eaf24aa19f8398304a465a48c07f4daadcf5c6e46b1e62c17a1fb7afd055afe \
+                    size    9876893
+
+# The build may opportunistically pick wrong libs, in violation of configure args.
+conflicts_build     gdal geos
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+
+set deproot         ${prefix}/libexec/R
+
+depends_lib-append  port:gdal-R \
+                    port:geos-R \
+                    port:proj-R \
+                    port:R-classInt \
+                    port:R-DBI \
+                    port:R-magrittr \
+                    port:R-Rcpp \
+                    port:R-s2 \
+                    port:R-units \
+                    port:sqlite3
+
+# configure fails to do its job: https://github.com/r-spatial/sf/issues/2292
+build.env-append    CPPFLAGS=-I${deproot}/proj/include \
+                    DYLD_LIBRARY_PATH=${prefix}/lib/libgcc:${deproot}/proj/lib \
+                    PKG_CONFIG_PATH=${deproot}/proj/lib/pkgconfig
+
+build.args-append   --configure-args="--with-gdal-config=${deproot}/gdal/bin/gdal-config \
+                        --with-geos-config=${deproot}/geos/bin/geos-config \
+                        --with-proj-include=${deproot}/proj/include \
+                        --with-proj-lib=${deproot}/proj/lib \
+                        --with-proj-share=${deproot}/proj/share/proj \
+                        --with-sqlite3-lib=${prefix}/lib"
+
+# Some optional deps are omitted.
+depends_test-append port:R-blob \
+                    port:R-covr \
+                    port:R-dplyr \
+                    port:R-ggplot2 \
+                    port:R-knitr \
+                    port:R-lwgeom \
+                    port:R-maps \
+                    port:R-microbenchmark \
+                    port:R-nanoarrow \
+                    port:R-odbc \
+                    port:R-pbapply \
+                    port:R-pillar \
+                    port:R-pool \
+                    port:R-raster \
+                    port:R-rlang \
+                    port:R-rmarkdown \
+                    port:R-RPostgres \
+                    port:R-RPostgreSQL \
+                    port:R-RSQLite \
+                    port:R-sp \
+                    port:R-spatstat \
+                    port:R-spatstat.geom \
+                    port:R-spatstat.random \
+                    port:R-spatstat.linnet \
+                    port:R-spatstat.utils \
+                    port:R-stars \
+                    port:R-terra \
+                    port:R-testthat \
+                    port:R-tibble \
+                    port:R-tidyr \
+                    port:R-tidyselect \
+                    port:R-vctrs \
+                    port:R-wk
+
+# A number of dependencies are not in Macports yet.
+test.run            no

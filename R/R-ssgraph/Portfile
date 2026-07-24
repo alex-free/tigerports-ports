@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran cran ssgraph 1.16
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Bayesian graph structure learning using spike-and-slab priors
+long_description    {*}${description}
+checksums           rmd160  c0faeb9cc95f329e7075872b9c95488119d2b306 \
+                    sha256  b7d3fa6b2fb1619a2adff7bcae4987dceb853aaade21b86c94cb7df1a9e38791 \
+                    size    208501
+
+depends_lib-append  port:R-BDgraph
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-skimr
+
+test.run            yes

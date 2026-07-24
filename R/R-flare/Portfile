@@ -1,0 +1,19 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran xingguo.leo flare 1.7.0.2
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-2
+description         Family of lasso regression
+long_description    {*}${description}
+checksums           rmd160  dbc7f9cd349d31906d28df9e0eea62ac34325d54 \
+                    sha256  6ff7a31cc1a7a1b8ab75b7e53227fd10b83d4e54f815e465d8e46c85e2f676c4 \
+                    size    1209186
+
+depends_lib-append  port:R-igraph
+
+test.run            yes

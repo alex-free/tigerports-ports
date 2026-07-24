@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran alexis.dinno dunn.test 1.3.7
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2
+description         Dunn’s test of multiple comparisons using rank sums
+long_description    {*}${description}
+checksums           rmd160  0ec2d62225278c7458ed7dac30b50e1ea4dad3e6 \
+                    sha256  edf78fbbb3a044b58906df806ff7e0a8171715f52e98d607c3e90a651ae69485 \
+                    size    11895
+supported_archs     noarch
+
+depends_lib-append  port:R-rlang
+
+test.run            yes

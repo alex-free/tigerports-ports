@@ -1,0 +1,78 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+PortGroup               cmake 1.1
+PortGroup               github 1.0
+
+github.setup            FNA-XNA FAudio 26.07
+revision                0
+license                 zlib
+categories              audio
+maintainers             {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+description             XAudio reimplementation
+long_description        {*}${description} that focuses solely on developing \
+                        fully accurate DirectX Audio runtime libraries for the FNA project, \
+                        including XAudio2, X3DAudio, XAPO and XACT3.
+checksums               rmd160  b7393633b062702f16a85a2b5329f9c474399393 \
+                        sha256  e136e9d0a96609f88405f2c479bbc445d7b058d5134247674257530bf7210986 \
+                        size    1136655
+github.tarball_from     archive
+
+depends_lib-append      port:libsdl2
+
+# Remove set deployment target and hard-coded RPATH setting
+patchfiles              patch-faudio-remove-deployment-target.diff
+
+configure.args          -DBUILD_SDL3=OFF \
+                        -DBUILD_TESTS=ON \
+                        -DBUILD_UTILS=OFF \
+                        -DCMAKE_INSTALL_INCLUDEDIR=include/FAudio \
+                        -DXNASONG=ON
+
+# https://github.com/FNA-XNA/FAudio/issues/321
+# Xcode clang on 10.6 also fails to build it.
+# FAudio.h: error: wrong number of arguments specified for ‘deprecated’ attribute
+compiler.blacklist-append \
+                        *gcc-4.* {clang < 421}
+
+# On macOS 23+ this fails at the moment:
+# ld: warning: alignment (4) of atom '_FACT3DCalculate.DefaultCurve'
+# from '/opt/local/var/macports/build/_opt_svacchanda_SonomaPorts_audio_FAudio/FAudio/work/build/CMakeFiles/FAudio.dir/src/FACT3D.c.o'
+# is too small and may result in unaligned pointers.
+# Temporary fix by setting deployment target to Big Sur.
+# https://github.com/FNA-XNA/FAudio/issues/362
+# Related: https://github.com/ldc-developers/ldc/issues/3864
+platform darwin arm {
+    if {${os.major} > 22} {
+        macosx_deployment_target    11.0
+    }
+}
+
+# Make sure that SDL2 is still supported when updating.
+variant sdl3 description "Use SDL3 instead of SDL2" {
+    depends_lib-replace \
+        port:libsdl2 port:SDL3
+    configure.args-replace \
+        -DBUILD_SDL3=OFF -DBUILD_SDL3=ON
+}
+
+# SDL3 not tested on 10.4 yet.
+if {${os.platform} ne "darwin" || ${os.major} > 8} {
+    default_variants +sdl3
+}
+
+# TODO: enable these via a variant:
+#pre-destroot {
+#    there are some utilities to consider, but the facttool segfaulted when I tried to open an audio engine
+#    they are not installed by default with the cmake install script, and other pkg systems don't install them
+#    they can be re-enabled by toggling -DBUILD_UTILS=ON, and manually installed like so if desired
+#    file copy ${workpath}/build/facttool ${destroot}${prefix}/bin/
+#}
+
+test.run                 yes
+# Otherwise it looks in prefix, and if the port has not been installed earlier, that fails:
+# dyld: Library not loaded: /opt/local/lib/libFAudio.0.dylib
+# On PowerPC tests do not run: https://github.com/FNA-XNA/FAudio/issues/319
+test.env-append          DYLD_LIBRARY_PATH=${cmake.build_dir}
+test.cmd                 ./faudio_tests
+test.target

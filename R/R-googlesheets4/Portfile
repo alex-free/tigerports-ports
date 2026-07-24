@@ -1,0 +1,42 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github tidyverse googlesheets4 1.1.2 v
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Access Google Sheets using the Sheets API V4
+long_description    {*}${description}
+homepage            https://googlesheets4.tidyverse.org
+checksums           rmd160  aa3b27ab1ae6da14c6de09414958d9ebc9be45ca \
+                    sha256  c1b4f31d4ac5ee3eb7861d3f86d6efb4d0dd312c1124258444a978c62308cc1a \
+                    size    2034554
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-cellranger \
+                    port:R-cli \
+                    port:R-curl \
+                    port:R-gargle \
+                    port:R-glue \
+                    port:R-googledrive \
+                    port:R-httr \
+                    port:R-ids \
+                    port:R-lifecycle \
+                    port:R-magrittr \
+                    port:R-purrr \
+                    port:R-rematch2 \
+                    port:R-rlang \
+                    port:R-tibble \
+                    port:R-vctrs \
+                    port:R-withr
+
+depends_test-append port:R-readr \
+                    port:R-rmarkdown \
+                    port:R-spelling \
+                    port:R-testthat
+
+test.run            yes

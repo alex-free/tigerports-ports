@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran mcomas coda.base 1.0.3
+revision            1
+maintainers         nomaintainer
+license             GPL
+description         Basic set of functions for compositional data analysis
+long_description    {*}${description}
+homepage            https://mcomas.net/coda.base
+checksums           rmd160  05f830bc0ddd464016446560390da25a7ff2e14f \
+                    sha256  0d7f073542a32fc35ce3e70e1eb7109e32e7f1c61bb47f6a884192168ff742e4 \
+                    size    270863
+
+depends_lib-append  port:R-Rcpp \
+                    port:R-RcppArmadillo
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-ggplot2 \
+                    port:R-jsonlite \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

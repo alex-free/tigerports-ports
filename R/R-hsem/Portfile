@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran rezzyekocaraka hsem 1.0
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Hierarchical Structural Equation Model
+long_description    {*}${description}
+checksums           rmd160  5acbc28721b8111ecc36135b14ce15ee03c4760d \
+                    sha256  731f6f2880cbbfdd41b1efd85d0fcddb386d8428d40cab0906bcbaa56331f735 \
+                    size    64776
+supported_archs     noarch
+
+depends_lib-append  port:R-mvtnorm \
+                    port:R-numDeriv
+
+test.run            yes

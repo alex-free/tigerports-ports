@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran multi-objective moocore 0.1.8
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             LGPL-2.1
+description         Core mathematical functions for multi-objective optimization
+long_description    Fast implementation of mathematical operations and performance metrics \
+                    for multi-objective optimization.
+homepage            https://multi-objective.github.io/moocore/r
+checksums           rmd160  11127a847ea4733cba1757b82581f7b69d7e9fa4 \
+                    sha256  18a0e8c8075161d478f2b918eb2fbd2257d517324d1598e04cc05e4b28636b86 \
+                    size    1908621
+
+# https://github.com/multi-objective/moocore/issues/24
+# Backport of upstream fix:
+patchfiles          77ff2a89b5a005f0782b7fc17fbd4a50ccd39ffc.patch
+
+depends_lib-append  port:R-matrixStats \
+                    port:R-Rdpack
+
+depends_test-append port:R-doctest \
+                    port:R-knitr \
+                    port:R-spelling \
+                    port:R-testthat \
+                    port:R-withr
+
+test.run            yes

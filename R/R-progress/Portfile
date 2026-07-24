@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github r-lib progress 1.2.3 v
+revision            3
+categories-append   sysutils
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Progress bar in your R terminal
+long_description    An R package to show ASCII progress bars.
+checksums           rmd160  6765833282be604522b9c08175df5b8bba49edf4 \
+                    sha256  295cbd533b428df2dc56cab949dbb3d4efc18d249000909bdc5bdf17253e28fa \
+                    size    34609
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-crayon \
+                    port:R-hms \
+                    port:R-prettyunits \
+                    port:R-R6
+
+depends_test-append port:R-Rcpp \
+                    port:R-testthat \
+                    port:R-withr
+
+test.run            yes

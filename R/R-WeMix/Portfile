@@ -1,0 +1,33 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran American-Institutes-for-Research WeMix 4.0.3
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2
+description         Weighted mixed-effects models using multi-level pseudo-maximum likelihood estimation
+long_description    {*}${description}
+homepage            https://american-institutes-for-research.github.io/WeMix
+checksums           rmd160  4f508609468d7e676a1669941f2928ffce223fe1 \
+                    sha256  e738f8e80ec0c18198d7ae513fcce08a32cd3c0a1bce49db5025540baf3e6ffa \
+                    size    634572
+supported_archs     noarch
+
+depends_lib-append  port:R-lme4 \
+                    port:R-matrixStats \
+                    port:R-minqa \
+                    port:R-numDeriv
+
+# Optional dep on R-EdSurvey is dropped.
+depends_test-append port:R-glmmTMB \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-tidyr \
+                    port:R-withr
+
+test.run            yes

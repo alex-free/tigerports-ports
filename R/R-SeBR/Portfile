@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran drkowal SeBR 1.1.0
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Semi-parametric Bayesian regression analysis
+long_description    {*}${description}
+homepage            https://drkowal.github.io/SeBR
+checksums           rmd160  c05e619ce7189d4622ecf1215136f17a19788b47 \
+                    sha256  e2774b9a2963e1ed5084209d21b6d8f0972a5312cc7b9aff57cb7f9e5e617026 \
+                    size    461923
+supported_archs     noarch
+
+depends_test-append port:R-fields \
+                    port:R-GpGp \
+                    port:R-knitr \
+                    port:R-plyr \
+                    port:R-quantreg \
+                    port:R-rmarkdown \
+                    port:R-spikeSlabGAM \
+                    port:R-statmod
+
+test.run            yes

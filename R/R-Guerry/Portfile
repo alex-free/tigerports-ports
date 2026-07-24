@@ -1,0 +1,19 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran friendly Guerry 1.8.3
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL
+description         Maps, data and methods related to Moral Statistics of France
+long_description    {*}${description} (1833) by Guerry.
+homepage            https://github.com/friendly/Guerry
+checksums           rmd160  6c99192d0fbe194e33491f13c46766db338be1df \
+                    sha256  47bb46a6f092a6814a2ede917a4f058bb43e1723952125844236eb835f939905 \
+                    size    1122910
+supported_archs     noarch
+
+depends_lib-append  port:R-sp

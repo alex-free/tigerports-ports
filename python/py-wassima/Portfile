@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-wassima
+version             2.1.2
+revision            0
+categories-append   devel
+platforms           any
+license             MIT
+maintainers         nomaintainer
+description         Access your OS root certificates with utmost ease
+long_description    {*}${description}
+homepage            https://github.com/jawah/wassima
+checksums           rmd160  a9686e2449cf4e12fcfe6c764930af7d5092c079 \
+                    sha256  f74b5441151728c54118ece6d747cfe92b2c595a3d062a1955f42a2bc894cd10 \
+                    size    139636
+supported_archs     noarch
+
+python.versions         310 311 312 313 314
+
+python.pep517_backend   hatch

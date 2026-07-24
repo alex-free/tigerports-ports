@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran runehaubo lmerTest 3.2-0 v
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             {GPL-2 GPL-3}
+description         Tests in linear mixed effects models
+long_description    {*}${description}
+checksums           rmd160  5768e1aedb8316ccaeec838b71648e4b51f197aa \
+                    sha256  c068c1cbd8debda6ca5f90875c59a5cfe1b58d04e9e04054b6b9321679972c83 \
+                    size    197500
+supported_archs     noarch
+
+depends_lib-append  port:R-ggplot2 \
+                    port:R-lme4 \
+                    port:R-numDeriv \
+                    port:R-reformulas
+
+depends_test-append port:R-pbkrtest
+
+test.run            yes

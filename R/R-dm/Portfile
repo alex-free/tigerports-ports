@@ -1,0 +1,75 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github cynkra dm 1.1.1 v
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Relational Data Models
+long_description    {*}${description}
+homepage            https://dm.cynkra.com
+checksums           rmd160  56ed6bb9609c614504ed9bdd29fe69586cf3c995 \
+                    sha256  865bd3d5b72a6ce941e09498605ad3622cc5e1ef5d32d96e602d6784a8996aee \
+                    size    3817899
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-backports \
+                    port:R-cli \
+                    port:R-dplyr \
+                    port:R-glue \
+                    port:R-lifecycle \
+                    port:R-memoise \
+                    port:R-purrr \
+                    port:R-rlang \
+                    port:R-tibble \
+                    port:R-tidyr \
+                    port:R-tidyselect \
+                    port:R-vctrs
+
+# A few optional deps are omitted.
+depends_test-append port:R-brio \
+                    port:R-colourpicker \
+                    port:R-covr \
+                    port:R-crayon \
+                    port:R-DBI \
+                    port:R-dbplyr \
+                    port:R-DiagrammeR \
+                    port:R-digest \
+                    port:R-duckdb \
+                    port:R-fansi \
+                    port:R-forcats \
+                    port:R-htmltools \
+                    port:R-htmlwidgets \
+                    port:R-igraph \
+                    port:R-jsonlite \
+                    port:R-keyring \
+                    port:R-knitr \
+                    port:R-labelled \
+                    port:R-magrittr \
+                    port:R-mockr \
+                    port:R-nycflights13 \
+                    port:R-odbc \
+                    port:R-pillar \
+                    port:R-pool \
+                    port:R-progress \
+                    port:R-reactable \
+                    port:R-RMariaDB \
+                    port:R-rmarkdown \
+                    port:R-RPostgres \
+                    port:R-RSQLite \
+                    port:R-rstudioapi \
+                    port:R-shiny \
+                    port:R-shinyAce \
+                    port:R-shinydashboard \
+                    port:R-testthat \
+                    port:R-tidyverse \
+                    port:R-waldo \
+                    port:R-withr
+
+# A few tests will fail on Big-endian platforms
+# due to DuckBD bug: https://github.com/cynkra/dm/issues/2211
+test.run            yes

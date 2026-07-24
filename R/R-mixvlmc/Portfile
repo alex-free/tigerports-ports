@@ -1,0 +1,38 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran fabrice-rossi mixvlmc 0.2.2
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3+
+description         Variable length Markov chains with covariates
+long_description    {*}${description}
+homepage            https://fabrice-rossi.github.io/mixvlmc
+checksums           rmd160  a4d22c23ef463f60d840f4f5ec2955319847a4ec \
+                    sha256  36bb0f5e99e3485312d0e0367ca93e8b0a8ee1f1545a7c68eae26ff2e13d3ebd \
+                    size    2433608
+
+depends_lib-append  port:R-assertthat \
+                    port:R-butcher \
+                    port:R-ggplot2 \
+                    port:R-pROC \
+                    port:R-Rcpp \
+                    port:R-rlang \
+                    port:R-stringr \
+                    port:R-VGAM \
+                    port:R-withr
+
+depends_test-append port:R-data.table \
+                    port:R-foreach \
+                    port:R-geodist \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-tibble \
+                    port:R-vdiffr \
+                    port:R-waldo
+
+test.run            yes

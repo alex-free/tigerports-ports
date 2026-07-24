@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran mhofert simsalapar 1.0-13
+revision            1
+categories-append   parallel
+platforms           {darwin any}
+maintainers         nomaintainer
+license             {GPL-2 GPL-3}
+description         Tools for simulation studies in parallel
+long_description    {*}${description}
+checksums           rmd160  f31534e78608186a16ce5ad6bb43337ba547737a \
+                    sha256  738704c61016276f1a01e0764a525ec9e5b0743003dfdf53487822a6ba881c6f \
+                    size    132124
+supported_archs     noarch
+
+depends_lib-append  port:R-colorspace \
+                    port:R-gridBase \
+                    port:R-sfsmisc
+
+depends_test-append port:R-copula \
+                    port:R-doParallel \
+                    port:R-fGarch \
+                    port:R-foreach \
+                    port:R-Hmisc \
+                    port:R-Rmpi \
+                    port:R-robustbase
+
+test.run            yes

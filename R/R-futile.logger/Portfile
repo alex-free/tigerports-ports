@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran zatonovo futile.logger 1.4.9
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             LGPL-3
+description         Logging utility for R
+long_description    {*}${description}
+homepage            https://github.com/zatonovo/futile.logger
+checksums           rmd160  9dbf5d1920c01c75fbb5911e45fbc4549883e650 \
+                    sha256  496bedbe2e52d06db22a4d659b8e7dd9ad0f1d1f95ead459ec02d05d0ac2b3d6 \
+                    size    24311
+supported_archs     noarch
+
+depends_lib-append  port:R-futile.options \
+                    port:R-lambda.r
+
+depends_test-append port:R-crayon \
+                    port:R-glue \
+                    port:R-httr \
+                    port:R-jsonlite \
+                    port:R-rsyslog \
+                    port:R-testit
+
+test.run            yes

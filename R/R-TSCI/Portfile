@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran dlcarl TSCI 3.0.5
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3+
+description         Tools for causal inference with possibly invalid instrumental variables
+long_description    {*}${description}
+homepage            https://github.com/dlcarl/TSCI
+checksums           rmd160  0dee943d6b76a299e181e5beb88c57b1d88499f0 \
+                    sha256  ba3e44efb4db449f6d7b6c26897d77d442a0c96a72d36e3dc32fe0e983b65b2b \
+                    size    110460
+supported_archs     noarch
+
+depends_lib-append  port:R-fastDummies \
+                    port:R-ranger \
+                    port:R-Rfast \
+                    port:R-xgboost
+
+depends_test-append port:R-fda \
+                    port:R-testthat \
+                    port:R-withr
+
+test.run            yes

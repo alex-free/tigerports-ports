@@ -1,0 +1,38 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran rlph50 garma 1.0.1
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Fitting and forecasting Gegenbauer ARMA \
+                    time series models
+long_description    {*}${description}
+homepage            https://github.com/rlph50/garma
+checksums           rmd160  02bbd044a7286ebe1cafc909b4b28b4104cafce9 \
+                    sha256  c6df7e3f8e8fdb5933a1a88ac4a988a23680eba6120cd5db0e482a820dcc3d25 \
+                    size    1089210
+supported_archs     noarch
+
+depends_lib-append  port:R-crayon \
+                    port:R-forecast \
+                    port:R-ggplot2 \
+                    port:R-lubridate \
+                    port:R-nloptr \
+                    port:R-pracma \
+                    port:R-rlang \
+                    port:R-Rsolnp \
+                    port:R-signal \
+                    port:R-zoo
+
+depends_test-append port:R-knitr \
+                    port:R-longmemo \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-yardstick
+
+test.run            yes

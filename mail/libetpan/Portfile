@@ -1,0 +1,47 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+PortGroup               github 1.0
+
+github.setup            dinhvh libetpan 1.10.1
+revision                0
+epoch                   1
+categories              mail devel
+license                 BSD
+maintainers             nomaintainer
+
+description             Mail access library
+long_description        libEtPan provides a portable, efficient framework \
+                        for different kinds of mail access:\
+                        IMAP, SMTP, POP and NNTP.\
+                        It provides an API for C language.
+
+checksums               rmd160  e008848ef177f01c124872891b98a4869c88b38d \
+                        sha256  87bacdc62661a2a7aa5fe9f1f28d2f7c7a53256633ac5129903916c59f80c4c2 \
+                        size    8878422
+github.tarball_from     archive
+
+depends_build-append    port:autoconf \
+                        port:automake \
+                        port:libtool \
+                        path:bin/pkg-config:pkgconfig
+
+depends_lib-append      port:curl \
+                        port:cyrus-sasl2 \
+                        port:expat \
+                        port:libiconv \
+                        path:lib/libssl.dylib:openssl \
+                        port:zlib
+
+configure.cmd           ./autogen.sh
+configure.args-append   --disable-db \
+                        --disable-debug \
+                        --disable-dependency-tracking \
+                        --disable-silent-rules \
+                        --with-openssl=${prefix} \
+                        --with-sasl=${prefix}
+
+platform linux {
+    configure.args-append \
+                        --with-poll
+}

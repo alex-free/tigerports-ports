@@ -1,0 +1,53 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           legacysupport 1.1
+
+# Undefined symbols for architecture x86_64:
+# "typeinfo for std::bad_variant_access"
+legacysupport.use_mp_libcxx yes
+# openmpt123(23299) malloc: *** error for object 0xa04dc754: pointer being freed was not allocated
+legacysupport.redirect_bins openmpt123
+
+name                libopenmpt
+version             0.8.7
+revision            0
+categories          audio devel multimedia
+license             BSD
+maintainers         nomaintainer
+description         Library to decode tracked music files
+long_description    ${name} is a cross-platform C++ and C library to decode \
+                    tracked music files (modules) into a raw PCM audio stream.
+homepage            https://lib.openmpt.org
+master_sites        ${homepage}/files/libopenmpt/src/
+distname            ${name}-${version}+release.autotools
+checksums           rmd160  e0fcb33cd78ef0b67cfc3e4c503f1af4cc9e661a \
+                    sha256  275c29ef47be9992f62a35fcc96f7ca05c06d2fd05c9298b8dee9f743f75b089 \
+                    size    1761893
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+depends_lib-append  port:flac \
+                    port:libogg \
+                    port:libsndfile \
+                    port:libvorbis \
+                    port:mpg123 \
+                    port:portaudio \
+                    port:zlib
+
+compiler.cxx_standard 2017
+
+configure.args-append \
+                    --disable-dependency-tracking \
+                    --disable-silent-rules
+
+# terminate called after throwing an instance of 'std::runtime_error'
+#  what():  locale::facet::_S_create_c_locale name not valid
+# See: https://stackoverflow.com/questions/19405272/c-issues-with-boostfilesystem-on-server-localefacet-s-create-c-locale
+build.env-append    LC_ALL=C
+destroot.env-append LC_ALL=C
+test.env-append     LC_ALL=C
+
+notes "You may need to export LC_ALL=C to the environment in order to use the executable."
+
+livecheck.url       https://lib.openmpt.org/files/libopenmpt/src/

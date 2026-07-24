@@ -1,0 +1,19 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran ryan.gill ljr 1.4-0
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-2+
+description         Logistic Joinpoint Regression
+long_description    Fits and tests logistic joinpoint models.
+checksums           rmd160  ebbe5846dfc99c074c83db6d9ad87b3df514c2b4 \
+                    sha256  fe96f1c77db08503dbc5b4e69dacdddb57c1b974d8ecbabae5d770442b497e49 \
+                    size    16686
+
+compilers.setup     require_fortran
+
+test.run            yes

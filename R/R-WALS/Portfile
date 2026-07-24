@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran kevhuy WALS 0.2.6 v
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             {GPL-2 GPL-3}
+description         Weighted-average least squares model averaging
+long_description    {*}${description}
+homepage            https://github.com/kevhuy/WALS
+checksums           rmd160  6a1770de2918824107efdb6e9bd03268adb26b25 \
+                    sha256  fc39f8094cd971171498ab9fab7873b8c733ca92623b0a90d6403b2ccc0f6667 \
+                    size    237662
+supported_archs     noarch
+
+depends_lib-append  port:R-Formula \
+                    port:R-Rdpack
+
+depends_test-append port:R-AER \
+                    port:R-BayesVarSel \
+                    port:R-BMS \
+                    port:R-testthat
+
+# FIXME: some tests fail, at least on ppc: https://github.com/kevhuy/WALS/issues/1
+test.run            yes

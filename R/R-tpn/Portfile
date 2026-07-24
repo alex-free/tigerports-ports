@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran dgallardo tpn 1.12
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Truncated positive normal model and extensions
+long_description    {*}${description}
+checksums           rmd160  598a41b196eac06acb8a6355ee5d4f85f16d2d2b \
+                    sha256  dd0eaee0e5cf5bc1407185c44c4af188f8296fc552ae320d89808c08a0bfb901 \
+                    size    14622
+supported_archs     noarch
+
+depends_lib-append  port:R-moments \
+                    port:R-pracma \
+                    port:R-RBE3 \
+                    port:R-skewMLRM \
+                    port:R-VGAM
+
+test.run            yes

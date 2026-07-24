@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran danielturek BayesNSGP 0.2.0
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Bayesian analysis of non-stationary Gaussian process models
+long_description    {*}${description}
+checksums           rmd160  75612a5271fc2e8573a10935349b6b3ecba302ae \
+                    sha256  31f4dd2ff2b1cdd88ea596bc9344443686bb9252fd3e05acba690922ca765add \
+                    size    45518
+supported_archs     noarch
+
+depends_lib-append  port:R-FNN \
+                    port:R-nimble \
+                    port:R-StatMatch
+
+test.run            yes

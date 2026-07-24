@@ -1,0 +1,36 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitLab version is outdated.
+R.setup             cran cvoeten buildmer 2.12
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             FreeBSD
+description         Stepwise elimination and term reordering for mixed-effects regression
+long_description    {*}${description}
+homepage            https://gitlab.com/cvoeten/buildmer
+checksums           rmd160  f622dfc5a8b8d815262fb30101c8c1399d8d2ad0 \
+                    sha256  43aa08a3c466dbe812fdbdccdfc702fc9e8acbd7a7d8bcf7243af1556b248d09 \
+                    size    572115
+supported_archs     noarch
+
+depends_lib-append  port:R-lme4 \
+                    port:R-reformulas
+
+depends_test-append port:R-gamm4 \
+                    port:R-glmertree \
+                    port:R-GLMMadaptive \
+                    port:R-glmmTMB \
+                    port:R-knitr \
+                    port:R-lmerTest \
+                    port:R-ordinal \
+                    port:R-partykit \
+                    port:R-pbkrtest \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

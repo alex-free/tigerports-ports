@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran gong.chen1 HAC 1.1-1
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3+
+description         Estimation, simulation and visualization of hierarchical archimedean copulae
+long_description    {*}${description} (HAC).
+checksums           rmd160  502e38a56f055b8b507ed2e4fe4117628e01391f \
+                    sha256  f68f6eab03517423dac63101b14f3bd08bbc24e5d96e0d81d833198648a53610 \
+                    size    929616
+supported_archs     noarch
+
+depends_lib-append  port:R-copula
+
+test.run            yes

@@ -1,0 +1,68 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           bitbucket 1.0
+PortGroup           cmake 1.1
+PortGroup           legacysupport 1.1
+
+# strnlen
+legacysupport.newest_darwin_requires_legacy 10
+
+set component       extraapps
+
+name                katana-${component}
+bitbucket.setup     smil3y kde-${component} 6bd26d4766e6c7d5831a94df1a3fc53b0b0481c5
+version             4.25.0-20260320
+revision            0
+categories          katana kde
+license             BSD LGPL-2.1
+maintainers         {@barracuda156 macos-powerpc.org:barracuda}
+homepage            https://bitbucket.org/smil3y/kde-${component}
+description         Katana extra apps
+long_description    {*}${description}
+
+checksums           rmd160  d585bef7c441a26bb252d8c42e1775aa68d299a8 \
+                    sha256  42f673fbb7dfac076a71b47cae4c559a114f5d982b8579011d870c0dee9d00d2 \
+                    size    3373592
+
+extract.rename      yes
+
+post-extract {
+    delete -force ${worksrcpath}/okular/VERSION
+}
+
+# https://trac.macports.org/ticket/41220
+patchfiles-append   patch-fix-gwenview.diff
+
+# Fix runtime crash:
+patchfiles-append   gwenview-thread-crash-fix.patch
+
+patchfiles-append   okular-plugin-debug.patch
+
+depends_build-append \
+                    port:gettext \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  port:bzip2 \
+                    port:djvulibre \
+                    port:ffmpegthumbnailer \
+                    port:gettext-runtime \
+                    port:katana-libs \
+                    port:katana-workspace \
+                    port:katie \
+                    port:libarchive \
+                    port:libdeflate \
+                    port:libspectre \
+                    path:lib/pkgconfig/poppler.pc:poppler \
+                    port:taglib \
+                    port:xorg-libXext \
+                    port:xorg-libXfixes \
+                    port:xz
+
+compiler.cxx_standard       2014
+compiler.blacklist-append   {clang}
+
+notes "
+Katana apps use dbus session. Please run the following from the non-root user:\
+launchctl load -w /Library/LaunchAgents/org.freedesktop.dbus-session.plist
+"

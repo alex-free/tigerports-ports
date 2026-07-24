@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-colorlog
+version             6.11.0
+revision            0
+
+categories-append   devel
+platforms           {darwin any}
+supported_archs     noarch
+license             MIT
+maintainers         {reneeotten @reneeotten} openmaintainer
+
+description         Log formatting with colors!
+long_description    {*}${description}
+
+homepage            https://github.com/borntyping/python-colorlog
+
+checksums           rmd160  47e3e42ce9fb23eac68a0a8406bdb0daab658a54 \
+                    sha256  9d90fb53fa906c8970c18fbe46506bae1fb5f86b513b8f867db37e4ace9be7ae \
+                    size    17734
+
+python.versions     310 311 312 313 314
+
+if {${name} ne ${subport}} {
+    post-destroot {
+        set docdir ${prefix}/share/doc/${subport}
+        xinstall -d ${destroot}${docdir}
+        xinstall -m 0644 -W ${worksrcpath} LICENSE README.md ${destroot}${docdir}
+    }
+
+    test.run        yes
+}

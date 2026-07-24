@@ -1,0 +1,37 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to r-forge once updated there.
+R.setup             cran r-project betareg 3.2-4
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             {GPL-2 GPL-3}
+description         Testing linear regression models
+long_description    Beta regression for modeling beta-distributed dependent variables, e.g. rates and proportions. \
+                    In addition to maximum likelihood regression (for both mean and precision of a beta-distributed response), \
+                    bias-corrected and bias-reduced estimation as well as finite mixture models and recursive partitioning \
+                    for Beta regressions are provided.
+checksums           rmd160  37d1069fcf825d833811a2d820e773168e549a08 \
+                    sha256  5ba44d30d45eb3b5bd93ca13c03b596558576a77e61a99aa9b7e00c0b6a6abfd \
+                    size    1500658
+
+depends_lib-append  port:R-flexmix \
+                    port:R-Formula \
+                    port:R-lmtest \
+                    port:R-modeltools \
+                    port:R-sandwich
+
+depends_test-append port:R-bamlss \
+                    port:R-car \
+                    port:R-distributions3 \
+                    port:R-knitr \
+                    port:R-numDeriv \
+                    port:R-partykit \
+                    port:R-quarto \
+                    port:R-statmod \
+                    port:R-strucchange
+
+test.run            yes

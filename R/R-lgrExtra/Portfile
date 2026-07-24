@@ -1,0 +1,41 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran s-fleck lgrExtra 0.2.1
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Extra appenders for R-lgr
+long_description    {*}${description}
+homepage            https://s-fleck.github.io/lgrExtra
+checksums           rmd160  9b57cb0c6213aa825b41ef23ddc3873fc6bd1667 \
+                    sha256  c228bdde0549b9ec4afa4b70048d366cf9aded4d2051132be5a197ca7bfd2a75 \
+                    size    57495
+supported_archs     noarch
+
+depends_lib-append  port:R-data.table \
+                    port:R-lgr \
+                    port:R-R6
+
+depends_test-append port:R-covr \
+                    port:R-DBI \
+                    port:R-elastic \
+                    port:R-gmailr \
+                    port:R-httr2 \
+                    port:R-jsonlite \
+                    port:R-knitr \
+                    port:R-paws.management \
+                    port:R-pool \
+                    port:R-RMariaDB \
+                    port:R-rmarkdown \
+                    port:R-RPostgres \
+                    port:R-RPushbullet \
+                    port:R-RSQLite \
+                    port:R-rsyslog \
+                    port:R-sendmailR \
+                    port:R-testthat
+
+test.run            yes

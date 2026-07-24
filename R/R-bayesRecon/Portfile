@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran IDSIA bayesRecon 1.0.0
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             LGPL-3+
+description         Provides methods for probabilistic reconciliation \
+                    of hierarchical forecasts of time series
+long_description    {*}${description}
+homepage            https://github.com/IDSIA/bayesRecon
+checksums           rmd160  3ef3ce9e5706af7bc0e48b7e30d9b6df797b29d6 \
+                    sha256  83c1e271e29bb3c711cdabd4bde17e26163da3ef5bcacdbc90d2657d643ff2fc \
+                    size    3027540
+supported_archs     noarch
+
+depends_lib-append  port:R-lpSolve \
+                    port:R-nloptr
+
+depends_test-append port:R-forecast \
+                    port:R-glarma \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-scoringRules \
+                    port:R-testthat
+
+# One test fails on 32-bit due to precision threshold.
+test.run            yes

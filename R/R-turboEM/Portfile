@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran ravi.varadhan turboEM 2025.1
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2
+description         Suite of convergence acceleration schemes \
+                    for EM, MM and other fixed-point algorithms
+long_description    {*}${description}
+checksums           rmd160  85dffdf8675402aa33ba46cf168b3334ff001a52 \
+                    sha256  e07732d781020c0ba2ec499a6227b1afec6468b198c81fb59554f8f07421a0b0 \
+                    size    332010
+supported_archs     noarch
+
+depends_lib-append  port:R-doParallel \
+                    port:R-foreach \
+                    port:R-iterators \
+                    port:R-numDeriv \
+                    port:R-quantreg
+
+depends_test-append port:R-setRNG
+
+test.run            yes

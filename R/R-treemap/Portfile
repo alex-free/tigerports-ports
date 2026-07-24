@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran mtennekes treemap 2.4-4
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Treemap visualization
+long_description    {*}${description}
+checksums           rmd160  376e0893d17d17940965588f23abd66b7f95e410 \
+                    sha256  c55a8b271f16405a283978cd4e0bef7192840b397aa7bb6fbbf9233b875677c0 \
+                    size    158048
+supported_archs     noarch
+
+depends_lib-append  port:R-colorspace \
+                    port:R-data.table \
+                    port:R-ggplot2 \
+                    port:R-gridBase \
+                    port:R-igraph \
+                    port:R-RColorBrewer \
+                    port:R-shiny
+
+depends_test-append port:R-knitr \
+                    port:R-markdown
+
+test.run            yes

@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran KyuriP causalnet 0.1.0
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Directed causal network enumeration and simulation
+long_description    {*}${description}
+homepage            https://github.com/KyuriP/causalnet
+checksums           rmd160  d45eb6d3c5e533628bfc259b4f9a6b0087a5b4a5 \
+                    sha256  2d981421b8b3bbb584bea4225292e9aba1ccd46282a8aca6c41ab62d4c31af56 \
+                    size    21909
+supported_archs     noarch
+
+depends_lib-append  port:R-cowplot \
+                    port:R-ggplot2 \
+                    port:R-scales \
+                    port:R-tidyr
+
+depends_test-append port:R-dplyr \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

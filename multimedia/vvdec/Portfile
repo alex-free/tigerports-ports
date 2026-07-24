@@ -1,0 +1,46 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+
+# posix_memalign
+legacysupport.newest_darwin_requires_legacy 9
+
+github.setup        fraunhoferhhi vvdec 3.1.0 v
+revision            0
+categories          multimedia
+license             BSD
+maintainers         nomaintainer
+description         Versatile Video Coding (VVC) decoder
+long_description    {*}${description}
+checksums           rmd160  a3a6c5addca3a65ff88c0f54e4f8238ea9d295ee \
+                    sha256  e3e5093acfdcbfd2159f3d0166d451d7ccabd293ed30f3762b481c9c6c0a7512 \
+                    size    1491938
+github.tarball_from archive
+
+cmake.build_type    Release
+cmake.generator     Ninja
+
+# https://github.com/macos-powerpc/powerpc-ports/issues/75
+patchfiles-append   patch-CommonDef.h
+
+configure.args-append \
+                    -DBUILD_SHARED_LIBS=ON \
+                    -DVVDEC_ENABLE_LINK_TIME_OPT=ON \
+                    -DVVDEC_ENABLE_UNSTABLE_API=OFF \
+                    -DVVDEC_ENABLE_WARNINGS_AS_WERROR=OFF \
+                    -DVVDEC_ENABLE_X86_SIMD=OFF \
+                    -DVVDEC_INSTALL_VVDECAPP=ON
+
+platform i386 {
+    configure.args-delete \
+                    -VVDEC_ENABLE_X86_SIMD=OFF
+}
+
+compiler.cxx_standard   2014
+
+# https://github.com/fraunhoferhhi/vvdec/issues/271
+configure.cxxflags-append \
+                    -Wno-error=array-bounds

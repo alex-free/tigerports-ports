@@ -1,0 +1,43 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran GrossSBM missSBM 1.0.5
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Handling missing data in stochastic block models
+long_description    {*}${description}
+homepage            https://grosssbm.github.io/missSBM
+checksums           rmd160  14da26b56405435dc0ce6d14b1adb7a7bb57b841 \
+                    sha256  411d2424e23f2aff7b32a3d4190a2ce9f92774487b1121a6409e0e97f362954e \
+                    size    735657
+
+depends_lib-append  port:R-future.apply \
+                    port:R-ggplot2 \
+                    port:R-igraph \
+                    port:R-magrittr \
+                    port:R-nloptr \
+                    port:R-R6 \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-rlang \
+                    port:R-RSpectra \
+                    port:R-sbm
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-aricode \
+                    port:R-blockmodels \
+                    port:R-corrplot \
+                    port:R-covr \
+                    port:R-future \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-spelling \
+                    port:R-testthat
+
+test.run            yes

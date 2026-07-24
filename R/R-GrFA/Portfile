@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran hujiaqi GrFA 0.2.2
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Group Factor Analysis
+long_description    {*}${description}
+checksums           rmd160  5060523b5539a9b36aff506835e85f0232123325 \
+                    sha256  d8043afbd7cbcd9d3f3e47a13b8145e29fced4539294538876991a1926dce397 \
+                    size    3978619
+supported_archs     noarch
+
+depends_lib-append  port:R-mvtnorm
+
+test.run            yes

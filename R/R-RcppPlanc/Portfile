@@ -1,0 +1,55 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran eddelbuettel RcppPlanc 2.0.13
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Parallel low-rank approximation with nonnegativity constraints
+long_description    {*}${description}
+homepage            https://github.com/welch-lab/RcppPlanc
+checksums           rmd160  75d25a9854fa00c2a97757e81872746d31a254fe \
+                    sha256  22a7515fdf9a1f425eb7b5e99b9dcc546498020831239652a67be2e7b29c2e91 \
+                    size    1531017
+
+# Deployment target is unneeded, but CRAN wants it.
+# https://github.com/welch-lab/RcppPlanc/issues/18
+patchfiles-append   patch-config.h.diff \
+                    patch-tensor.hpp.diff \
+                    patch-unbreak-configure.diff
+
+# If everything works as expected, git is unneeded, but anyway.
+depends_build-append \
+                    path:bin/cmake:cmake \
+                    path:bin/git:git \
+                    path:bin/pkg-config:pkgconfig
+depends_lib-append  port:hdf5 \
+                    port:hwloc \
+                    port:libaec \
+                    path:lib/libopenblas.dylib:OpenBLAS \
+                    port:R-hdf5r.Extra \
+                    port:R-HighFive \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-RcppProgress \
+                    port:zlib
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-withr
+
+# FIXME: there are some overflow warnings:
+# https://github.com/welch-lab/RcppPlanc/issues/19
+
+# Tests on PowerPC, as of v. 2.0.12:
+# [ FAIL 0 | WARN 0 | SKIP 0 | PASS 104 ]
+# proc.time()
+# user  system elapsed
+# 153.688 115.408  74.923
+test.run            yes

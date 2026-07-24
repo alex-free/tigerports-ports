@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran bbnkmp crossdes 1.1-2
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2
+description         Construction of crossover designs
+long_description    {*}${description}
+checksums           rmd160  905575383531ef91f0345b58c11a26bddeedc1d8 \
+                    sha256  5e65e760bf22fc07036c69ceb462dddb97605cae0e8e3cdac503d43a50938959 \
+                    size    17070
+supported_archs     noarch
+
+depends_lib-append  port:R-AlgDesign \
+                    port:R-gtools
+
+test.run            yes

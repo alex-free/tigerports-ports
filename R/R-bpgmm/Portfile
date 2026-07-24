@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran yl814 bpgmm 1.1.1
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2
+description         Bayesian model selection approach for parsimonious Gaussian mixture models
+long_description    {*}${description}
+checksums           rmd160  885fe8e3b7115115924ad6ddeb42f54d1a5e7fb3 \
+                    sha256  49578ef4777a86b2135475df94e8c8ef9d02956e055ea02e6bcb2fdf1aaf1a9d \
+                    size    29171
+
+depends_lib-append  port:R-fabMix \
+                    port:R-gtools \
+                    port:R-label.switching \
+                    port:R-mclust \
+                    port:R-mcmcse \
+                    port:R-mvtnorm \
+                    port:R-pgmm \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-testthat
+
+test.run            yes

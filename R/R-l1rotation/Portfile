@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github SimonFreyaldenhoven l1rotation 1.0.2 v
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Identify loading vectors under sparsity in factor models
+long_description    {*}${description}
+homepage            https://kobleary.github.io/l1rotation
+checksums           rmd160  6bc0d8fb3c87d119212b213f41e641ca0508ab67 \
+                    sha256  46a3fc177b09ba92106db1acca03372be8aaa69239ab3a4d64b5cc57b0088c67 \
+                    size    5022233
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-cli \
+                    port:R-doParallel \
+                    port:R-dplyr \
+                    port:R-foreach \
+                    port:R-ggplot2 \
+                    port:R-magrittr \
+                    port:R-matrixStats \
+                    port:R-pracma \
+                    port:R-scales
+
+depends_test-append port:R-knitr \
+                    port:R-quarto \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

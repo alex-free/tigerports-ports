@@ -1,0 +1,20 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran adelchi.azzalini mnormt 2.1.2
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             {GPL-2 GPL-3}
+description         The Multivariate Normal and t distributions, and their truncated versions
+long_description    {*}${description}
+homepage            http://azzalini.stat.unipd.it/SW/Pkg-mnormt
+checksums           rmd160  5ba4d7696d689f0de839d054df7ac21e8f9f6c7e \
+                    sha256  684fe9e07cf0b448cf6f0eda026606d8f4e4fd20f077f108630098ae7d0a09b2 \
+                    size    64436
+
+compilers.setup     require_fortran
+
+test.run            yes

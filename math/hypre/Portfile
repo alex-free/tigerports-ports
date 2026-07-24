@@ -1,0 +1,112 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+PortGroup           mpi 1.0
+PortGroup           muniversal 1.0
+
+github.setup        hypre-space hypre 3.1.0 v
+revision            0
+categories          math
+license             LGPL-2.1
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+description         HYPRE is a linear solver
+long_description    HYPRE is a library for solving large, sparse linear \
+                    systems of equations on massively parallel computers.
+
+checksums           rmd160  3f41eaee54e470065f2d68908de4c5e95321807e \
+                    sha256  a6879ae9375d95c26afd97141d61e7a8092807333bf40cd180b385aed7351b2d \
+                    size    8047241
+github.tarball_from archive
+
+cmake.source_dir    ${worksrcpath}/src
+
+depends_build-append \
+                    port:grep
+
+# Only some components need this, but ensure we use a compiler that builds everything:
+compiler.cxx_standard 2017
+
+configure.args-append \
+                    -DBUILD_SHARED_LIBS=ON \
+                    -DCMAKE_INSTALL_INCLUDEDIR=${prefix}/include/HYPRE \
+                    -DHYPRE_BUILD_EXAMPLES=OFF \
+                    -DHYPRE_BUILD_TESTS=OFF \
+                    -DHYPRE_ENABLE_BIGINT=OFF \
+                    -DHYPRE_ENABLE_CALIPER=OFF \
+                    -DHYPRE_ENABLE_COMPLEX=OFF \
+                    -DHYPRE_ENABLE_CUDA=OFF \
+                    -DHYPRE_ENABLE_FEI=OFF \
+                    -DHYPRE_ENABLE_HIP=OFF \
+                    -DHYPRE_ENABLE_HOPSCOTCH=OFF \
+                    -DHYPRE_ENABLE_HOST_MEMORY=ON \
+                    -DHYPRE_ENABLE_HYPRE_BLAS=ON \
+                    -DHYPRE_ENABLE_HYPRE_LAPACK=ON \
+                    -DHYPRE_ENABLE_LONG_DOUBLE=OFF \
+                    -DHYPRE_ENABLE_LTO=OFF \
+                    -DHYPRE_ENABLE_MAGMA=OFF \
+                    -DHYPRE_ENABLE_MEMORY_TRACKER=OFF \
+                    -DHYPRE_ENABLE_MIXED_PRECISION=OFF \
+                    -DHYPRE_ENABLE_MIXEDINT=OFF \
+                    -DHYPRE_ENABLE_MPI=ON \
+                    -DHYPRE_ENABLE_ONEMKLBLAS=OFF \
+                    -DHYPRE_ENABLE_ONEMKLRAND=OFF \
+                    -DHYPRE_ENABLE_ONEMKLSPARSE=OFF \
+                    -DHYPRE_ENABLE_OPENMP=OFF \
+                    -DHYPRE_ENABLE_SINGLE=OFF \
+                    -DHYPRE_ENABLE_SUPERLU=OFF \
+                    -DHYPRE_ENABLE_DSUPERLU=OFF \
+                    -DHYPRE_ENABLE_SYCL=OFF \
+                    -DHYPRE_ENABLE_UMPIRE=OFF
+
+if {![mpi_variant_isset]} {
+    configure.args-replace \
+                    -DHYPRE_ENABLE_MPI=ON -DHYPRE_ENABLE_MPI=OFF
+} else {
+    mpi.setup       require \
+                    -gcc44 -gcc45 -gcc46 -gcc47 -gcc48 -gcc49 -gcc5
+
+    # This is not strictly correct, but works for default variants:
+    pre-configure {
+        configure.args-append \
+                    -DMPI_C_COMPILER=${prefix}/bin/${mpi.cc} \
+                    -DMPI_INCLUDE_PATH=${prefix}/include/[mpi_variant_name]-mp  \
+                    -DMPIEXEC_EXECUTABLE=${prefix}/bin/${mpi.exec}
+    }
+}
+
+variant longindex description "Build with 64-bit ints" {
+    configure.args-replace \
+                    -DHYPRE_ENABLE_BIGINT=OFF -DHYPRE_ENABLE_BIGINT=ON
+}
+
+variant lto description "Enable LTO" {
+    configure.args-replace \
+                    -DHYPRE_ENABLE_LTO=OFF -DHYPRE_ENABLE_LTO=ON
+}
+
+variant openmp description "Build with OpenMP" {
+    compiler.openmp_version 3.0
+    configure.args-replace \
+                    -DHYPRE_ENABLE_OPENMP=OFF -DHYPRE_ENABLE_OPENMP=ON
+
+    if {[string match *clang* ${configure.compiler}]} {
+        configure.ldflags-append \
+                    -L${prefix}/lib/libomp -lomp
+    }
+}
+
+default_variants    +openmp
+
+# FIXME: tests target is broken: https://github.com/hypre-space/hypre/issues/928
+variant tests description "Enable testing" {
+    configure.pre_args-replace \
+                    -DCMAKE_BUILD_WITH_INSTALL_RPATH:BOOL=ON \
+                    -DCMAKE_BUILD_WITH_INSTALL_RPATH:BOOL=OFF
+
+    configure.args-replace \
+                    -DHYPRE_BUILD_TESTS=OFF -DHYPRE_BUILD_TESTS=ON
+
+    test.run        yes
+}

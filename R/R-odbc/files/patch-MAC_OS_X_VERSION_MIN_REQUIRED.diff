@@ -1,0 +1,13 @@
+--- src/nanodbc/nanodbc.cpp	2025-12-01 22:27:05.000000000 +0800
++++ src/nanodbc/nanodbc.cpp	2025-12-26 04:40:25.000000000 +0800
+@@ -50,8 +50,10 @@
+ 
+ #ifdef __APPLE__
+ // silence spurious OS X deprecation warnings
++#ifndef MAC_OS_X_VERSION_MIN_REQUIRED
+ #define MAC_OS_X_VERSION_MIN_REQUIRED MAC_OS_X_VERSION_10_6
+ #endif
++#endif
+ 
+ #ifdef _WIN32
+ // needs to be included above sql.h for windows

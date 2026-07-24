@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran steve.the.bayesian BoomSpikeSlab 1.2.7
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             LGPL-2.1
+description         MCMC for Spike and Slab regression
+long_description    Spike and slab regression with a variety of residual error distributions.
+checksums           rmd160  139bbf4c75e274f0741e0d5f1fe1a35b361d5a56 \
+                    sha256  086de6b5622e4230825fad0a6d83617c5bc63ed995ab323141041eeafda7bb74 \
+                    size    132128
+
+depends_lib-append  port:R-Boom
+
+depends_test-append port:R-igraph \
+                    port:R-mlbench \
+                    port:R-testthat
+
+test.run            yes

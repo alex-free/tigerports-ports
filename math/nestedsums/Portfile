@@ -1,0 +1,51 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem      1.0
+PortGroup       xcodeversion 1.0
+
+name            nestedsums
+version         1.5.2
+categories      math
+maintainers     nomaintainer
+description     ${name} library
+long_description \
+                A library for the symbolic expansion of a class \
+                of transcendental functions
+license         GPL-2
+homepage        https://particlephysics.uni-mainz.de/weinzierl/nestedsums
+master_sites    http://particlephysics.uni-mainz.de/weinzierl/download/
+
+checksums       rmd160  8d5c5148ea018502b153c5ebfb4cbe521f84b24d \
+                sha256  5dd125dda6159c04fbcf4341e57dc2f38a9bc7c62b629f29038242b3b7f9882c \
+                size    511806
+
+patchfiles      patch-test-cxxflags.diff
+post-patch {
+    reinplace "s|libtoolize|glibtoolize|g" ${worksrcpath}/autogen.sh
+    reinplace "s|@CXXFLAGS@|${configure.cxxflags} [get_canonical_archflags cxx]|" \
+                ${worksrcpath}/checks/Makefile.am
+}
+
+compiler.cxx_standard \
+                2011
+
+use_autoreconf  yes
+autoreconf.cmd  ./autogen.sh
+autoreconf.args
+
+depends_build-append \
+                port:autoconf \
+                port:automake \
+                port:libtool \
+                path:bin/pkg-config:pkgconfig
+depends_lib-append \
+                port:GiNaC
+
+minimum_xcodeversions \
+                {8 2.1}
+
+test.run        yes
+test.target     check
+
+livecheck.type  regex
+livecheck.regex {<dd>([0-9.]+)</dd>}

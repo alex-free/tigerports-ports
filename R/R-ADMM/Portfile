@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran kisung.you ADMM 0.3.4
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3+
+description         Algorithms using Alternating Direction Method of Multipliers
+long_description    {*}${description}
+checksums           rmd160  9c0ac9859abf5522becf34f187a698a8ed947357 \
+                    sha256  b65d8250813dfdaacf4092eb5e9ed4f21b383ac2ba7c8b6a177e1fe92dc0cb33 \
+                    size    53414
+
+depends_lib-append  port:R-doParallel \
+                    port:R-foreach \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-Rdpack
+
+compilers.setup     require_fortran
+
+test.run            yes

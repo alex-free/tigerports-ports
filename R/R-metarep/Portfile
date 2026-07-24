@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran IJaljuli metarep 1.2.1
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Replicability-analysis tools for meta-analysis
+long_description    {*}${description}
+homepage            https://github.com/IJaljuli/metarep
+checksums           rmd160  9b5db3a1e734d56e894200e597797f778d6e0c93 \
+                    sha256  12341d5c0b0e26b88071d2f2a05b330b4713303509f17be3a1fe5b3d72d6765c \
+                    size    181111
+# Despite CRAN claim, there is nothing to compile here.
+supported_archs     noarch
+
+depends_lib-append  port:R-meta
+
+depends_test-append port:R-BiasedUrn \
+                    port:R-knitr \
+                    port:R-lme4 \
+                    port:R-metafor \
+                    port:R-numDeriv \
+                    port:R-rmarkdown
+
+test.run            yes

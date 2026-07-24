@@ -1,0 +1,11 @@
+--- src/CMakeLists.txt	2026-06-27 19:56:55.000000000 +0800
++++ src/CMakeLists.txt	2026-07-09 16:39:17.000000000 +0800
+@@ -233,7 +233,7 @@
+ endif ()
+ 
+ if (APPLE)
+-  if (BLAS_LIBRARIES MATCHES "Accelerate")
++  if (BLAS_LIBRARIES MATCHES "Accelerate" OR BLAS_LIBRARIES MATCHES "vecLibFort")
+     target_compile_definitions(dbcsr PRIVATE __ACCELERATE)
+   endif ()
+ endif ()

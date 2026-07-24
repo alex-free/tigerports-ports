@@ -1,0 +1,20 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran hanas dma 1.4-1
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-2
+description         Dynamic Model Averaging
+long_description    {*}${description} for binary and continuous outcomes.
+checksums           rmd160  2291bb7b99763c2c7420181c5dba198a3aeb945e \
+                    sha256  2c6118f429f252224ea16057d6f34e6de4e84c5fff5a712a716542a8f6e5f88a \
+                    size    14710
+supported_archs     noarch
+
+depends_test-append port:R-testthat
+
+test.run            yes

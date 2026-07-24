@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran mayer79 MetricsWeighted 1.0.4
+revision            1
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Weighted metrics, scoring functions and performance measures for machine learning
+long_description    {*}${description}
+homepage            https://github.com/mayer79/MetricsWeighted
+checksums           rmd160  d1047d1f0c8d379cfe4ec6134f016f0cb884475a \
+                    sha256  e0329985e47eb8fe4c80090b77c8b20e19c435118e108989ff4b3ef9cb7fe719 \
+                    size    71376
+supported_archs     noarch
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

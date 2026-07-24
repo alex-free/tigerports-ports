@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran rstudio DT 0.34.0
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Wrapper for the JavaScript library DataTables
+long_description    {*}${description}
+checksums           rmd160  4e4c2fa8d453547e8b97ef575afc1ef65c3d63f8 \
+                    sha256  8862025ef26af65b53f072adb1d133c25c5f96a812e7ae0aa822baa71249f1f2 \
+                    size    1664306
+supported_archs     noarch
+
+depends_lib-append  port:R-crosstalk \
+                    port:R-htmltools \
+                    port:R-htmlwidgets \
+                    port:R-jquerylib \
+                    port:R-jsonlite \
+                    port:R-magrittr \
+                    port:R-promises
+
+depends_test-append port:R-bslib \
+                    port:R-future \
+                    port:R-httpuv \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-shiny \
+                    port:R-testit \
+                    port:R-tibble
+
+test.run            yes

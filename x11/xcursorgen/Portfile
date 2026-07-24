@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           gitlab 1.0
+
+name                xcursorgen
+gitlab.instance     https://gitlab.freedesktop.org/xorg
+gitlab.setup        app ${name} 1.0.8 ${name}-
+revision            0
+categories          x11
+license             X11
+maintainers         {jeremyhu @jeremyhu} openmaintainer
+description         Create an X11 cursor file from a collection of PNG images
+long_description    ${name} takes a list of images, hotspot and size information \
+                    and converts them to Xcursor format.
+
+homepage            https://www.x.org
+use_bzip2           yes
+
+checksums           rmd160  8d1e45f0b0c21d5b584aca6dfbb20b25f357c1e3 \
+                    sha256  77e99b4dc6b6f822bb535a1f62b013732d2814ba246c38b44ee25ed3f92747f2 \
+                    size    7924
+
+use_autoreconf      yes
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig \
+                    port:xorg-util-macros
+
+depends_lib         port:libpng \
+                    port:xorg-libXcursor

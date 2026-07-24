@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran dgallardo skewMLRM 1.7
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Estimation for scale-shape mixtures of skew-normal distributions
+long_description    {*}${description}
+checksums           rmd160  4bd024faa1e4fb1d3431d652b26e2da8c6fdaecb \
+                    sha256  92392019e0c454c5bc41c214623d7932c2a267f757729fc1a36b209d240c5d26 \
+                    size    62094
+supported_archs     noarch
+
+depends_lib-append  port:R-clusterGeneration \
+                    port:R-doParallel \
+                    port:R-foreach \
+                    port:R-matrixcalc \
+                    port:R-moments \
+                    port:R-mvtnorm
+
+depends_lib-append  port:R-sn
+
+test.run            yes

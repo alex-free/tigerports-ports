@@ -1,0 +1,20 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran eddelbuettel AsioHeaders 1.30.2-1
+revision            1
+categories-append   devel
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             Boost-1
+description         Asio C++ headers
+long_description    {*}${description}
+homepage            https://dirk.eddelbuettel.com/code/asioheaders.html
+checksums           rmd160  d6eb0947b36c5b9c653df84f771870283c0d6638 \
+                    sha256  1be43b48a4cc704ef84b5673b4fc78323709fd0d61c18dbd364ac89a38e2ab31 \
+                    size    699604
+supported_archs     noarch
+
+test.run            yes

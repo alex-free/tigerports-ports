@@ -1,0 +1,77 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+
+name                factor
+version             0.93
+categories          lang devel
+platforms           macosx
+license             BSD
+maintainers         nomaintainer
+
+description         A practical stack language
+
+long_description    The Factor programming language combines powerful language \
+                    features with a full-featured library. The implementation \
+                    is fully compiled for performance, while still supporting \
+                    interactive development. Factor applications are portable \
+                    between all common platforms. Factor can deploy stand- \
+                    alone applications on all platforms.
+
+homepage            https://www.factorcode.org
+
+master_sites        http://downloads.factorcode.org/releases/${version}/
+distname            ${name}-src-${version}
+worksrcdir          ${name}
+
+checksums           rmd160  bf77e58f10af90020c78687aec1ab6e1e798f031 \
+                    sha256  3b0046417da82258a90a19781603f236298236e965ed2fa3c0f7ec6167331c96 \
+                    size    16040370
+use_zip             yes
+
+supported_archs	    i386 x86_64 ppc
+
+# Original makefile in 0.93 has broken targets.
+patchfiles          patch-fix-missing-header.diff \
+                    patch-GNUmakefile.0.93.diff
+
+post-patch {
+    reinplace "s|@LIBX11@|${prefix}/lib|" ${worksrcpath}/GNUmakefile
+}
+
+universal_variant   no
+
+use_configure       no
+
+if {${build_arch} == "x86_64"} {
+    build.target    macosx-x86-64
+    set boot_image  boot.unix-x86.64.image 
+} elseif {${build_arch} == "i386"} {
+    build.target    macosx-x86-32
+    set boot_image  boot.unix-x86.32.image 
+} elseif {${build_arch} == "ppc"} {
+    build.target    macosx-ppc
+    set boot_image  boot.macosx-ppc.image
+}
+
+build.args-append   CC=${configure.cc} \
+                    CXX=${configure.cxx} \
+                    SITE_CFLAGS="${configure.cflags} ${configure.cc_archflags}"
+
+post-build {
+    system "cd ${worksrcpath} && ./factor -i=./${boot_image}"
+}
+
+destroot {
+    set factor_dir ${destroot}${applications_dir}/Factor-${version}
+    xinstall -d ${factor_dir}
+    foreach f {Factor.app factor.image basis core \
+               extra misc readme.html license.txt} {
+        copy ${worksrcpath}/$f ${factor_dir}
+    }
+    copy ${worksrcpath}/libfactor.dylib ${destroot}${prefix}/lib
+}
+
+livecheck.type      regex
+livecheck.url       ${homepage}
+livecheck.regex     ${name}-src-(\\d+\\.\\d+)${extract.suffix}

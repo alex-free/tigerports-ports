@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is old.
+R.setup             cran gertvv gemtc 1.1-0
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Network meta-analysis using Bayesian methods
+long_description    {*}${description}
+homepage            https://github.com/gertvv/gemtc
+checksums           rmd160  1b38021240efc6e8ffa6ce1853136c0b8a9b25dd \
+                    sha256  31a6b6a18c16530328faf77b467f674bc8812e6956b9aa6c304db53d619a273b \
+                    size    891284
+
+depends_lib-append  port:R-coda \
+                    port:R-forcats \
+                    port:R-igraph \
+                    port:R-meta \
+                    port:R-plyr \
+                    port:R-Rglpk \
+                    port:R-rjags \
+                    port:R-truncnorm
+
+depends_test-append port:R-testthat
+
+test.run            yes

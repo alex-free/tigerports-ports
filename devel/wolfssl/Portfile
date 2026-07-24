@@ -1,0 +1,100 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+
+# CLOCK_REALTIME
+legacysupport.newest_darwin_requires_legacy 15
+
+github.setup        wolfSSL wolfssl 5.9.2 v -stable
+revision            0
+categories          devel security
+maintainers         {wolfssl.com:facts @JacobBarthelmeh} openmaintainer
+homepage            https://wolfssl.com/wolfSSL/Products-wolfssl.html
+license             GPL-2
+
+description         wolfSSL Embedded SSL Library
+long_description    \
+    The wolfSSL embedded SSL library is a lightweight SSL library written \
+    in ANSI C and targeted for embedded and RTOS environments – primarily \
+    because of its small size, speed and feature set. It is commonly \
+    used in standard operating environments as well because of its \
+    royalty-free pricing and excellent cross platform support. CyaSSL \
+    supports industry standards up to the current TLS and DTLS 1.2 levels, \
+    is up to 20 times smaller than OpenSSL, and offers progressive ciphers \
+    such as ChaCha20, Poly1305 and NTRU.
+
+checksums           rmd160  e0c0632512cad146e4f1a1b09f4092c516dbe51b \
+                    sha256  2f4ef3d4fd387a9b3191d36a6316d69116c46ff69bb9583b6c82b36d7b8ca114 \
+                    size    28078586
+github.tarball_from archive
+
+configure.args      --disable-jobserver \
+                    --disable-silent-rules \
+                    --enable-all
+
+# Linking fails now with Xcode gcc.
+# https://github.com/wolfSSL/wolfssl/issues/8731
+# Also assembler fails with it:
+# https://github.com/wolfSSL/wolfssl/issues/8747
+compiler.blacklist-append \
+                    *gcc-4.0 *gcc-4.2
+
+patch.pre_args-replace  -p0 -p1
+# Drop this if building on 10a190:
+patchfiles-append   0001-macOS-enable-dispatch-on-10.6-powerpc.patch
+
+depends_build-append    path:libexec/coreutils/libstdbuf.so:coreutils
+
+use_autoreconf  yes
+autoreconf.args -fvi
+configure.checks.implicit_function_declaration.whitelist-append strchr
+
+# src/internal.c:42797:24: error: call to undeclared function
+# 'SecTrustEvaluateWithError' on macOS <10.14
+# Arguably we do not need archaic system certificates anyway.
+if {${os.platform} eq "darwin" && ${os.major} < 18} {
+    configure.args-append \
+                    --disable-sys-ca-certs
+}
+
+if {${os.platform} eq "darwin" && ${os.major} < 10} {
+    # crl.c:1318:36: error: 'EVFILT_USER' undeclared (first use in this function); did you mean 'EVFILT_TIMER'?
+    configure.args-append \
+                    --disable-crl-monitor
+    # ssl_bn.c:1031:37: error: array subscript 'mp_int {aka sp_int}[0]' is partly outside array bounds of 'unsigned char[28]' [-Werror=array-bounds=]
+    post-patch {
+        reinplace "s|Warray-bounds|Wno-array-bounds|g" ${worksrcpath}/m4/ax_harden_compiler_flags.m4
+    }
+}
+
+if {${os.platform} eq "darwin" && ${configure.build_arch} eq "ppc"} {
+    configure.args-append \
+        --enable-ppc32-asm=inline-reg
+}
+
+variant debug description "Enable wolfSSL debugging support" {
+    configure.args-append \
+        --enable-debug
+}
+
+variant aesni description "Enable wolfSSL Intel AES-NI support, if available" {
+    configure.args-append \
+        --enable-aesni
+}
+
+variant sniffer description "Enable wolfSSL sniffer support" {
+    depends_lib-append \
+        port:libpcap
+    configure.args-append \
+        --enable-sniffer
+}
+
+test.run    yes
+test.env    TMPDIR=/tmp RANDFILE=/tmp/wolfssl-unittest-rnd DYLD_LIBRARY_PATH=${worksrcpath}/src/.libs WOLFSSL_EXTERNAL_TEST=0 OPENSSL=no-openssl
+test.target check
+test.args   -j${build.jobs}
+
+livecheck.url   https://www.wolfssl.com/wolfSSL/download/downloadForm.php
+livecheck.regex "${name}-((?!.*${name}.*|\\${extract.suffix}).*)\\${extract.suffix}"

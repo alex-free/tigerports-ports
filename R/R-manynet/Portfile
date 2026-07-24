@@ -1,0 +1,43 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran stocnet manynet 1.6.1
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Many ways to make, manipulate and map myriad networks
+long_description    {*}${description}
+homepage            https://stocnet.github.io/manynet
+checksums           rmd160  4751641a44b92db0bb8e2cc98ee620e87487d36e \
+                    sha256  25edf8abb219481c3b28fb169aaf8ed6cb6611e183821e153edc3e46a22da6f7 \
+                    size    1471340
+supported_archs     noarch
+
+depends_lib-append  port:R-cli \
+                    port:R-dplyr \
+                    port:R-igraph \
+                    port:R-network \
+                    port:R-pillar \
+                    port:R-tidygraph
+
+# Some suggested deps are dropped:
+# https://github.com/joelgombin/concaveman/issues/18
+depends_test-append port:R-autograph \
+                    port:R-knitr \
+                    port:R-learnr \
+                    port:R-netdiffuseR \
+                    port:R-readxl \
+                    port:R-rmarkdown \
+                    port:R-RSiena \
+                    port:R-sna \
+                    port:R-testthat \
+                    port:R-tibble \
+                    port:R-tidyr \
+                    port:R-xml2
+
+# One test fails: https://github.com/snlab-ch/manynet/issues/20
+test.run            yes

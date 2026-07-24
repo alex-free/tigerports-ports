@@ -1,0 +1,40 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem                  1.0
+PortGroup                   cmake 1.1
+PortGroup                   github 1.0
+
+name                        arborx
+github.setup                arborx ArborX 2.0.1 v
+revision                    0
+categories                  math
+platforms                   any
+license                     BSD
+maintainers                 {mcalhoun @MarcusCalhoun-Lopez} openmaintainer
+description                 An open-source library designed to provide \
+                            performance portable algorithms for geometric search
+long_description            ArborX is {*}${description}.
+
+checksums                   rmd160  2ad94ce646d75c565f9b5ae77680a2f73f152c6d \
+                            sha256  9a831c5086a4fedf312fc88eec24e1382cac7520516aa56f743ef7769638ce37 \
+                            size    450804
+github.tarball_from         archive
+
+depends_lib-append          path:lib/libkokkoscore.dylib:kokkos
+
+# Without this clang cannot find Kokkos:
+compiler.cxx_standard       2017
+compiler.openmp_version     4.0
+
+if {![variant_isset tests]} {
+    supported_archs         noarch
+}
+
+# FIXME: due to CMake changes, it cannot find Boost now.
+variant tests description {Enable tests} {
+    PortGroup               boost 1.0
+
+    configure.args-append   -DARBORX_ENABLE_TESTS=ON
+
+    test.run                yes
+}

@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran erinm.hodgess disagg2 0.1.0
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             {GPL-2 GPL-3}
+description         Support functions for Time Series Analysis book
+long_description    {*}${description}
+checksums           rmd160  7bb5cfe8eb76973070a90e3f098e74fd9e768fb7 \
+                    sha256  ee4e3c607109fdc162af2d577a47cd1f58e956ce311baae82803e73ccae4d9e9 \
+                    size    2970
+supported_archs     noarch
+
+depends_lib-append  port:R-PolynomF
+
+test.run            yes

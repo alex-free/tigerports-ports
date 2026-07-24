@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran consmavr FLR 1.0
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Fuzzy Logic Rule Classifier
+long_description    {*}${description}
+checksums           rmd160  293629627749a29ddffff2e8ddfa2269a25b7a2e \
+                    sha256  16548a648610062e3617ed4ebe45c644ddca028662190df495fa483c4edca04c \
+                    size    22785
+supported_archs     noarch
+
+depends_lib-append  port:R-combinat
+
+test.run            yes

@@ -1,0 +1,52 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem      1.0
+PortGroup       cmake 1.1
+PortGroup       github 1.0
+PortGroup       legacysupport 1.1
+
+# _clock_gettime
+legacysupport.newest_darwin_requires_legacy 15
+
+# FIXME: at least recent versions do not work correctly.
+# See: https://github.com/quickjs-ng/quickjs/issues/1122
+# Another quickjs* (non-ng) seems to work fine.
+
+set real_name   quickjs
+name            ${real_name}-ng
+github.setup    ${real_name}-ng ${real_name} 0.12.1 v
+revision        0
+conflicts       ${real_name} ${real_name}-devel
+categories      devel
+license         MIT
+maintainers     {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+description     small and embeddable JavaScript engine
+long_description \
+                ${name} is a {*}${description}. \
+                It supports the ES2020 specification including modules, \
+                asynchronous generators, proxies and BigInt.
+checksums       rmd160  846e5f5050fd328d9536f0ac2f4aa50822dee57e \
+                sha256  c2c54b76ca2f52ffea49658a61c5111449cfe0f94e62510bd3bd7a12e2e18884 \
+                size    812042
+github.tarball_from archive
+
+compiler.c_standard 2011
+
+# https://github.com/quickjs-ng/quickjs/issues/1023
+configure.args-append \
+                -DQJS_BUILD_LIBC=ON
+
+if {[string match *gcc* ${configure.cc}]} {
+    configure.ldflags-append \
+                -latomic
+}
+
+# configure.pre_args-replace \
+#                 -DCMAKE_BUILD_WITH_INSTALL_RPATH:BOOL=ON \
+#                 -DCMAKE_BUILD_WITH_INSTALL_RPATH:BOOL=OFF
+
+# Test executable tries to find non-existing file:
+# run-test262: sta.js: No such file or directory
+# test.run        yes
+# test.cmd        ${cmake.build_dir}/run-test262
+# test.target

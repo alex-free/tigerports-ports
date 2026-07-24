@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran mnrzrad BCD 0.1.1
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Bivariate distributions via conditional specification
+long_description    {*}${description}
+homepage            https://github.com/mnrzrad/BCD
+checksums           rmd160  23ca2ff1834de72d679c1fa036db77f637a8ce53 \
+                    sha256  f9efd92fa0fa118cb84c20a41c44b41515c5f0a76ec3ea3774c1e63a4ed41d3f \
+                    size    347815
+supported_archs     noarch
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown
+
+test.run            yes

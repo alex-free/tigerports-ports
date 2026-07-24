@@ -1,0 +1,60 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran tidyverse ggplot2 4.0.2 v
+revision            1
+categories-append   graphics
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Create elegant data visualisations \
+                    using the grammar of graphics
+long_description    {*}${description}
+homepage            https://ggplot2.tidyverse.org
+checksums           rmd160  2af6db63e28ec99a64e537adf030dc1c80894180 \
+                    sha256  b915244599222a71ea56e256ba3810e444424190dbc37654de08b366ef144412 \
+                    size    6358661
+# github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-cli \
+                    port:R-gtable \
+                    port:R-isoband \
+                    port:R-lifecycle \
+                    port:R-rlang \
+                    port:R-S7 \
+                    port:R-scales \
+                    port:R-vctrs \
+                    port:R-withr
+
+# Test dep on R-ggplot2movies is dropped.
+depends_test-append port:R-broom \
+                    port:R-covr \
+                    port:R-dplyr \
+                    port:R-hexbin \
+                    port:R-Hmisc \
+                    port:R-hms \
+                    port:R-knitr \
+                    port:R-mapproj \
+                    port:R-maps \
+                    port:R-multcomp \
+                    port:R-munsell \
+                    port:R-profvis \
+                    port:R-quantreg \
+                    port:R-quarto \
+                    port:R-ragg \
+                    port:R-RColorBrewer \
+                    port:R-rmarkdown \
+                    port:R-roxygen2 \
+                    port:R-sf \
+                    port:R-sp \
+                    port:R-svglite \
+                    port:R-testthat \
+                    port:R-tibble \
+                    port:R-vdiffr \
+                    port:R-xml2
+
+test.run            yes

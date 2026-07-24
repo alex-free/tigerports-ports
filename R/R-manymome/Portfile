@@ -1,0 +1,38 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran sfcheung manymome 0.3.3 v
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3+
+description         Mediation, moderation and moderated mediation \
+                    after model fitting
+long_description    {*}${description}
+homepage            https://sfcheung.github.io/manymome
+checksums           rmd160  e0dc0bb67aaf4d5c2f717ee57ef930b998bde35b \
+                    sha256  f6991b5adf2586e3981a7e29f80ca2ea2c0c817839dd4dbe0d1d28b63a0c50e8 \
+                    size    2604999
+# github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-ggplot2 \
+                    port:R-igraph \
+                    port:R-lavaan \
+                    port:R-lmhelprs \
+                    port:R-pbapply
+
+depends_test-append port:R-Amelia \
+                    port:R-knitr \
+                    port:R-lavaan.mi \
+                    port:R-mice \
+                    port:R-rmarkdown \
+                    port:R-semPlot \
+                    port:R-semptools \
+                    port:R-testthat
+
+test.run            yes

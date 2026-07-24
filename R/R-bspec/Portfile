@@ -1,0 +1,18 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran christian.roever bspec 1.6
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Bayesian Spectral Inference
+long_description    Bayesian inference on the (discrete) power spectrum of time series.
+checksums           rmd160  56773462f680019044f656f6cd99534be31bf77e \
+                    sha256  9be16982318feccbbd2c65330b2ff49ae703b381200ecd2a8ac64ed39fd281a6 \
+                    size    70867
+supported_archs     noarch
+
+test.run            yes

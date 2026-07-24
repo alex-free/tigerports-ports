@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran r-project mvtnorm 1.4-1
+revision            0
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2
+description         Multivariate Normal and t distributions
+long_description    {*}${description}
+homepage            http://mvtnorm.R-forge.R-project.org
+checksums           rmd160  bc92e9d952422576ed41b958634e4d1433e44820 \
+                    sha256  cda87fb2bbf99e0bed40f9ea7bdaca647fba42845f12cc54bed8f3892e07c236 \
+                    size    1036091
+
+compilers.setup     require_fortran
+
+# Installation fails without it:
+# Error in loadNamespace(x): there is no package called ‘bibtex’
+depends_build-append \
+                    port:R-bibtex
+
+depends_test-append port:R-bibtex \
+                    port:R-numDeriv \
+                    port:R-qrng
+
+test.run            yes

@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran innager Umoments 1.0.1
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Unbiased central moment estimates
+long_description    {*}${description}
+checksums           rmd160  85b02aea953d02045a54ab2fc737e4dcf9b541a5 \
+                    sha256  de03cba0f7a61c83be806d8f5aec0302676b645aab77e9f413338f47c319293c \
+                    size    95668
+supported_archs     noarch
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

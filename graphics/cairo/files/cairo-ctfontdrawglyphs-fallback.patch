@@ -1,0 +1,88 @@
+From: Sergey Fedorov <vital.had@gmail.com>
+Subject: Add fallback for CTFontDrawGlyphs on macOS < 10.7
+
+CTFontDrawGlyphs was introduced in macOS 10.7. For older systems,
+fall back to CGContextShowGlyphsWithAdvances.
+
+Also fix kCTFontColorGlyphsTrait which doesn't exist on macOS 10.6.
+
+diff --git a/src/cairo-quartz-font.c b/src/cairo-quartz-font.c
+--- a/src/cairo-quartz-font.c
++++ b/src/cairo-quartz-font.c
+@@ -75,7 +75,11 @@
+ #define CGGLYPH_MAX ((CGGlyph) 0xFFFE) /* kCGFontIndexMax */
+ #define CGGLYPH_INVALID ((CGGlyph) 0xFFFF) /* kCGFontIndexInvalid */
+ 
+-#if MAC_OS_X_VERSION_MIN_REQUIRED < 1080
++#if MAC_OS_X_VERSION_MIN_REQUIRED < 1070
++/* macOS 10.6 and earlier: color glyphs not supported */
++#define FONT_ORIENTATION_HORIZONTAL kCTFontHorizontalOrientation
++#define FONT_COLOR_GLYPHS 0
++#elif MAC_OS_X_VERSION_MIN_REQUIRED < 1080
+ #define FONT_ORIENTATION_HORIZONTAL kCTFontHorizontalOrientation
+ #define FONT_COLOR_GLYPHS kCTFontColorGlyphsTrait
+ #else
+@@ -657,7 +661,20 @@
+ 	CGContextSetAlpha (cgContext, 1.0);
+ 	CGContextTranslateCTM (cgContext, -glyphOrigin.x, -glyphOrigin.y);
+ 	CGContextConcatCTM (cgContext, textMatrix);
++#if CAIRO_HAS_CORE_TEXT
+ 	CTFontDrawGlyphs (font->ctFont, &glyph, &CGPointZero, 1, cgContext);
++#else
++	{
++	    CGGlyph cg_glyph = glyph;
++	    CGSize zero_advance = { 0.0, 0.0 };
++	    CGFontRef cgFont = CTFontCopyGraphicsFont (font->ctFont, NULL);
++	    CGContextSetFont (cgContext, cgFont);
++	    CGContextSetFontSize (cgContext, 1.0);
++	    CGContextSetTextMatrix (cgContext, CGAffineTransformIdentity);
++	    CGContextShowGlyphsWithAdvances (cgContext, &cg_glyph, &zero_advance, 1);
++	    CGFontRelease (cgFont);
++	}
++#endif
+ 	CGContextRelease (cgContext);
+ 	CGColorSpaceRelease (colorspace);
+     }
+diff --git a/src/cairo-quartz-surface.c b/src/cairo-quartz-surface.c
+--- a/src/cairo-quartz-surface.c
++++ b/src/cairo-quartz-surface.c
+@@ -1941,7 +1941,39 @@ _cairo_quartz_cg_glyphs (const cairo_compositor_t *compositor,
+     CGContextTranslateCTM (state.cgMaskContext, origin.x, origin.y);
+     CGContextConcatCTM (state.cgMaskContext, textTransform);
+ 
++#if CAIRO_HAS_CORE_TEXT
+     CTFontDrawGlyphs (ctFont, cg_glyphs, cg_positions, num_glyphs, state.cgMaskContext);
++#else
++    {
++	CGFontRef cgFont = _cairo_quartz_scaled_font_get_cg_font_ref (scaled_font);
++	CGSize *cg_advances;
++	CGSize cg_advances_static[CAIRO_STACK_ARRAY_LENGTH (CGSize)];
++
++	if (num_glyphs > ARRAY_LENGTH (cg_advances_static))
++	    cg_advances = (CGSize*) _cairo_malloc_ab (num_glyphs, sizeof (CGSize));
++	else
++	    cg_advances = &cg_advances_static[0];
++
++	if (likely (cg_advances)) {
++	    /* Convert positions to advances (deltas between consecutive glyphs) */
++	    for (int i = 0; i < num_glyphs - 1; ++i) {
++		cg_advances[i].width = cg_positions[i + 1].x - cg_positions[i].x;
++		cg_advances[i].height = cg_positions[i + 1].y - cg_positions[i].y;
++	    }
++	    cg_advances[num_glyphs - 1].width = 0;
++	    cg_advances[num_glyphs - 1].height = 0;
++
++	    CGContextSetFont (state.cgMaskContext, cgFont);
++	    CGContextSetFontSize (state.cgMaskContext, 1.0);
++	    CGContextSetTextMatrix (state.cgMaskContext, CGAffineTransformIdentity);
++	    CGContextSetTextPosition (state.cgMaskContext, cg_positions[0].x, cg_positions[0].y);
++	    CGContextShowGlyphsWithAdvances (state.cgMaskContext, cg_glyphs, cg_advances, num_glyphs);
++
++	    if (cg_advances != cg_advances_static)
++		free (cg_advances);
++	}
++    }
++#endif
+ 
+     CGContextConcatCTM (state.cgMaskContext, invTextTransform);
+     CGContextTranslateCTM (state.cgMaskContext, -origin.x, -origin.y);

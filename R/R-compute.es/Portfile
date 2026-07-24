@@ -1,0 +1,20 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran acdelre compute.es 0.2-6
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2
+description         Compute effect sizes
+long_description    {*}${description}
+homepage            https://acdelre.github.io
+checksums           rmd160  4e4d157a4739c8110743420843be714f7b416709 \
+                    sha256  96ceedb1b1230b427e04b8162c11750bab2a79fd908c3e68be4cf73d145fedbc \
+                    size    23313
+supported_archs     noarch
+
+test.run            yes

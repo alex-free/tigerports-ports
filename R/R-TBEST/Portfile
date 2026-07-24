@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran guolisun87 TBEST 5.2
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2
+description         Tree Branches Evaluated Statistically for Tightness
+long_description    {*}${description}
+checksums           rmd160  45efddc2827dfae18a37716a15d629639605f7be \
+                    sha256  5d6ef869b898ab39f66b76b5d9758f5e9d42c24e607ea88d1c898f64f2d6aea5 \
+                    size    116132
+supported_archs     noarch
+
+depends_lib-append  port:R-fdrtool \
+                    port:R-signal
+
+test.run            yes

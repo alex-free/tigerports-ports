@@ -1,0 +1,198 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           meson 1.0
+PortGroup           openssl 1.0
+
+# TODO: before updating, review status of https://github.com/rkd77/elinks/issues/409
+
+name                elinks-devel
+github.setup        rkd77 elinks 0.19.0 v
+revision            1
+
+# Drop this on next update:
+if {${os.platform} eq "darwin" && ${os.major} < 10} {
+    incr revision
+}
+
+categories          www
+maintainers         nomaintainer
+
+description         Full-Featured Text WWW Browser
+long_description    ELinks is an advanced and well-established \
+                    feature-rich text mode web (HTTP/FTP/..) browser.
+license             GPL-2
+homepage            http://elinks.or.cz
+distname            elinks-${version}
+checksums           rmd160  9ac64f70bf124cb188f4e67e96927a5a40354434 \
+                    sha256  4e13b9fdc5ed09592fb86cdca36d269a8ec6ad43df6e66a56da28c0b7fc2eb93 \
+                    size    4358267
+github.tarball_from archive
+
+installs_libs       no
+
+patch.pre_args-replace  -p0 -p1
+
+# Drop on next update, backport from upstream.
+# See: https://github.com/rkd77/elinks/issues/408
+patchfiles          8f37a8beab473988e094b63d9f5854522761a0bc.patch
+
+# Fix finding quickjs
+patchfiles-append   patch-fix-quickjs.diff
+
+# https://github.com/rkd77/elinks/issues/412
+patchfiles-append   patch-leopard-poll.diff
+
+depends_build-append \
+                    port:gettext \
+                    path:bin/pkg-config:pkgconfig
+depends_lib         port:brotli \
+                    port:bzip2 \
+                    port:curl \
+                    port:expat \
+                    port:gettext-runtime \
+                    port:libiconv \
+                    port:libidn2 \
+                    path:lib/libssl.dylib:openssl \
+                    port:tre \
+                    port:zlib
+
+configure.args-append \
+                    -D256-colors=false \
+                    -D88-colors=false \
+                    -Dapidoc=false \
+                    -Dbacktrace=true \
+                    -Dbittorrent=true \
+                    -Dbookmarks=true \
+                    -Dbrotli=true \
+                    -Dbzlib=true \
+                    -Dcookies=true \
+                    -Dcss=false \
+                    -Ddoc=false \
+                    -Dfinger=false \
+                    -Dfsp=false \
+                    -Dfsp2=false \
+                    -Dftp=true \
+                    -Dgemini=true \
+                    -Dgettext=true \
+                    -Dgnutls=false \
+                    -Dgopher=true \
+                    -Dgpm=false \
+                    -Dgssapi=false \
+                    -Dhtmldoc=false \
+                    -Didn=true \
+                    -Dipv6=true \
+                    -Dkitty=false \
+                    -Dlibavif=false \
+                    -Dlibcss=false \
+                    -Dlibcurl=true \
+                    -Dlibev=false \
+                    -Dlibevent=false \
+                    -Dlibsixel=false \
+                    -Dlibuv=false \
+                    -Dlibwebp=false \
+                    -Dlzma=false \
+                    -Dmailcap=true \
+                    -Dmarks=true \
+                    -Dmemcount=false \
+                    -Dmimetypes=true \
+                    -Dmujs=false \
+                    -Dnls=true \
+                    -Dnntp=false \
+                    -Dopenssl=true \
+                    -Dpdfdoc=false \
+                    -Dquickjs=false \
+                    -Dsftp=true \
+                    -Dsmb=false \
+                    -Dspartan=false \
+                    -Dspidermonkey=false \
+                    -Dsysmouse=false \
+                    -Dtre=true \
+                    -Dtrue-color=false \
+                    -Dutf-8=true \
+                    -Dx=false \
+                    -Dzlib=true \
+                    -Dzstd=false
+
+compiler.cxx_standard       2017
+
+# avoid execinfo.h
+platform darwin 8 {
+    configure.args-replace \
+                    -Dbacktrace=true \
+                    -Dbacktrace=false
+}
+
+variant colors description "Enable support for 88/256 colors and True color" {
+    configure.args-replace  -D256-colors=false -D256-colors=true \
+                            -D88-colors=false -D88-colors=true \
+                            -Dtrue-color=false -Dtrue-color=true
+}
+
+variant fsp description "Enable support for FSP (File Service Protocol)" {
+    depends_build-append    port:fsplib
+
+    configure.args-replace  -Dfsp=false -Dfsp=true \
+                            -Dfsp2=false -Dfsp2=true
+}
+
+variant libuv description "Compile with libuv support" {
+    depends_build-append    path:lib/pkgconfig/libuv.pc:libuv
+
+    configure.args-replace  -Dlibuv=false -Dlibuv=true
+}
+
+variant quickjs conflicts spidermonkey description "Enable JS via QuickJS" {
+    depends_lib-append      path:lib/pkgconfig/quickjs.pc:quickjs
+
+    configure.args-replace  -Dquickjs=false -Dquickjs=true
+
+    configure.cflags-append -Wno-error=incompatible-pointer-types
+}
+
+variant spidermonkey conflicts quickjs description "Enable JS via SpiderMonkey" {
+    depends_lib-append      port:spidermonkey
+
+    configure.args-replace  -Dspidermonkey=false -Dspidermonkey=true
+}
+
+variant webp description "Enable webp support" {
+    depends_build-append    port:webp
+
+    configure.args-replace  -Dlibwebp=false -Dlibwebp=true
+}
+
+default_variants            +colors
+
+if {![variant_isset spidermonkey]} {
+    default_variants-append +quickjs
+}
+
+if {[variant_isset quickjs]} {
+    PortGroup               legacysupport 1.1
+
+    # _clock_gettime
+    legacysupport.newest_darwin_requires_legacy 15
+}
+
+if {[variant_isset quickjs] || [variant_isset spidermonkey]} {
+    # libsixel support requires libdom
+    depends_lib-append      port:libcss \
+                            port:libdom \
+                            port:libsixel \
+                            port:libwapcaplet
+
+    configure.args-replace  -Dcss=false -Dcss=true \
+                            -Dlibcss=false -Dlibcss=true \
+                            -Dlibsixel=false -Dlibsixel=true
+}
+
+# elinks needs GNU Make 3.81 or later due to the "else" followed by a conditional.
+platform darwin 8 {
+    depends_build-append    port:gmake
+    build.cmd               ${prefix}/bin/gmake
+}
+
+# https://github.com/rkd77/elinks/issues/407
+notes "Mouse support requires a modern terminal emulator."

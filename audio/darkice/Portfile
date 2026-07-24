@@ -1,0 +1,110 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+
+github.setup        rafael2k darkice 1.4 v
+revision            0
+categories          audio
+platforms           darwin freebsd
+maintainers         nomaintainer
+license             GPL-3+
+description         Live audio encoder and streamer
+long_description    DarkIce is a live audio streamer. It records audio from \
+                    an audio interface (e.g. sound card), encodes it and \
+                    sends it to a streaming server (i.e. IceCast, ShoutCast...).
+
+homepage            http://www.darkice.org
+
+checksums           rmd160  90db0e17936e92a97009fa5b8781957771eebda1 \
+                    sha256  e6a8ec2b447cf5b4ffaf9b62700502b6bdacebf00b476f4e9bf9f9fe1e3dd817 \
+                    size    364782
+github.tarball_from releases
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+
+patchfiles          patch-FaacEncoder.cpp.diff
+
+configure.args      --without-aacplus \
+                    --without-faac \
+                    --without-jack \
+                    --without-lame \
+                    --without-opus \
+                    --without-pulseaudio \
+                    --without-samplerate \
+                    --without-twolame \
+                    --without-vorbis
+
+# Some dependencies need C11.
+# error: comma at end of enumerator list
+compiler.c_standard     2011
+# error: ISO C++17 does not allow dynamic exception specifications
+compiler.cxx_standard   2011
+configure.cxxflags-append \
+                    -std=c++11
+
+default_variants    +faac +lame +vorbis
+
+variant faac description {Add FAAC encoding} {
+    depends_lib-append \
+       port:faac
+    configure.args-replace \
+       --without-faac --with-faac
+    configure.args-append \
+       --with-faac-prefix=${prefix}
+}
+
+variant jack description {Add JACK Audio connectivity} {
+    depends_lib-append \
+       port:jack
+    configure.args-replace \
+       --without-jack --with-jack
+    configure.args-append \
+       --with-jack-prefix=${prefix}
+}
+
+variant lame description {Add LAME encoding} {
+    depends_lib-append \
+       port:lame
+    configure.args-replace \
+       --without-lame --with-lame
+    configure.args-append \
+       --with-lame-prefix=${prefix}
+}
+
+variant opus description {Add OPUS encoding} {
+    depends_lib-append \
+       port:libopus
+    configure.args-replace \
+       --without-opus --with-opus
+    configure.args-append \
+       --with-opus-prefix=${prefix}
+}
+
+variant samplerate description {Add Samplerate encoding} {
+    depends_lib-append \
+       port:libsamplerate
+    configure.args-replace \
+       --without-samplerate --with-samplerate
+    configure.args-append \
+       --with-samplerate-prefix=${prefix}
+}
+
+variant twolame description {Add TWOLAME encoding} {
+    depends_lib-append \
+       port:twolame
+    configure.args-replace \
+       --without-twolame --with-twolame
+    configure.args-append \
+       --with-twolame-prefix=${prefix}
+}
+
+variant vorbis description {Add OGG-VORBIS encoding} {
+    depends_lib-append \
+       port:libvorbis
+    configure.args-replace \
+       --without-vorbis --with-vorbis
+    configure.args-append \
+       --with-vorbis-prefix=${prefix}
+}

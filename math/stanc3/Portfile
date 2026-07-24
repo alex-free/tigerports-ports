@@ -1,0 +1,46 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+PortGroup               github 1.0
+PortGroup               ocaml 1.1
+
+set myname              stanc
+github.setup            stan-dev ${myname}3 2.38.0 v
+epoch                   1
+revision                1
+categories              math lang ocaml
+maintainers             {@barracuda156 macos-powerpc.org:barracuda}
+license                 BSD
+description             New compiler for Stan, written in OCaml
+long_description        {*}${description}
+homepage                https://mc-stan.org/stanc3/stanc
+checksums               rmd160  5fa824d88624b67131233b7197128f4fbdb2dbff \
+                        sha256  bcc86b68646ea82e9d4a01977d21dd9472372f2f7855684c496cc4c727954aa6 \
+                        size    4005724
+github.tarball_from     archive
+
+# https://github.com/stan-dev/stanc3/issues/1559
+post-patch {
+    reinplace "s|%%NAME%%|${myname}|g" ${worksrcpath}/src/stanc/CLI.ml
+    reinplace "s|%%VERSION%%|${version}|" ${worksrcpath}/src/stanc/CLI.ml
+}
+
+depends_lib-append      port:ocaml-cmdliner \
+                        port:ocaml-core \
+                        port:ocaml-core_kernel \
+                        port:ocaml-fmt \
+                        port:ocaml-menhir \
+                        port:ocaml-ppx_deriving \
+                        port:ocaml-yojson
+
+depends_test-append     port:ocaml-bisect_ppx \
+                        port:ocaml-merlin \
+                        port:ocaml-ocamlformat \
+                        port:ocaml-ocp-indent \
+                        port:ocaml-patdiff \
+                        port:ocaml-utop
+
+ocaml.build_type        dune
+dune.packages           ${myname}
+
+test.run                yes

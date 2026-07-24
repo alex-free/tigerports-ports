@@ -1,0 +1,20 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran albert LearnBayes 2.15.2
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Functions for learning Bayesian inference
+long_description    {*}${description}
+checksums           rmd160  2749574eabeffcb08cfd7f19d8d0cef4f0aa6b87 \
+                    sha256  7ae3458c64b426b7a753bf0613dc1e6eebccddcadbea9e86687ab2312861d192 \
+                    size    89218
+supported_archs     noarch
+
+depends_lib-append  port:R-coda
+
+test.run            yes

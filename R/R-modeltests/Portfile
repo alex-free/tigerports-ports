@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran alexpghayes modeltests 0.1.8
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Testing infrastructure for Broom model generics
+long_description    {*}${description}
+homepage            https://github.com/alexpghayes/modeltests
+checksums           rmd160  73ca8d7c50b0ee5fff70806000ea7cd75b83bea8 \
+                    sha256  c30af4191196825f08e6c17ff0a6434d8837421e77790a5f81f9b999d01b6977 \
+                    size    24722
+supported_archs     noarch
+
+depends_lib-append  port:R-dplyr \
+                    port:R-generics \
+                    port:R-purrr \
+                    port:R-testthat \
+                    port:R-tibble
+
+depends_test-append port:R-covr
+
+test.run            yes

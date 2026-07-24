@@ -1,0 +1,51 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           ocaml 1.1
+
+name                ocaml-js_of_ocaml
+github.setup        ocsigen js_of_ocaml 6.3.2
+revision            1
+categories          ocaml devel lang
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             {GPL-2+ LGPL-2.1+}
+description         Compiler from OCaml bytecode to JavaScript
+long_description    {*}${description}
+
+checksums           rmd160  64d880f90654f04365e1f27046733ea024452c5a \
+                    sha256  fbbe8eafc44445d199ce83d01ccb3e5f9dd2ee7922af74ab02e1a1233f77e596 \
+                    size    3653161
+github.tarball_from archive
+
+depends_lib-append  port:ocaml-ppxlib
+
+ocaml.build_type    dune
+
+if {${subport} eq ${name}} {
+    depends_lib-append \
+                    port:ocaml-js_of_ocaml-compiler
+}
+
+subport ${name}-compiler {
+    depends_lib-append \
+                    port:ocaml-cmdliner \
+                    port:ocaml-findlib \
+                    port:ocaml-menhir \
+                    port:ocaml-menhirLib \
+                    port:ocaml-menhirSdk \
+                    port:ocaml-sedlex \
+                    port:ocaml-yojson
+}
+
+subport ${name}-lwt {
+    # No -append is intended here:
+    depends_lib     port:ocaml-js_of_ocaml \
+                    port:ocaml-js_of_ocaml-ppx \
+                    port:ocaml-lwt
+}
+
+subport ${name}-ppx {
+    depends_lib-append \
+                    port:ocaml-js_of_ocaml
+}

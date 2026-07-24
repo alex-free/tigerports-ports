@@ -1,0 +1,42 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github yoshidk6 rstanemax 0.1.9 v
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-3
+description         Emax model analysis with RStan
+long_description    {*}${description}
+homepage            https://yoshidk6.github.io/rstanemax
+checksums           rmd160  55365abba4661fe14c3c7edce8049ba6f3f8c824 \
+                    sha256  0efe39e5bcf6fb44c99c018875c2c9fe17373ad66716e5f9cc7fa074df052891 \
+                    size    80393
+github.tarball_from archive
+
+depends_lib-append  port:R-BH \
+                    port:R-dplyr \
+                    port:R-ggplot2 \
+                    port:R-lifecycle \
+                    port:R-magrittr \
+                    port:R-posterior \
+                    port:R-purrr \
+                    port:R-Rcpp \
+                    port:R-RcppEigen \
+                    port:R-RcppParallel \
+                    port:R-rstan \
+                    port:R-rstantools \
+                    port:R-StanHeaders \
+                    port:R-tidyr
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-spelling \
+                    port:R-testthat \
+                    port:R-tibble \
+                    port:R-tidybayes \
+                    port:R-withr
+
+test.run            yes

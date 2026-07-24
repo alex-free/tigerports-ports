@@ -1,0 +1,64 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github spsanderson tidyAML 0.0.6 v
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Automatic machine learning with tidymodels
+long_description    {*}${description}
+homepage            https://www.spsanderson.com/tidyAML
+checksums           rmd160  eafb98672f883e37c1727ee8c143448b58da4bbc \
+                    sha256  8e7540a7e372045bf31f73bae646b658c8fa84b51d0e94390c63c332dbd22afe \
+                    size    11833778
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-broom \
+                    port:R-dplyr \
+                    port:R-forcats \
+                    port:R-ggplot2 \
+                    port:R-magrittr \
+                    port:R-parsnip \
+                    port:R-purrr \
+                    port:R-rlang \
+                    port:R-rsample \
+                    port:R-workflows \
+                    port:R-workflowsets \
+                    port:R-tidyr \
+                    port:R-tune
+
+patchfiles          patch-no-brulee.diff
+
+depends_test-append port:R-baguette \
+                    port:R-bonsai \
+                    port:R-censored \
+                    port:R-dbarts \
+                    port:R-discrim \
+                    port:R-flexsurv \
+                    port:R-gee \
+                    port:R-glmnet \
+                    port:R-kernlab \
+                    port:R-kknn \
+                    port:R-klaR \
+                    port:R-knitr \
+                    port:R-LiblineaR \
+                    port:R-mda \
+                    port:R-multilevelmod \
+                    port:R-poissonreg \
+                    port:R-randomForest \
+                    port:R-ranger \
+                    port:R-recipes \
+                    port:R-rmarkdown \
+                    port:R-roxygen2 \
+                    port:R-rstanarm \
+                    port:R-rules \
+                    port:R-sda \
+                    port:R-sparsediscrim \
+                    port:R-stringr \
+                    port:R-tibble
+
+test.run            yes

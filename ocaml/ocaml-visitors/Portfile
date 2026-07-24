@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           gitlab 1.0
+PortGroup           ocaml 1.1
+
+name                ocaml-visitors
+gitlab.instance     https://gitlab.inria.fr
+gitlab.setup        fpottier visitors 20260520
+revision            0
+
+categories          ocaml devel
+maintainers         {landonf @landonf} openmaintainer
+license             LGPL-2.1
+description         OCaml syntax extension for generating visitor classes
+long_description    An OCaml syntax extension (a ppx_deriving plugin) which generates \
+                    object-oriented visitors for traversing and transforming data structures.
+
+checksums           rmd160  b06b44399713846b7829aa86d297b595d8b9f848 \
+                    sha256  0f4c5e59894295f78ddb84bc5063c2c8990b55308801937ecad0e06da18ab851 \
+                    size    508096
+
+depends_lib-append  port:ocaml-ppxlib \
+                    port:ocaml-ppx_deriving \
+                    port:ocaml-result
+
+ocaml.build_type    dune

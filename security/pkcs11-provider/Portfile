@@ -1,0 +1,53 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+PortGroup           meson 1.0
+
+# strnlen, clock_gettime
+legacysupport.newest_darwin_requires_legacy 15
+
+github.setup        latchset pkcs11-provider 1.1.0 v
+revision            0
+categories          security crypto
+license             Apache-2.0
+maintainers         {cal @neverpanic} openmaintainer
+description         A pkcs#11 provider for OpenSSL 3.0+
+long_description    \
+    An OpenSSL 3 provider to access Hardware or Software Tokens using \
+    the PKCS#11 Cryptographic Token Interface
+distname            ${name}-1.1
+checksums           rmd160  65cfd919c7c9311e04a3d49a384aa1fc8bf8a3e7 \
+                    sha256  77fef7993ce28c4c1cdf956353ca47ac118d6bd8245f2fec79a19fc250693776 \
+                    size    187792
+github.tarball_from releases
+use_xz              yes
+
+# util.c:733:19: error: implicit declaration of function 'strnlen'; did you mean 'strlen'?
+patchfiles-append   patch-_DARWIN_C_SOURCE.diff
+
+# https://trac.macports.org/ticket/72059
+compiler.c_standard 2011
+
+# NSS, softhsm, p11-kit, gnutls, and opensc are used for testing, but detection happens at build time
+depends_build       path:lib/pkgconfig/gnutls.pc:gnutls \
+                    port:nss \
+                    port:opensc \
+                    port:p11-kit \
+                    path:bin/pkg-config:pkgconfig \
+                    port:softhsm
+
+depends_lib         port:openssl3
+
+post-destroot {
+    xinstall -d -m 0755 \
+        ${destroot}${prefix}/libexec/openssl3/etc/openssl/openssl.cnf.d
+    xinstall -m 0644 \
+        ${filespath}/pkcs11-provider.cnf \
+        ${destroot}${prefix}/libexec/openssl3/etc/openssl/openssl.cnf.d/pkcs11-provider.cnf
+}
+
+test.run            yes
+
+github.livecheck.branch main

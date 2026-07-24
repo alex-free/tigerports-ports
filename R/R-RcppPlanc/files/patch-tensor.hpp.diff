@@ -1,0 +1,11 @@
+--- src/planc/common/tensor.hpp.orig	2025-03-12 23:52:20.000000000 +0800
++++ src/planc/common/tensor.hpp	2025-07-04 23:18:02.000000000 +0800
+@@ -1,7 +1,7 @@
+ #pragma once
+ /* Copyright 2017 Ramakrishnan Kannan */
+ 
+-#include <cblas.h>
++#include <cblas_openblas.h>
+ #include <armadillo>
+ #include <fstream>
+ #include <ios>

@@ -1,0 +1,34 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran tdhock binsegRcpp 2025.5.13
+revision            1
+categories-append   devel
+maintainers         nomaintainer
+license             GPL-3
+description         Efficient implementation of binary segmentation
+long_description    {*}${description}
+homepage            https://github.com/tdhock/binsegRcpp
+checksums           rmd160  db04fef45cff63083fe2dcdea0925e398d9f99da \
+                    sha256  eb715bf56f3a5be0c9f832c9f925382d174b135a18c3d074cef84fbbc152d097 \
+                    size    59597
+
+depends_lib-append  port:R-data.table \
+                    port:R-Rcpp
+
+depends_test-append port:R-changepoint \
+                    port:R-covr \
+                    port:R-directlabels \
+                    port:R-ggplot2 \
+                    port:R-knitr \
+                    port:R-markdown \
+                    port:R-neuroblastoma \
+                    port:R-penaltyLearning \
+                    port:R-quadprog \
+                    port:R-testthat
+
+# FIXME: few test cases fail on PowerPC [ FAIL 6 | WARN 0 | SKIP 0 | PASS 184 ]
+# https://github.com/tdhock/binsegRcpp/issues/28
+test.run            yes

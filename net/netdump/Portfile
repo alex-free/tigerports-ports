@@ -1,0 +1,60 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+PortGroup           makefile 1.0
+
+# clock_gettime
+legacysupport.newest_darwin_requires_legacy 15
+
+# See: https://github.com/giorgiopapini/netdump/issues/1
+github.setup        giorgiopapini netdump 75020e1f16dc434b0e9bc6f3647e0477c9dfd57f
+version             1.0.1
+revision            1
+categories          net
+license             GPL-3
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+description         Simple network packet analyzer
+long_description    ${name} is a simple network packet analyzer using libpcap, \
+                    supporting both real-time and offline analysis with ASCII visualization.
+checksums           rmd160  cfd266eb81b350301d0316aa30203cddb8ce10b4 \
+                    sha256  be197f80c9856ae6118e13482edda2c2a924e28801185ca1219567dda4dd14df \
+                    size    258076
+github.tarball_from archive
+
+patchfiles          fix-Makefile-for-gnumake.diff
+
+depends_lib-append  port:libpcap
+
+compiler.blacklist-append \
+                    *gcc-4.0 *gcc-4.2
+
+# colors.h:8:21: error: format '%ld' expects argument of type 'long int',
+# but argument 5 has type '__darwin_suseconds_t' {aka 'int'} [-Werror=format=]
+configure.cflags-append \
+                    -Wno-error=format
+
+# visualizer.c:61:9: error: conversion to 'long unsigned int' from 'int'
+# may change the sign of the result [-Werror=sign-conversion]
+# hashmap.c:45:13: error: conversion from 'long long unsigned int' to 'size_t'
+# {aka 'long unsigned int'} may change value [-Werror=conversion]
+# dissectors.c:124:60: error: '__builtin_snprintf' output may be truncated
+# before the last format character [-Werror=format-truncation=]
+if {[string match *gcc* ${configure.compiler}]} {
+    configure.cflags-append \
+                    -Wno-error=conversion \
+                    -Wno-error=format-truncation \
+                    -Wno-error=sign-conversion
+}
+
+post-destroot {
+    # This directory can be used for custom dissectors, see README:
+    # xinstall -d ${destroot}${prefix}/share/${name}
+    set docdir ${prefix}/share/doc/${name}
+    xinstall -d ${destroot}${docdir}
+    xinstall -m 0644 -W ${worksrcpath} LICENSE README.md ${destroot}${docdir}
+}
+
+# As of 1.0.1, seems not to be used anymore.
+# destroot.keepdirs   ${destroot}${prefix}/share/${name}

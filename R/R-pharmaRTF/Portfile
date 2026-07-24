@@ -1,0 +1,36 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is archaic.
+R.setup             cran atorus-research pharmaRTF 0.1.4 v-
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Enhanced RTF wrapper for use with existing table packages
+long_description    {*}${description}
+checksums           rmd160  da7a0639473e280eb234109c73ffbeeb9e623573 \
+                    sha256  2eb082ad88bcfc17bd6a08e2e937142feb054ed59a8839305fd5540a3dc926c0 \
+                    size    1433960
+supported_archs     noarch
+
+depends_lib-append  port:R-assertthat \
+                    port:R-huxtable \
+                    port:R-purrr \
+                    port:R-stringr
+
+depends_test-append port:R-dplyr \
+                    port:R-gt \
+                    port:R-kableExtra \
+                    port:R-knitr \
+                    port:R-magrittr \
+                    port:R-plyr \
+                    port:R-readr \
+                    port:R-readxl \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-tidyverse
+
+test.run            yes

@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran spatstat spatstat.geom 3.7-0
+revision            1
+categories-append   math geometry
+maintainers         nomaintainer
+license             GPL-2+
+description         Geometrical functionality of the R-spatstat family
+long_description    {*}${description}
+homepage            https://github.com/spatstat/${R.package}
+checksums           rmd160  b35153b16bd4893e84d7badac1cf98a50834114b \
+                    sha256  5375b2ad0613a5a4de1484c32f98688109c1ea3341eb071b398f813b78b9d5e7 \
+                    size    816109
+
+depends_lib-append  port:R-deldir \
+                    port:R-polyclip \
+                    port:R-spatstat.data \
+                    port:R-spatstat.univar \
+                    port:R-spatstat.utils
+
+depends_test-append port:R-fftwtools \
+                    port:R-spatial \
+                    port:R-spatstat \
+                    port:R-spatstat.explore \
+                    port:R-spatstat.linnet \
+                    port:R-spatstat.model \
+                    port:R-spatstat.random
+
+test.run            yes

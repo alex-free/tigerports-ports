@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran paws-r paws.management 0.9.0
+revision            1
+categories-append   www
+platforms           {darwin any}
+maintainers         nomaintainer
+license             Apache-2
+description         Amazon Web Services management & governance services
+long_description    {*}${description}
+homepage            https://github.com/paws-r/paws
+checksums           rmd160  4acf3b8351e665b034f2c1b53e3a0b2dc41007b8 \
+                    sha256  53d87f0d8d33a125dc9e858a31e929f098771bfb4e88a56c77942b6f036e8451 \
+                    size    1337479
+supported_archs     noarch
+
+depends_lib-append  port:R-paws.common
+
+depends_test-append port:R-testthat
+
+test.run            yes

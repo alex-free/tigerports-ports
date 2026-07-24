@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran sheffersonlab lefko3 6.7.1
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-2+
+description         Historical and ahistorical population projection \
+                    matrix analysis
+long_description    {*}${description}
+checksums           rmd160  48334fc4466bf17806a2127310bdaaf62d34d9a3 \
+                    sha256  79dec19a3fdcda84636e04ee50abff12c5cb5277d514f1b3368a9ff3e6889cdd \
+                    size    3135452
+
+depends_lib-append  port:R-BH \
+                    port:R-glmmTMB \
+                    port:R-lme4 \
+                    port:R-MuMIn \
+                    port:R-pscl \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-rlang \
+                    port:R-VGAM
+
+compilers.setup     require_fortran

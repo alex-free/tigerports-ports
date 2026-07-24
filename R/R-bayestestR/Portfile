@@ -1,0 +1,65 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github easystats bayestestR 0.17.0 v
+revision            1
+categories-append   math economics
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Understand and describe Bayesian models and posterior distributions
+long_description    {*}${description}
+homepage            https://easystats.github.io/bayestestR
+checksums           rmd160  22ebbd5e7b445264f29d06f8a00893a506122589 \
+                    sha256  c52266fdf71df5dbc695b7dfa692398f45b6356b1bff32fd41fd78062f450273 \
+                    size    2254967
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-datawizard \
+                    port:R-insight
+
+depends_test-append port:R-BayesFactor \
+                    port:R-bayesQR \
+                    port:R-bayesplot \
+                    port:R-betareg \
+                    port:R-BH \
+                    port:R-blavaan \
+                    port:R-bridgesampling \
+                    port:R-brms \
+                    port:R-collapse \
+                    port:R-curl \
+                    port:R-effectsize \
+                    port:R-emmeans \
+                    port:R-gamm4 \
+                    port:R-ggdist \
+                    port:R-ggplot2 \
+                    port:R-glmmTMB \
+                    port:R-httr2 \
+                    port:R-knitr \
+                    port:R-lavaan \
+                    port:R-lme4 \
+                    port:R-logspline \
+                    port:R-marginaleffects \
+                    port:R-mclust \
+                    port:R-mediation \
+                    port:R-modelbased \
+                    port:R-ordbetareg \
+                    port:R-parameters \
+                    port:R-patchwork \
+                    port:R-performance \
+                    port:R-posterior \
+                    port:R-quadprog \
+                    port:R-RcppEigen \
+                    port:R-rmarkdown \
+                    port:R-rstan \
+                    port:R-rstanarm \
+                    port:R-see \
+                    port:R-testthat \
+                    port:R-tinytable \
+                    port:R-tweedie \
+                    port:R-withr
+
+test.run            yes

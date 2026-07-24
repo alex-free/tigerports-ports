@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran NicChr cheapr 1.5.2
+revision            0
+categories-append   devel
+maintainers         nomaintainer
+license             MIT
+description         Simple functions to save time and memory
+long_description    {*}${description}
+homepage            https://github.com/NicChr/cheapr
+checksums           rmd160  8aae68ac8e27d0618d39619ce18c5c30f99a8d7e \
+                    sha256  d4440e4ae3458e9395529bccccb0554608c5b4f7efcfaf96d39f5835f8b0a7ad \
+                    size    548566
+
+depends_lib-append  port:R-collapse \
+                    port:R-cpp11
+
+depends_test-append port:R-bench \
+                    port:R-data.table \
+                    port:R-testthat
+
+test.run            yes

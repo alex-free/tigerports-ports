@@ -1,0 +1,33 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran ardata-fr doconv 0.4.0
+revision            1
+categories-append   graphics
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Document conversion to PDF or PNG
+long_description    {*}${description}
+checksums           rmd160  6b92f6f05c26956a37469f13da46cc3ff0e8f868 \
+                    sha256  08a63b17be6100c8345d62efbd315f90ab6f3f651965a6b524cec35722258820 \
+                    size    461295
+supported_archs     noarch
+
+depends_lib-append  port:R-gdtools \
+                    port:R-locatexec \
+                    port:R-magick \
+                    port:R-pdftools \
+                    port:R-processx
+
+# R-webshot2 is omitted.
+depends_test-append port:R-curl \
+                    port:R-flextable \
+                    port:R-ragg \
+                    port:R-testthat \
+                    port:R-tinytest
+
+# Despite declared dependencies, there are no specific tests.
+test.run            yes

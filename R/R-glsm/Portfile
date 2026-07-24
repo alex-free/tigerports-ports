@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran jvillalba glsm 0.0.0.6
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Saturated model log-likelihood for multinomial outcomes
+long_description    {*}${description}
+checksums           rmd160  33506982511a9467c9b95a5c77159bd882303ba7 \
+                    sha256  0edd225900a16e6aa621e57b10e5feb4cffd39f660402d0dee2b5ddff05a26bf \
+                    size    17822
+supported_archs     noarch
+
+depends_lib-append  port:R-dplyr \
+                    port:R-ggplot2 \
+                    port:R-plyr \
+                    port:R-VGAM
+
+test.run            yes

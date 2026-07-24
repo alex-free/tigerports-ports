@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+
+github.setup        nemtrif utfcpp 4.1.1 v
+revision            0
+categories          devel textproc
+platforms           any
+license             Boost-1
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+description         C++ portable library for working with utf-8 encoding
+long_description    {*}${description}
+checksums           rmd160  22ca3b43b5191bff222953c0a30e27d4dc3a94b7 \
+                    sha256  1ca68016f0abc24172998e39ce0d8f8e2b7a26f7579a0ff85d4e1b9a7aea56f8 \
+                    size    36846
+github.tarball_from archive
+supported_archs     noarch
+
+compiler.cxx_standard   1998
+
+configure.args-append \
+                    -DUTF8CPP_ENABLE_BENCHMARKS=OFF \
+                    -DUTF8CPP_ENABLE_TESTS=OFF

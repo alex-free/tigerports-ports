@@ -1,0 +1,43 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+PortGroup               cmake 1.1
+
+name                    alglib
+version                 4.05.0
+revision                0
+categories              math
+license                 GPL-2+
+maintainers             {mcalhoun @MarcusCalhoun-Lopez} openmaintainer
+description             a cross-platform numerical analysis and data processing library
+long_description        ALGLIB is ${description}.
+
+homepage                http://www.alglib.net
+master_sites            ${homepage}/translator/re/
+
+extract.suffix          .cpp.gpl.tgz
+
+checksums               rmd160  aca89265f811c529272204908d945f80e6d22407 \
+                        sha256  73380187388a8c03b5ed9c170a1b2339acc868d38346b1b2b3085ce23e3f4fdb \
+                        size    3980381
+
+worksrcdir              ${name}-cpp
+
+post-extract {
+    # CMakeLists.txt is taken from https://src.fedoraproject.org/rpms/alglib/raw/rawhide/f/CMakeLists.txt
+    copy ${filespath}/CMakeLists.txt ${worksrcpath}/
+}
+
+# http://bugs.alglib.net/view.php?id=1025
+# No dependencies, so rather force bools to 1 byte.
+# Notice, only 32-bit ppc needs this.
+if {${os.platform} eq "darwin" && ${configure.build_arch} eq "ppc"} {
+    configure.cxxflags-append \
+                        -mone-byte-bool
+}
+
+configure.args-append   -DALGLIB_VERSION=${version} \
+                        -DALGLIB_VERSION_MAJOR=[lindex [split ${version} .] 0]
+
+test.run                yes
+test.args-append        DYLD_LIBRARY_PATH=${cmake.build_dir}

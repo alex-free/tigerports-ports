@@ -1,0 +1,43 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           active_variants 1.1
+PortGroup           R 1.0
+
+R.setup             cran lkotthoff llama 0.10.1
+revision            1
+categories-append   java
+platforms           {darwin any}
+maintainers         nomaintainer
+license             BSD
+description         Leveraging Learning to Automatically Manage Algorithms
+long_description    {*}${description}
+homepage            https://bitbucket.org/lkotthoff/llama
+checksums           rmd160  afff30e9fd3af5a630ccbe5fb919268908c68502 \
+                    sha256  fc5bd1a3ceec321d3a27874c6368efa31ebe0cc298089289581c8a13fea284e7 \
+                    size    1787238
+supported_archs     noarch
+
+require_active_variants R java
+
+if {${configure.build_arch} in [list ppc ppc64]} {
+    depends_run-append \
+                    port:openjdk8
+} else {
+    PortGroup       java 1.0
+
+}
+
+depends_lib-append  port:R-BBmisc \
+                    port:R-checkmate \
+                    port:R-data.table \
+                    port:R-ggplot2 \
+                    port:R-mlr \
+                    port:R-parallelMap \
+                    port:R-plyr \
+                    port:R-rJava
+
+depends_test-append port:R-ParamHelpers \
+                    port:R-testthat
+
+test.run            yes

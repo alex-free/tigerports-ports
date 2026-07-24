@@ -1,0 +1,1259 @@
+From 472384ede6543674547de26a982110a722dda0ce Mon Sep 17 00:00:00 2001
+From: Sergey Fedorov <vital.had@gmail.com>
+Date: Mon, 13 Jul 2026 11:09:44 +0800
+Subject: [PATCH 3/6] Cocoa: split screens, macOS-style menus and SSH
+ connection dialog
+
+---
+ uitoolkit/quartz/cocoa.h                     |   6 +
+ uitoolkit/quartz/cocoa.m                     | 717 ++++++++++++++++---
+ uitoolkit/quartz/ui_connect_dialog.c         |  20 +-
+ uitoolkit/quartz/ui_event_source-cocoa.m     |  19 +
+ uitoolkit/quartz/ui_im_status_screen-cocoa.m |  10 +-
+ 5 files changed, 652 insertions(+), 120 deletions(-)
+
+diff --git uitoolkit/quartz/cocoa.h uitoolkit/quartz/cocoa.h
+index bea7b6ba..5b27c70f 100644
+--- uitoolkit/quartz/cocoa.h
++++ uitoolkit/quartz/cocoa.h
+@@ -109,8 +109,14 @@ Pixmap cocoa_load_image(const char *path, u_int *width, u_int *height);
+ 
+ int cocoa_dialog_connection(char **uri, char **pass, const char *msg);
+ 
++int cocoa_dialog_ssh_full(char **uri, char **pass, char **exec_cmd, char **privkey, int *x11_fwd,
++                           const char *def_server);
++
+ int cocoa_dialog_okcancel(const char *msg);
+ 
+ int cocoa_dialog_alert(const char *msg);
+ 
++/* Termination flag to prevent race conditions during cleanup */
++extern int cocoa_is_terminating;
++
+ #endif
+diff --git uitoolkit/quartz/cocoa.m uitoolkit/quartz/cocoa.m
+index 9caca702..143e43a6 100644
+--- uitoolkit/quartz/cocoa.m
++++ uitoolkit/quartz/cocoa.m
+@@ -13,6 +13,10 @@
+ #include "../ui_event_source.h"
+ #include "../ui_selection_encoding.h"
+ 
++#include <string.h> /* strchr/strncmp */
++#include <stdio.h>  /* snprintf */
++#include <stdlib.h> /* malloc/free */
++
+ /* XXX USE_CGLAYER is defined if 10.14 Mojave or later for now. */
+ #if MAC_OS_X_VERSION_MAX_ALLOWED >= 101400
+ #define USE_CGLAYER
+@@ -85,6 +89,14 @@ static ui_window_t *uiwindow_for_mlterm_view;
+ 
+ static NSMenuItem *configMenuItem;
+ static NSMenuItem *pasteMenuItem;
++static NSMenuItem *copyMenuItem;
++static NSMenuItem *newWindowMenuItem;
++static NSMenuItem *splitHMenuItem;
++static NSMenuItem *splitVMenuItem;
++static NSMenuItem *closeSplitMenuItem;
++static NSMenuItem *bgColorMenuItem;
++static NSMenuItem *sshConnMenuItem;
++static NSMenuItem *quitMenuItem;
+ 
+ char *global_args;
+ 
+@@ -103,12 +115,15 @@ char *global_args;
+ void main_loop_final(void);
+ #endif
+ 
++int cocoa_is_terminating = 0;
++
+ static void exit_program(void) {
+   /* This function is called twice from willClose() and monitor_pty() */
+   static int exited;
+ 
+   if (!exited) {
+     exited = 1;
++    cocoa_is_terminating = 1;
+ 
+ #ifdef DEBUG
+     main_loop_final();
+@@ -286,6 +301,10 @@ static NSAlert *create_dialog(const char *msg, int has_cancel) {
+ /* --- class --- */
+ 
+ int cocoa_dialog_alert(const char *msg);
++#ifdef USE_LIBSSH2
++int cocoa_dialog_ssh_full(char **uri, char **pass, char **exec_cmd, char **privkey, int *x11_fwd,
++                           const char *def_server);
++#endif
+ 
+ @implementation MLTermView
+ 
+@@ -334,23 +353,23 @@ int cocoa_dialog_alert(const char *msg);
+     monitor_pty();
+ 
+     /*
+-     * addLocalMonitorForEventsMatchingMask: takes an ObjC block, which older
+-     * GCC (e.g. targeting Mac OS X 10.6) doesn't support. Skip the Eisu/Kana
+-     * key monitor there rather than fail to build.
++     * addLocalMonitorForEventsMatchingMask: takes an ObjC block, which the
++     * GCC toolchain used for PowerPC doesn't support. Skip the Eisu/Kana key
++     * monitor there rather than fail to build.
+      */
+-#ifdef __clang__
++#ifdef __BLOCKS__
+     [NSEvent addLocalMonitorForEventsMatchingMask:NSKeyDownMask
+                                           handler:^(NSEvent *event) {
+-                                            switch (event.keyCode) {
++                                            switch ([event keyCode]) {
+                                               case 0x66: /* Eisu */
+                                               case 0x68: /* Kana */
+                                                 ignoreKeyDown = TRUE;
++                                                [[[event window] firstResponder]
++                                                    keyDown:event];
++                                                return (NSEvent *)nil;
+                                             }
+ 
+-                                            [event.window.firstResponder
+-                                                keyDown:event];
+-
+-                                            return (NSEvent *)nil;
++                                            return event;
+                                           }];
+ #endif
+ 
+@@ -358,14 +377,79 @@ int cocoa_dialog_alert(const char *msg);
+     setenv("PANGO_LIBDIR", [[[NSBundle mainBundle] bundlePath] UTF8String], 1);
+ 
+     NSMenu *appmenu = [[NSMenu alloc] initWithTitle:@""];
+-    configMenuItem = [appmenu addItemWithTitle:@"Config"
+-                                        action:@selector(configMenu:)
+-                                 keyEquivalent:@"C"];
++
++    newWindowMenuItem = [appmenu addItemWithTitle:@"New Window"
++                                           action:@selector(newWindowMenu:)
++                                    keyEquivalent:@"n"];
++    [newWindowMenuItem setTarget:self];
++
++    NSMenuItem *closeWindowMenuItem = [appmenu addItemWithTitle:@"Close Window"
++                                                          action:@selector(performClose:)
++                                                   keyEquivalent:@"w"];
++    [closeWindowMenuItem setTarget:nil];
++
++    [appmenu addItem:[NSMenuItem separatorItem]];
++
++    copyMenuItem = [appmenu addItemWithTitle:@"Copy"
++                                      action:@selector(copyMenu:)
++                               keyEquivalent:@"c"];
++    [copyMenuItem setTarget:self];
++
+     pasteMenuItem = [appmenu addItemWithTitle:@"Paste"
+                                        action:@selector(pasteMenu:)
+-                                keyEquivalent:@"P"];
+-    [configMenuItem setTarget:self];
++                                keyEquivalent:@"v"];
+     [pasteMenuItem setTarget:self];
++
++    [appmenu addItem:[NSMenuItem separatorItem]];
++
++    splitHMenuItem = [appmenu addItemWithTitle:@"Split Horizontal"
++                                        action:@selector(splitHorizontalMenu:)
++                                 keyEquivalent:@"h"];
++    [splitHMenuItem setTarget:self];
++    [splitHMenuItem setKeyEquivalentModifierMask:NSCommandKeyMask | NSShiftKeyMask];
++
++    splitVMenuItem = [appmenu addItemWithTitle:@"Split Vertical"
++                                        action:@selector(splitVerticalMenu:)
++                                 keyEquivalent:@"d"];
++    [splitVMenuItem setTarget:self];
++    [splitVMenuItem setKeyEquivalentModifierMask:NSCommandKeyMask | NSShiftKeyMask];
++
++    closeSplitMenuItem = [appmenu addItemWithTitle:@"Close Split"
++                                            action:@selector(closeSplitMenu:)
++                                     keyEquivalent:@"W"];
++    [closeSplitMenuItem setTarget:self];
++    [closeSplitMenuItem setKeyEquivalentModifierMask:NSCommandKeyMask | NSShiftKeyMask];
++
++    [appmenu addItem:[NSMenuItem separatorItem]];
++
++#ifdef USE_LIBSSH2
++    sshConnMenuItem = [appmenu addItemWithTitle:@"New SSH Connection..."
++                                         action:@selector(sshConnMenu:)
++                                  keyEquivalent:@""];
++    [sshConnMenuItem setTarget:self];
++
++    [appmenu addItem:[NSMenuItem separatorItem]];
++#endif
++
++    bgColorMenuItem = [appmenu addItemWithTitle:@"Toggle Light/Dark"
++                                         action:@selector(bgColorMenu:)
++                                  keyEquivalent:@""];
++    [bgColorMenuItem setTarget:self];
++
++    [appmenu addItem:[NSMenuItem separatorItem]];
++
++    configMenuItem = [appmenu addItemWithTitle:@"Config"
++                                        action:@selector(configMenu:)
++                                 keyEquivalent:@""];
++    [configMenuItem setTarget:self];
++
++    [appmenu addItem:[NSMenuItem separatorItem]];
++
++    quitMenuItem = [appmenu addItemWithTitle:@"Quit mlterm"
++                                      action:@selector(terminate:)
++                               keyEquivalent:@"q"];
++    [quitMenuItem setTarget:[NSApplication sharedApplication]];
++
+     NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
+     [[menu addItemWithTitle:@"" action:nil keyEquivalent:@""]
+         setSubmenu:appmenu];
+@@ -389,19 +473,136 @@ int cocoa_dialog_alert(const char *msg);
+ }
+ 
+ - (void)configMenu:(id)sender {
+-  /* if by any change */
+-  if (((ui_screen_t *)uiwindow)->term) {
++  if (uiwindow && ((ui_screen_t *)uiwindow)->term) {
+     ui_screen_exec_cmd((ui_screen_t *)uiwindow, "mlconfig");
+   }
+ }
+ 
++- (void)newWindowMenu:(id)sender {
++  if (uiwindow && ((ui_screen_t *)uiwindow)->term) {
++    NSString *bundlePath = [[NSBundle mainBundle] bundlePath];
++    NSString *executablePath = [NSString stringWithFormat:@"%@/Contents/MacOS/mlterm", bundlePath];
++
++    NSTask *task = [[NSTask alloc] init];
++#if MAC_OS_X_VERSION_MAX_ALLOWED >= 101300
++    [task setExecutableURL:[NSURL fileURLWithPath:executablePath]];
++    [task launchAndReturnError:nil];
++#else
++    [task setLaunchPath:executablePath];
++    [task launch];
++#endif
++    [task release];
++  }
++}
++
++#ifdef USE_LIBSSH2
++- (void)sshConnMenu:(id)sender {
++  char *uri = NULL;
++  char *pass = NULL;
++  char *exec_cmd = NULL;
++  char *privkey = NULL;
++  int x11_fwd = 0;
++
++  NSWindow *mainWin = [self window];
++
++  cocoa_dialog_ssh_full(&uri, &pass, &exec_cmd, &privkey, &x11_fwd, "");
++
++  /* ALWAYS restore window and first responder after modal dialog, regardless of how it was closed */
++  if (mainWin) {
++    [mainWin makeKeyAndOrderFront:nil];
++    [mainWin makeFirstResponder:self];
++  }
++
++  /* ALWAYS reset menu targets after modal dialog closes (OK, Cancel, or (x) button) */
++  if (uiwindow && ((ui_screen_t *)uiwindow)->term) {
++    [newWindowMenuItem setTarget:uiwindow->my_window];
++#ifdef USE_LIBSSH2
++    [sshConnMenuItem setTarget:uiwindow->my_window];
++#endif
++    [copyMenuItem setTarget:uiwindow->my_window];
++    [pasteMenuItem setTarget:uiwindow->my_window];
++    [splitHMenuItem setTarget:uiwindow->my_window];
++    [splitVMenuItem setTarget:uiwindow->my_window];
++    [closeSplitMenuItem setTarget:uiwindow->my_window];
++    [bgColorMenuItem setTarget:uiwindow->my_window];
++    [configMenuItem setTarget:uiwindow->my_window];
++  }
++
++  if (uri) {
++      char cmd[1024];
++      snprintf(cmd, sizeof(cmd), "mlclient %s%s%s%s%s%s",
++               uri,
++               (privkey && *privkey) ? " --privkey " : "",
++               (privkey && *privkey) ? privkey : "",
++               (exec_cmd && *exec_cmd) ? " -e " : "",
++               (exec_cmd && *exec_cmd) ? exec_cmd : "",
++               x11_fwd ? " --x11fwd" : "");
++
++      if (pass && *pass) {
++        setenv("MLTERM_PASSWORD", pass, 1);
++      }
++
++      if (uiwindow && ((ui_screen_t *)uiwindow)->term) {
++        ui_screen_exec_cmd((ui_screen_t *)uiwindow, cmd);
++      }
++
++      if (pass && *pass) {
++        unsetenv("MLTERM_PASSWORD");
++      }
++
++    free(uri);
++    if (pass) free(pass);
++    if (exec_cmd) free(exec_cmd);
++    if (privkey) free(privkey);
++  }
++}
++#endif
++
++- (void)copyMenu:(id)sender {
++  if (uiwindow && ((ui_screen_t *)uiwindow)->term) {
++    ui_window_set_selection_owner(uiwindow, CurrentTime, SEL_CLIPBOARD);
++  }
++}
++
+ - (void)pasteMenu:(id)sender {
+-  /* if by any change */
+-  if (((ui_screen_t *)uiwindow)->term) {
++  if (uiwindow && ((ui_screen_t *)uiwindow)->term) {
+     ui_screen_exec_cmd((ui_screen_t *)uiwindow, "paste");
+   }
+ }
+ 
++- (void)splitHorizontalMenu:(id)sender {
++  if (uiwindow && ((ui_screen_t *)uiwindow)->term) {
++    ui_screen_exec_cmd((ui_screen_t *)uiwindow, "vsplit_screen");
++  }
++}
++
++- (void)splitVerticalMenu:(id)sender {
++  if (uiwindow && ((ui_screen_t *)uiwindow)->term) {
++    ui_screen_exec_cmd((ui_screen_t *)uiwindow, "hsplit_screen");
++  }
++}
++
++- (void)closeSplitMenu:(id)sender {
++  if (uiwindow && ((ui_screen_t *)uiwindow)->term) {
++    ui_screen_exec_cmd((ui_screen_t *)uiwindow, "close_screen");
++  }
++}
++
++- (void)bgColorMenu:(id)sender {
++  if (uiwindow && ((ui_screen_t *)uiwindow)->term) {
++    ui_color_t *bg = &uiwindow->bg_color;
++    int is_dark = (bg->pixel & 0xffffff) < 0x808080;
++
++    if (is_dark) {
++      ui_screen_set_config((ui_screen_t *)uiwindow, NULL, "fg_color", "black");
++      ui_screen_set_config((ui_screen_t *)uiwindow, NULL, "bg_color", "white");
++    } else {
++      ui_screen_set_config((ui_screen_t *)uiwindow, NULL, "fg_color", "white");
++      ui_screen_set_config((ui_screen_t *)uiwindow, NULL, "bg_color", "black");
++    }
++  }
++}
++
+ #ifdef USE_CGLAYER
+ - (void)setFrameSize:(NSSize)s {
+   if (layer) {
+@@ -430,16 +631,16 @@ static void reset_position(ui_window_t *uiwindow) {
+ }
+ 
+ - (void)resized:(NSNotification *)note {
+-  if (!uiwindow->parent || !((ui_screen_t *)uiwindow)->term) {
++  if (!uiwindow || !uiwindow->parent || !((ui_screen_t *)uiwindow)->term) {
+     /* It has been already removed from ui_layout or term has been detached. */
+     return;
+   }
+ 
+   uiwindow->parent->width =
+-      ((NSView *)[self window].contentView).frame.size.width -
++      [((NSView *)[[self window] contentView]) frame].size.width -
+       uiwindow->parent->hmargin * 2;
+   uiwindow->parent->height =
+-      ((NSView *)[self window].contentView).frame.size.height -
++      [((NSView *)[[self window] contentView]) frame].size.height -
+       uiwindow->parent->vmargin * 2;
+ 
+   (*uiwindow->parent->window_resized)(uiwindow->parent);
+@@ -458,7 +659,7 @@ static void reset_position(ui_window_t *uiwindow) {
+     [[self window] orderOut:self];
+ 
+     if (uiwindow->event_mask & PointerMotionMask) {
+-      [self window].acceptsMouseMovedEvents = YES;
++      [[self window] setAcceptsMouseMovedEvents:YES];
+     }
+   }
+ 
+@@ -466,7 +667,7 @@ static void reset_position(ui_window_t *uiwindow) {
+       addObserver:self
+          selector:@selector(resized:)
+              name:NSViewFrameDidChangeNotification
+-           object:[self window].contentView];
++           object:[[self window] contentView]];
+   [[NSNotificationCenter defaultCenter]
+       addObserver:self
+          selector:@selector(focused:)
+@@ -483,15 +684,14 @@ static void reset_position(ui_window_t *uiwindow) {
+              name:NSWindowWillCloseNotification
+            object:[self window]];
+ 
+-  int diff_x = [self window].frame.size.width - self.frame.size.width;
+-  int diff_y = [self window].frame.size.height - self.frame.size.height;
++  int diff_x = [[self window] frame].size.width - [self frame].size.width;
++  int diff_y = [[self window] frame].size.height - [self frame].size.height;
+   u_int sb_width = [NSScroller scrollerWidth];
+   int y = ACTUAL_HEIGHT(uiwindow->parent) - ACTUAL_HEIGHT(uiwindow) - uiwindow->y;
+ 
+   /* Change view size */
+ 
+-  self.frame =
+-      CGRectMake(uiwindow->x, y, ACTUAL_WIDTH(uiwindow), ACTUAL_HEIGHT(uiwindow));
++  [self setFrame:NSMakeRect(uiwindow->x, y, ACTUAL_WIDTH(uiwindow), ACTUAL_HEIGHT(uiwindow))];
+ 
+   /* Creating scrollbar */
+ 
+@@ -502,15 +702,15 @@ static void reset_position(ui_window_t *uiwindow) {
+   [scroller setTarget:self];
+   [scroller setAction:@selector(scrollerAction:)];
+ #if 1
+-  [scroller setFloatValue:0.0 knobProportion:1.0]; /* Deprecated since 10.6 */
++  [scroller setFloatValue:0.0 knobProportion:1.0];
+ #else
+-  scroller.knobProportion = 1.0;
+-  scroller.doubleValue = 0.0;
++  [scroller setKnobProportion:1.0];
++  [scroller setDoubleValue:0.0];
+ #endif
+ #if 0
+   [scroller setArrowsPosition:NSScrollerArrowsMaxEnd];
+ #endif
+-  [[self window].contentView addSubview:scroller];
++  [[[self window] contentView] addSubview:scroller];
+ 
+   term->scrollbar.window.my_window = (NSView *)scroller;
+ 
+@@ -532,7 +732,7 @@ static void reset_position(ui_window_t *uiwindow) {
+ 
+     uiwindow->parent->my_window = [self window];
+ 
+-    r = [self window].frame;
++    r = [[self window] frame];
+     r.size.width = ACTUAL_WIDTH(uiwindow->parent) + diff_x;
+     float new_height = ACTUAL_HEIGHT(uiwindow->parent) + diff_y;
+     r.origin.y += (r.size.height - new_height);
+@@ -553,7 +753,7 @@ static void reset_position(ui_window_t *uiwindow) {
+      * window position.
+      */
+     if (uiwindow->parent->x > 0 || uiwindow->parent->y > 0) {
+-      r = [self window].frame;
++      r = [[self window] frame];
+       r.origin.x += uiwindow->parent->x;
+       r.origin.y -= uiwindow->parent->y;
+ 
+@@ -570,6 +770,10 @@ static void reset_position(ui_window_t *uiwindow) {
+ }
+ 
+ - (void)scrollerAction:(id)sender {
++  if (!uiwindow || !((ui_screen_t *)uiwindow)->term) {
++    return;
++  }
++
+   struct terminal *term = ((ui_screen_t *)uiwindow)->screen_scroll_listener->self;
+   ui_scrollbar_t *sb = &term->scrollbar;
+   float pos = [sender floatValue];
+@@ -601,7 +805,7 @@ static void reset_position(ui_window_t *uiwindow) {
+ }
+ 
+ - (void)drawRect:(NSRect)rect {
+-  if (!uiwindow->parent || !((ui_screen_t *)uiwindow)->term) {
++  if (!uiwindow || !uiwindow->parent || !((ui_screen_t *)uiwindow)->term) {
+     /* It has been already removed from ui_layout or term has been detached. */
+     return;
+   }
+@@ -622,7 +826,7 @@ static void reset_position(ui_window_t *uiwindow) {
+ 
+ #ifdef USE_CGLAYER
+   if (!layer) {
+-    layer = CGLayerCreateWithContext(screen_ctx, self.bounds.size, NULL);
++    layer = CGLayerCreateWithContext(screen_ctx, [self bounds].size, NULL);
+     ctx = CGLayerGetContext(layer);
+ 
+     if (uiwindow->update_window_flag == 0) {
+@@ -699,7 +903,7 @@ static ui_window_t *get_current_window(ui_window_t *win) {
+ }
+ 
+ - (void)focused:(NSNotification *)note {
+-  if (!uiwindow->parent || !((ui_screen_t *)uiwindow)->term) {
++  if (!uiwindow || !uiwindow->parent || !((ui_screen_t *)uiwindow)->term) {
+     /* It has been already removed from ui_layout or term has been detached. */
+     return;
+   }
+@@ -713,13 +917,22 @@ static ui_window_t *get_current_window(ui_window_t *win) {
+   ui_window_t *focused;
+ 
+   if ((focused = get_current_window(ui_get_root_window(uiwindow)))) {
+-    [configMenuItem setTarget:focused->my_window];
++    [newWindowMenuItem setTarget:focused->my_window];
++#ifdef USE_LIBSSH2
++    [sshConnMenuItem setTarget:focused->my_window];
++#endif
++    [copyMenuItem setTarget:focused->my_window];
+     [pasteMenuItem setTarget:focused->my_window];
++    [splitHMenuItem setTarget:focused->my_window];
++    [splitVMenuItem setTarget:focused->my_window];
++    [closeSplitMenuItem setTarget:focused->my_window];
++    [bgColorMenuItem setTarget:focused->my_window];
++    [configMenuItem setTarget:focused->my_window];
+   }
+ }
+ 
+ - (void)unfocused:(NSNotification *)note {
+-  if (!uiwindow->parent || !((ui_screen_t *)uiwindow)->term) {
++  if (!uiwindow || !uiwindow->parent || !((ui_screen_t *)uiwindow)->term) {
+     /* It has been already removed from ui_layout or term has been detached. */
+     return;
+   }
+@@ -735,24 +948,52 @@ static ui_window_t *get_current_window(ui_window_t *win) {
+   return YES;
+ }
+ 
++- (BOOL)acceptsFirstMouse:(NSEvent *)event {
++  return YES;
++}
++
+ - (BOOL)becomeFirstResponder {
+   if ([super becomeFirstResponder] != YES) {
+     return NO;
+   }
+ 
++  if (!uiwindow || !uiwindow->parent || !((ui_screen_t *)uiwindow)->term) {
++    return YES;
++  }
++
+   XEvent ev;
+ 
+   ev.type = UI_KEY_FOCUS_IN;
+ 
+   ui_window_receive_event(uiwindow, &ev);
+ 
+-  [configMenuItem setTarget:uiwindow->my_window];
++  /* Set menu targets to this view so actions route correctly */
++  [newWindowMenuItem setTarget:uiwindow->my_window];
++#ifdef USE_LIBSSH2
++  [sshConnMenuItem setTarget:uiwindow->my_window];
++#endif
++  [copyMenuItem setTarget:uiwindow->my_window];
+   [pasteMenuItem setTarget:uiwindow->my_window];
++  [splitHMenuItem setTarget:uiwindow->my_window];
++  [splitVMenuItem setTarget:uiwindow->my_window];
++  [closeSplitMenuItem setTarget:uiwindow->my_window];
++  [bgColorMenuItem setTarget:uiwindow->my_window];
++  [configMenuItem setTarget:uiwindow->my_window];
+ 
+   return YES;
+ }
+ 
++- (BOOL)resignFirstResponder {
++  /* Just call super - becomeFirstResponder on the new view will handle focus change */
++  return [super resignFirstResponder];
++}
++
+ - (void)willClose:(NSNotification *)note {
++  /* If terminating the app, skip cleanup to avoid crashes during multi-window close */
++  if (cocoa_is_terminating) {
++    return;
++  }
++
+   if (ui_get_all_screens(NULL) == 0) {
+     [[NSNotificationCenter defaultCenter] removeObserver:self];
+ 
+@@ -771,6 +1012,13 @@ static ui_window_t *get_current_window(ui_window_t *win) {
+ 
+   remove_all_observers(root);
+ 
++  /* If this is the last screen/window, we're quitting - skip cleanup to avoid resize crashes */
++  if (ui_get_all_screens(NULL) <= 1) {
++    cocoa_is_terminating = 1;
++    exit_program();
++    return;
++  }
++
+   XEvent ev;
+ 
+   ev.type = UI_CLOSE_WINDOW;
+@@ -783,22 +1031,24 @@ static ui_window_t *get_current_window(ui_window_t *win) {
+ }
+ 
+ - (void)mouseDown:(NSEvent *)event {
++  [[self window] makeFirstResponder:self];
++
+   NSPoint loc = [event locationInWindow];
+   XButtonEvent bev;
+ 
+   bev.type = UI_BUTTON_PRESS;
+-  bev.time = event.timestamp * 1000;
+-  bev.x = loc.x - self.frame.origin.x;
++  bev.time = [event timestamp] * 1000;
++  bev.x = loc.x - [self frame].origin.x;
+   bev.y =
+-      ACTUAL_HEIGHT(uiwindow->parent) - loc.y - /* self.frame.origin.y - */ 1;
+-  bev.state = event.modifierFlags &
++      ACTUAL_HEIGHT(uiwindow) - (loc.y - [self frame].origin.y) - 1;
++  bev.state = [event modifierFlags] &
+               (NSShiftKeyMask | NSControlKeyMask | NSAlternateKeyMask);
+-  if (event.type == NSLeftMouseDown) {
++  if ([event type] == NSLeftMouseDown) {
+     bev.button = 1;
+   } else {
+     bev.button = 3;
+   }
+-  bev.click_count = event.clickCount;
++  bev.click_count = [event clickCount];
+ 
+   ui_window_receive_event(uiwindow, (XEvent *)&bev);
+ }
+@@ -808,13 +1058,13 @@ static ui_window_t *get_current_window(ui_window_t *win) {
+   XButtonEvent bev;
+ 
+   bev.type = UI_BUTTON_RELEASE;
+-  bev.time = event.timestamp * 1000;
+-  bev.x = loc.x - self.frame.origin.x;
++  bev.time = [event timestamp] * 1000;
++  bev.x = loc.x - [self frame].origin.x;
+   bev.y =
+-      ACTUAL_HEIGHT(uiwindow->parent) - loc.y - /* self.frame.origin.y - */ 1;
+-  bev.state = event.modifierFlags &
++      ACTUAL_HEIGHT(uiwindow) - (loc.y - [self frame].origin.y) - 1;
++  bev.state = [event modifierFlags] &
+               (NSShiftKeyMask | NSControlKeyMask | NSAlternateKeyMask);
+-  if (event.type == NSLeftMouseUp) {
++  if ([event type] == NSLeftMouseUp) {
+     bev.button = 1;
+   } else {
+     bev.button = 3;
+@@ -828,11 +1078,11 @@ static ui_window_t *get_current_window(ui_window_t *win) {
+   XButtonEvent bev;
+ 
+   bev.type = UI_BUTTON_RELEASE;
+-  bev.time = event.timestamp * 1000;
+-  bev.x = loc.x - self.frame.origin.x;
++  bev.time = [event timestamp] * 1000;
++  bev.x = loc.x - [self frame].origin.x;
+   bev.y =
+-      ACTUAL_HEIGHT(uiwindow->parent) - loc.y - /* self.frame.origin.y - */ 1;
+-  bev.state = event.modifierFlags &
++      ACTUAL_HEIGHT(uiwindow) - (loc.y - [self frame].origin.y) - 1;
++  bev.state = [event modifierFlags] &
+               (NSShiftKeyMask | NSControlKeyMask | NSAlternateKeyMask);
+   bev.button = 3;
+ 
+@@ -840,18 +1090,20 @@ static ui_window_t *get_current_window(ui_window_t *win) {
+ }
+ 
+ - (NSMenu *)menuForEvent:(NSEvent *)event {
++  [[self window] makeFirstResponder:self];
++
+   NSPoint loc = [event locationInWindow];
+   XButtonEvent bev;
+ 
+   bev.type = UI_BUTTON_PRESS;
+-  bev.time = event.timestamp * 1000;
+-  bev.x = loc.x - self.frame.origin.x;
++  bev.time = [event timestamp] * 1000;
++  bev.x = loc.x - [self frame].origin.x;
+   bev.y =
+-      ACTUAL_HEIGHT(uiwindow->parent) - loc.y - /* self.frame.origin.y - */ 1;
+-  bev.state = event.modifierFlags &
++      ACTUAL_HEIGHT(uiwindow) - (loc.y - [self frame].origin.y) - 1;
++  bev.state = [event modifierFlags] &
+               (NSShiftKeyMask | NSControlKeyMask | NSAlternateKeyMask);
+   bev.button = 3;
+-  bev.click_count = event.clickCount;
++  bev.click_count = [event clickCount];
+ 
+   ui_window_receive_event(uiwindow, (XEvent *)&bev);
+ 
+@@ -863,10 +1115,10 @@ static ui_window_t *get_current_window(ui_window_t *win) {
+   XMotionEvent mev;
+ 
+   mev.type = UI_BUTTON_MOTION;
+-  mev.time = event.timestamp * 1000;
+-  mev.x = loc.x - self.frame.origin.x;
+-  mev.y = ACTUAL_HEIGHT(uiwindow->parent) - loc.y - /* self.frame.origin.y */ -1;
+-  if (event.type == NSLeftMouseDragged) {
++  mev.time = [event timestamp] * 1000;
++  mev.x = loc.x - [self frame].origin.x;
++  mev.y = ACTUAL_HEIGHT(uiwindow) - (loc.y - [self frame].origin.y) - 1;
++  if ([event type] == NSLeftMouseDragged) {
+     mev.state = Button1Mask;
+   } else {
+     mev.state = Button3Mask;
+@@ -880,9 +1132,9 @@ static ui_window_t *get_current_window(ui_window_t *win) {
+   XMotionEvent mev;
+ 
+   mev.type = UI_BUTTON_MOTION;
+-  mev.time = event.timestamp * 1000;
+-  mev.x = loc.x - self.frame.origin.x;
+-  mev.y = ACTUAL_HEIGHT(uiwindow->parent) - loc.y - /* self.frame.origin.y */ -1;
++  mev.time = [event timestamp] * 1000;
++  mev.x = loc.x - [self frame].origin.x;
++  mev.y = ACTUAL_HEIGHT(uiwindow) - (loc.y - [self frame].origin.y) - 1;
+   mev.state = Button3Mask;
+ 
+   ui_window_receive_event(uiwindow, (XEvent *)&mev);
+@@ -893,9 +1145,9 @@ static ui_window_t *get_current_window(ui_window_t *win) {
+   XMotionEvent mev;
+ 
+   mev.type = UI_POINTER_MOTION;
+-  mev.time = event.timestamp * 1000;
+-  mev.x = loc.x - self.frame.origin.x;
+-  mev.y = ACTUAL_HEIGHT(uiwindow->parent) - loc.y - /* self.frame.origin.y */ -1;
++  mev.time = [event timestamp] * 1000;
++  mev.x = loc.x - [self frame].origin.x;
++  mev.y = ACTUAL_HEIGHT(uiwindow->parent) - loc.y - /* [self frame].origin.y */ -1;
+   mev.state = 0;
+ 
+   ui_window_receive_event(uiwindow, (XEvent *)&mev);
+@@ -909,35 +1161,35 @@ static ui_window_t *get_current_window(ui_window_t *win) {
+   bevPress.type = UI_BUTTON_PRESS;
+   bevRelease.type = UI_BUTTON_RELEASE;
+ 
+-  bevPress.time = event.timestamp * 1000;
+-  bevRelease.time = (event.timestamp * 1000) + 1;
++  bevPress.time = [event timestamp] * 1000;
++  bevRelease.time = ([event timestamp] * 1000) + 1;
+ 
+-  bevPress.x = loc.x - self.frame.origin.x;
+-  bevRelease.x = loc.x - self.frame.origin.x;
++  bevPress.x = loc.x - [self frame].origin.x;
++  bevRelease.x = loc.x - [self frame].origin.x;
+ 
+   bevPress.y =
+-      ACTUAL_HEIGHT(uiwindow->parent) - loc.y - /* self.frame.origin.y - */ 1;
++      ACTUAL_HEIGHT(uiwindow->parent) - loc.y - /* [self frame].origin.y - */ 1;
+   bevRelease.y =
+-      ACTUAL_HEIGHT(uiwindow->parent) - loc.y - /* self.frame.origin.y - */ 1;
++      ACTUAL_HEIGHT(uiwindow->parent) - loc.y - /* [self frame].origin.y - */ 1;
+ 
+-  bevPress.state = event.modifierFlags &
++  bevPress.state = [event modifierFlags] &
+                    (NSShiftKeyMask | NSControlKeyMask | NSAlternateKeyMask);
+-  bevRelease.state = event.modifierFlags &
++  bevRelease.state = [event modifierFlags] &
+                      (NSShiftKeyMask | NSControlKeyMask | NSAlternateKeyMask);
+ 
+   bevPress.click_count = 1;
+ 
+-  if (event.deltaY > 1) {
++  if ([event deltaY] > 1) {
+     bevPress.button = 4;
+     bevRelease.button = 4;
+   }
+ 
+-  if (event.deltaY < -1) {
++  if ([event deltaY] < -1) {
+     bevPress.button = 5;
+     bevRelease.button = 5;
+   }
+ 
+-  if (event.deltaY < -1 || event.deltaY > 1) {
++  if ([event deltaY] < -1 || [event deltaY] > 1) {
+     ui_window_receive_event(uiwindow, (XEvent *)&bevPress);
+     ui_window_receive_event(uiwindow, (XEvent *)&bevRelease);
+   }
+@@ -948,7 +1200,7 @@ static ui_window_t *get_current_window(ui_window_t *win) {
+     return;
+   }
+ 
+-  u_int flags = event.modifierFlags;
++  u_int flags = [event modifierFlags];
+ 
+   /* ShiftMask is not set without this. (see insertText()) */
+   currentShiftMask = flags & NSShiftKeyMask;
+@@ -972,13 +1224,13 @@ static ui_window_t *get_current_window(ui_window_t *win) {
+ 
+     if (kev.state & NSControlKeyMask) {
+       kev.keysym = [[event charactersIgnoringModifiers] characterAtIndex:0];
+-      kev.utf8 = [event characters].UTF8String;
++      kev.utf8 = [[event characters] UTF8String];
+     } else if (kev.state & NSAlternateKeyMask) {
+       kev.keysym = [[event charactersIgnoringModifiers] characterAtIndex:0];
+       kev.utf8 = NULL;
+     } else {
+       kev.keysym = [[event characters] characterAtIndex:0];
+-      kev.utf8 = [event characters].UTF8String;
++      kev.utf8 = [[event characters] UTF8String];
+     }
+ 
+     if ((kev.state & NSShiftKeyMask) && 'A' <= kev.keysym &&
+@@ -1001,7 +1253,7 @@ static ui_window_t *get_current_window(ui_window_t *win) {
+    * If this view exits with owning pasteboard, this method is called
+    * after ui_screen_t::term is deleted.
+    */
+-  if (((ui_screen_t *)uiwindow)->term) {
++  if (uiwindow && ((ui_screen_t *)uiwindow)->term) {
+     XSelectionRequestEvent ev;
+ 
+     ev.type = UI_SELECTION_REQUESTED;
+@@ -1090,7 +1342,11 @@ static ui_window_t *get_current_window(ui_window_t *win) {
+ 
+   NSRect r = NSMakeRect(x, y, ui_col_width((ui_screen_t *)uiwindow),
+                         ui_line_height((ui_screen_t *)uiwindow));
++#if MAC_OS_X_VERSION_MAX_ALLOWED >= 1070
++  r = [[self window] convertRectToScreen:r];
++#else
+   r.origin = [[self window] convertBaseToScreen:r.origin];
++#endif
+ 
+   return r;
+ }
+@@ -1502,7 +1758,7 @@ void view_alloc(ui_window_t *uiwindow) {
+ 
+   MLTermView *view =
+       [[MLTermView alloc] initWithFrame:NSMakeRect(0, 0, 400, 400)];
+-  [((NSWindow *)uiwindow->parent->my_window).contentView addSubview:view];
++  [[(NSWindow *)uiwindow->parent->my_window contentView] addSubview:view];
+   [view release];
+ }
+ 
+@@ -1584,8 +1840,8 @@ void window_alloc(ui_window_t *root) {
+ void window_dealloc(NSWindow *window) { [window close]; }
+ 
+ void window_resize(NSWindow *window, int width, int height) {
+-  NSRect wr = window.frame;
+-  NSSize vs = ((NSView *)window.contentView).frame.size;
++  NSRect wr = [window frame];
++  NSSize vs = [(NSView *)[window contentView] frame].size;
+   int diff_x = wr.size.width - vs.width;
+   int diff_y = wr.size.height - vs.height;
+ 
+@@ -1596,8 +1852,8 @@ void window_resize(NSWindow *window, int width, int height) {
+ }
+ 
+ void window_move_resize(NSWindow *window, int x, int y, int width, int height) {
+-  NSRect wr = window.frame;
+-  NSSize vs = ((NSView *)window.contentView).frame.size;
++  NSRect wr = [window frame];
++  NSSize vs = [(NSView *)[window contentView] frame].size;
+   int diff_x = wr.size.width - vs.width;
+   int diff_y = wr.size.height - vs.height;
+ 
+@@ -1609,7 +1865,7 @@ void window_move_resize(NSWindow *window, int x, int y, int width, int height) {
+ }
+ 
+ void window_accepts_mouse_moved_events(NSWindow *window, int accept) {
+-  window.acceptsMouseMovedEvents = (accept ? YES : NO);
++  [window setAcceptsMouseMovedEvents:(accept ? YES : NO)];
+ }
+ 
+ void window_set_normal_hints(NSWindow *window, u_int width_inc,
+@@ -1618,9 +1874,9 @@ void window_set_normal_hints(NSWindow *window, u_int width_inc,
+ }
+ 
+ void window_get_position(NSWindow *window, int *x, int *y) {
+-  *x = window.frame.origin.x;
+-  *y = [[window screen] visibleFrame].size.height - window.frame.origin.y -
+-       [window.contentView frame].size.height;
++  *x = [window frame].origin.x;
++  *y = [[window screen] visibleFrame].size.height - [window frame].origin.y -
++       [[window contentView] frame].size.height;
+ }
+ 
+ static int is_valid_utf8(const char *str, size_t len) {
+@@ -1659,10 +1915,10 @@ void app_urgent_bell(int on) {
+ 
+ void scroller_update(NSScroller *scroller, float pos, float knob) {
+ #if 1
+-  [scroller setFloatValue:pos knobProportion:knob]; /* Deprecated since 10.6 */
++  [scroller setFloatValue:pos knobProportion:knob];
+ #else
+-  scroller.knobProportion = knob;
+-  scroller.doubleValue = pos;
++  [scroller setKnobProportion:knob];
++  [scroller setDoubleValue:pos];
+ #endif
+ }
+ 
+@@ -1792,6 +2048,275 @@ int cocoa_dialog_connection(char **uri, char **pass, const char *msg) {
+   }
+ }
+ 
++/* Helper class to handle modal panel close button */
++@interface ModalPanelDelegate : NSObject
++#if MAC_OS_X_VERSION_MAX_ALLOWED >= 1060
++<NSWindowDelegate>
++#endif
++@end
++
++@implementation ModalPanelDelegate
++- (BOOL)windowShouldClose:(id)sender {
++  /* Stop modal session when (x) button is clicked */
++  [NSApp stopModalWithCode:NSCancelButton];
++  return YES;
++}
++/*
++ * stopModalWithCode: takes the return code directly, so it can't be wired
++ * as a button action (the sender would be used as the code). Read the
++ * button's tag and pass it as the modal result.
++ */
++- (void)buttonPressed:(id)sender {
++  [NSApp stopModalWithCode:[sender tag]];
++}
++@end
++
++int cocoa_dialog_ssh_full(char **uri, char **pass, char **exec_cmd, char **privkey, int *x11_fwd,
++                           const char *def_server) {
++  if (![NSThread isMainThread]) {
++    return 0;
++  }
++
++  NSPanel *panel = [[NSPanel alloc] initWithContentRect:NSMakeRect(0, 0, 400, 320)
++                                              styleMask:NSTitledWindowMask | NSClosableWindowMask
++                                                backing:NSBackingStoreBuffered
++                                                  defer:NO];
++  [panel autorelease];
++  [panel setTitle:@"SSH Connection"];
++  [panel center];
++
++  /* Set delegate to handle (x) button */
++  ModalPanelDelegate *delegate = [[ModalPanelDelegate alloc] init];
++  [delegate autorelease];
++  [panel setDelegate:delegate];
++
++  NSView *content = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 400, 320)];
++  [content autorelease];
++  [panel setContentView:content];
++
++  int ypos = 280;
++  int labelWidth = 100;
++  int fieldWidth = 270;
++  int rowHeight = 24;
++  int spacing = 30;
++
++  NSTextField *hostLabel = [[NSTextField alloc] initWithFrame:NSMakeRect(10, ypos, labelWidth, 20)];
++  [hostLabel autorelease];
++  [hostLabel setStringValue:@"Host:"];
++  [hostLabel setEditable:NO];
++  [hostLabel setBordered:NO];
++  [hostLabel setDrawsBackground:NO];
++  [content addSubview:hostLabel];
++
++  NSTextField *hostField = [[NSTextField alloc] initWithFrame:NSMakeRect(120, ypos, fieldWidth, rowHeight)];
++  [hostField autorelease];
++  [content addSubview:hostField];
++  ypos -= spacing;
++
++  NSTextField *portLabel = [[NSTextField alloc] initWithFrame:NSMakeRect(10, ypos, labelWidth, 20)];
++  [portLabel autorelease];
++  [portLabel setStringValue:@"Port:"];
++  [portLabel setEditable:NO];
++  [portLabel setBordered:NO];
++  [portLabel setDrawsBackground:NO];
++  [content addSubview:portLabel];
++
++  NSTextField *portField = [[NSTextField alloc] initWithFrame:NSMakeRect(120, ypos, fieldWidth, rowHeight)];
++  [portField autorelease];
++  [portField setStringValue:@"22"];
++  [content addSubview:portField];
++  ypos -= spacing;
++
++  NSTextField *userLabel = [[NSTextField alloc] initWithFrame:NSMakeRect(10, ypos, labelWidth, 20)];
++  [userLabel autorelease];
++  [userLabel setStringValue:@"User:"];
++  [userLabel setEditable:NO];
++  [userLabel setBordered:NO];
++  [userLabel setDrawsBackground:NO];
++  [content addSubview:userLabel];
++
++  NSTextField *userField = [[NSTextField alloc] initWithFrame:NSMakeRect(120, ypos, fieldWidth, rowHeight)];
++  [userField autorelease];
++  [content addSubview:userField];
++  ypos -= spacing;
++
++  NSTextField *passLabel = [[NSTextField alloc] initWithFrame:NSMakeRect(10, ypos, labelWidth, 20)];
++  [passLabel autorelease];
++  [passLabel setStringValue:@"Password:"];
++  [passLabel setEditable:NO];
++  [passLabel setBordered:NO];
++  [passLabel setDrawsBackground:NO];
++  [content addSubview:passLabel];
++
++  NSTextField *passField = [[MLSecureTextField alloc] initWithFrame:NSMakeRect(120, ypos, fieldWidth, rowHeight)];
++  [passField autorelease];
++  [content addSubview:passField];
++  ypos -= spacing;
++
++  NSTextField *keyLabel = [[NSTextField alloc] initWithFrame:NSMakeRect(10, ypos, labelWidth, 20)];
++  [keyLabel autorelease];
++  [keyLabel setStringValue:@"Private Key:"];
++  [keyLabel setEditable:NO];
++  [keyLabel setBordered:NO];
++  [keyLabel setDrawsBackground:NO];
++  [content addSubview:keyLabel];
++
++  NSTextField *keyField = [[NSTextField alloc] initWithFrame:NSMakeRect(120, ypos, fieldWidth, rowHeight)];
++  [keyField autorelease];
++  if (*privkey) {
++    [keyField setStringValue:[NSString stringWithCString:*privkey encoding:NSUTF8StringEncoding]];
++  }
++  [content addSubview:keyField];
++  ypos -= spacing;
++
++  NSTextField *encLabel = [[NSTextField alloc] initWithFrame:NSMakeRect(10, ypos, labelWidth, 20)];
++  [encLabel autorelease];
++  [encLabel setStringValue:@"Encoding:"];
++  [encLabel setEditable:NO];
++  [encLabel setBordered:NO];
++  [encLabel setDrawsBackground:NO];
++  [content addSubview:encLabel];
++
++  NSTextField *encField = [[NSTextField alloc] initWithFrame:NSMakeRect(120, ypos, fieldWidth, rowHeight)];
++  [encField autorelease];
++  [encField setStringValue:@"UTF-8"];
++  [content addSubview:encField];
++  ypos -= spacing;
++
++  NSTextField *cmdLabel = [[NSTextField alloc] initWithFrame:NSMakeRect(10, ypos, labelWidth, 20)];
++  [cmdLabel autorelease];
++  [cmdLabel setStringValue:@"Exec Cmd:"];
++  [cmdLabel setEditable:NO];
++  [cmdLabel setBordered:NO];
++  [cmdLabel setDrawsBackground:NO];
++  [content addSubview:cmdLabel];
++
++  NSTextField *cmdField = [[NSTextField alloc] initWithFrame:NSMakeRect(120, ypos, fieldWidth, rowHeight)];
++  [cmdField autorelease];
++  [content addSubview:cmdField];
++  ypos -= spacing;
++
++  NSButton *x11Check = [[NSButton alloc] initWithFrame:NSMakeRect(120, ypos, 200, 20)];
++  [x11Check autorelease];
++  [x11Check setButtonType:NSSwitchButton];
++  [x11Check setTitle:@"X11 Forwarding"];
++  [x11Check setState:(*x11_fwd ? NSOnState : NSOffState)];
++  [content addSubview:x11Check];
++  ypos -= 40;
++
++  NSButton *okButton = [[NSButton alloc] initWithFrame:NSMakeRect(210, 15, 80, 30)];
++  [okButton autorelease];
++  [okButton setTitle:@"OK"];
++  [okButton setBezelStyle:NSRoundedBezelStyle];
++  [okButton setKeyEquivalent:@"\r"];
++  [okButton setTarget:delegate];
++  [okButton setAction:@selector(buttonPressed:)];
++  [okButton setTag:NSOKButton];
++  [content addSubview:okButton];
++
++  NSButton *cancelButton = [[NSButton alloc] initWithFrame:NSMakeRect(300, 15, 80, 30)];
++  [cancelButton autorelease];
++  [cancelButton setTitle:@"Cancel"];
++  [cancelButton setBezelStyle:NSRoundedBezelStyle];
++  [cancelButton setKeyEquivalent:@"\e"];
++  [cancelButton setTarget:delegate];
++  [cancelButton setAction:@selector(buttonPressed:)];
++  [cancelButton setTag:NSCancelButton];
++  [content addSubview:cancelButton];
++
++  if (def_server && *def_server) {
++    char *server_copy = strdup(def_server);
++    char *user = NULL;
++    char *host = server_copy;
++    char *port_str = NULL;
++    char *encoding = NULL;
++
++    if (strncmp(host, "ssh://", 6) == 0) {
++      host += 6;
++    }
++
++    char *at = strchr(host, '@');
++    if (at) {
++      *at = '\0';
++      user = host;
++      host = at + 1;
++    }
++
++    char *colon = strchr(host, ':');
++    if (colon) {
++      *colon = '\0';
++      port_str = colon + 1;
++      char *colon2 = strchr(port_str, ':');
++      if (colon2) {
++        *colon2 = '\0';
++        encoding = colon2 + 1;
++      }
++    }
++
++    if (user && *user) {
++      [userField setStringValue:[NSString stringWithCString:user encoding:NSUTF8StringEncoding]];
++    }
++    if (host && *host) {
++      [hostField setStringValue:[NSString stringWithCString:host encoding:NSUTF8StringEncoding]];
++    }
++    if (port_str && *port_str) {
++      [portField setStringValue:[NSString stringWithCString:port_str encoding:NSUTF8StringEncoding]];
++    }
++    if (encoding && *encoding) {
++      [encField setStringValue:[NSString stringWithCString:encoding encoding:NSUTF8StringEncoding]];
++    }
++
++    free(server_copy);
++  }
++
++  [panel makeFirstResponder:hostField];
++
++  NSInteger result = [NSApp runModalForWindow:panel];
++  [panel orderOut:nil];
++
++  if (result == NSOKButton) {
++    const char *host_str = [[hostField stringValue] UTF8String];
++    const char *port_str = [[portField stringValue] UTF8String];
++    const char *user_str = [[userField stringValue] UTF8String];
++    const char *enc_str = [[encField stringValue] UTF8String];
++
++    if (!host_str || !*host_str) {
++      return 0;
++    }
++
++    size_t uri_len = strlen("ssh://") + (user_str ? strlen(user_str) + 1 : 0) + strlen(host_str) +
++                     1 + strlen(port_str) + (enc_str ? strlen(enc_str) + 1 : 0) + 10;
++    *uri = malloc(uri_len);
++    if (*uri) {
++      if (user_str && *user_str) {
++        snprintf(*uri, uri_len, "ssh://%s@%s:%s%s%s", user_str, host_str, port_str,
++                 (enc_str && *enc_str) ? ":" : "", (enc_str && *enc_str) ? enc_str : "");
++      } else {
++        snprintf(*uri, uri_len, "ssh://%s:%s%s%s", host_str, port_str,
++                 (enc_str && *enc_str) ? ":" : "", (enc_str && *enc_str) ? enc_str : "");
++      }
++    }
++
++    const char *pass_str = [[passField stringValue] UTF8String];
++    *pass = (pass_str && *pass_str) ? strdup(pass_str) : strdup("");
++
++    const char *cmd_str = [[cmdField stringValue] UTF8String];
++    *exec_cmd = (cmd_str && *cmd_str) ? strdup(cmd_str) : NULL;
++
++    const char *key_str = [[keyField stringValue] UTF8String];
++    if (*privkey) {
++      free(*privkey);
++    }
++    *privkey = (key_str && *key_str) ? strdup(key_str) : NULL;
++
++    *x11_fwd = ([x11Check state] == NSOnState) ? 1 : 0;
++
++    return 1;
++  }
++
++  return 0;
++}
++
+ int cocoa_dialog_okcancel(const char *msg) {
+   NSAlert *alert = create_dialog(msg, 1);
+   if (alert == nil) {
+diff --git uitoolkit/quartz/ui_connect_dialog.c uitoolkit/quartz/ui_connect_dialog.c
+index 3fac2ffc..7726e6a3 100644
+--- uitoolkit/quartz/ui_connect_dialog.c
++++ uitoolkit/quartz/ui_connect_dialog.c
+@@ -19,25 +19,7 @@ int ui_connect_dialog(char **uri,      /* Should be free'ed by those who call th
+                       int *x11_fwd,    /* in/out */
+                       char *display_name, Window parent_window,
+                       const char *def_server /* (<user>@)(<proto>:)<server address>(:<encoding>). */) {
+-  char *msg;
+-
+-  if (!(*uri = strdup(def_server))) {
+-    return 0;
+-  }
+-
+-  if ((msg = alloca(19 + strlen(*uri) + 1))) {
+-    sprintf(msg, "Enter password for %s", *uri);
+-
+-    if (cocoa_dialog_connection(uri, pass, msg)) {
+-      *exec_cmd = NULL;
+-      return 1;
+-    }
+-  }
+-
+-  free(*uri);
+-  *uri = NULL;
+-
+-  return 0;
++  return cocoa_dialog_ssh_full(uri, pass, exec_cmd, privkey, x11_fwd, def_server);
+ }
+ 
+ #endif
+diff --git uitoolkit/quartz/ui_event_source-cocoa.m uitoolkit/quartz/ui_event_source-cocoa.m
+index db9e7a13..6d504670 100644
+--- uitoolkit/quartz/ui_event_source-cocoa.m
++++ uitoolkit/quartz/ui_event_source-cocoa.m
+@@ -15,6 +15,8 @@
+ #include <pobl/bl_file.h>
+ #include <vt_term_manager.h>
+ #include "../ui_display.h"
++#include "../ui_screen_manager.h"
++#include "cocoa.h"
+ 
+ /* --- static variables --- */
+ 
+@@ -45,6 +47,10 @@ static void ui_event_source_process_main(void *ctx_void) {
+ 
+   vt_close_dead_terms();
+ 
++#ifndef COCOA_TOUCH
++  ui_close_dead_screens();
++#endif
++
+   vt_term_t **terms;
+   u_int num_terms = vt_get_all_terms(&terms);
+ 
+@@ -120,6 +126,13 @@ int ui_event_source_process(void) {
+   };
+ 
+   for (;;) {
++#ifndef COCOA_TOUCH
++    /* Avoid a race with main-thread cleanup while the app is quitting. */
++    if (cocoa_is_terminating) {
++      return 0;
++    }
++#endif
++
+     tval.tv_usec = 100000; /* 0.1 sec */
+     tval.tv_sec = 0;
+ 
+@@ -129,6 +142,12 @@ int ui_event_source_process(void) {
+     ui_event_source_process_main(&ctx);
+ #endif
+ 
++#ifndef COCOA_TOUCH
++    if (ui_get_all_screens(NULL) == 0) {
++      return 0;
++    }
++#endif
++
+     if (maxfd == -1 ||
+         ((ret = select(maxfd + 1, &read_fds, NULL, NULL, &tval)) < 0 &&
+          errno != EAGAIN && errno != EINTR &&
+diff --git uitoolkit/quartz/ui_im_status_screen-cocoa.m uitoolkit/quartz/ui_im_status_screen-cocoa.m
+index 7d35d119..8e3c75a1 100644
+--- uitoolkit/quartz/ui_im_status_screen-cocoa.m
++++ uitoolkit/quartz/ui_im_status_screen-cocoa.m
+@@ -77,12 +77,12 @@ static int set(ui_im_status_screen_t* stat_screen, ef_parser_t* parser,
+   utf8[len] = '\0';
+ 
+   NSWindow* window = stat_screen->window.my_window;
+-  NSTextField* label = window.contentView;
++  NSTextField* label = [window contentView];
+ 
+-  label.stringValue =
+-      [NSString stringWithCString:utf8 encoding:NSUTF8StringEncoding];
++  [label setStringValue:
++      [NSString stringWithCString:utf8 encoding:NSUTF8StringEncoding]];
+   [label sizeToFit];
+-  [window setContentSize:label.frame.size];
++  [window setContentSize:[label frame].size];
+ 
+   /* XXX (see ui_im_status_screen_new()) */
+   if (stat_screen->filled_len == 1) {
+@@ -131,7 +131,7 @@ ui_im_status_screen_t *ui_im_status_screen_new(ui_display_t* disp,
+ 
+   NSTextField* label =
+       [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 10, 10)];
+-  label.drawsBackground = YES;
++  [label setDrawsBackground:YES];
+   [label setEditable:NO];
+   [label setSelectable:NO];
+ 
+-- 
+2.54.0
+

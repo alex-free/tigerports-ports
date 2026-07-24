@@ -1,0 +1,40 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is outdated.
+R.setup             cran strengejacke sjmisc 2.8.11
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Data and variable transformation functions
+long_description    {*}${description}
+homepage            https://strengejacke.github.io/sjmisc
+checksums           rmd160  b3bf2cb18104bb04cc748ec45c2b1512447060b2 \
+                    sha256  8ed1d6a2fb1555d62a8135465b2af0dbf2ea343010b4eafe817121cbb172152c \
+                    size    219057
+supported_archs     noarch
+
+depends_lib-append  port:R-datawizard \
+                    port:R-dplyr \
+                    port:R-insight \
+                    port:R-magrittr \
+                    port:R-purrr \
+                    port:R-rlang \
+                    port:R-sjlabelled \
+                    port:R-tidyselect
+
+depends_test-append port:R-ggplot2 \
+                    port:R-haven \
+                    port:R-knitr \
+                    port:R-mice \
+                    port:R-rmarkdown \
+                    port:R-sjPlot \
+                    port:R-sjstats \
+                    port:R-stringdist \
+                    port:R-testthat \
+                    port:R-tidyr
+
+test.run            yes

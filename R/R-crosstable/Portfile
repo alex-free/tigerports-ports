@@ -1,0 +1,57 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran DanChaltiel crosstable 0.8.2
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Crosstables for descriptive analyses
+long_description    {*}${description}
+homepage            https://danchaltiel.github.io/crosstable
+checksums           rmd160  2a208fe8b1db43f884ff1006d2bfb9080f6de69e \
+                    sha256  ade27efd625b12f1d4e5946e60a654e10476c1c6fe5e6c8598e66b9073e594ab \
+                    size    1015757
+supported_archs     noarch
+
+depends_lib-append  port:R-checkmate \
+                    port:R-cli \
+                    port:R-dplyr \
+                    port:R-flextable \
+                    port:R-forcats \
+                    port:R-glue \
+                    port:R-lifecycle \
+                    port:R-officer \
+                    port:R-purrr \
+                    port:R-rlang \
+                    port:R-stringr \
+                    port:R-tibble \
+                    port:R-tidyr
+
+depends_test-append port:R-callr \
+                    port:R-covr \
+                    port:R-crayon \
+                    port:R-digest \
+                    port:R-gt \
+                    port:R-expss \
+                    port:R-ggplot2 \
+                    port:R-gmodels \
+                    port:R-Hmisc \
+                    port:R-hms \
+                    port:R-jsonlite \
+                    port:R-knitr \
+                    port:R-openxlsx \
+                    port:R-rmarkdown \
+                    port:R-sloop \
+                    port:R-stringi \
+                    port:R-systemfonts \
+                    port:R-testthat \
+                    port:R-tidyselect \
+                    port:R-waldo \
+                    port:R-withr \
+                    port:R-xml2
+
+test.run            yes

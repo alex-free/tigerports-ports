@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran jafiorucci forecTheta 3.0
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Forecasting time series by Theta models
+long_description    {*}${description}
+homepage            https://github.com/jafiorucci/forecTheta
+checksums           rmd160  1b90ce22c474389a76c6cc7ec61308a83dce36c1 \
+                    sha256  f374e75c264b882e0d2774531847fd01f4a8a142db3e96f2cc058074f56f55db \
+                    size    21559
+supported_archs     noarch
+
+depends_lib-append  port:R-foreach \
+                    port:R-forecast \
+                    port:R-tseries
+
+depends_test-append port:R-testthat
+
+test.run            no

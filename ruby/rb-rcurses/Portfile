@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           ruby 1.0
+
+ruby.branches       3.4 3.3 3.2 3.1
+ruby.setup          rcurses 7.0.0 gem {} rubygems
+license             Unlicense
+categories-append   devel
+platforms           any
+maintainers         nomaintainer
+description         Alternative curses library written in pure Ruby
+long_description    {*}${description}. Create curses applications \
+                    for the terminal easier than ever.
+homepage            https://github.com/isene/rcurses
+checksums           rmd160  c567a398007bfbd51ff73ec48ff7ed4947cf7f13 \
+                    sha256  f99e1d2d136a9372555cc952ae95fe689ec4e85f8dc7cd2c8c81c617b94066ac \
+                    size    1733120
+supported_archs     noarch
+
+if {${subport} ne ${name}} {
+    depends_run-append \
+                    port:rb${ruby.suffix}-clipboard
+}

@@ -1,0 +1,176 @@
+# -*- Mode: Tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:filetype=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem      1.0
+PortGroup       github 1.0
+
+name            fltk
+categories      aqua devel
+license         LGPL
+platforms       macosx
+maintainers     {michaelld @michaelld} openmaintainer
+description     Fast Light Tool Kit
+homepage        https://www.fltk.org
+
+long_description \
+    FLTK (pronounced fulltick) is a cross-platform C++ GUI \
+    toolkit for UNIX/Linux (X11), Microsoft Windows and Mac OS X. \
+    FLTK provides modern GUI functionality without the bloat \
+    and supports 3D graphics via OpenGL and its built-in GLUT emulation. \
+    FLTK is designed to be small and modular enough to be \
+    statically linked, but works fine as a shared library. \
+    FLTK also includes an excellent UI builder called FLUID \
+    that can be used to create applications in minutes.
+
+subport fltk-devel  {}
+
+patch.pre_args-replace  -p0 -p1
+
+if {${subport} eq ${name}} {
+    github.setup    fltk fltk 1.4.5 release-
+    revision        0
+    worksrcdir      ${github.project}-${github.version}
+    distname        ${worksrcdir}-source
+    use_bzip2       yes
+    checksums       rmd160  b9064f83bce36be196c24c4ab158fae817cf688a \
+                    sha256  b5a52489b7ffae196db2076adb4c1b18170db0d047f5e93539a382603461564b \
+                    size    8464904
+    github.tarball_from releases
+
+    conflicts       ${name}-devel
+    long_description ${long_description} \
+        This port provides the release of FLTK, typically updated a few times a year.
+
+    # https://github.com/fltk/fltk/issues/1424
+    patchfiles              88eedd32d11b1f600d201c93cb33d4e6b7caef6e.patch
+
+    depends_build-append    port:autoconf
+
+    post-patch {
+        reinplace "s|/Applications|${applications_dir}/fltk|g" \
+            ${worksrcpath}/fltk-options/Makefile \
+            ${worksrcpath}/fluid/Makefile \
+            ${worksrcpath}/test/Makefile
+
+        # Disable silent rules
+        reinplace "/^\\.SILENT:$/d" ${worksrcpath}/makeinclude.in
+
+        # Tell fltk's make script to create config.sub, which is required
+        # before configure will execute properly. This command actually
+        # runs configure through once, to create the file; we then call
+        # configure manually with the correct arguments, which overwrites
+        # this (and other) files to be what we want. Make sure CC is set
+        # correctly per "using the right compiler". While this port will
+        # work correctly without this addition, doing this allows the port
+        # to not error out on dev's systems set up to check whether
+        # the right compiler is being used.
+
+        system -W ${worksrcpath} "CC=${configure.cc} make config.sub"
+    }
+
+    pre-configure {
+        configure.args-append \
+            --with-archflags="[get_canonical_archflags]"
+    }
+
+    configure.args \
+                --enable-shared \
+                --disable-localjpeg \
+                --disable-localzlib \
+                --disable-localpng
+
+    configure.universal_args-delete --disable-dependency-tracking
+
+    post-configure {
+        reinplace -E {s|-arch [a-z0-9_]+||g} ${worksrcpath}/fltk-config
+        if {${configure.sdkroot} ne ""} {
+            reinplace -E "s|-\[^ \"\]+[quotemeta ${configure.sdkroot}]||g" ${worksrcpath}/fltk-config
+        }
+    }
+
+    destroot.target install install-desktop
+    github.livecheck.regex  {([0-9.]+)}
+
+} else {
+    PortGroup       cmake 1.1
+    PortGroup       legacysupport 1.1
+
+    # wrappers
+    legacysupport.newest_darwin_requires_legacy 0
+    legacysupport.redirect_bins \
+                    fltk-options fltk-options-shared fluid fluid-shared
+
+    # FIXME: https://github.com/fltk/fltk/issues/1286
+    # !Use non-devel subport until this is resolved!
+    github.setup    fltk fltk 11ebe432eaad07d72ffaa8a456c524e46cfad840
+    version         20260513-[string range ${github.version} 0 7]
+    revision        0
+    checksums       rmd160  91106fc8c18f8933f43afa12cbdd841c468c4202 \
+                    sha256  72effa38ea350c3a9e7277603cd786b5dd9d78ac29596c173e4639ea0c4c8c8f \
+                    size    9116855
+    github.tarball_from archive
+
+    conflicts       ${name}
+    long_description ${long_description} \
+        This port provides the snapshot of upstream.
+
+    # https://github.com/fltk/fltk/discussions/1426
+    patchfiles              support-10.6.patch
+
+    patchfiles-append       enable-objcxx.patch
+
+    compiler.cxx_standard   2011
+
+    depends_build-append    path:bin/pkg-config:pkgconfig
+
+    depends_run-append      port:desktop-file-utils
+
+    pre-configure {
+        configure.args-append \
+                -DFLTK_ARCHFLAGS="[get_canonical_archflags]"
+    }
+
+    # TODO: add an X11 variant, take care of right paths.
+    configure.args-append \
+                -DFLTK_BACKEND_WAYLAND=OFF \
+                -DFLTK_BACKEND_X11=OFF \
+                -DFLTK_BUILD_EXAMPLES=OFF \
+                -DFLTK_BUILD_SHARED_LIBS=ON \
+                -DFLTK_BUILD_TEST=OFF \
+                -DFLTK_USE_GL=ON \
+                -DFLTK_USE_SVG=OFF \
+                -DFLTK_USE_SYSTEM_LIBJPEG=ON \
+                -DFLTK_USE_SYSTEM_LIBPNG=ON \
+                -DFLTK_USE_SYSTEM_ZLIB=ON
+
+    platform darwin {
+        configure.objcxxflags-append \
+                -fno-exceptions -fno-strict-aliasing
+    }
+
+    # FIXME: find a more decent way to handle this:
+    post-destroot {
+        foreach app {fltk-options.app fltk-options-shared.app fluid.app fluid-shared.app} {
+            move ${destroot}${prefix}/bin/${app} ${destroot}${applications_dir}/${app}
+        }
+    }
+
+    post-activate {
+        system "${prefix}/bin/update-desktop-database ${prefix}/share/applications"
+    }
+}
+
+depends_lib-append \
+                path:include/turbojpeg.h:libjpeg-turbo \
+                port:libpng \
+                port:zlib
+
+pre-configure {
+    configure.cc_archflags
+    configure.cxx_archflags
+    configure.objc_archflags
+    configure.objcxx_archflags
+    configure.ld_archflags
+}
+
+configure.cppflags-delete   -I${prefix}/include
+configure.ldflags-delete    -L${prefix}/lib

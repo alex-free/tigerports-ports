@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is archaic.
+R.setup             cran jeswheel arima2 3.4.0
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-3+
+description         Likelihood-based inference for ARIMA modelling
+long_description    {*}${description}
+homepage            https://github.com/jeswheel/arima2
+checksums           rmd160  3ac1daba9395151ae3c762fc4eb4c04832cbc1f2 \
+                    sha256  158723573762ce206da5b20946332da69bb73e31ce3f7ca091ab6edaa30eac64 \
+                    size    123871
+
+depends_lib-append  port:R-ggplot2
+
+depends_test-append port:R-testthat
+
+test.run            yes

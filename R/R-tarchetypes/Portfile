@@ -1,0 +1,39 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github ropensci tarchetypes 0.13.2
+revision            1
+categories-append   devel
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Archetypes for R-targets
+long_description    {*}${description}
+homepage            https://docs.ropensci.org/tarchetypes
+checksums           rmd160  bfe9b76b17e78db4beba0bb62f5451133c47672b \
+                    sha256  7d75990fd28ffcee39ac312b012ef4a1ccb69e051c82df68ef3ff74f1530d928 \
+                    size    270079
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-dplyr \
+                    port:R-fs \
+                    port:R-rlang \
+                    port:R-secretbase \
+                    port:R-targets \
+                    port:R-tibble \
+                    port:R-tidyselect \
+                    port:R-vctrs \
+                    port:R-withr
+
+# Dep on R-nanoparquet is omitted.
+depends_test-append port:R-curl \
+                    port:R-knitr \
+                    port:R-quarto \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-xml2
+
+test.run            yes

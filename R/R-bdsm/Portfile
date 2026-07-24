@@ -1,0 +1,40 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran marcindubel bdsm 0.3.0
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Bayesian Dynamic Systems Modelling
+long_description    {*}${description}
+checksums           rmd160  5ed8ba9c9518593365cde1179462cb6d9093b480 \
+                    sha256  f84992db8635c0d6853698b0b0c187b22a710772876400af33525d522615b14f \
+                    size    1345106
+
+depends_lib-append  port:R-dplyr \
+                    port:R-ggplot2 \
+                    port:R-ggpubr \
+                    port:R-gridExtra \
+                    port:R-knitr \
+                    port:R-magrittr \
+                    port:R-optimbase \
+                    port:R-pbapply \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-rje \
+                    port:R-rlang \
+                    port:R-rootSolve \
+                    port:R-tidyr \
+                    port:R-tidyselect
+
+depends_test-append port:R-rmarkdown \
+                    port:R-spelling \
+                    port:R-testthat
+
+# Quite a number of tests fail, but most of errors
+# are caused by over-excessive precision requirement.
+# [ FAIL 7 | WARN 2 | SKIP 0 | PASS 14 ]
+test.run            yes

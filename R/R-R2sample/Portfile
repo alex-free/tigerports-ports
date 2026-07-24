@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran wolfgang.rolke R2sample 4.1.0
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-2+
+description         Various methods for the two sample problem
+long_description    {*}${description}
+checksums           rmd160  cd22f0f6098eee3553e1df19125c00e8c28516c9 \
+                    sha256  20f75dbb16f68a4e947592bf4fb7e5d5e474b9b247c2b9829b38504be5609389 \
+                    size    118488
+
+depends_lib-append  port:R-ggplot2 \
+                    port:R-microbenchmark \
+                    port:R-Rcpp \
+                    port:R-shiny
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran eddelbuettel anytime 0.3.13
+revision            0
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Anything to POSIXct or Date Converter
+long_description    {*}${description}
+homepage            http://dirk.eddelbuettel.com/code/anytime.html
+checksums           rmd160  23f34fa9914873d3c9ddcb41ec892b7b4fa10ec2 \
+                    sha256  8cb58bece2a164ac6232ba40c8050a7c160e9da5f0953148722abae8356f7715 \
+                    size    141074
+
+depends_lib-append  port:R-BH \
+                    port:R-Rcpp
+
+depends_test-append port:R-gettz \
+                    port:R-tinytest
+
+test.run            yes

@@ -1,0 +1,45 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github tidymodels discrim 1.0.2 v
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Model wrappers for discriminant analysis
+long_description    {*}${description}
+homepage            https://discrim.tidymodels.org
+checksums           rmd160  beb6fd25b843c5093de3bdb5d6f623d4140f617d \
+                    sha256  320ae8cafd56c6ce9deba641a13a79e272b86b119562dc063c6e850b0521584d \
+                    size    153738
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-dials \
+                    port:R-parsnip \
+                    port:R-rlang \
+                    port:R-tibble \
+                    port:R-withr
+
+depends_test-append port:R-covr \
+                    port:R-dplyr \
+                    port:R-earth \
+                    port:R-ggplot2 \
+                    port:R-hardhat \
+                    port:R-klaR \
+                    port:R-knitr \
+                    port:R-mda \
+                    port:R-mlbench \
+                    port:R-modeldata \
+                    port:R-naivebayes \
+                    port:R-rmarkdown \
+                    port:R-sda \
+                    port:R-sparsediscrim \
+                    port:R-spelling \
+                    port:R-testthat \
+                    port:R-xml2
+
+test.run            yes

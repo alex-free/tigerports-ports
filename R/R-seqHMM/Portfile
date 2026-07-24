@@ -1,0 +1,45 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is archaic.
+R.setup             cran helske seqHMM 2.0.0
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Mixture hidden Markov models for social sequence data \
+                    and other multivariate, multichannel categorical time series
+long_description    {*}${description}
+homepage            https://github.com/helske/seqHMM
+checksums           rmd160  27a6e6de5e6c7d240e8f827bf87971b193e308af \
+                    sha256  d4dbaced9dd704279dd25523e289a44f410086071009f28e86bfe5bcd3f803d2 \
+                    size    1421443
+
+depends_lib-append  port:R-checkmate \
+                    port:R-cli \
+                    port:R-data.table \
+                    port:R-future.apply \
+                    port:R-ggplot2 \
+                    port:R-ggseqplot \
+                    port:R-gridBase \
+                    port:R-igraph \
+                    port:R-lhs \
+                    port:R-nloptr \
+                    port:R-numDeriv \
+                    port:R-patchwork \
+                    port:R-progressr \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-RcppHungarian \
+                    port:R-rlang \
+                    port:R-TraMineR
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-covr \
+                    port:R-knitr \
+                    port:R-testthat
+
+test.run            yes

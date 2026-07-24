@@ -1,0 +1,17 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran r-forge fastmatch 1.1-8
+revision            1
+maintainers         nomaintainer
+license             GPL-2
+description         Fast match() function
+long_description    {*}${description}
+homepage            https://www.rforge.net/fastmatch
+checksums           rmd160  64bc263fdd4cc00ea02e51c9eddf92649387925b \
+                    sha256  2661c01bdc2383f4a30bf940e6bc3b68f1329db5f0e837df8160eb893f748d54 \
+                    size    17943
+
+test.run            yes

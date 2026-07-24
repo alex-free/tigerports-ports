@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+
+github.setup        libyal libcthreads 20260530
+revision            0
+categories          security devel
+license             LGPL-3+
+maintainers         nomaintainer
+description         Library for cross-platform C threads functions
+long_description    ${description}
+distname            ${name}-alpha-${version}
+checksums           rmd160  c23fbd486e82f8a95784c22160b01beb73de1a73 \
+                    sha256  25caf47ee507b8875bfdaa04311924c310db48e9e236d80b0cdf1c0015f12c6f \
+                    size    570378
+github.tarball_from releases
+
+worksrcdir          ${name}-${version}
+
+depends_build-append \
+                    port:gettext \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  port:gettext-runtime \
+                    port:libcerror \
+                    port:libiconv
+
+configure.args-append \
+                    --with-libiconv-prefix=${prefix} \
+                    --with-libintl-prefix=${prefix}

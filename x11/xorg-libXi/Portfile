@@ -1,0 +1,77 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem      1.0
+
+name            xorg-libXi
+version         1.8.3
+revision        0
+categories      x11 devel
+license         X11
+maintainers     {jeremyhu @jeremyhu} openmaintainer
+description     X.org libXi
+homepage        https://www.x.org
+platforms       darwin macosx
+long_description X11 Input Extension
+master_sites     xorg:individual/lib/
+
+distname        libXi-${version}
+
+checksums       rmd160  f2f22a886ba084d172e3d471070243314ebbe277 \
+                sha256  7ad60056f01af4f786cfe93b3a7707447711626fc8da2637bec71a90409babe5 \
+                size    411684
+
+use_xz          yes
+
+# this port repeatedly fails to build parallel on Tiger
+platform darwin 8 {
+    use_parallel_build   no
+}
+
+depends_build   path:bin/pkg-config:pkgconfig
+
+depends_lib     port:xorg-libXext \
+                port:xorg-libXfixes \
+                port:xorg-xorgproto
+
+configure.args \
+	--without-asciidoc \
+	--without-xmlto \
+	--without-fop \
+	--disable-specs
+
+build.args V=1
+
+# Depending on ghostscript for the PDF documentation creates a dependency
+# loop, so you may want to install first without the docs variant
+variant docs description "Install extra documentation" {
+	depends_build-append \
+		port:asciidoc \
+		port:fop \
+		port:xmlto \
+		port:xorg-sgml-doctools
+
+	depends_skip_archcheck-append \
+		asciidoc \
+		xmlto
+
+	configure.args-delete \
+		--without-asciidoc \
+		--without-xmlto \
+		--without-fop \
+		--disable-specs
+
+	configure.args-append \
+		--with-asciidoc \
+		--with-xmlto \
+		--with-fop \
+		--enable-specs
+
+	configure.env-append \
+		ASCIIDOC=${prefix}/bin/asciidoc \
+		XMLTO=${prefix}/bin/xmlto \
+		FOP=${prefix}/bin/fop
+}
+
+livecheck.type  regex
+livecheck.url   https://xorg.freedesktop.org/archive/individual/lib/?C=M&O=D
+livecheck.regex libXi-(\\d+\\.\\d+\\.\\d+)\\.tar

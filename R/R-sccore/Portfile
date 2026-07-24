@@ -1,0 +1,43 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github kharchenkolab sccore 1.0.6 v
+revision            1
+maintainers         nomaintainer
+license             GPL-3
+description         Core utilities for single-cell RNA-seq
+long_description    {*}${description}
+checksums           rmd160  bdc84df0b49b3f19c5edea64eff61fe34adf04fb \
+                    sha256  32e0d6d50619616de396192a11328dab1851a3f9c76877881bca28ee96c0973e \
+                    size    379286
+github.tarball_from archive
+
+depends_lib-append  port:R-dplyr \
+                    port:R-ggplot2 \
+                    port:R-ggrepel \
+                    port:R-igraph \
+                    port:R-irlba \
+                    port:R-magrittr \
+                    port:R-pbmcapply \
+                    port:R-pROC \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-RcppEigen \
+                    port:R-RcppProgress \
+                    port:R-rlang \
+                    port:R-scales \
+                    port:R-Seurat \
+                    port:R-tibble \
+                    port:R-uwot \
+                    port:R-withr
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-ggrastr \
+                    port:R-jsonlite \
+                    port:R-rmumps \
+                    port:R-testthat
+
+test.run            yes

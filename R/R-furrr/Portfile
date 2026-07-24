@@ -1,0 +1,33 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github DavisVaughan furrr 0.4.0 v
+revision            0
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Apply mapping functions in parallel using futures
+long_description    {*}${description}
+checksums           rmd160  3b134687ccfdaaa54b0534af9b319a107a5efed6 \
+                    sha256  f0c9f907e6e3ddc9d2f680da6b6444e52cb1d52a0f8ac4626d39a0857a4ca70f \
+                    size    930168
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-future \
+                    port:R-globals \
+                    port:R-purrr \
+                    port:R-rlang \
+                    port:R-vctrs
+
+depends_test-append port:R-carrier \
+                    port:R-covr \
+                    port:R-dplyr \
+                    port:R-knitr \
+                    port:R-parallelly \
+                    port:R-testthat \
+                    port:R-tidyselect
+
+test.run            yes

@@ -1,0 +1,46 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+
+github.setup        DanBloomberg leptonica 1.87.0
+revision            1
+categories          graphics science devel
+license             BSD
+
+maintainers         {stromnov @stromnov} openmaintainer
+
+description         image processing and image analysis library
+long_description    ${name} is an {*}${description}.
+
+checksums           rmd160  d94a571272ad3ecdd359d91cabc3d354f556bda7 \
+                    sha256  c73363397f96eb1295602bf44d708a994ad42046c791bf03ea0505d829bdb6a7 \
+                    size    14802808
+github.tarball_from releases
+
+depends_build       path:bin/pkg-config:pkgconfig
+
+depends_lib-append  port:giflib5 \
+                    path:include/turbojpeg.h:libjpeg-turbo \
+                    port:libpng \
+                    port:openjpeg \
+                    port:tiff \
+                    port:webp \
+                    port:zlib
+
+# stdatomic.h
+compiler.c_standard 2011
+compiler.blacklist-append {clang < 700}
+
+use_autoreconf      yes
+
+configure.args      --disable-silent-rules
+
+configure.cflags-prepend \
+                    -I${prefix}/libexec/giflib5/include
+configure.cppflags-prepend \
+                    -I${prefix}/libexec/giflib5/include
+configure.ldflags-prepend \
+                    -L${prefix}/libexec/giflib5/lib
+
+github.livecheck.regex {([0-9.]+)}

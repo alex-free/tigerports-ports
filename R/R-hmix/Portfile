@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran giancarlo.vercellino hmix 1.0.2
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Hidden Markov model for predicting time sequences with mixture sampling
+long_description    {*}${description}
+homepage            https://rpubs.com/giancarlo_vercellino/hmix
+checksums           rmd160  0ca92c70d66033d4e7c124ab6d8f1aac2b9a6b48 \
+                    sha256  ab1a5a3cf1ec1eba8cb4b19b4370504de09031df0ed960eee0cb0e07189138c0 \
+                    size    28705
+supported_archs     noarch
+
+depends_lib-append  port:R-cubature \
+                    port:R-dplyr \
+                    port:R-edfun \
+                    port:R-gld \
+                    port:R-glogis \
+                    port:R-HMM \
+                    port:R-mc2d \
+                    port:R-normalp \
+                    port:R-purrr
+
+depends_test-append port:R-testthat
+
+test.run            yes

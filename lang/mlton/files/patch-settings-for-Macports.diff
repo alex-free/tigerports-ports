@@ -1,0 +1,76 @@
+From 53d12fe9ff77fd96a8973e8ff459b498ba728f9b Mon Sep 17 00:00:00 2001
+From: barracuda156 <vital.had@gmail.com>
+Date: Fri, 21 Jul 2023 13:35:34 +0800
+Subject: [PATCH] Amend Makefile.config for Macports
+
+--- Makefile.config	2024-12-30 19:51:36.000000000 +0800
++++ Makefile.config	2024-12-31 02:54:22.000000000 +0800
+@@ -22,7 +22,7 @@
+ endif
+ 
+ # Specify installation prefix and staged install destination.
+-PREFIX := /usr/local
++PREFIX := @PREFIX@
+ DESTDIR :=
+ 
+ # Specify runtime and compile arguments given to (the to-be-built) `mlton`
+@@ -41,7 +41,7 @@
+ OLD_MLTON_RUNTIME_ARGS :=
+ OLD_MLTON_COMPILE_ARGS :=
+ 
+-OLD_MLTON_DIR :=
++OLD_MLTON_DIR := @MLTON@
+ ifneq (,$(OLD_MLTON_DIR))
+ OLD_MLTON := $(OLD_MLTON_DIR)/$(OLD_MLTON)
+ endif
+@@ -50,17 +50,17 @@
+ # Can be used for alternative tools (e.g., `SED=gsed`).
+ DIFF := diff
+ FIND := find
+-GIT := git
+-GREP := grep
++GIT := @PREFIX@/bin/git
++GREP := @PREFIX@/bin/ggrep
+ GZIP := gzip
+ PATCH := patch
+-RSYNC := rsync
+-SED := sed
++RSYNC := @PREFIX@/bin/rsync
++SED := @PREFIX@/bin/gsed
+ TAR := tar
+ 
+ SHA1SUM := sha1sum
+ SHA1 := sha1
+-OPENSSL := openssl
++OPENSSL := @PREFIX@/bin/openssl
+ SHASUM := shasum
+ 
+ CAT := cat
+@@ -85,7 +85,7 @@
+ MLTON_NAME := MLton [$(MLTON_FORK)]
+ endif
+ MLTON_OUTPUT := $(MLTON)-compile
+-MLTON_VERSION := $(shell TZ=UTC $(GIT) log -n1 --date=format-local:"%Y%m%d.%H%M%S" --pretty=format:"%cd-g%h$$([ "$$($(GIT) status --porcelain 2> /dev/null)" ] && echo '-dirty')" 2> /dev/null || echo '????????')
++MLTON_VERSION := "@VERSION@"
+ 
+ ######################################################################
+ ######################################################################
+
+From 106fc161be1c269db996acd207296385dcee1be5 Mon Sep 17 00:00:00 2001
+From: barracuda156 <vital.had@gmail.com>
+Date: Fri, 21 Jul 2023 13:37:14 +0800
+Subject: [PATCH] mlbdeps: amend for Macports
+
+diff --git bin/mlbdeps bin/mlbdeps
+index ef75768d0..abb885507 100755
+--- bin/mlbdeps
++++ bin/mlbdeps
+@@ -2,7 +2,7 @@
+ 
+ set -e
+ 
+-SED=${SED:-sed}
++SED="@PREFIX@/bin/gsed"
+ 
+ name=$(basename "$0")
+ 

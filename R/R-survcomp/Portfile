@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             bioconductor Bioconductor survcomp 1.58.0
+revision            1
+categories-append   bioconductor
+maintainers         nomaintainer
+license             Artistic-2
+description         Performance assessment and comparison for survival analysis
+long_description    {*}${description}
+checksums           rmd160  0bb588acb275562dd28aefc3274a5bc2cbbdefb2 \
+                    sha256  70a0b1d17146c34cbac93072ad2bcef5e03d87107c3086f7162fc2a8f68cbd35 \
+                    size    654011
+
+depends_lib-append  port:R-bootstrap \
+                    port:R-ipred \
+                    port:R-prodlim \
+                    port:R-rmeta \
+                    port:R-SuppDists \
+                    port:R-survivalROC
+
+depends_test-append port:R-Biobase \
+                    port:R-BiocManager \
+                    port:R-clinfun \
+                    port:R-Hmisc \
+                    port:R-xtable
+
+test.run            yes

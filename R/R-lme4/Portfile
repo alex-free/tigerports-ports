@@ -1,0 +1,43 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran lme4 lme4 2.0-1
+revision            0
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Linear Mixed-Effects Models using Eigen and S4
+long_description    {*}${description}
+homepage            https://github.com/lme4/lme4
+checksums           rmd160  808cd90ed630183dbea5f2fc625fbe2b6f277c88 \
+                    sha256  a34b75c1ef05d7c023d9d86c9d644381a4098de5b3008f9256b89b3a380917a4 \
+                    size    3701223
+
+depends_lib-append  port:R-minqa \
+                    port:R-nloptr \
+                    port:R-Rcpp \
+                    port:R-RcppEigen \
+                    port:R-reformulas
+
+depends_test-append port:R-car \
+                    port:R-dfoptim \
+                    port:R-gamm4 \
+                    port:R-ggplot2 \
+                    port:R-HSAUR3 \
+                    port:R-knitr \
+                    port:R-MEMSS \
+                    port:R-merDeriv \
+                    port:R-mlmRev \
+                    port:R-numDeriv \
+                    port:R-optimx \
+                    port:R-pbkrtest \
+                    port:R-rmarkdown \
+                    port:R-rr2 \
+                    port:R-semEff \
+                    port:R-statmod \
+                    port:R-testthat \
+                    port:R-tibble
+
+test.run            yes

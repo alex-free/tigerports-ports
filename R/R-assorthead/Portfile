@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             bioconductor LTLA assorthead 1.2.0
+revision            1
+categories-append   bioconductor
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Assorted Header-Only C++ Libraries
+long_description    {*}${description}
+homepage            https://github.com/LTLA/assorthead
+checksums           rmd160  3b0d75fc54cdcaa9bb8b106e918126fda53eb64b \
+                    sha256  6d00461796b54ee1da063bc23045a7d745c5b6318ed9c34dbe656645a9407295 \
+                    size    1828725
+supported_archs     noarch
+
+depends_test-append port:R-BiocStyle \
+                    port:R-knitr \
+                    port:R-rmarkdown
+
+test.run            yes

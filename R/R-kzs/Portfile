@@ -1,0 +1,19 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran cyr.derek kzs 1.4.1
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Kolmogorov–Zurbenko spatial smoothing and applications
+long_description    {*}${description}
+checksums           rmd160  78f71b7de4be6c7d111e8897ef786d546a7d796a \
+                    sha256  f91eb302c72ffcdaf5f7fd95fb14eeb7ed041017a5d479241f2c14ce4b697cb9 \
+                    size    3450393
+supported_archs     noarch
+
+test.run            yes

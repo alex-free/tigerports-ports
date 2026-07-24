@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran kevinushey dotty 0.1.0
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Unpacking dot operator
+long_description    {*}${description}
+homepage            https://kevinushey.github.io/dotty
+checksums           rmd160  365b671d2a0f6d06b7acb431af6700a97de9967e \
+                    sha256  8e9982ed4c2abd0dd2567ad9b2bd49e2790c2ae0ce731c4d0e593c03436581f0 \
+                    size    4603
+supported_archs     noarch
+
+depends_test-append port:R-testthat
+
+test.run            yes

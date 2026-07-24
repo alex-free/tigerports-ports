@@ -1,0 +1,38 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github larmarange labelled 2.14.1 v
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3+
+description         Manipulating labelled data
+long_description    {*}${description}
+homepage            https://larmarange.github.io/labelled
+checksums           rmd160  9f21f5497d8cf99112a4f154b6b1952241973e44 \
+                    sha256  089a14e95952fba565e0f2f2d1e97ad51b59519d10fd212e9a50d1f906f939bf \
+                    size    1192463
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-cli \
+                    port:R-dplyr \
+                    port:R-haven \
+                    port:R-lifecycle \
+                    port:R-rlang \
+                    port:R-stringr \
+                    port:R-tidyr \
+                    port:R-tidyselect \
+                    port:R-vctrs
+
+depends_test-append port:R-knitr \
+                    port:R-memisc \
+                    port:R-questionr \
+                    port:R-rmarkdown \
+                    port:R-snakecase \
+                    port:R-spelling \
+                    port:R-testthat
+
+test.run            yes

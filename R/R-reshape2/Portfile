@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# reshape vs reshape2 is intended:
+R.setup             github hadley reshape 1.4.5 v
+set R.package       reshape2
+revision            1
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Flexibly reshape data: a reboot of the reshape package
+long_description    {*}${description}
+checksums           rmd160  fd9df695bca8b6f9e1bb7abd01cd3702c07fe0a5 \
+                    sha256  9b45c8d818f95da6f8b9b9719712621a0ea5d238fce399d1787d0c3d4ac10417 \
+                    size    1943503
+github.tarball_from archive
+
+depends_lib-append  port:R-plyr \
+                    port:R-Rcpp \
+                    port:R-stringr
+
+depends_test-append port:R-covr \
+                    port:R-testthat
+
+test.run            yes

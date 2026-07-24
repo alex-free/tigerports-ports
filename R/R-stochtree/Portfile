@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran StochasticTree stochtree 0.3.0
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Stochastic Tree Ensembles (XBART and BART)
+long_description    {*}${description} for supervised learning and causal inference.
+homepage            https://github.com/StochasticTree/stochtree
+checksums           rmd160  9b84652a1728867fa2b34ad0888c6f221f8e32d3 \
+                    sha256  a0485a8b82828611de90a8b313a0e97c2eb1be9de758da7720538ba91444154d \
+                    size    1599639
+
+# https://github.com/StochasticTree/stochtree/issues/288
+patchfiles          patch-eigen3.diff
+
+depends_lib-append  port:R-BH \
+                    port:R-cpp11 \
+                    port:R-R6
+
+depends_test-append port:R-testthat
+
+test.run            yes

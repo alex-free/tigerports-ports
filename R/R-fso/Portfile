@@ -1,0 +1,20 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran droberts fso 2.1-4
+revision            1
+maintainers         nomaintainer
+license             GPL-2+
+description         Fuzzy Set Ordination
+long_description    {*}${description}
+checksums           rmd160  c519f3d966be76588df3a7fac1390f9197e45eeb \
+                    sha256  0a6f5b01b65799782f9b3dcb3d22b8828097e5420cc702f26379d0918bcd3652 \
+                    size    15035
+
+depends_lib-append  port:R-labdsv
+
+compilers.setup     require_fortran
+
+test.run            yes

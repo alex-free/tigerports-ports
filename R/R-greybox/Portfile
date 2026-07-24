@@ -1,0 +1,37 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran config-i1 greybox 2.0.8
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             LGPL-2.1
+description         Toolbox for model building and forecasting
+long_description    {*}${description}
+homepage            https://github.com/config-i1/greybox
+checksums           rmd160  3d2a3108d50c925c75be72e3016b7a1cd7a78075 \
+                    sha256  9d20f21a669b5db55cb5b53b2ac80e7761a9084f7174d80ee0afe78a7eeed83c \
+                    size    2599219
+
+depends_lib-append  port:R-generics \
+                    port:R-nloptr \
+                    port:R-pracma \
+                    port:R-Rcpp \
+                    port:R-statmod \
+                    port:R-texreg \
+                    port:R-xtable \
+                    port:R-zoo
+
+depends_test-append port:R-foreach \
+                    port:R-forecast \
+                    port:R-doMC \
+                    port:R-doParallel \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-smooth \
+                    port:R-testthat \
+                    port:R-vars
+
+test.run            yes

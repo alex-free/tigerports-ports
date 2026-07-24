@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           ruby 1.0
+
+ruby.branches       3.4 3.3 3.2 3.1 3.0
+ruby.setup          liquid 5.12.0 gem {} rubygems
+categories-append   textproc
+platforms           any
+license             MIT
+maintainers         nomaintainer
+description         Secure, non-evaling end user template engine with aesthetic markup
+long_description    {*}${description}
+homepage            https://shopify.github.io/liquid
+checksums           rmd160  d8ac9d78eed20355ea32a5d700b3e0b3baa04dca \
+                    sha256  5a3c2c2430cd925d21c53e4ed9abea52cd0a9da53b541422f81dee79aca2a673 \
+                    size    60928
+supported_archs     noarch
+
+if {${subport} ne ${name}} {
+    depends_run-append \
+                    port:rb${ruby.suffix}-bigdecimal \
+                    port:rb${ruby.suffix}-strscan
+}

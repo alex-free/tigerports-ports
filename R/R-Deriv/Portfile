@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran sgsokol Deriv 4.2.0 v
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3+
+description         Symbolic differentiation
+long_description    R-based solution for symbolic differentiation. It admits \
+                    user-defined function as well as function substitution \
+                    in arguments of functions to be differentiated. \
+                    Some symbolic simplification is part of the work.
+checksums           rmd160  36a68bb5a36e99da3a868b62b02f4d796a1ba385 \
+                    sha256  210394e7f90fe6fd943d37e8b1953c5a3c10c96fbdc5bbac7660aa9d112a1f63 \
+                    size    38752
+# github.tarball_from archive
+supported_archs     noarch
+
+depends_test-append port:R-testthat
+
+test.run            yes

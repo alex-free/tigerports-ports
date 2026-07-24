@@ -1,0 +1,169 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           conflicts_build 1.0
+PortGroup           legacysupport 1.1
+PortGroup           openssl 1.0
+
+# At least for memmem
+legacysupport.newest_darwin_requires_legacy 10
+
+# This is working now, but EXPERIMENTAL and will likely change.
+
+# Revbump Nim on the primary compiler major version updates, since /opt/local/libexec/nim/bin/gcc
+# refers to the exact compiler, not merely gcc/clang.
+
+name                nim
+version             2.2.8
+revision            2
+license             MIT
+categories          lang
+maintainers         {@esafak gmail.com:esafak} {@barracuda156 macos-powerpc.org:barracuda}
+
+description         Nim programming language
+long_description    Nim is a statically typed compiled systems programming \
+                    language. It combines successful concepts from mature \
+                    languages like Python, Ada and Modula. Its design focuses \
+                    on efficiency, expressiveness and elegance (in that order \
+                    of priority).
+
+homepage            https://nim-lang.org
+
+# TODO: using our csources is a temporary measure.
+# Fixes should be merged to upstream Nim sources and then updated csources have to be generated.
+# See: https://github.com/nim-lang/Nim/issues/24414
+
+set c_hash          1daf0d84448ba2df173b330712abee542ea1d7a6
+
+master_sites        ${homepage}/download/:nim \
+                    https://github.com/barracuda156/csources_v3/archive/${c_hash}/:csource
+distfiles           ${distname}.tar.xz:nim \
+                    csources_v3-${c_hash}.tar.gz:csource
+checksums           ${distname}.tar.xz \
+                    rmd160  fbcd186c97d7bd728d2a8d0e102a520c9af81711 \
+                    sha256  114191afa083c5059dcbe5ce88dbe4f42542cff04e2c3017668ee438bc0b8cfc \
+                    size    8579420 \
+                    csources_v3-${c_hash}.tar.gz \
+                    rmd160  7fdda1cfbc70b9315008cba34262ad929e75461c \
+                    sha256  7edc25dc6a5cad3106c0929260deaf05b1e9cfbd4b67f6b5a7a9c68b5f8c8feb \
+                    size    359202993
+
+use_xz              yes
+extract.only        ${distname}.tar.xz
+
+# Do not let Nim pick nimble from ports’ prefix.
+conflicts_build     nimble
+
+compiler.c_standard 2011
+
+post-extract {
+    set tar [findBinary tar ${portutil::autoconf::tar_command}]
+    system -W ${workpath} "${tar} -zxf ${distpath}/csources_v3-${c_hash}.tar.gz"
+    delete -force ${worksrcpath}/c_code
+    delete -force ${worksrcpath}/build.sh
+    delete -force ${worksrcpath}/makefile
+    copy ${workpath}/csources_v3-${c_hash}/c_code ${worksrcpath}/
+    copy ${workpath}/csources_v3-${c_hash}/build.sh ${worksrcpath}/
+    copy ${workpath}/csources_v3-${c_hash}/makefile ${worksrcpath}/
+
+    # We need to force it to use the right compiler.
+    ln -s ${configure.cc} ${worksrcpath}/bin/gcc
+}
+
+patch.pre_args-replace  -p0 -p1
+
+patchfiles-append   0001-fix-paths.patch
+
+# https://github.com/nim-lang/Nim/issues/25372
+# https://github.com/nim-lang/Nim/issues/25373
+# https://github.com/nim-lang/csources_v1/pull/7
+patchfiles-append   0002-support-powerpc-darwin.patch
+
+if {${os.platform} eq "darwin" && ${os.major} < 11} {
+    # https://github.com/nim-lang/Nim/issues/25381
+    patchfiles-append \
+                    0003-patch-legacy.diff
+}
+
+# Cherry-picked from https://github.com/freebsd/freebsd-ports/tree/85911e10acdc8854a13831834b48fefa57c4f370/lang/nim/files
+patchfiles-append   0004-misc-BSD.patch
+
+# Fix annoying inability of Nim to find right dylibs.
+# https://github.com/nim-lang/nimble/issues/789
+patchfiles-append   0005-wrappers.patch
+
+post-patch {
+    reinplace "s|@PREFIX@|${prefix}|g" \
+        ${worksrcpath}/build.sh ${worksrcpath}/makefile ${worksrcpath}/config/nim.cfg \
+        ${worksrcpath}/lib/wrappers/openssl.nim ${worksrcpath}/lib/wrappers/pcre.nim \
+        ${worksrcpath}/lib/pure/ssl_certs.nim ${worksrcpath}/lib/pure/encodings.nim \
+        ${worksrcpath}/tests/manyloc/keineschweine/lib/glx.nim
+}
+
+# TODO: 10.4 may need to switch away from posix_spawn.
+# See: https://github.com/freebsd/freebsd-ports/blob/aa046690dcc7fb7999e05913c51170848fba769a/lang/nim/files/patch-config-nim.cfg
+
+use_configure       no
+
+if {${configure.build_arch} ni [list ppc ppc64]} {
+    variant doc description "Build HTML docs" {}
+}
+
+depends_lib-append  port:libiconv \
+                    port:pcre
+
+build {
+    # See https://nim-lang.github.io/Nim/packaging.html
+    set nim_build_arch ${os.arch}
+    if {${configure.build_arch} eq "arm64"} {
+        # nim looks for aarch64 and not arm/arm64
+        set nim_build_arch "aarch64"
+    } elseif {${configure.build_arch} eq "ppc64"} {
+        # This does not actually work on its own.
+        set nim_build_arch "powerpc64"
+    }
+
+    system -W ${worksrcpath} "PATH=./bin:\$PATH ./build.sh --os ${os.platform} --cpu ${nim_build_arch}"
+    system -W ${worksrcpath} "PATH=./bin:\$PATH ./bin/nim c --parallelBuild=${build.jobs} --nimcache=./nimcache -d:release koch"
+    system -W ${worksrcpath} "PATH=./bin:\$PATH ./koch boot --parallelBuild=${build.jobs} --nimcache=./nimcache -d:release -d:useLinenoise"
+    system -W ${worksrcpath} "PATH=./bin:\$PATH ./bin/nim c --parallelBuild=${build.jobs} --nimcache=./nimcache --app:lib -d:release -d:createNimRtl lib/nimrtl.nim"
+    system -W ${worksrcpath} "PATH=./bin:\$PATH ./koch tools --parallelBuild=${build.jobs} --nimcache=./nimcache -d:release"
+
+    if {[variant_isset doc]} {
+        system -W ${worksrcpath} "./koch docs --nimcache=./nimcache -d:release"
+    }
+}
+
+set nimroot ${prefix}/libexec/${name}
+
+destroot {
+    system -W \
+        ${worksrcpath} "./install.sh [shellescape ${destroot}${prefix}/libexec]"
+
+    foreach nimbin [glob ${worksrcpath}/bin/*] {
+        xinstall -m 0755 ${nimbin} ${destroot}${nimroot}/bin/
+
+        ln -sf \
+            ${nimroot}/bin/[file tail ${nimbin}] ${destroot}${prefix}/bin/
+    }
+
+    copy ${worksrcpath}/lib/libnimrtl.dylib ${destroot}${nimroot}/lib/
+
+    # Fix a bug in Nim installation:
+    # https://github.com/nim-lang/Nim/issues/22831
+    if {[file exists ${worksrcpath}/dist/checksums]} {
+        xinstall -d -m 0755 ${destroot}${nimroot}/dist
+        copy ${worksrcpath}/dist/checksums ${destroot}${nimroot}/dist/checksums
+    }
+
+    xinstall -d ${destroot}${prefix}/share/doc/${name}
+    copy {*}[glob ${worksrcpath}/doc/*] ${destroot}${prefix}/share/doc/${name}
+}
+
+# Do not install a symlink, it can cause problems with other ports.
+post-destroot {
+    delete -f ${destroot}${prefix}/bin/gcc
+}
+
+livecheck.url       ${homepage}/install.html
+livecheck.regex     ${name}-(\[0-9.\]+).tar.xz

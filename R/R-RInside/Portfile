@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran eddelbuettel RInside 0.2.19
+revision            1
+categories-append   devel
+maintainers         nomaintainer
+license             GPL-2+
+description         C++ classes to embed R in C++ (and C) applications
+long_description    {*}${description}
+homepage            https://dirk.eddelbuettel.com/code/rinside.html
+checksums           rmd160  cf815b2cb50b897e7469062d18d1ba2c36cc51bd \
+                    sha256  0703843a3f1460c571650138e5846d96552d6541766c7df72c609cd3aaca1f24 \
+                    size    81639
+
+depends_lib-append  port:R-Rcpp
+
+# /usr/bin/install_name_tool: more than one input file specified (@loader_path/../lib and -add_rpath)
+patchfiles-append   patch-fix-install_name_tool.diff
+
+test.run            yes

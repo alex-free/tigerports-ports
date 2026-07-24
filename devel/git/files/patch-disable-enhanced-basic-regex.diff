@@ -1,0 +1,23 @@
+--- a/config.mak.uname	2026-07-01 10:03:22.000000000 +0800
++++ b/config.mak.uname	2026-07-01 10:05:44.000000000 +0800
+@@ -159,20 +159,9 @@
+ 	FREAD_READS_DIRECTORIES = UnfortunatelyYes
+ 	HAVE_NS_GET_EXECUTABLE_PATH = YesPlease
+ 	CSPRNG_METHOD = arc4random
+-	USE_ENHANCED_BASIC_REGULAR_EXPRESSIONS = YesPlease
+ 	HAVE_PLATFORM_PROCINFO = YesPlease
+ 	COMPAT_OBJS += compat/darwin/procinfo.o
+ 
+-        ifeq ($(uname_M),arm64)
+-		HOMEBREW_PREFIX = /opt/homebrew
+-        else
+-		HOMEBREW_PREFIX = /usr/local
+-        endif
+-        ifeq ($(shell test "$(DARWIN_MAJOR_VERSION)" -ge 24 && echo 1),1)
+-		USE_HOMEBREW_LIBICONV = UnfortunatelyYes
+-		NEEDS_GOOD_LIBICONV = UnfortunatelyYes
+-        endif
+-
+ 	# ld reports "PROJECT:{ld,ld64,dyld}-NNN", match any of the three.
+ 	LD_MAJOR_VERSION = $(shell ld -v 2>&1 | sed -n 's/.*PROJECT:[^ ]*-\([0-9][0-9]*\).*/\1/p')
+ 

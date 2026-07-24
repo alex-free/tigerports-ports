@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran r-project stablelearner 0.1-6
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             {GPL-2 GPL-3}
+description         Stability assessment of statistical learning methods
+long_description    {*}${description}
+checksums           rmd160  d861a3318b4035897851e2eccd8a7865a61ed75b \
+                    sha256  3e81384ea5d40c12e452d14ef0c4d0d21ba619e2e05deb1bd8b27337f720555d \
+                    size    226481
+supported_archs     noarch
+
+depends_lib-append  port:R-e1071 \
+                    port:R-party \
+                    port:R-partykit \
+                    port:R-randomForest \
+                    port:R-ranger

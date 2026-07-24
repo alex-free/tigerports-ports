@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           common_lisp 1.0
+PortGroup           github 1.0
+
+github.setup        Shinmera trivial-main-thread 19f6c40745b909beb8e215142a280d47d1d828bc
+name                cl-trivial-main-thread
+version             20250109
+revision            0
+
+checksums           rmd160  a648dc24511adf1b67a41d18a350e4917bdcefe9 \
+                    sha256  ca88c52d28d9dc7a48d712997709d675e042ba6ed59711df6bcbd2d2e23cd8a0 \
+                    size    8164
+github.tarball_from archive
+
+categories-append   devel
+maintainers         nomaintainer
+license             zlib
+
+description         Compatibility library to run things in the main thread
+long_description    {*}${description}.
+
+depends_lib-append  port:cl-bordeaux-threads \
+                    port:cl-simple-tasks \
+                    port:cl-trivial-features
+
+common_lisp.threads yes

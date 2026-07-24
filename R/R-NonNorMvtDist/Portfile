@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran zhixin.lun NonNorMvtDist 1.1.0
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3+
+description         Multivariate Lomax (Pareto Type II) and its related distributions
+long_description    {*}${description}
+checksums           rmd160  0e750593c751c29ca81f4530573b67dc993c283a \
+                    sha256  ea8a50ad761b0d12cc560ba64c2099cf0651342a8775a040fa1ebac35ba6d59e \
+                    size    15055
+supported_archs     noarch
+
+depends_lib-append  port:R-cubature
+
+test.run            yes

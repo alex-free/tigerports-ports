@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github eliocamp ggnewscale 0.5.2 v
+revision            1
+categories-append   graphics
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Multiple fill and colour scales in R-ggplot2
+long_description    {*}${description}
+homepage            https://eliocamp.github.io/ggnewscale
+checksums           rmd160  57b8b4ad33a8eb0f93d8f167326be016ae71f142 \
+                    sha256  a38cde4fdd13cc5206b2db645706d060d537e4995c7d6af01548e09f3503d78b \
+                    size    514331
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-ggplot2
+
+depends_test-append port:R-covr \
+                    port:R-testthat \
+                    port:R-vdiffr
+
+test.run            yes

@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitLab once updated there.
+R.setup             cran luke-tierney misc3d 0.9-2 R-
+revision            1
+categories-append   graphics
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL
+description         Collection of miscellaneous 3D plots, including isosurfaces
+long_description    {*}${description}
+checksums           rmd160  51cadc2bc7f70f75ebf4a43f2ef452e90873e61f \
+                    sha256  fabd1b0348def8244a627664206cfa610a84fa34c6e21da73a6c13d547229b99 \
+                    size    67405
+supported_archs     noarch
+
+depends_test-append port:R-maps \
+                    port:R-rgl \
+                    port:R-scatterplot3d \
+                    port:R-tkrplot
+
+test.run            yes

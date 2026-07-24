@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran ulrike.groemping DoE.base 1.2-5
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Full factorials, orthogonal arrays and base utilities for DoE packages
+long_description    {*}${description}
+homepage            https://prof.bht-berlin.de/groemping/DoE
+checksums           rmd160  eb047bbfe682ec8cdf90e3b1a145e38575faed2b \
+                    sha256  59cc4e2afe7bef792d454655258e8f4eb073cf3fdcb9639237f83e2fe1b7f4b9 \
+                    size    723500
+supported_archs     noarch
+
+depends_lib-append  port:R-combinat \
+                    port:R-conf.design \
+                    port:R-numbers \
+                    port:R-partitions \
+                    port:R-vcd
+
+depends_test-append port:R-DoE.wrapper \
+                    port:R-FrF2 \
+                    port:R-RColorBrewer
+
+test.run            yes

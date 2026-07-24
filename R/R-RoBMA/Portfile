@@ -1,0 +1,55 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran FBartos RoBMA 3.6.1
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Robust Bayesian Meta-Analyses
+long_description    {*}${description}
+homepage            https://fbartos.github.io/RoBMA
+checksums           rmd160  b18de171ad666f43497cba86bab071393923066d \
+                    sha256  388437c4d54a277a2b8942ec8d5d477a843abeabac9e07d6cf236e9218beebe1 \
+                    size    2683088
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  port:jags \
+                    port:R-BayesTools \
+                    port:R-coda \
+                    port:R-ggplot2 \
+                    port:R-mvtnorm \
+                    port:R-Rdpack \
+                    port:R-rjags \
+                    port:R-rlang \
+                    port:R-runjags \
+                    port:R-scales
+
+# https://github.com/FBartos/RoBMA/issues/27
+if {${os.platform} eq "darwin" && ${configure.cxx_stdlib} ne "libc++"} {
+    # Symbol not found: __ZNK4jags12Distribution5aliasB5cxx11Ev
+    patchfiles-append \
+                    patch-Makevars.diff
+}
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-covr \
+                    port:R-emmeans \
+                    port:R-fixest \
+                    port:R-knitr \
+                    port:R-lme4 \
+                    port:R-metaBMA \
+                    port:R-metadat \
+                    port:R-metafor \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-vdiffr \
+                    port:R-weightr
+
+test.run            yes

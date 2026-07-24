@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran drizopoulos ltm 1.2-0
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Latent Trait Models under IRT
+long_description    {*}${description}
+homepage            https://github.com/drizopoulos/ltm
+checksums           rmd160  39050451b11fcb1deb21dab85269793ea554412c \
+                    sha256  e12aea694b5a5663de0b4e12596454117261dd9d72ca95758d747c20cd5c0f6e \
+                    size    287001
+supported_archs     noarch
+
+depends_lib-append  port:R-msm \
+                    port:R-polycor
+
+test.run            yes

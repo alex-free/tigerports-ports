@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran groll glmmLasso 1.6.4
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2
+description         Variable selection for generalized linear mixed models by l1-penalized estimation
+long_description    {*}${description}
+checksums           rmd160  886d0b068a17f680895ce32b7134f99f1d0c250f \
+                    sha256  497ca067e5316cc3ab931914890b2041fb078317dbe33446f1e2b16eca98a43a \
+                    size    72013
+
+depends_lib-append  port:R-minqa \
+                    port:R-Rcpp \
+                    port:R-RcppEigen
+
+test.run            yes

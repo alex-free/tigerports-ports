@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran joshpasek weights 1.1.2
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-2+
+description         Weighting and weighted statistics
+long_description    {*}${description}
+checksums           rmd160  d48c4198c0c0c747f62b08c5fecaad69c0d7a1f5 \
+                    sha256  6cc1c5020aad9d86cd38e65cad07958220f2f3e35e0e4bf81110c384be1599ea \
+                    size    48400
+
+depends_lib-append  port:R-gdata \
+                    port:R-Hmisc \
+                    port:R-mice \
+                    port:R-lme4
+
+depends_test-append port:R-glmnet \
+                    port:R-pscl \
+                    port:R-vioplot
+
+test.run            yes

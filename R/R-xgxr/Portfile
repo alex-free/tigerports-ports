@@ -1,0 +1,49 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran Novartis xgxr 1.1.2
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Exploratory graphics for pharmacometrics
+long_description    {*}${description}
+homepage            https://opensource.nibr.com/xgx
+checksums           rmd160  0cb1b269bf0e4c33196a59f9443a3a949e442ad9 \
+                    sha256  fba919415726ed5ff80db1e7b207aaf633789a2e760f7adda2149fa5be81b656 \
+                    size    2462492
+supported_archs     noarch
+
+depends_lib-append  port:R-assertthat \
+                    port:R-binom \
+                    port:R-Deriv \
+                    port:R-DescTools \
+                    port:R-dplyr \
+                    port:R-ggplot2 \
+                    port:R-glue \
+                    port:R-gtable \
+                    port:R-Hmisc \
+                    port:R-labeling \
+                    port:R-magrittr \
+                    port:R-minpack.lm \
+                    port:R-pander \
+                    port:R-png \
+                    port:R-RCurl \
+                    port:R-readr \
+                    port:R-scales \
+                    port:R-stringr \
+                    port:R-tibble
+
+depends_test-append port:R-caTools \
+                    port:R-gridExtra \
+                    port:R-knitr \
+                    port:R-pkgdown \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-tidyr
+
+# FIXME: tests pass, but examples error out:
+# Error in plot.new() : figure margins too large
+test.run            yes

@@ -1,0 +1,55 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+
+# clock_gettime
+legacysupport.newest_darwin_requires_legacy 15
+
+github.setup        Singular Singular 4-4-1 Release-
+name                singular
+revision            0
+version             [string map {- .} ${github.version}]
+categories          math
+maintainers         nomaintainer
+license             {GPL-2 GPL-3}
+description         The Singular computer algebra system
+long_description \
+    Singular is a computer algebra system for polynomial computations, \
+    with special emphasis on commutative and non-commutative algebra, \
+    algebraic geometry and singularity theory.
+homepage            https://www.singular.uni-kl.de
+
+checksums           rmd160  1d113e2aa27b26852956a67fc34555b3665669cd \
+                    sha256  f10e47151bebc61b6d188c026acdcddfa46cbd6303ac512c2b9913b41242b7f8 \
+                    size    13849477
+github.tarball_from archive
+
+# https://github.com/Singular/Singular/commit/05f5116e13c8a4f5f820c78c35944dd6d197d442
+patchfiles          flint-3.3.x.patch
+
+# clang: error: unknown argument: '-fno-delete-null-pointer-checks'
+# https://trac.macports.org/ticket/65804
+compiler.blacklist-append {clang < 700} *gcc-4.*
+
+depends_build-append \
+                    port:autoconf \
+                    port:automake \
+                    port:libtool
+
+depends_lib-append  port:cddlib \
+                    port:flint \
+                    port:gmp \
+                    port:mpfr \
+                    port:ncurses \
+                    port:ntl \
+                    port:readline
+
+configure.cmd       ./autogen.sh && ./configure
+configure.args      --enable-gfanlib \
+                    --with-ntl=${prefix} \
+                    --with-flint=${prefix}
+
+test.run            yes
+test.target         check

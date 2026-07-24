@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is outdated.
+R.setup             cran R-CF ncdfCF 0.8.1 v
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Easy access to NetCDF files with CF metadata conventions
+long_description    {*}${description}
+homepage            https://github.com/R-CF/ncdfCF
+checksums           rmd160  9f8921f0e1b6a1af40b42ecd28df923a5b1f6b79 \
+                    sha256  4dbb47e3ff8054250aa778e8b74cabec56158b47835d4497c27fce430aa3af4a \
+                    size    1148174
+supported_archs     noarch
+
+depends_lib-append  port:R-abind \
+                    port:R-CFtime \
+                    port:R-R6 \
+                    port:R-RNetCDF \
+                    port:R-stringr
+
+depends_test-append port:R-data.table \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-terra \
+                    port:R-testthat \
+                    port:R-units
+
+# FIXME: one test fails on PowerPC: https://github.com/R-CF/ncdfCF/issues/11
+# Error in `ax1[[1L]]`: subscript out of bounds
+test.run            yes

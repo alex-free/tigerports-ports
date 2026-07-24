@@ -1,0 +1,39 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran Merck gsDesign2 1.1.5 v
+revision            1
+maintainers         nomaintainer
+license             GPL-3
+description         Group sequential design with non-constant effect
+long_description    {*}${description}
+homepage            https://merck.github.io/gsDesign2
+checksums           rmd160  cff2a84c1a6c182acefdc137450aab6d3ffa109a \
+                    sha256  968467dec654dbc18e5a533862c70f8c6ea04a7caa6d67ea762e054adc635615 \
+                    size    452590
+# github.tarball_from archive
+
+depends_lib-append  port:R-corpcor \
+                    port:R-data.table \
+                    port:R-dplyr \
+                    port:R-gsDesign \
+                    port:R-gt \
+                    port:R-mvtnorm \
+                    port:R-npsurvSS \
+                    port:R-r2rtf \
+                    port:R-Rcpp \
+                    port:R-tibble \
+                    port:R-tidyr
+
+depends_test-append port:R-covr \
+                    port:R-ggplot2 \
+                    port:R-kableExtra \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-simtrial \
+                    port:R-testthat
+
+test.run            yes

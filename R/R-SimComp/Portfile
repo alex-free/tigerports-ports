@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran hasler SimComp 3.6
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL
+description         Simultaneous comparisons for multiple endpoints
+long_description    {*}${description}
+checksums           rmd160  627924b649084ec218965efdc14f9efb28af1803 \
+                    sha256  0317f9780b49aa86cc071681cf7f3f0106d0e1d3f9d99d6c4916c230f1e479d2 \
+                    size    31077
+supported_archs     noarch
+
+depends_lib-append  port:R-mratios \
+                    port:R-multcomp \
+                    port:R-mvtnorm
+
+test.run            yes

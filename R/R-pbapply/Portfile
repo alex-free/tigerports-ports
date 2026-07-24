@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran psolymos pbapply 1.7-4 v
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Adding progress bar to *apply functions
+long_description    {*}${description}
+homepage            https://peter.solymos.org/pbapply
+checksums           rmd160  f2f13cf00c92d1ac5c0a9a745fd16d554b832983 \
+                    sha256  6a5c7110a6bf13735374d3b2e75b32ec0e0f0276ad95e928d2c802b53ff1302d \
+                    size    23759
+supported_archs     noarch
+
+depends_test-append port:R-future \
+                    port:R-future.apply \
+                    port:R-shiny
+
+test.run            yes

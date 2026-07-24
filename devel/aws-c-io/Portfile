@@ -1,0 +1,57 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+PortGroup           openssl 1.0
+
+github.setup        awslabs aws-c-io 0.27.4 v
+revision            0
+categories          devel
+license             Apache-2
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+description         Event-driven framework for implementing application protocols
+long_description    {*}${description}
+checksums           rmd160  66ac5934c46ed7015725a3c3f8c79f4cb99becdf \
+                    sha256  0f2ce32de3685ca5ba3a8395d461c783253c1718cf70d31378eb6be890db1e3e \
+                    size    772441
+github.tarball_from archive
+
+# See: https://github.com/awslabs/aws-c-io/issues/784
+if {${os.platform} eq "darwin" && ${os.major} < 11} {
+    patchfiles-append \
+                    patch-CMakeLists.txt \
+                    patch-pki_utils.h.diff \
+                    patch-socket.c.diff \
+                    patch-s2n_apple_keychain.diff \
+                    patch-tls_channel_handler.diff \
+                    patch-tests.diff
+}
+
+depends_lib-append  port:aws-c-cal \
+                    port:aws-c-common \
+                    port:s2n-tls
+
+# future.c:64: error: #pragma GCC diagnostic not allowed inside functions
+compiler.blacklist-append \
+                    *gcc-4.* {clang < 421}
+
+configure.args-append \
+                    -DAWS_USE_SECITEM=OFF \
+                    -DBUILD_SHARED_LIBS=ON \
+                    -DBUILD_TESTING=ON \
+                    -DUSE_S2N=ON
+
+# Needed for tests:
+configure.pre_args-replace \
+                    -DCMAKE_BUILD_WITH_INSTALL_RPATH:BOOL=ON \
+                    -DCMAKE_BUILD_WITH_INSTALL_RPATH:BOOL=OFF
+
+# FIXME: a number of tests fail, mostly tls-related (not all of those though).
+# On powerpc: 76% tests passed, 47 tests failed out of 192 (with 2 cleanup_in_* disabled due to getting stuck).
+# TLS tests failures are not exclusive to powerpc, but related to Unix-like building:
+# https://github.com/awslabs/aws-c-io/issues/784
+# This must be addressed.
+# Upd. As of 0.27.2, on powerpc: 86% tests passed, 33 tests failed out of 232
+test.env-append     AWS_CRT_USE_NON_FIPS_TLS_13=1
+test.run            yes

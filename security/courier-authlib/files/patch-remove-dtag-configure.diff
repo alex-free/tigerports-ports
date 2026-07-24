@@ -1,0 +1,50 @@
+--- configure	2026-06-28 10:31:47.000000000 +0800
++++ configure	2026-07-02 19:18:24.000000000 +0800
+@@ -23773,46 +23773,7 @@
+ 
+ 
+ save_LDFLAGS="$LDFLAGS"
+-LDFLAGS="-Wl,--enable-new-dtags $LDFLAGS"
+-
+-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking --enable-new-dtags option" >&5
+-printf %s "checking --enable-new-dtags option... " >&6; }
+-if test ${authlib_cv_enable_new_dtags+y}
+-then :
+-  printf %s "(cached) " >&6
+-else case e in #(
+-  e) cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+-/* end confdefs.h.  */
+-
+-
+-int
+-main (void)
+-{
+-return 0;
+-  ;
+-  return 0;
+-}
+-_ACEOF
+-if ac_fn_c_try_link "$LINENO"
+-then :
+-  authlib_cv_enable_new_dtags=yes
+-else case e in #(
+-  e) authlib_cv_enable_new_dtags=no  ;;
+-esac
+-fi
+-rm -f core conftest.err conftest.$ac_objext conftest.beam \
+-    conftest$ac_exeext conftest.$ac_ext
+-
+- ;;
+-esac
+-fi
+-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $authlib_cv_enable_new_dtags" >&5
+-printf "%s\n" "$authlib_cv_enable_new_dtags" >&6; }
+-
+-if test "$authlib_cv_enable_new_dtags" = "yes"
+-then
+-   courierauth_ldflags="-Wl,--enable-new-dtags $courierauth_ldflags"
+-fi
++LDFLAGS="$LDFLAGS"
+ 
+ 
+ 

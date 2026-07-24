@@ -1,0 +1,44 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran BjarkeHautop bayesSSM 0.7.0 v
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Bayesian Methods for State Space Models
+long_description    {*}${description}
+homepage            https://bjarkehautop.github.io/bayesSSM
+checksums           rmd160  95963853e258bdb4e48533991ba444f608e01e34 \
+                    sha256  8ae941d3e2014cbc397d98963a1c7304f98bb15f3f27b0b8ec55bbdcdd713bbc \
+                    size    134770
+# github.tarball_from archive
+
+post-extract {
+    # Trash pre-compiled objects:
+    fs-traverse f ${worksrcpath}/src {
+        if {[file isfile ${f}] && [file extension ${f}] == ".o"} {
+            delete -force ${f}
+        }
+    }
+}
+
+depends_lib-append  port:R-checkmate \
+                    port:R-dplyr \
+                    port:R-future \
+                    port:R-future.apply \
+                    port:R-Rcpp
+
+depends_test-append port:R-expm \
+                    port:R-extraDistr \
+                    port:R-ggplot2 \
+                    port:R-knitr \
+                    port:R-rlang \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-tidyr
+
+test.run            yes

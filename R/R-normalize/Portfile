@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran loelschlaeger normalize 0.1.2
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3+
+description         Centering and scaling of numeric data
+long_description    {*}${description}
+homepage            https://github.com/loelschlaeger/normalize
+checksums           rmd160  d81afe8e6b234a822e9ba6b0959f95b712578c7a \
+                    sha256  e7d0dd26f5d93e5249b89b1989a2954bd7827f57f0954c52f6e630d724fa92ef \
+                    size    14703
+supported_archs     noarch
+
+depends_test-append port:R-testthat
+
+test.run            yes

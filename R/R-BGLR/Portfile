@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran perpdgo BGLR 1.1.4
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-3
+description         Bayesian Generalized Linear Regression
+long_description    {*}${description}
+checksums           rmd160  15adf42fceb08b5bb7cedd87c00e95f153ef96b5 \
+                    sha256  1122549fd53e1d050b99bebae3e56f2e3d2135c6b622acba9fd4bfa14a97c792 \
+                    size    4955414
+
+depends_lib-append  port:R-truncnorm
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-pROC
+
+test.run            yes

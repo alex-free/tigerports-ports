@@ -1,0 +1,18 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran tianhao.wu EconDemand 1.0
+revision            1
+categories-append   economics
+maintainers         nomaintainer
+license             GPL-2
+description         General analysis of various economics demand systems
+long_description    {*}${description}
+checksums           rmd160  518a920d30fe080e4935760cdba6bc70ca090066 \
+                    sha256  d21769d6fbb4cd2cb2230f5ccb4615867ebef8cfbea698db0f821fd955e497ea \
+                    size    2698
+supported_archs     noarch
+
+test.run            yes

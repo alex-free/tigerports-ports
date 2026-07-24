@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran njrockwood PLmixed 0.1.7
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Estimate (generalized) linear mixed models with factor structures
+long_description    {*}${description}
+checksums           rmd160  54af68c85ab1ec42f536c461aeabc1ff393c9b2e \
+                    sha256  d539b8f79b3a938d50b626437b9186fae41be1c0256d5854b734f8943be2c9ce \
+                    size    1117236
+supported_archs     noarch
+
+depends_lib-append  port:R-lme4 \
+                    port:R-numDeriv \
+                    port:R-optimx
+
+depends_test-append port:R-irtoys \
+                    port:R-knitr \
+                    port:R-rmarkdown
+
+test.run            yes

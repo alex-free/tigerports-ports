@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran gogonzo runner 0.4.6
+revision            1
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         R package performing simple running calculations
+long_description    {*}${description}
+homepage            https://gogonzo.github.io/runner
+checksums           rmd160  b83e69460fda3791bb57ffc22cda1ad5c288af21 \
+                    sha256  faff9f5958ed5f7a71ecfe159d04b5608998a6651b66ea6f595b7612b5555435 \
+                    size    1072174
+
+depends_lib-append  port:R-Rcpp
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-tinytest
+
+test.run            yes

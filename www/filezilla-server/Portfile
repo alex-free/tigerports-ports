@@ -1,0 +1,112 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           legacysupport 1.1
+PortGroup           wxWidgets 1.0
+
+legacysupport.newest_darwin_requires_legacy 19
+
+if {[string match *clang* ${configure.compiler}]} {
+    legacysupport.use_mp_libcxx yes
+}
+
+name                filezilla-server
+version             1.12.6
+revision            1
+categories          www net
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             AGPL-3
+homepage            https://filezilla-project.org
+description         A simple FTP, FTPS or SFTP server
+long_description    {*}${description}
+
+installs_libs       no
+
+# Arch Linux sources: https://aur.archlinux.org/packages/filezilla-server
+master_sites        https://sourceforge.net/projects/fabiololix-os-archive/files/src/ \
+                    http://macos-powerpc.org/PPCPorts/distfiles/
+
+use_xz              yes
+distname            FileZilla_Server_${version}_src
+
+checksums           rmd160  56bb6a67219050864486128d5e76e0519dc5c1a4 \
+                    sha256  c4ef238eee9230b78cfad52f528dd47ef06735e0efeb1aae65d4c7894fc34e84 \
+                    size    1633408
+
+worksrcdir          ${name}-${version}
+
+patchfiles          patch-no-demos.diff
+
+# Missing header:
+patchfiles-append   patch-errno.diff
+
+# Unix-like build:
+patchfiles-append   patch-mac-unix.diff
+
+# Hack around a buggy header:
+patchfiles-append   patch-no-64-bit-lockfree.diff
+
+# warning: defining 'fz::util::invoker_event', which previously failed to be complete in a SFINAE context [-Wsfinae-incomplete=]
+# Out of stack space.
+if {${configure.cxx_stdlib} ne "libc++"} {
+    compiler.blacklist-append \
+                    {macports-gcc-1[6-9]}
+    # gcc15 is untested with this, use gcc14 which works.
+    compiler.whitelist \
+                    macports-gcc-14 macports-gcc-13
+}
+
+# Use POSIX-compliant syntax, not gnuisms:
+post-patch {
+    reinplace "s|cp -a |cp -pRP |" \
+                    ${worksrcpath}/src/filezilla/webui/app/Makefile.am \
+                    ${worksrcpath}/src/filezilla/webui/app/Makefile.in
+    reinplace "s|@PREFIX@|${prefix}|" ${worksrcpath}/src/filezilla/known_paths.cpp
+}
+
+wxWidgets.use       wxGTK-3.2
+
+use_autoreconf      yes
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  port:libfilezilla \
+                    port:pugixml \
+                    port:sqlite3 \
+                    port:${wxWidgets.port}
+
+depends_run-append  port:desktop-file-utils
+
+legacysupport.redirect_bins \
+    filezilla-server filezilla-server-config-converter filezilla-server-crypt filezilla-server-gui filezilla-server-impersonator
+
+configure.args-append \
+                    --disable-update-checker \
+                    --disable-silent-rules \
+                    --enable-webui \
+                    --with-pugixml=system \
+                    --with-wx-config=${wxWidgets.wxconfig} \
+                    --with-wxdir=${wxWidgets.wxdir}
+
+compiler.cxx_standard           2017
+compiler.thread_local_storage   yes
+compiler.blacklist-append       {clang < 1300}
+
+# You'd imagine that disabling update checker sets appropriate defines...
+configure.cppflags-append \
+                    -DWITHOUT_FZ_UPDATE_CHECKER
+
+if {[string match *gcc* ${configure.compiler}] && ${configure.build_arch} in [list arm i386 ppc]} {
+    configure.ldflags-append \
+                    -latomic
+}
+
+post-activate {
+    system "${prefix}/bin/update-desktop-database ${prefix}/share/applications"
+}
+
+depends_test-append port:cppunit
+
+test.run            yes
+test.target         check

@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran r-forge fBasics 4052.98
+revision            1
+categories-append   finance
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Rmetrics – Markets and Basic Statistics
+long_description    Provides a collection of functions to explore and to investigate basic properties \
+                    of financial returns and related quantities.
+homepage            https://r-forge.r-project.org/projects/rmetrics
+checksums           rmd160  34467772bf3297a21b4a23adb411f56cc36cc5a6 \
+                    sha256  d2af0b19cfc964838f0c8d0f0a0a4416f61c14a733d80c501ca990c264210edd \
+                    size    939038
+
+depends_lib-append  port:R-gss \
+                    port:R-stabledist \
+                    port:R-timeDate \
+                    port:R-timeSeries
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-interp \
+                    port:R-RUnit
+
+test.run        yes

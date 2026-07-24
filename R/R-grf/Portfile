@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran grf-labs grf 2.5.0
+revision            1
+categories-append   economics math
+maintainers         nomaintainer
+license             GPL-3
+description         Generalized Random Forests
+long_description    {*}${description}
+homepage            https://grf-labs.github.io/grf
+checksums           rmd160  1c5450b1405ef1a8206c16395ee4d1806ce8c098 \
+                    sha256  29828dff1a8d2acacf4560daacf179a612407dac224e129f0349d67355c5957d \
+                    size    212313
+
+depends_lib-append  port:R-DiceKriging \
+                    port:R-lmtest \
+                    port:R-Rcpp \
+                    port:R-RcppEigen \
+                    port:R-sandwich
+
+depends_test-append port:R-DiagrammeR \
+                    port:R-rdrobust \
+                    port:R-testthat
+
+test.run            yes

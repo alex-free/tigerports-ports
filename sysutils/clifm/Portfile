@@ -1,0 +1,47 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+
+# clock_gettime
+legacysupport.newest_darwin_requires_legacy 15
+
+github.setup        leo-arch clifm 1.28 v
+revision            0
+categories          sysutils
+license             GPL-2+
+maintainers         {l2dy @l2dy} openmaintainer
+description         Command Line Interface File Manager
+long_description    Shell-like, command-line terminal file manager
+
+github.tarball_from releases
+
+checksums           rmd160  9201993f3c6fa3890a93dc85744a5dfe94781fcf \
+                    sha256  65ac33825fb55d6388c1044572e464a50ad367b607448774fb396d850b7c4420 \
+                    size    1669154
+
+depends_lib-append  port:gettext-runtime \
+                    port:libmagic \
+                    port:readline
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+
+depends_run-append  port:desktop-file-utils \
+                    port:fnf
+
+# https://github.com/leo-arch/clifm/issues/298
+if {${os.platform} eq "darwin" && ${os.major} < 14} {
+    configure.cflags-append \
+                    -DCLIFM_LEGACY -std=c99
+}
+
+post-activate {
+    system "${prefix}/bin/update-desktop-database ${prefix}/share/applications"
+}
+
+notes "
+Tab completion mode can be chosen with --tabmode=(fnf|fzf|standard) argumemt.
+"

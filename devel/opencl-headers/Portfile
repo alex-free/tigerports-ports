@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+
+github.setup        KhronosGroup OpenCL-Headers 2026.05.29 v
+name                [string tolower ${github.project}]
+revision            0
+platforms           any
+categories          devel graphics
+maintainers         nomaintainer
+license             Apache-2
+description         Khronos OpenCL-Headers
+long_description    {*}${description}.
+checksums           rmd160  6a654efefb812e0aadb35d81c1a75b643c560cf0 \
+                    sha256  d9e6c48357de5002da11ce45de600e0c3ffe6ab4f628a3b9fe2b38603161658a \
+                    size    89035
+github.tarball_from archive
+supported_archs     noarch
+
+# test_ext_headers.c:32:56: error: expected ')' before 'PRIu32'
+patchfiles-append   patch-inttypes.diff
+# Destroot is messed up.
+patchfiles-append   patch-CMakeLists.txt.diff
+
+compiler.cxx_standard   2017

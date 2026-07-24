@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github r-lib oskeyring 0.1.7 v
+revision            0
+categories-append   security sysutils
+maintainers         nomaintainer
+license             MIT
+description         Raw system credential store access from R
+long_description    {*}${description}
+homepage            https://r-lib.github.io/oskeyring
+checksums           rmd160  aaac97ce8b0fafc9a4246193735dddd47bdd3c4b \
+                    sha256  4507fa87504baabd490bbdcab1c581330f23284be45e089f8922585189e6622b \
+                    size    34865
+github.tarball_from archive
+
+# Does not compile otherwise at least on 10.6.8.
+patchfiles          patch-fix-old-macos.diff
+
+depends_test-append port:R-askpass \
+                    port:R-covr \
+                    port:R-testthat \
+                    port:R-withr
+
+test.run            yes

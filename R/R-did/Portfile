@@ -1,0 +1,39 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran bcallaway11 did 2.3.0
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2
+description         Treatment effects with multiple periods and groups
+long_description    {*}${description}
+homepage            https://bcallaway11.github.io/did
+checksums           rmd160  68b3f378199211f03ccfdee3fd2a885d24b5e245 \
+                    sha256  92bc0af15230bff17e75507845718b0ce6d3249085eeceef598b499565b9e8a3 \
+                    size    4636706
+supported_archs     noarch
+
+depends_lib-append  port:R-BMisc \
+                    port:R-data.table \
+                    port:R-DRDID \
+                    port:R-dreamerr \
+                    port:R-fastglm \
+                    port:R-generics \
+                    port:R-ggplot2 \
+                    port:R-ggpubr \
+                    port:R-pbapply \
+                    port:R-tidyr
+
+depends_test-append port:R-backports \
+                    port:R-covr \
+                    port:R-here \
+                    port:R-knitr \
+                    port:R-plm \
+                    port:R-rmarkdown
+
+test.run            yes

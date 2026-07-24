@@ -1,0 +1,19 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github NicChr cppally 1.0.0 v
+revision            0
+categories-append   devel
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         C++20 API for R
+long_description    {*}${description}
+homepage            https://nicchr.github.io/cppally
+checksums           rmd160  3f94b7a8b4d7714a9e282eba40007914054cd8d4 \
+                    sha256  a2226f63b619e15ce6dd58aa4c09058f6c2f345bcbcdcd073d8ab3ec387f65d4 \
+                    size    176403
+github.tarball_from archive
+supported_archs     noarch

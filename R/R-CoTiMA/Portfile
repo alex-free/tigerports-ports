@@ -1,0 +1,37 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran CoTiMA CoTiMA 1.0.2
+revision            1
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Continuous Time Meta-Analysis
+long_description    {*}${description}
+homepage            https://github.com/CoTiMA/CoTiMA
+checksums           rmd160  686942df02d7e9a6bd1cf21678c580ca43dbb29b \
+                    sha256  e195410a3a0b9af02fc9cfbf3307f3ffd6007e88f1574463ab9540801a375a53 \
+                    size    3070493
+supported_archs     noarch
+
+depends_lib-append  port:R-abind \
+                    port:R-crayon \
+                    port:R-ctsem \
+                    port:R-doParallel \
+                    port:R-foreach \
+                    port:R-lavaan \
+                    port:R-MBESS \
+                    port:R-OpenMx \
+                    port:R-openxlsx \
+                    port:R-psych \
+                    port:R-rootSolve \
+                    port:R-RPushbullet \
+                    port:R-scholar \
+                    port:R-stringi \
+                    port:R-zcurve
+
+depends_test-append port:R-R.rsp
+
+test.run            yes

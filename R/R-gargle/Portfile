@@ -1,0 +1,44 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github r-lib gargle 1.6.1 v
+revision            1
+categories-append   devel
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Manage the life cycle of your exported functions \
+                    and arguments
+long_description    {*}${description}
+homepage            https://gargle.r-lib.org
+checksums           rmd160  cb6d546d6395430a3c07904d657aaa759fa5b413 \
+                    sha256  a2ee39b1d15ec24430c69a38a32d3f55cebd176c18056621af89b2ce0c933259 \
+                    size    480846
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-cli \
+                    port:R-fs \
+                    port:R-glue \
+                    port:R-httr \
+                    port:R-jsonlite \
+                    port:R-lifecycle \
+                    port:R-openssl \
+                    port:R-rappdirs \
+                    port:R-rlang \
+                    port:R-withr
+
+depends_test-append port:R-aws.ec2metadata \
+                    port:R-aws.signature \
+                    port:R-covr \
+                    port:R-httpuv \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-sodium \
+                    port:R-spelling \
+                    port:R-testthat
+
+test.run            yes
+test.args-append    --ignore-vignettes

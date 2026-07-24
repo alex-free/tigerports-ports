@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran trestletech shinyRGL 0.1.0
+revision            1
+categories-append   graphics
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Shiny wrappers for the RGL package
+long_description    {*}${description}
+homepage            https://github.com/trestletech/shinyRGL
+checksums           rmd160  4d81a6dba2d6a7caae8868c4b1d2a7fa0734cf92 \
+                    sha256  bef2a94812ccd3df653d272b03acf1b3ef5f92f114982913babaeef27c78941e \
+                    size    11092
+supported_archs     noarch
+
+depends_lib-append  port:R-rgl \
+                    port:R-shiny
+
+depends_test-append port:R-testthat
+
+test.run            yes

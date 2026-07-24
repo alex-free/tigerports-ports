@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github bsvars bsvarSIGNs 2.0 v
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3+
+description         Bayesian SVARs with sign, zero and narrative restrictions
+long_description    {*}${description}
+homepage            https://bsvars.org/bsvarSIGNs
+checksums           rmd160  5422d8ea6ff5c99f65511f154e5d47028a469b8d \
+                    sha256  6663d0a4bf8d447a6007c5f9c30bbb6c3e170e9a946a091bb684b47302bb7c68 \
+                    size    743317
+github.tarball_from archive
+
+depends_lib-append  port:R-bsvars \
+                    port:R-R6 \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-RcppProgress
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-knitr \
+                    port:R-tinytest
+
+test.run            yes

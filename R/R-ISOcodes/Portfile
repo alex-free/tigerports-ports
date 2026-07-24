@@ -1,0 +1,18 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran r-project ISOcodes 2025.05.18
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2
+description         Select ISO Codes
+long_description    {*}${description}
+checksums           rmd160  d43d555ba17a417c8ac637c6a12e3a14ae09dfd0 \
+                    sha256  dbda7193bdaf3b09bb584b749f10a021454daf1717d6792e4befeb4247385b0d \
+                    size    201335
+supported_archs     noarch
+
+test.run            yes

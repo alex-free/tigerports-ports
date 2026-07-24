@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran wouterseb StratigrapheR 1.3.1
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Integrated stratigraphy
+long_description    {*}${description}
+checksums           rmd160  d8340fa5fcc83db96d5f84bf8e154388541da2bf \
+                    sha256  89969e6bbd0a148cbff0bcb1ec0855b5b43792dbb00da882d7d4c4d658da9e81 \
+                    size    772929
+supported_archs     noarch
+
+depends_lib-append  port:R-diagram \
+                    port:R-dplyr \
+                    port:R-reshape \
+                    port:R-shiny \
+                    port:R-stringr \
+                    port:R-XML

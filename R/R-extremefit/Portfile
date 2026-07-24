@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran kevin.jaunatre extremefit 1.1.0
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2
+description         Estimation of extreme conditional quantiles and probabilities
+long_description    {*}${description}
+checksums           rmd160  1164e14f9bafb1ac2af3e9344cdf0f1025734294 \
+                    sha256  3bac735d7bbd19bca03a08c78ddf9f6043ab33dd190f03b9a74ecfa81fc94b7a \
+                    size    4575007
+supported_archs     noarch
+
+depends_test-append port:R-R.rsp
+
+test.run            yes

@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github julierennes misaem 1.0.1 v
+revision            1
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Linear regression and logistic regression with missing covariates
+long_description    {*}${description}
+checksums           rmd160  f5073c98f66aa37c2d1fd5885c3a2a02d4eb6b1e \
+                    sha256  0d4abafad35b5c21a178a21e3849baa258b3df448a54b3951f2d1d886c5ee49e \
+                    size    22519
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-mvtnorm \
+                    port:R-norm
+
+depends_test-append port:R-knitr \
+                    port:R-mice \
+                    port:R-rmarkdown
+
+test.run            yes

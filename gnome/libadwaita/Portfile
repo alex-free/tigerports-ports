@@ -1,0 +1,52 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:filetype=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           meson 1.0
+
+name                libadwaita
+version             1.9.2
+revision            0
+categories          gnome devel
+license             LGPL-2.1
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+
+description         Building blocks for modern GNOME applications
+long_description    {*}${description}
+homepage            https://www.gnome.org
+
+set branch          [join [lrange [split ${version} .] 0 1] .]
+master_sites        gnome:sources/${name}/${branch}/
+use_xz              yes
+checksums           rmd160  497cafe6bc1ee75443efdb7cf4f3e2fc6c593418 \
+                    sha256  6920f813a76c4856591ca56ee842e94efbbe736e8ca2f445c9e9fc3b4e7076f0 \
+                    size    2893708
+
+meson.wrap_mode     nodownload
+
+# adw-settings-impl-macos.c: error: stray '@' in program
+# Use this code where it is actually needed.
+patchfiles-append   patch-fix-adw-settings-impl-macos.diff
+
+depends_build-append \
+                    port:gettext \
+                    path:bin/pkg-config:pkgconfig \
+                    port:sassc \
+                    path:bin/vala:vala
+
+depends_lib-append  port:appstream \
+                    path:lib/pkgconfig/cairo.pc:cairo \
+                    port:fribidi \
+                    path:lib/pkgconfig/gdk-pixbuf-2.0.pc:gdk-pixbuf2 \
+                    port:gettext-runtime \
+                    path:lib/pkgconfig/glib-2.0.pc:glib2 \
+                    path:lib/pkgconfig/gobject-introspection-1.0.pc:gobject-introspection \
+                    port:graphene \
+                    path:lib/pkgconfig/gtk4.pc:gtk4
+
+# cc1: error: unrecognized command line option "-std=gnu11"
+compiler.c_standard 2011
+
+platform darwin 8 {
+    configure.ldflags-append \
+                    -fstack-protector-strong
+}

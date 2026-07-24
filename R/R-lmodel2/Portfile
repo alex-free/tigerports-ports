@@ -1,0 +1,20 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran vegandevs lmodel2 1.7-4
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2
+description         Model II regression
+long_description    {*}${description}
+homepage            https://github.com/vegandevs/lmodel2
+checksums           rmd160  04b5869f27f505a9e6cf03bc5599701582fb478b \
+                    sha256  8ea8d881137662de3172fabeb656cdb4303e67d40619fae7c5c66228b0e294e5 \
+                    size    326183
+supported_archs     noarch
+
+test.run            yes

@@ -1,0 +1,51 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran philchalmers SimDesign 2.20.0 v
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Structure for organizing Monte Carlo simulation designs
+long_description    {*}${description}
+homepage            https://philchalmers.github.io/SimDesign
+checksums           rmd160  d472876f7ea8fc8575c9fa148daab0f77023c10a \
+                    sha256  90ec7e190e9b2b5ee89d2b4babcff3e2a14e6819800fcdace9b7bad91510d303 \
+                    size    2447798
+# github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-beepr \
+                    port:R-dplyr \
+                    port:R-future \
+                    port:R-future.apply \
+                    port:R-parallelly \
+                    port:R-pbapply \
+                    port:R-progressr \
+                    port:R-R.utils \
+                    port:R-sessioninfo \
+                    port:R-testthat
+
+depends_test-append port:R-cli \
+                    port:R-copula \
+                    port:R-extraDistr \
+                    port:R-FrF2 \
+                    port:R-future.batchtools \
+                    port:R-ggplot2 \
+                    port:R-httr \
+                    port:R-job \
+                    port:R-knitr \
+                    port:R-purrr \
+                    port:R-renv \
+                    port:R-rmarkdown \
+                    port:R-RPushbullet \
+                    port:R-shiny \
+                    port:R-snow \
+                    port:R-tidyr
+
+test.run            yes
+# https://github.com/philchalmers/SimDesign/issues/41
+test.args-append    --ignore-vignettes

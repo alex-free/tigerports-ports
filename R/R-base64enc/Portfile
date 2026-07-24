@@ -1,0 +1,20 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran r-project base64enc 0.1-6
+revision            0
+maintainers         nomaintainer
+license             {GPL-2 GPL-3}
+description         Tools for base64 encoding
+long_description    This package provides tools for handling base64 encoding. \
+                    It is more flexible than the orphaned base64 package.
+homepage            http://www.rforge.net/base64enc
+checksums           rmd160  a089043d71ab8ce25954fce207ca6951394a45ed \
+                    sha256  3c7e9d22f7409fa2989008fa6e980c3dd8e2693eb20676acf2470ae7addb0816 \
+                    size    9418
+
+depends_test-append port:R-png
+
+test.run            yes

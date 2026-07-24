@@ -1,0 +1,15 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran r-project proxy 0.4-29
+revision            1
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2
+description         Distance and Similarity Measures
+long_description    Provides an extensible framework for the efficient calculation of auto- and cross-proximities, \
+                    along with implementations of the most popular ones.
+checksums           rmd160  2466e3522657800ddc3e5588ae9dc23c7ead691e \
+                    sha256  c6eb0e36ef2eecb1b8564f0188ca8d2c91a80865c86698386a7b5d5baa92c35b \
+                    size    71437

@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran nctingwang merDeriv 0.2-5
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Case-wise and cluster-wise derivatives for mixed effects models
+long_description    {*}${description}
+checksums           rmd160  05bdfd51a1162c85251a2e36abf65233687374c8 \
+                    sha256  ce190cad5e8fc5185cae3fbc67ccc3c9e2e2f494510c8b6be040941aa9be84fd \
+                    size    14742
+supported_archs     noarch
+
+depends_lib-append  port:R-lavaan \
+                    port:R-lme4 \
+                    port:R-nonnest2 \
+                    port:R-numDeriv \
+                    port:R-sandwich
+
+depends_test-append port:R-lmeInfo \
+                    port:R-mirt \
+                    port:R-tinytest
+
+test.run            yes

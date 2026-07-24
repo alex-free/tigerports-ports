@@ -1,0 +1,41 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+
+github.setup        magiblot tvision 85aaeca0999c8b53006c556ccda063f143d259ca
+version             2026.01.12
+revision            0
+categories          devel
+license             MIT
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+description         Modern port of Turbo Vision 2.0
+long_description    {*}${description}, the classical framework for text-based user interfaces.
+checksums           rmd160  0cfd23ae847bb1a7328a633eb4304af312d2636d \
+                    sha256  38725d663b742fe5a5e122e32d4800e105f4dd70e1d011e6ee3d6a0528d96ccc \
+                    size    854274
+github.tarball_from archive
+
+depends_lib-append  port:ncurses
+
+compiler.cxx_standard   2014
+
+configure.args-append \
+                    -DTV_BUILD_AVSCOLOR=OFF \
+                    -DTV_BUILD_EXAMPLES=OFF \
+                    -DTV_BUILD_TESTS=OFF \
+                    -DTV_LIBRARY_UNITY_BUILD=OFF \
+                    -DTV_OPTIMIZE_BUILD=OFF \
+                    -DTV_REDUCE_APP_SIZE=OFF
+
+variant tests description "Build and run tests" {
+    depends_build-append \
+                    port:gtest
+    configure.args-replace \
+                    -DTV_BUILD_TESTS=OFF -DTV_BUILD_TESTS=ON
+    test.run        yes
+    # Tests will run at the end of the build.
+    # No special target needed.
+    test            { }
+}

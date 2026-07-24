@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github gaborcsardi disposables 1.0.3 v
+revision            1
+categories-append   devel
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Create disposable R packages for testing
+long_description    {*}${description}
+checksums           rmd160  daf6658b566a7b380ef5ec711d1536173d4bd5f3 \
+                    sha256  cc8c925f3e3c329e213b0198a8f2752fa52adc51b0e50d990c22396bcfb3c8d2 \
+                    size    6867
+github.tarball_from archive
+supported_archs     noarch
+
+depends_test-append port:R-covr \
+                    port:R-testthat
+
+test.run            yes

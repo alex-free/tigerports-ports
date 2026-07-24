@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran r-dbi adbi 0.1.2
+revision            1
+categories-append   databases
+platforms           {darwin any}
+maintainers         nomaintainer
+license             LGPL-2.1
+description         DBI-compliant database access using ADBC
+long_description    {*}${description}
+homepage            https://adbi.r-dbi.org
+checksums           rmd160  dbf16b3181f7c3e0b45684c53910202544387276 \
+                    sha256  9ac21214d8099400d7f279a7f597bcab2c4e5408f4492c89fd25c488ddb244fe \
+                    size    27592
+supported_archs     noarch
+
+depends_lib-append  port:R-adbcdrivermanager \
+                    port:R-DBI \
+                    port:R-nanoarrow
+
+depends_test-append port:R-adbcsqlite \
+                    port:R-arrow \
+                    port:R-bit64 \
+                    port:R-covr \
+                    port:R-DBItest \
+                    port:R-testthat \
+                    port:R-withr
+
+test.run            yes

@@ -1,0 +1,41 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:filetype=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem                  1.0
+PortGroup                   github 1.0
+PortGroup                   makefile 1.0
+
+github.setup                augustss MicroCabal 4568cc27378c95585617ba1ec96cbf0ab71fd688
+name                        [string tolower ${github.project}]
+version                     2026.02.27
+revision                    0
+categories                  devel haskell
+maintainers                 {@barracuda156 macos-powerpc.org:barracuda}
+license                     Apache-2
+
+description                 Reimplementation of a subset of Cabal
+long_description            {*}${description}.
+
+checksums                   rmd160  9c0aac107c5f6f088d04ecf22bbee2ef69a441c3 \
+                            sha256  f23193dfbca138f3a2d1189352a10058f23952db1e7c501d913764d76e3ca058 \
+                            size    35970
+github.tarball_from         archive
+
+patchfiles                  patch-makefile.diff
+
+post-patch {
+    reinplace "s|@MHS@|${prefix}/bin/mhs|" ${worksrcpath}/Makefile
+    reinplace "s|@MHSDIR@|${prefix}/lib/mhs|" ${worksrcpath}/Makefile
+}
+
+depends_build               port:MicroHS
+
+# Match MicroHS
+compiler.blacklist-append   *gcc-4.*
+
+build.target                bin/mcabal
+
+universal_variant           no
+
+destroot {
+    xinstall -m 755 ${worksrcpath}/bin/mcabal ${destroot}${prefix}/bin/
+}

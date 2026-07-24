@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran marcinjurek1988 GPvecchia 0.1.8
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Scalable Gaussian-process approximations
+long_description    {*}${description}
+checksums           rmd160  44406525e3d1af48bfe736db85635f1d6239f4f0 \
+                    sha256  7e45265e1b20f94df7353065eaae4ebfd7f9112d9ec4d237e3b4a38b77b4807d \
+                    size    190438
+
+depends_lib-append  port:R-BH \
+                    port:R-fields \
+                    port:R-FNN \
+                    port:R-GpGp \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-sparseinv
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-knitr \
+                    port:R-mvtnorm \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran karline.soetaert plot3Drgl 1.0.5
+revision            1
+categories-append   graphics
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3+
+description         The R-rgl implementation of R-plot3D functions
+long_description    {*}${description}
+checksums           rmd160  3503cae127edff9a626fac296cc5510690b19d9a \
+                    sha256  75ceeaef9b369f6b7bc8408dc9dcfff232ac127591b7d729b7bb6075cd01dc74 \
+                    size    18147
+supported_archs     noarch
+
+depends_lib-append  port:R-plot3D \
+                    port:R-rgl
+
+test.run            yes

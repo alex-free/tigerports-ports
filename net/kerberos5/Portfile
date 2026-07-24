@@ -1,0 +1,94 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem                  1.0
+
+name                        kerberos5
+version                     1.22.2
+revision                    0
+set branch                  [join [lrange [split ${version} .] 0 1] .]
+conflicts                   fbopenssl
+categories                  net security
+maintainers                 {ryandesign @ryandesign} openmaintainer
+license                     MIT BSD ISC OpenLDAP-2.8+
+
+description                 Kerberos is a network authentication protocol.
+
+long_description            Kerberos is a network authentication protocol. \
+                            It is designed to provide strong authentication \
+                            for client/server applications by using secret-key \
+                            cryptography. A free implementation of this protocol \
+                            is  available from the Massachusetts Institute of \
+                            Technology. Kerberos is available in many commercial \
+                            products as well.
+
+homepage                    http://web.mit.edu/kerberos
+master_sites                ${homepage}/dist/krb5/${branch}/
+distname                    krb5-${version}
+checksums                   rmd160  f8152d6d955235be7ce3bbaf9578dc908cbcc876 \
+                            sha256  3243ffbc8ea4d4ac22ddc7dd2a1dc54c57874c40648b60ff97009763554eaf13 \
+                            size    8747729
+
+depends_build               port:bison \
+                            port:gettext \
+                            path:bin/pkg-config:pkgconfig
+
+depends_lib                 port:gettext-runtime \
+                            port:libcomerr \
+                            port:libedit \
+                            port:lmdb \
+                            port:ncurses \
+                            path:lib/libssl.dylib:openssl
+
+worksrcdir                  ${worksrcdir}/src
+
+patchfiles                  patch-util__verto__Makefile.in-use-nonzero-compat-version.diff \
+                            patch-config__shlib.conf-do-not-pass-dylib-file-ldflags.diff \
+                            patch-lib_rpc_Makefile.in-explicitly-link-krb5support.diff \
+                            autoconf-2.73.patch \
+                            no-Werror.patch
+
+# https://github.com/krb5/krb5/pull/1462
+patchfiles-append           udppktinfo.patch
+
+# At least with Apple clang this fails:
+# x-deltat.y: error: unknown warning group '-Wunused-but-set-variable', ignored [-Werror,-Wunknown-warning-option]
+patchfiles-append           patch-gcc-pragma.diff
+
+use_autoreconf              yes
+configure.checks.implicit_function_declaration.whitelist-append strchr
+
+# kerberos5 fails to build in its own presence, see #23769, #37944
+# remove ${prefix}/lib from configure.ldflags to allow linking against its own libs first
+# adding ${worksrcpath}/lib is not necessary and pollutes krb5-config --libs and pkg-config files
+configure.ldflags-delete    -L${prefix}/lib
+
+configure.python            false
+
+configure.args              --with-crypto-impl=openssl \
+                            --with-libedit \
+                            --with-system-et \
+                            --without-hesiod \
+                            --without-ldap \
+                            --without-readline \
+                            --without-system-db \
+                            --without-system-ss \
+                            --without-system-verto \
+                            ac_cv_prog_AWK=/usr/bin/awk
+
+# Needs LIBRARY_PATH support
+compiler.blacklist-append   {clang <= 318.0.61}
+
+# i386 linking fails on Snow Leopard with gcc-4.2 from Xcode 3.2.6
+if {[string match *gcc-4.2 ${configure.compiler}] &&
+    ($build_arch eq "i386" || ([variant_isset universal] && "i386" in $universal_archs))} {
+    configure.optflags -O2
+}
+
+post-configure {
+    reinplace -E {s|-arch [^ ]+||g} \
+        ${worksrcpath}/build-tools/krb5-config
+}
+
+livecheck.type              regex
+livecheck.url               ${homepage}
+livecheck.regex             {Current\s+release:\s+<.*>krb5-([0-9.]+)<}

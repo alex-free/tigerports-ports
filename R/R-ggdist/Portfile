@@ -1,0 +1,57 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github mjskay ggdist 3.3.3 v
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3+
+description         Visualizations of distributions and uncertainty
+long_description    {*}${description}
+homepage            https://mjskay.github.io/ggdist
+checksums           rmd160  24eabc178d4553b3aa0ea4f548665cebc263687f \
+                    sha256  0cb631ed9db3f8f1286db07f9cb638dbb837f47c3856f9ceb28eb6ae4c39764a \
+                    size    36590767
+github.tarball_from archive
+
+depends_lib-append  port:R-cli \
+                    port:R-distributional \
+                    port:R-dplyr \
+                    port:R-ggplot2 \
+                    port:R-glue \
+                    port:R-gtable \
+                    port:R-numDeriv \
+                    port:R-quadprog \
+                    port:R-Rcpp \
+                    port:R-rlang \
+                    port:R-scales \
+                    port:R-tibble \
+                    port:R-vctrs \
+                    port:R-withr
+
+depends_test-append port:R-beeswarm \
+                    port:R-broom \
+                    port:R-covr \
+                    port:R-cowplot \
+                    port:R-dplyr \
+                    port:R-fda \
+                    port:R-fontquiver \
+                    port:R-knitr \
+                    port:R-mvtnorm \
+                    port:R-patchwork \
+                    port:R-pkgdown \
+                    port:R-posterior \
+                    port:R-purrr \
+                    port:R-ragg \
+                    port:R-rmarkdown \
+                    port:R-showtext \
+                    port:R-svglite \
+                    port:R-sysfonts \
+                    port:R-testthat \
+                    port:R-tidyr \
+                    port:R-tidyselect \
+                    port:R-vdiffr
+
+test.run            yes

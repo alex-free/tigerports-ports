@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran tsungwu pdR 1.9.4
+revision            1
+categories-append   economics
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Threshold model and unit root tests \
+                    in cross-section and time series data
+long_description    {*}${description}
+checksums           rmd160  862a86802193cbd09ad23474f017d0391f0354c0 \
+                    sha256  09681696ef34dec568258d90e73fc91678eb57a49d521715582a36012977612c \
+                    size    407884
+supported_archs     noarch
+
+depends_lib-append  port:R-glmmTMB \
+                    port:R-lme4 \
+                    port:R-pglm \
+                    port:R-plm \
+                    port:R-uroot
+
+test.run            yes

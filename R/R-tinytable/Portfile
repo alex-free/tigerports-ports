@@ -1,0 +1,46 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is outdated.
+R.setup             cran vincentarelbundock tinytable 0.11.0
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3+
+description         Simple and configurable tables
+long_description    Create highly customized tables \
+                    with this simple and dependency-free package.
+homepage            https://vincentarelbundock.github.io/tinytable
+checksums           rmd160  e554f53ca61109f3ff8f504b175f3d8fada0edb4 \
+                    sha256  99f10a88805259d2d7adb858160ea9af6e37adcf22adef59d4da4d6607e35aa5 \
+                    size    547536
+supported_archs     noarch
+
+# Dependency on R-webshot2 is dropped.
+depends_test-append port:R-base64enc \
+                    port:R-data.table \
+                    port:R-estimatr \
+                    port:R-fansi \
+                    port:R-ggplot2 \
+                    port:R-gh \
+                    port:R-htmltools \
+                    port:R-knitr \
+                    port:R-litedown \
+                    port:R-magrittr \
+                    port:R-marginaleffects \
+                    port:R-modelsummary \
+                    port:R-pandoc \
+                    port:R-quarto \
+                    port:R-rmarkdown \
+                    port:R-rstudioapi \
+                    port:R-scales \
+                    port:R-stringi \
+                    port:R-tibble \
+                    port:R-tinysnapshot \
+                    port:R-tinytest \
+                    port:R-tinytex \
+                    port:R-xfun
+
+test.run            yes

@@ -1,0 +1,54 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran ropensci ijtiff 3.2.0
+revision            1
+categories-append   graphics
+maintainers         nomaintainer
+license             GPL-3
+description         Comprehensive TIFF I/O with full support for ImageJ TIFF files
+long_description    {*}${description}
+homepage            https://docs.ropensci.org/ijtiff
+checksums           rmd160  d569f52131748488e38e66907164943173b786d8 \
+                    sha256  e8122a59166e6a6c078bcafd208312a4021c9e038b5bd71e9421395298cdf7b1 \
+                    size    2284473
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  port:bzip2 \
+                    port:fftw-3 \
+                    port:libdeflate \
+                    path:include/turbojpeg.h:libjpeg-turbo \
+                    port:lzma \
+                    port:R-checkmate \
+                    port:R-cli \
+                    port:R-dplyr \
+                    port:R-fs \
+                    port:R-jsonlite \
+                    port:R-lubridate \
+                    port:R-magrittr \
+                    port:R-purrr \
+                    port:R-readr \
+                    port:R-rlang \
+                    port:R-strex \
+                    port:R-stringr \
+                    port:tiff \
+                    port:webp \
+                    port:xorg-libX11 \
+                    port:zlib \
+                    port:zstd
+
+depends_test-append port:R-abind \
+                    port:R-covr \
+                    port:R-EBImage \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-spelling \
+                    port:R-testthat \
+                    port:R-tiff
+
+test.run            yes

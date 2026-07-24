@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+PortGroup               github 1.0
+
+github.setup            ngtcp2 nghttp3 1.17.0 v
+revision                0
+categories              net www
+maintainers             {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license                 MIT
+description             ${name} is an implementation of RFC 9114 HTTP/3 \
+                        mapping over QUIC and RFC 9204 QPACK in C
+long_description        {*}${description}
+homepage                https://nghttp2.org/nghttp3
+checksums               rmd160  ba16b7b54bf1c4bf0440dba2184c4654c1a50416 \
+                        sha256  e8b798272b9282045cb83577dcf7bd7fcd22bb3a43aec0eb1a24f675b4cef0b8 \
+                        size    410916
+github.tarball_from     releases
+
+use_xz                  yes
+
+compiler.cxx_standard   2017
+
+use_autoreconf          yes
+
+depends_build-append    path:bin/pkg-config:pkgconfig
+
+configure.args-append   --disable-silent-rules
+
+test.run                yes
+test.target             check

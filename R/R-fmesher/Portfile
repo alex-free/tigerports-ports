@@ -1,0 +1,44 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran inlabru-org fmesher 0.5.0
+revision            1
+categories-append   math geometry
+maintainers         nomaintainer
+license             MPL-2
+description         Triangle meshes and related geometry tools
+long_description    {*}${description}
+homepage            https://inlabru-org.github.io/fmesher
+checksums           rmd160  ed760d677b965f1764b7a2d8cc90735dd46d4958 \
+                    sha256  7c1bcb1191cd807a9fdfa15d1a2c25548e32caec5c6a458a840607bfa667ebe7 \
+                    size    1431226
+
+depends_lib-append  port:R-dplyr \
+                    port:R-lifecycle \
+                    port:R-Rcpp \
+                    port:R-rlang \
+                    port:R-sf \
+                    port:R-splancs \
+                    port:R-tibble \
+                    port:R-withr
+
+compiler.cxx_standard 2017
+
+# R-inlabru is omitted.
+depends_test-append port:R-geometry \
+                    port:R-ggplot2 \
+                    port:R-gsl \
+                    port:R-knitr \
+                    port:R-patchwork \
+                    port:R-rgl \
+                    port:R-rmarkdown \
+                    port:R-sp \
+                    port:R-testthat \
+                    port:R-terra \
+                    port:R-tidyterra
+
+test.run            yes
+# Some vignettes need INLA, it is not in MacPorts.
+test.args-append    --ignore-vignettes

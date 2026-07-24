@@ -1,0 +1,41 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github atorus-research Tplyr 1.2.1 v
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Traceability-focused grammar of clinical data summary
+long_description    {*}${description}
+checksums           rmd160  bf2b25d7caffc0932e9bfca64f6ed97b5113a8ca \
+                    sha256  8f23baa902486fcf0bf23b12fa8d735ea9c3f6a58c41fc7c6499b89ff0ce94d0 \
+                    size    8692189
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-assertthat \
+                    port:R-dplyr \
+                    port:R-forcats \
+                    port:R-lifecycle \
+                    port:R-purrr \
+                    port:R-rlang \
+                    port:R-stringr \
+                    port:R-tibble \
+                    port:R-tidyr \
+                    port:R-tidyselect
+
+depends_test-append port:R-haven \
+                    port:R-huxtable \
+                    port:R-kableExtra \
+                    port:R-knitr \
+                    port:R-pharmaRTF \
+                    port:R-readr \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-tidyverse \
+                    port:R-withr
+
+test.run            yes

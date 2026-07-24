@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran eddelbuettel RcppCNPy 0.2.14
+revision            1
+categories-append   python
+maintainers         nomaintainer
+license             GPL-2+
+description         Read-write support for NumPy files via R-Rcpp
+long_description    {*}${description}
+homepage            https://dirk.eddelbuettel.com/code/rcpp.cnpy.html
+checksums           rmd160  f8d227d757eba7a5b27f4f447135a6161d64c185 \
+                    sha256  085a251d7d3498d3a1b6c5bb049f97949d8368c40cc55e7633ea25843655e58c \
+                    size    221284
+
+depends_lib-append  port:R-Rcpp
+
+depends_test-append port:R-rbenchmark \
+                    port:R-reticulate
+
+test.run            yes

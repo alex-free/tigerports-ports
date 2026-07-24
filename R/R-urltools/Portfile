@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is outdated.
+R.setup             cran Ironholds urltools 1.7.3.1
+revision            1
+categories-append   net
+maintainers         nomaintainer
+license             MIT
+description         Vectorised tools for URL handling and parsing
+long_description    {*}${description}
+homepage            https://github.com/Ironholds/urltools
+checksums           rmd160  12cd916d3efb537f50b514367672c3d1e7d4ddce \
+                    sha256  f85bb761bb85beef98d34cef0030b589bb71c24cfebc1959b5954fb0676c8772 \
+                    size    124107
+
+depends_lib-append  port:R-Rcpp \
+                    port:R-triebeard
+
+depends_test-append port:R-knitr \
+                    port:R-testthat
+
+test.run            yes

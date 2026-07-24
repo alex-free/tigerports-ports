@@ -1,0 +1,36 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github fmichonneau foghorn 1.6.1 v
+revision            1
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         R package to summarize CRAN check results in the Terminal
+long_description    {*}${description}
+homepage            https://fmichonneau.github.io/foghorn
+checksums           rmd160  db97ddbca3e772b8ca9ebb32033f8df29a2803a0 \
+                    sha256  f45b7aaba4e7dc6702c3b2ab4805b2dc7e7cc2737b850c3613313ef36b820a3e \
+                    size    51469
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-cli \
+                    port:R-curl \
+                    port:R-httr2 \
+                    port:R-rlang \
+                    port:R-rvest \
+                    port:R-tibble \
+                    port:R-xml2
+
+depends_test-append port:R-covr \
+                    port:R-dplyr \
+                    port:R-knitr \
+                    port:R-progress \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-withr
+
+test.run            yes

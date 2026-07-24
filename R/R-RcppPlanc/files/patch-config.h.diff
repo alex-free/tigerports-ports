@@ -1,0 +1,13 @@
+--- src/planc/common/config.h.orig	2025-05-22 10:52:15.000000000 +0800
++++ src/planc/common/config.h	2025-07-04 23:16:47.000000000 +0800
+@@ -11,8 +11,8 @@
+ //#else
+ //#if defined(HAVE_FLEXIBLAS_CBLAS_H)
+ //#include "flexiblas/cblas.h"
+-//#elif defined(HAVE_OPENBLAS_CBLAS_H)
+-//#include "openblas/cblas.h"
++#elif defined(HAVE_OPENBLAS_CBLAS_H)
++#include "cblas_openblas.h"
+ //#else
+ //#include "cblas.h"
+ //#endif

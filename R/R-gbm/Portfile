@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran gbm-developers gbm 2.2.3
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Generalized boosted regression models
+long_description    {*}${description}
+homepage            https://github.com/gbm-developers/gbm
+checksums           rmd160  2b0ecc493dd3b4dba896990ad8d2f2659b3aaaa2 \
+                    sha256  3a4fc9b4c4c8734c7591256bf80154665cbe0c2e00ec83232223954743660b11 \
+                    size    450443
+
+depends_test-append port:R-covr \
+                    port:R-gridExtra \
+                    port:R-knitr \
+                    port:R-pdp \
+                    port:R-RUnit \
+                    port:R-tinytest \
+                    port:R-vip \
+                    port:R-viridis
+
+test.run            yes

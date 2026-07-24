@@ -1,0 +1,51 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran crsh papaja 0.1.3 v
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Prepare American Psychological Association Journal articles \
+                    with R markdown
+long_description    {*}${description}
+homepage            https://github.com/crsh/papaja
+checksums           rmd160  3d139b8c7e8f8df13e7ee76d4e6d62713fafb5ff \
+                    sha256  bbfb3a6dcabbbbfe09c9c0f99c114e006811ddb907a3e8a82411b549f2907652 \
+                    size    1028943
+supported_archs     noarch
+
+depends_lib-append  port:R-bookdown \
+                    port:R-broom \
+                    port:R-glue \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-rmdfiltr \
+                    port:R-tinylabels \
+                    port:R-yaml \
+                    port:R-zip
+
+depends_test-append port:R-afex \
+                    port:R-BayesFactor \
+                    port:R-beeswarm \
+                    port:R-car \
+                    port:R-dplyr \
+                    port:R-effectsize \
+                    port:R-emmeans \
+                    port:R-ggforce \
+                    port:R-ggplot2 \
+                    port:R-latex2exp \
+                    port:R-lme4 \
+                    port:R-lmerTest \
+                    port:R-MBESS \
+                    port:R-multcomp \
+                    port:R-R.rsp \
+                    port:R-skimr \
+                    port:R-spelling \
+                    port:R-testthat \
+                    port:R-VGAM
+
+test.run            yes

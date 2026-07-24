@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran RafaelFuentealbaC mutualinf 2.0.4
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-3
+description         mutual information index
+long_description    Computation and decomposition of the {*}${description}
+homepage            https://github.com/RafaelFuentealbaC/mutualinf
+checksums           rmd160  85a70dc10932d27e4c6ba799a5bb36df29771524 \
+                    sha256  84cbc2cd88f9c669a068f800bc3bf673ef050095f77586ad7ea6c87d66e8a6f9 \
+                    size    263569
+
+depends_lib-append  port:R-data.table \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-runner
+
+compilers.setup     require_fortran
+
+test.run            yes

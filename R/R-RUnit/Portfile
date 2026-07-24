@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran zenka.roman RUnit 0.4.33.1
+revision            1
+categories-append   devel
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2
+description         R Unit test framework
+long_description    R functions implementing a standard Unit Testing framework, \
+                    with additional code inspection and report generation tools.
+checksums           rmd160  fcf7e72f10115475ad51ae8506a68f054fe09e0d \
+                    sha256  8528fa3ba8d04a6e71783f01ba3e1163b5900c6b3c2bc81bad2349e220197f05 \
+                    size    180317
+supported_archs     noarch
+
+depends_test-append port:R-XML
+
+test.run            yes

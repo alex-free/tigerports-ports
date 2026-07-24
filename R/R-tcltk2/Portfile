@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran SciViews tcltk2 1.6.1
+revision            1
+categories-append   graphics
+platforms           {darwin any}
+maintainers         nomaintainer
+license             LGPL-3
+description         A series of additional Tcl commands and Tk widgets \
+                    with style and various functions to supplement the R-tcltk package
+long_description    {*}${description}
+homepage            https://github.com/SciViews/tcltk2
+checksums           rmd160  4760845804a75ee13003430865ecb7acf1cb2eb7 \
+                    sha256  dc1cc00ce973df1ce98b830aa70998e455119d89961ce9a368e8a688e6845c6a \
+                    size    1177801
+supported_archs     noarch
+
+pre-fetch {
+    if {![catch {set result [active_variants R "tcltk"]}]} {
+        if !{$result} {
+            ui_msg "Error: to install ${name} package, R should be installed with +tcltk variant."
+            return -code error "Required variant missing."
+        }
+    }
+}
+
+test.run            yes

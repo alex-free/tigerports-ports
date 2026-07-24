@@ -1,0 +1,44 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github guido-s netmeta 3.3-1
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Network meta-analysis using frequentist methods
+long_description    {*}${description}
+checksums           rmd160  a99e404ee14d37217a72e1a9154fd05dacee7a3d \
+                    sha256  a3ba5a143093404b9dc6610a544f46713ed0745e517def0399a1e5da7efaf969 \
+                    size    1172846
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-colorspace \
+                    port:R-dplyr \
+                    port:R-ggplot2 \
+                    port:R-igraph \
+                    port:R-magic \
+                    port:R-magrittr \
+                    port:R-meta \
+                    port:R-metafor \
+                    port:R-mvtnorm
+
+# Test dep on R-crossnma is dropped.
+depends_test-append port:R-brglm2 \
+                    port:R-cccp \
+                    port:R-gemtc \
+                    port:R-graph \
+                    port:R-gridExtra \
+                    port:R-knitr \
+                    port:R-R.rsp \
+                    port:R-rgl \
+                    port:R-Rgraphviz \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-tictoc \
+                    port:R-writexl
+
+test.run            yes

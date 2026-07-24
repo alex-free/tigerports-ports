@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran tingtingzhan Qindex 0.1.7
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2
+description         Continuous and dichotomized index predictors \
+                    based on distribution quantiles
+long_description    {*}${description}
+checksums           rmd160  070d684bab6bd873c38cfae2aefcab8d49d62df9 \
+                    sha256  cbf8d878a35d05d85af8cf645957e38d74c9669d86626efe4314cebb9908a837 \
+                    size    36321
+supported_archs     noarch
+
+depends_lib-append  port:R-matrixStats \
+                    port:R-plotly
+
+depends_test-append port:R-knitr \
+                    port:R-htmlwidgets \
+                    port:R-Qindex.data
+
+test.run            yes

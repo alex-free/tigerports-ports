@@ -1,0 +1,48 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+
+# arc4random_buf
+legacysupport.newest_darwin_requires_legacy 15
+
+github.setup        artkiver signify-macOS 1.63
+revision            0
+name                signify
+categories          security
+license             ISC
+maintainers         {vt.edu:jpo @jpouellet} {@artkiver gmail.com:artkiver} openmaintainer
+description         cryptographically sign and verify files
+long_description    The signify utility creates and verifies cryptographic \
+                    signatures. A signature verifies the integrity of a message.
+homepage            https://man.openbsd.org/signify.1
+
+checksums           rmd160  f829819820a21f147be7c4058c11fe78a7a7614f \
+                    sha256  35a3b6b2fa11faae80af0a14afa12e4bfd3a602600ea9b7da52e57613734e32b \
+                    size    98639
+github.tarball_from archive
+
+# https://github.com/jpouellet/signify-osx/issues/8
+# Restore fallback which was removed in:
+# https://github.com/jpouellet/signify-osx/commit/084e1de0e97c5a61b6c23eee3302d7a60a1861c3
+patchfiles-append   0001-Restore-readpassphrase-for-macOS-10.12.patch \
+                    0002-readpassphrase-fix-for-undefined-_NSIG.patch \
+                    0003-Makefile-add-LDFLAGS.patch \
+                    0004-Restore-timingsafe.patch
+
+variant universal   {}
+
+use_configure       no
+
+# readpassphrase.c:35: error: ‘_NSIG’ undeclared here (not in a function)
+configure.cflags-append \
+                    -D_DARWIN_C_SOURCE
+
+build.target        signify
+build.args-append   CC="${configure.cc} ${configure.cflags} [get_canonical_archflags cc]" \
+                    LDFLAGS="${configure.ldflags} [get_canonical_archflags ld]"
+
+destroot.args       PREFIX="${destroot}${prefix}"
+
+test.run            yes

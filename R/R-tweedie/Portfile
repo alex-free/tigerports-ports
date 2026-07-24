@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran pdunn2 tweedie 3.0.17
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Evaluation of Tweedie exponential family models
+long_description    {*}${description}
+checksums           rmd160  7529bce731b464fda08f914d6daf05f0fcfa4c9f \
+                    sha256  4be7c6dbd064a5316976771b8846977df0eb9ccb3a63444b8988dce71a9c3ea9 \
+                    size    2048517
+
+depends_lib-append  port:R-lifecycle \
+                    port:R-statmod
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

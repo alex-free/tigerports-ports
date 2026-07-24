@@ -1,0 +1,61 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           python 1.0
+
+# PyPi tarball lacks requirements and fails to build.
+github.setup        mps-youtube yewtube 2.13.1 v
+revision            0
+categories          net multimedia
+platforms           {darwin any}
+license             GPL-3
+maintainers         nomaintainer
+description         Terminal-based YouTube player and downloader
+long_description    {*}${description}. No Youtube API key required.
+checksums           rmd160  96b03806772cdd44c76286d2ef2b845e8f2e95f6 \
+                    sha256  cfff2f05a403b26807dd9000457bd339aff33fc437b79609b2454c0903c97895 \
+                    size    117242
+github.tarball_from archive
+supported_archs     noarch
+
+set python.version  313
+
+depends_lib-append  port:py${python.version}-httpx \
+                    port:py${python.version}-pip \
+                    port:py${python.version}-pylast \
+                    port:py${python.version}-pyperclip \
+                    port:py${python.version}-requests \
+                    port:yewtube-search-python \
+                    port:yt-dlp
+
+depends_run-append  port:desktop-file-utils
+
+# TODO: this might have been fixed or at least improved, needs testing.
+# FIXME: currently only low-res vids will stream.
+# Once upstream fixes the problem, add a patch.
+# See: https://github.com/mps-youtube/yewtube/issues/942
+# Downloading works for full-res normally.
+# See also: https://github.com/mps-youtube/yewtube/issues/1275
+# And: https://github.com/mps-youtube/yewtube/issues/1298
+
+# FIXME: apparently broken again: https://github.com/mps-youtube/yewtube/issues/1351
+
+notes "
+Config files are saved in ~/.config/mps-youtube/.\
+You may edit `config.json` to set a player of choice,\
+and `transcode` to point to ffmpeg executable.
+"
+
+set appdir ${prefix}/share/applications
+
+post-destroot {
+    xinstall -d ${destroot}${prefix}/bin
+    ln -s ${python.prefix}/bin/yt ${destroot}${prefix}/bin/yt
+    xinstall -d ${destroot}${appdir}
+    xinstall -m 0644 -W ${worksrcpath} yewtube.desktop ${destroot}${appdir}
+}
+
+post-activate {
+    system "${prefix}/bin/update-desktop-database ${appdir}"
+}

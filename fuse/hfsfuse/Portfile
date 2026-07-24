@@ -1,0 +1,40 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           fuse 1.0
+PortGroup           github 1.0
+PortGroup           makefile 1.0
+
+github.setup        0x09 hfsfuse 0.425
+revision            0
+categories          fuse devel
+license             BSD
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+description         FUSE driver for HFS+ filesystems
+long_description    {*}${description}
+checksums           rmd160  9cac5dc95c28f728cd3447d53c5c0cc4f4af7507 \
+                    sha256  de2790d44c58f66879e12a641a97dd3444b93e45c1a71bd30d9af85cc1b7b433 \
+                    size    322632
+github.tarball_from archive
+
+# Respect prefix, fix uthash include path.
+patchfiles          patch-Makefile.diff
+
+post-patch {
+    reinplace "s,@VER@,${version}," ${worksrcpath}/Makefile
+}
+
+compiler.c_standard 2011
+
+depends_build-append \
+                    port:uthash
+depends_lib-append  port:libarchive \
+                    port:libutf8proc \
+                    port:zlib
+
+build.env-append    CFLAGS="${configure.cppflags} ${configure.cflags}" \
+                    WITH_UTF8PROC=system \
+                    WITH_UTHASH=system
+# This is required so that build settings are not overridden:
+destroot.env-append WITH_UTF8PROC=system \
+                    WITH_UTHASH=system

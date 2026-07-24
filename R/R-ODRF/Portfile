@@ -1,0 +1,36 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran liuyu-star ODRF 0.0.5
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3+
+description         Oblique decision random forest for classification and regression
+long_description    {*}${description}
+homepage            https://liuyu-star.github.io/ODRF
+checksums           rmd160  a4dbfa8910c8f9cef8cb1a63871f1db1acced693 \
+                    sha256  19aab30eb262565e75c68af5c22bd0b91c0018b775e9cf41fbc27b7a436602cc \
+                    size    252954
+
+depends_lib-append  port:R-doParallel \
+                    port:R-foreach \
+                    port:R-glmnet \
+                    port:R-glue \
+                    port:R-lifecycle \
+                    port:R-magrittr \
+                    port:R-partykit \
+                    port:R-Pursuit \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-RcppEigen \
+                    port:R-rlang
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-spelling \
+                    port:R-testthat
+
+test.run            yes

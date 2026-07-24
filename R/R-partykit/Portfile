@@ -1,0 +1,40 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran r-project partykit 1.2-25
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             {GPL-2 GPL-3}
+description         Toolkit for recursive partytioning
+long_description    {*}${description}
+homepage            http://partykit.r-forge.r-project.org/partykit
+checksums           rmd160  1a5be737f7042b971a1db8aeb10f5824980ef024 \
+                    sha256  7abd05afd2c5d09a378ec5ec54366045357ceb22dddca501a1109cabc5da8820 \
+                    size    2045835
+
+depends_lib-append  port:R-Formula \
+                    port:R-inum \
+                    port:R-libcoin \
+                    port:R-mvtnorm
+
+# Test dependency on R-rJava and R-RWeka are dropped
+# in order to avoid requiring Java in R.
+# (It works on powerpc now, we just do not want to require it.)
+depends_test-append port:R-AER \
+                    port:R-coin \
+                    port:R-mlbench \
+                    port:R-party \
+                    port:R-pmml \
+                    port:R-psychotools \
+                    port:R-psychotree \
+                    port:R-randomForest \
+                    port:R-sandwich \
+                    port:R-strucchange \
+                    port:R-TH.data \
+                    port:R-vcd \
+                    port:R-XML
+
+test.run            yes

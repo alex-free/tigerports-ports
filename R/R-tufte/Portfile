@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran rstudio tufte 0.14.0
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Tufteʼs styles for Rmarkdown documents
+long_description    {*}${description}
+homepage            https://github.com/rstudio/tufte
+checksums           rmd160  b627dd5ea55d5ac4a4507e8b4ee2d9bfa4b3034d \
+                    sha256  0b69dd5408858747e5180d0c2b06164583b66ae7c69e860dfe2f77740c48774a \
+                    size    251527
+supported_archs     noarch
+
+depends_lib-append  port:R-htmltools \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-xfun
+
+depends_test-append port:R-covr \
+                    port:R-testthat \
+                    port:R-withr
+
+test.run            yes

@@ -1,0 +1,19 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran GeoBosh rbibutils 2.4.1
+revision            1
+maintainers         nomaintainer
+license             GPL-2
+description         Read Bibtex files and convert between bibliography formats
+long_description    {*}${description}
+homepage            https://geobosh.github.io/rbibutils
+checksums           rmd160  35f22ce8a223d6a40a6650eb80a2277e074841e6 \
+                    sha256  da313d920a0f35ffdf30a54929ba8904b2b5a0d7f11a519db8674148129c8f32 \
+                    size    1191704
+
+depends_test-append port:R-testthat
+
+test.run            yes

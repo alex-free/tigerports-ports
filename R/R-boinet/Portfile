@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran yamagubed boinet 1.4.0
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Conduct simulation study of Bayesian optimal interval \
+                    design with BOIN-ET family
+long_description    {*}${description}
+checksums           rmd160  c46f70712929be97d960271ade7817f37ba5d1fd \
+                    sha256  b89c98ebe23338097b9b8aa0860d6910a5cd186b13f6dc0b97855eeaf6586d25 \
+                    size    191104
+supported_archs     noarch
+
+depends_lib-append  port:R-copula \
+                    port:R-gt \
+                    port:R-Iso \
+                    port:R-mfp \
+                    port:R-tibble
+
+depends_test-append port:R-dplyr \
+                    port:R-ggplot2 \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

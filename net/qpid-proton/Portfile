@@ -1,0 +1,88 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+
+github.setup        apache qpid-proton 0.40.0
+revision            0
+
+description         Qpid Proton is a high-performance, lightweight AMQP \
+                    1.0 messaging library.
+long_description    Qpid Proton is a high-performance, lightweight messaging library. It can \
+                    be used in the widest range of messaging applications, including brokers, \
+                    client libraries, routers, bridges, proxies, and more. Proton makes it \
+                    trivial to integrate with the AMQP 1.0 ecosystem from any platform, \
+                    environment, or language.
+categories          net
+license             Apache-2
+maintainers         {unifiedsoftworx.com:roddie.kieley @roddiekieley} openmaintainer
+platforms           darwin freebsd linux
+homepage            https://qpid.apache.org
+
+checksums           rmd160  efc0e43b5e9d9c5cd362d3dbb2bc1a5016843bcd \
+                    sha256  f3dcd30e85626d8eff13a98009f0b75b2a4d0cbf91520830a67202157dc63d6d \
+                    size    1520957
+github.tarball_from archive
+
+# Python is required by the build even if disabled:
+# Could NOT find Python (missing: Python_EXECUTABLE Interpreter) (Required is at least version "3.8")
+set py_ver          3.13
+set py_ver_nodot    [string map {. {}} ${py_ver}]
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig \
+                    port:python${py_ver_nodot}
+
+depends_lib-append  port:jsoncpp \
+                    path:lib/pkgconfig/libuv.pc:libuv
+
+cmake.build_type    RelWithDebInfo
+
+compiler.c_standard    1999
+compiler.cxx_standard  2011
+
+# Enabling lto may break the build, avoid it by default.
+configure.args-append \
+                    -DBUILD_EXAMPLES=OFF \
+                    -DBUILD_GO=OFF \
+                    -DBUILD_PERL=OFF \
+                    -DBUILD_PYTHON=OFF \
+                    -DBUILD_RUBY=OFF \
+                    -DENABLE_JSONCPP=ON \
+                    -DENABLE_LINKTIME_OPTIMIZATION=OFF \
+                    -DENABLE_OPENTELEMETRYCPP=OFF \
+                    -DENABLE_VALGRIND=OFF \
+                    -DLIB_SUFFIX="" \
+                    -DPython_EXECUTABLE=${prefix}/bin/python${py_ver} \
+                    -DSASL_IMPL=none \
+                    -DSSL_IMPL=none
+
+# Revert a breakage caused by this commit:
+# https://github.com/apache/qpid-proton/commit/6f2fdeb633575114c5f92f1387a21eba992b422a
+patchfiles-append   patch-fix-macOS-build.diff
+
+test.cmd            ${filespath}/runtests.sh
+test.run            yes                                                 
+
+default_variants    +openssl
+
+variant openssl description {With built-in support for OpenSSL} {
+    PortGroup       openssl 1.0
+
+    configure.args-replace \
+                    -DSSL_IMPL=none -DSSL_IMPL=openssl
+}
+
+variant swig description {With built-in support for SWIG so the bindings can be built} {
+    configure.args-replace -DBUILD_PERL=OFF -DBUILD_PERL=ON
+    configure.args-replace -DBUILD_PYTHON=OFF -DBUILD_PYTHON=ON
+    configure.args-replace -DBUILD_GO=OFF -DBUILD_GO=ON
+    configure.args-replace -DBUILD_RUBY=OFF -DBUILD_RUBY=ON
+
+    depends_lib-append      port:swig \
+                            port:swig-perl \
+                            port:swig-python \
+                            port:swig-go \
+                            port:swig-ruby
+}

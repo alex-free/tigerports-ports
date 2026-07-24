@@ -1,0 +1,48 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+PortGroup           openssl 1.0
+
+github.setup        Nheko-Reborn mtxclient 0.10.1 v
+revision            1
+epoch               2
+categories          net chat devel
+license             GPL-3
+maintainers         nomaintainer
+description         Client API for Matrix
+long_description    Client API library for the Matrix protocol, built on top of Boost.Asio.
+
+checksums           rmd160  f687f362c306a03346d40cca75a5f6599f0dc799 \
+                    sha256  203be46a08e1dc6cfc068d0911f3b09976f48e4cc4302c3517b9c0f4e53631e3 \
+                    size    636035
+github.tarball_from archive
+
+set libfmt_ver      11
+cmake.prefix_path-append \
+                    ${prefix}/lib/libfmt${libfmt_ver}/cmake
+
+compiler.cxx_standard \
+                    2020
+# base does not yet know about c++20 so manually blacklist Xcode clangs for now
+compiler.blacklist-append clang
+
+depends_build-append \
+                    port:curl \
+                    port:libevent \
+                    port:nlohmann-json \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  port:coeurl \
+                    port:libfmt${libfmt_ver} \
+                    port:olm \
+                    port:re2 \
+                    port:spdlog
+
+configure.args-append \
+                    -DBUILD_LIB_TESTS=OFF \
+                    -DBUILD_LIB_EXAMPLES=OFF \
+                    -DOLM_INCLUDE_DIR=${prefix}/include/olm \
+                    -DOLM_LIBRARY=${prefix}/lib/libolm.a \
+                    -DOPENSSL_ROOT_DIR=[openssl::install_area]

@@ -1,0 +1,36 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran rstudio promises 1.5.0
+revision            1
+categories-append   devel
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Abstractions for promise-based asynchronous programming
+long_description    {*}${description}
+homepage            https://rstudio.github.io/promises
+checksums           rmd160  067b776f85c00f880f8f61cb47411248bb2b0671 \
+                    sha256  bb68fd4065cc072996aed416f0b2388f58738797a3a38024720c29d67164747d \
+                    size    3210294
+
+depends_lib-append  port:R-fastmap \
+                    port:R-later \
+                    port:R-lifecycle \
+                    port:R-magrittr \
+                    port:R-otel \
+                    port:R-R6 \
+                    port:R-rlang
+
+# R-otelsdk is dropped until added to ports.
+depends_test-append port:R-future \
+                    port:R-knitr \
+                    port:R-purrr \
+                    port:R-Rcpp \
+                    port:R-rmarkdown \
+                    port:R-spelling \
+                    port:R-testthat \
+                    port:R-vembedr
+
+test.run            yes

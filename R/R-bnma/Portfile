@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran swj8874 bnma 1.6.1
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Bayesian Network Meta-Analysis using JAGS
+long_description    {*}${description}
+checksums           rmd160  9330b89bc03868551cb9515ff7f359e0363e6e4b \
+                    sha256  490b379fbe1f10a6aa1363fb7556dc37b6daafb999a3cc562b30d3feff98730e \
+                    size    118646
+supported_archs     noarch
+
+depends_lib-append  port:R-coda \
+                    port:R-ggplot2 \
+                    port:R-igraph \
+                    port:R-rjags
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown
+
+test.run            yes

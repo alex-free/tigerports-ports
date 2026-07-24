@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           codeberg 1.0
+PortGroup           common_lisp 1.0
+
+codeberg.setup      shinmera mmap d8d4fad5db120eb99559340a3a2cc74c53b9f09a
+name                cl-mmap
+version             20250821
+revision            0
+
+categories-append   devel
+maintainers         nomaintainer
+license             zlib
+
+description         Yet another CL deflate decompressor
+long_description    {*}${description}
+
+checksums           rmd160  c579cdc74369424be0aa35515a64fe5754aebb20 \
+                    sha256  8ba4b8c9e338b4b6187dc3a36a5ef1637af3826522db088bc492a232077bf88b \
+                    size    15575
+
+depends_lib-append  port:cl-cffi \
+                    port:cl-documentation-utils \
+                    port:cl-parachute \
+                    port:cl-pathname-utils \
+                    port:cl-trivial-features
+
+common_lisp.ffi     yes

@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran mhahsler TSP 1.2-5
+revision            1
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Traveling Salesperson Problem
+long_description    {*}${description}
+checksums           rmd160  918bfe7e3f318f595780c5a3574607b3ffbd8db9 \
+                    sha256  ab51ca1514d16ad488592918227f3333e9b0e7969f6d7757446b0d92f6aa4c20 \
+                    size    626125
+
+depends_lib-append  port:R-foreach
+
+depends_test-append port:R-doParallel \
+                    port:R-maps \
+                    port:R-testthat
+
+test.run            yes

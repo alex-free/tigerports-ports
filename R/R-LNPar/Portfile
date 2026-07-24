@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran marco.bee LNPar 1.1.3
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Estimation and testing for a Lognormal-Pareto mixture
+long_description    {*}${description}
+checksums           rmd160  4c92ace995914d0e3d8543d88c5205c8a4d88ce8 \
+                    sha256  5dbbc0527e0b04345c4114092d97dd08259ad119b6d5f9c584ae37e3ea592048 \
+                    size    28090
+supported_archs     noarch
+
+depends_lib-append  port:R-Rdpack
+
+test.run            yes

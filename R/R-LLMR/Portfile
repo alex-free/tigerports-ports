@@ -1,0 +1,46 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran asanaei LLMR 0.6.3
+revision            1
+categories-append   llm
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Interface for Large Language Model APIs
+long_description    {*}${description} in R.
+homepage            https://github.com/asanaei/LLMR
+checksums           rmd160  4e435d240a1aa40a5d922af28e90f5787bc8c5dd \
+                    sha256  818dded6bbd29ce9fa87dbdca2db4a98656e61a0c35675f74a9ecb59905d25d6 \
+                    size    332970
+supported_archs     noarch
+
+depends_lib-append  port:R-base64enc \
+                    port:R-cli \
+                    port:R-dplyr \
+                    port:R-future \
+                    port:R-future.apply \
+                    port:R-glue \
+                    port:R-httr2 \
+                    port:R-jsonlite \
+                    port:R-memoise \
+                    port:R-mime \
+                    port:R-purrr \
+                    port:R-rlang \
+                    port:R-tibble \
+                    port:R-tidyr \
+                    port:R-vctrs
+
+# R-jsonvalidate is broken due to depending on R-V8, therefore dropped.
+depends_test-append port:R-ggplot2 \
+                    port:R-httptest2 \
+                    port:R-knitr \
+                    port:R-progressr \
+                    port:R-R.rsp \
+                    port:R-rmarkdown \
+                    port:R-roxygen2 \
+                    port:R-testthat
+
+test.run            yes

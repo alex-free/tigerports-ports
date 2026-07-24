@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran Diego.Pedregal UComp 5.1.7
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-3
+description         Automatic unobserved components \
+                    and other time series models
+long_description    {*}${description}
+checksums           rmd160  ccd59e27780cd2845a90cfe0f4f187bde84905f8 \
+                    sha256  1e41f5fa2887622072d752f0afb16042077987adc9c19b7dcc58322f3f66d7ec \
+                    size    174080
+
+depends_lib-append  port:R-ggforce \
+                    port:R-ggplot2 \
+                    port:R-gridExtra \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-tsibble \
+                    port:R-tsoutliers
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown
+
+test.run            yes

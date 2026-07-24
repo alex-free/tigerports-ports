@@ -1,0 +1,20 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran randy3k collections 0.3.11
+revision            1
+categories-append   devel
+maintainers         nomaintainer
+license             MIT
+description         High-performance container data types
+long_description    {*}${description}
+homepage            https://randy3k.github.io/collections
+checksums           rmd160  bb81967fee1446b03f0114dfa736704991607f62 \
+                    sha256  7ef40db7dbb161b3345289699b1e1d0b9a2cb0abd4f8e46a9bd1b3b890bc7584 \
+                    size    111980
+
+depends_test-append port:R-testthat
+
+test.run            yes

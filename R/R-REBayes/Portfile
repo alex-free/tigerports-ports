@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran r-project REBayes 2.59
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Empirical Bayes Estimation and Inference
+long_description    {*}${description}
+checksums           rmd160  8b1dddfdc0f422922bb19420e46d239aec6880c7 \
+                    sha256  31d671a29c1afcfdefeabb13a2b76c26c51fad0f5d23dfc047f2eb1e4294654e \
+                    size    1195740
+supported_archs     noarch
+
+depends_lib-append  port:R-deconvolveR
+
+depends_test-append port:R-digest \
+                    port:R-knitr \
+                    port:R-Rmosek
+
+# Tests need MOSEK installation; Rmosek is just an interface.
+test.run            no

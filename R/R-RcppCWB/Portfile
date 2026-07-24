@@ -1,0 +1,46 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is outdated.
+R.setup             cran PolMine RcppCWB 0.6.8
+revision            1
+categories-append   textproc
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Rcpp bindings for the C code of the Corpus Workbench (CWB)
+long_description    {*}${description}
+checksums           rmd160  c1974fe63f449703cf452603b62a3cddfa50b1b2 \
+                    sha256  04daa86879fb52efb757e6218d9c0291ab731442398069f5820116c2b97ac4c0 \
+                    size    1128662
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  path:lib/pkgconfig/glib-2.0.pc:glib2 \
+                    port:pcre2 \
+                    port:R-fs \
+                    port:R-Rcpp
+
+patchfiles          0001-Fixes-for-Macports.patch
+
+post-patch {
+    reinplace "s|@CC@|${configure.cc}|" \
+                    ${worksrcpath}/src/cwb/config/platform/darwin-arm64 \
+                    ${worksrcpath}/src/cwb/config/platform/darwin-ppc \
+                    ${worksrcpath}/src/cwb/config/platform/darwin-ppc64 \
+                    ${worksrcpath}/src/cwb/config/platform/darwin-x86_64
+
+    # R is not universal in Macports at the moment.
+    if {${os.platform} eq "darwin" && ${configure.build_arch} eq "ppc64"} {
+        reinplace "s|darwin-ppc|darwin-ppc64|g"
+        reinplace "s|build for ppc64|build for ppc|"
+    }
+}
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

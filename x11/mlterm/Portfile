@@ -1,0 +1,257 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           openssl 1.0
+
+name                mlterm
+version             3.9.5
+categories          x11 aqua sysutils
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             BSD
+
+description         Multi-lingual X11 terminal emulator
+
+long_description    ${name} is a multi-lingual terminal emulator written \
+                    from scratch, which supports various character sets \
+                    and encodings in the world and complex characters, \
+                    such as double width for East Asian, combining for Thai, \
+                    Vietnamese, and so on, and bi-direction for Arabic \
+                    and Hebrew. Indic scripts in ISCII encoding are \
+                    experimentally supported using libind library. It also \
+                    supports various unique feature such as anti-alias using \
+                    FreeType, multiple XIM, multiple windows, scrollbar API, \
+                    scroll by mouse wheel, automatic selection of encoding, \
+                    daemon mode, and so on.
+conflicts           ${name}-minimal
+homepage            https://mlterm.sourceforge.net
+master_sites        sourceforge:project/mlterm/01release/mlterm-${version}
+
+checksums           rmd160  0c2ed9ac3176f74a1134daf84e8340d965fc6433 \
+                    sha256  7d28678aa90dade72cea4e1e5fffb5e4c343487d60ca36c88dc615134613af39 \
+                    size    4279053
+
+subport ${name}-minimal {
+    conflicts       ${name} ${name}-devel
+}
+
+subport ${name}-devel {
+    PortGroup       github 1.0
+
+    github.setup    arakiken mlterm bbdc0346b694f349eb18aa93d35c6de439e439fc
+    version         2026.07.06
+    checksums       rmd160  89408e4b3cccca14ae53356986a0830c621511f9 \
+                    sha256  45d5a3843d17d9ffd2f81563bd8c4f26a72a6f72bb5cfd7899fcd14edfbeb720 \
+                    size    4281689
+    master_sites    https://github.com/arakiken/mlterm/archive/${github.version}/
+    distname        mlterm-${github.version}
+    conflicts       ${name} ${name}-minimal
+}
+
+depends_build-append \
+                    port:gettext \
+                    port:gmake \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  port:libssh2
+
+depends_run-append  port:unifont-ttf
+
+if {${subport} eq ${name} || ${subport} eq "${name}-devel"} {
+    depends_lib-append \
+                    path:lib/pkgconfig/fontconfig.pc:fontconfig \
+                    path:lib/pkgconfig/freetype2.pc:freetype \
+                    port:fribidi \
+                    path:lib/pkgconfig/gdk-pixbuf-2.0.pc:gdk-pixbuf2 \
+                    port:gettext-runtime \
+                    path:lib/pkgconfig/harfbuzz.pc:harfbuzz \
+                    port:libsixel
+    depends_run-append \
+                    port:font-misc-misc
+} else {
+    depends_build-append \
+                    port:libsixel
+}
+
+build.cmd           ${prefix}/bin/gmake
+
+
+# https://github.com/arakiken/mlterm/issues/146
+patchfiles-append   0001-Cocoa-sources-avoid-non-portable-blocks.patch
+
+patchfiles-append   0002-Cocoa-support-10.5.patch
+
+patchfiles-append   0003-Cocoa-split-screens-macOS-style-menus-and-SSH-connec.patch
+
+platform darwin {
+    # https://github.com/arakiken/mlterm/issues/160
+    patchfiles-append \
+                    0004-Wayland-minor-tweak-for-macOS.patch
+    # Fix paths for macOS:
+    patchfiles-append \
+                    0005-Remove-hardcoded-paths-to-usr-local.patch \
+                    0006-ui_font-add-macOS-case.patch
+}
+
+post-destroot {
+    xinstall -m 755 -d ${destroot}${prefix}/share/doc/${name}
+    file copy {*}[glob ${worksrcpath}/doc/*] \
+        ${destroot}${prefix}/share/doc/${name}
+}
+
+configure.args-append       --disable-silent-rules \
+                            --enable-image
+
+if {${subport} eq ${name}} {
+    # Main port
+    revision                0
+
+    configure.args-append   --with-imagelib=gdk-pixbuf
+
+variant gtk2 conflicts gtk3 description "Build with GTK2" {
+    depends_lib-append      path:lib/pkgconfig/gtk+-2.0.pc:gtk2
+    configure.args-append   --with-gtk=2.0
+}
+
+variant gtk3 conflicts gtk2 description "Build with GTK3" {
+    depends_lib-append      path:lib/pkgconfig/gtk+-3.0.pc:gtk3
+    configure.args-append   --with-gtk=3.0
+}
+
+variant x11 conflicts sdl2 quartz_gui {
+    depends_lib-append      port:Xft2 \
+                            port:xorg-libX11
+    configure.args-append   --with-gui=xlib
+}
+
+# Avoid naming it `quartz`, since then `port install mlterm +gtk3 +quartz`
+# will pull in gtk3+quartz, which is broken. Cocoa backend here is unrelated
+# to the one which gtk3 uses, they do different things. Therefore, rename this.
+variant quartz_gui conflicts sdl2 x11 description "Use native GUI" {
+    configure.args-append   --with-gui=quartz
+    post-destroot {
+        set app_dir ${applications_dir}/mlterm.app
+        set bin_dir ${app_dir}/Contents/MacOS
+        copy ${worksrcpath}/cocoa/mlterm.app ${destroot}${app_dir}
+        ln -s ${prefix}/etc/mlterm ${destroot}${app_dir}
+        xinstall -d ${destroot}${bin_dir}
+        move ${destroot}${prefix}/bin/mlterm ${destroot}${bin_dir}
+        ln -s ${prefix}/libexec/mlterm/mlconfig ${destroot}${bin_dir}
+        # Using a symlink doesn't work because the app can't find its data files.
+        set fp [open ${destroot}${prefix}/bin/mlterm w 0755]
+        puts ${fp} "#!/bin/sh"
+        puts ${fp} "exec '${bin_dir}/mlterm' \"$@\""
+        close ${fp}
+    }
+
+    # https://github.com/arakiken/mlterm/issues/147
+    notes "
+    While terminal emulator itself uses Cocoa, settings dialog requires X server.
+    "
+}
+
+variant sdl2 conflicts quartz_gui x11 description "Use SDL2 GUI" {
+    depends_lib-append      port:libsdl2
+    configure.args-append   --with-gui=sdl2
+}
+
+if {![variant_isset gtk2] && ![variant_isset gtk3]} {
+    default_variants        +gtk3
+}
+
+if {[variant_isset gtk2] || [variant_isset gtk3]} {
+    depends_lib-append      port:vte
+}
+
+if {![variant_isset sdl2] && ![variant_isset quartz_gui] && ![variant_isset x11]} {
+    # FIXME: https://github.com/arakiken/mlterm/issues/149
+    if {${os.platform} eq "darwin" && ${os.major} >= 10} {
+        default_variants-append +quartz_gui
+    } else {
+        default_variants-append +x11
+    }
+}
+
+} elseif {${subport} eq "${name}-minimal"} {
+    # mlterm-minimal subport
+    revision                0
+
+    configure.args-append   --disable-debug \
+                            --disable-dl-ctl \
+                            --disable-dl-type \
+                            --disable-fontconfig \
+                            --disable-fribidi \
+                            --disable-ind \
+                            --disable-kbd \
+                            --disable-otl \
+                            --disable-shared
+
+if {${os.platform} eq "darwin" && ${os.major} >= 10} {
+    configure.args-append   --with-gui=quartz
+
+    post-destroot {
+        set app_dir ${applications_dir}/mlterm.app
+        set bin_dir ${app_dir}/Contents/MacOS
+        copy ${worksrcpath}/cocoa/mlterm.app ${destroot}${app_dir}
+        ln -s ${prefix}/etc/mlterm ${destroot}${app_dir}
+        xinstall -d ${destroot}${bin_dir}
+        move ${destroot}${prefix}/bin/mlterm ${destroot}${bin_dir}
+        ln -s ${prefix}/libexec/mlterm/mlconfig ${destroot}${bin_dir}
+        set fp [open ${destroot}${prefix}/bin/mlterm w 0755]
+        puts ${fp} "#!/bin/sh"
+        puts ${fp} "exec '${bin_dir}/mlterm' \"$@\""
+        close ${fp}
+    }
+} else {
+    # gdk-pixbuf2 can be dropped, but then image support breaks down.
+    # Dependency on fontconfig seems to be unavoidable with SDL back-end.
+    # Not really minimal in result, but at least we can avoid GTK. SDL2
+    # uses Cocoa on legacy systems, so this is very similar to +quartz_gui.
+    depends_lib-append      path:lib/pkgconfig/fontconfig.pc:fontconfig \
+                            path:lib/pkgconfig/freetype2.pc:freetype \
+                            path:lib/pkgconfig/gdk-pixbuf-2.0.pc:gdk-pixbuf2 \
+                            port:libsdl2
+    configure.args-append   --with-gui=sdl2 \
+                            --with-imagelib=gdk-pixbuf
+    configure.args-delete   --disable-fontconfig
+
+    # Rename to what is expected:
+    post-destroot {
+        move ${destroot}${prefix}/bin/mlterm-sdl2 ${destroot}${prefix}/bin/mlterm
+    }
+
+    # If you encounter No fonts for ISO10646 error, set a font manually in a config file.
+    # See: https://github.com/arakiken/mlterm/issues/149
+}
+
+} else {
+    # Experimental -devel subport
+    revision                0
+
+    depends_lib-append      path:lib/pkgconfig/gtk+-3.0.pc:gtk3
+
+    configure.args-append   --with-gtk=3.0 \
+                            --with-gui=quartz \
+                            --with-imagelib=gdk-pixbuf
+
+    post-destroot {
+        set app_dir ${applications_dir}/mlterm.app
+        set bin_dir ${app_dir}/Contents/MacOS
+        copy ${worksrcpath}/cocoa/mlterm.app ${destroot}${app_dir}
+        ln -s ${prefix}/etc/mlterm ${destroot}${app_dir}
+        xinstall -d ${destroot}${bin_dir}
+        move ${destroot}${prefix}/bin/mlterm ${destroot}${bin_dir}
+        ln -s ${prefix}/libexec/mlterm/mlconfig ${destroot}${bin_dir}
+        # Using a symlink doesn't work because the app can't find its data files.
+        set fp [open ${destroot}${prefix}/bin/mlterm w 0755]
+        puts ${fp} "#!/bin/sh"
+        puts ${fp} "exec '${bin_dir}/mlterm' \"$@\""
+        close ${fp}
+    }
+
+    # https://github.com/arakiken/mlterm/issues/147
+    notes "
+    While terminal emulator itself uses Cocoa, settings dialog requires X server.
+    "
+}
+
+livecheck.regex     /${name}-(\[0-9.\]+)${extract.suffix}

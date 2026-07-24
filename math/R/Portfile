@@ -1,0 +1,456 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem                  1.0
+PortGroup                   compilers 1.0
+PortGroup                   legacysupport 1.1
+
+legacysupport.newest_darwin_requires_legacy 10
+
+name                        R
+# Remember to set revision to 0 when bumping version
+# And also to update Rversion in R PortGroup
+version                     4.6.1
+revision                    1
+
+set branch                  [join [lrange [split ${version} .] 0 1] .]
+categories                  math science lang
+maintainers                 {me.com:kjell.konis @kjellpk} \
+                            {i0ntempest @i0ntempest} \
+                            {@barracuda156 macos-powerpc.org:barracuda} \
+                            openmaintainer
+license                     {GPL-2 GPL-3}
+
+description \
+    R is GNU S – an interpreted language for statistical computing
+
+long_description \
+    R is a language and environment for statistical computing and graphics. \
+    R provides a wide variety of statistical (linear and nonlinear modelling, \
+    classical statistical tests, time-series analysis, classification, \
+    clustering, ...) and graphical techniques, and is highly extensible.
+
+homepage                    https://www.r-project.org
+
+master_sites                https://cran.rstudio.com/src/base/R-4/ \
+                            https://cran.r-project.org/src/base/R-4/
+
+checksums                   rmd160  f203d95b14a3d9d60b4ad72fe987f9c68e2c0623 \
+                            sha256  4da6e61d2c0aac5f14a2e7e432cb5fcc269efe83da4293050ba7f03dff4e2cf4 \
+                            size    40926649
+
+# Avoid Apple clangs:
+compiler.blacklist-append   {clang}
+# Blacklist macports-clang-23+. See discussion: https://trac.macports.org/ticket/67144
+# for rationale. The decision when to migrate to a new compiler
+# is then in the hands of the R maintainers and will not change
+# from the current defaults when these get bumped centrally.
+# NOTE : Keep this setting in sync with the one in the R portgroup.
+compiler.blacklist-append   {macports-clang-2[3-9]}
+# Similarly, for gcc select the gcc16 variant of the compilers PG.
+# This setting should also be kept in sync with the one in the R portgroup.
+# Updates should be coordinated with the R maintainers.
+# https://trac.macports.org/ticket/70799
+compiler.blacklist-append   {macports-gcc-1[7-9]}
+
+# NOTE: upon the update to gcc15, please update the blacklist accordingly,
+# like it is done for clangs. We would prefer using the same version of gcc and gfortran.
+# https://trac.macports.org/ticket/70799
+default_variants-append     +gcc16
+
+# devQuartz.c:3049:35: error: passing argument 2 of 'CGContextSetFont'
+# from incompatible pointer type [-Wincompatible-pointer-types]
+configure.cflags-append     -Wno-error=incompatible-pointer-types
+
+# R bakes in the compiler, so if it is built with ccache,
+# then it will require ccache to build R packages.
+# Disable it to avoid an unnecessary dependency.
+configure.ccache            no
+
+compilers.choose            fc f77
+compilers.setup             require_fortran
+
+# IMPORTANT: setting explicit C++ standard in the port has an effect of adding
+# C++ ABI flag. Flags which are used when building R get baked into R config scripts
+# and are automatically applied to builds of all R packages. While generally
+# in MacPorts libstdc++-based systems use old C++ ABI, passing -D_GLIBCXX_USE_CXX11_ABI=0
+# to cxxflags (which is done for compatibility with old macOS libstdc++),
+# this was never done for R ports and remained totally untested. The R ecosystem
+# never uses Xcode gcc, and is largely isolated from the rest of MacPorts.
+# Therefore in most cases it can use new C++ ABI, and that was shown to work fine
+# (I have not only built every R port on PowerPC, but ran tests for most of them
+# at least once, upon adding a port). In a few instances where an R package links
+# to a non-R port using C++, -D_GLIBCXX_USE_CXX11_ABI=0 has to be passed manually.
+# This is far easier than getting rid of the flag, once it is baked into R itself,
+# and it is unknown how ports will work with old C++ ABI. Mixing ABIs randomly leads
+# to nasty failures. In particular, when Rstan is built with the new ABI, its dependents
+# cannot use old ABI, otherwise they fail to work:
+# ** testing if installed package can be loaded from temporary location
+# sh: line 1: 97760 Bus error
+#  *** caught bus error ***
+# address 0x0, cause 'invalid alignment'
+# Upd. The new ABI creates a mess with gcc16 now, so use the old one, matching all other ports.
+# For example, already Rcpp fails with the new ABI:
+# Error: package or namespace load failed for ‘Rcpp’ in dyn.load(file, DLLpath = DLLpath, ...):
+# unable to load shared object '/opt/local/var/macports/build/R-Rcpp-42e23720/work/build/00LOCK-Rcpp/00new/Rcpp/libs/Rcpp.so':
+#  dlopen(/opt/local/var/macports/build/R-Rcpp-42e23720/work/build/00LOCK-Rcpp/00new/Rcpp/libs/Rcpp.so, 6): Symbol not found: __ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEC4EOS4_
+#  Referenced from: /opt/local/var/macports/build/R-Rcpp-42e23720/work/build/00LOCK-Rcpp/00new/Rcpp/libs/Rcpp.so
+compiler.cxx_standard       2014
+
+# https://trac.macports.org/ticket/69849
+# https://bugs.r-project.org/show_bug.cgi?id=18713
+if {${configure.build_arch} in [list i386 ppc]} {
+    patchfiles-append       patch-fix-memsize.diff
+}
+
+# https://trac.macports.org/ticket/67298
+# https://bugs.r-project.org/show_bug.cgi?id=18520
+# See related: https://skia.googlesource.com/skia/+/3490263287e9432119c501884e45840de4d986bc
+if {${os.platform} eq "darwin" && ${os.major} < 11} {
+    patchfiles-append       patch-fix-10.6.diff
+}
+
+# We wanna ensure the same compiler is used for R itself and R packages.
+# See R PortGroup.
+if {[string match macports-clang-* ${configure.compiler}]} {
+    set clang_v [
+        string range ${configure.compiler} [
+            string length macports-clang-
+        ] end
+    ]
+    depends_build-append    port:clang-${clang_v}
+    depends_run-append      port:clang-${clang_v}
+} elseif {[string match macports-gcc-* ${configure.compiler}]} {
+    set gcc_v [
+        string range ${configure.compiler} [
+            string length macports-gcc-
+        ] end
+    ]
+    depends_build-append    port:gcc${gcc_v}
+    depends_run-append      port:gcc${gcc_v}
+}
+
+depends_build-append        port:gmake \
+                            path:bin/pkg-config:pkgconfig
+
+depends_lib-append          port:bzip2 \
+                            port:curl \
+                            port:gnutar \
+                            port:gzip \
+                            path:lib/pkgconfig/icu-uc.pc:icu \
+                            port:less \
+                            port:libdeflate \
+                            port:libiconv \
+                            path:include/turbojpeg.h:libjpeg-turbo \
+                            port:libpng \
+                            port:pcre \
+                            port:pcre2 \
+                            port:readline \
+                            port:texinfo \
+                            port:tiff \
+                            port:unzip \
+                            port:xz \
+                            port:zip \
+                            port:zlib \
+                            port:zstd
+
+depends_run-append          port:ld64
+
+if {${os.platform} eq "darwin" && ${configure.cxx_stdlib} ne "libc++"} {
+    # Avoid multiple malloc errors. See: https://github.com/iains/darwin-toolchains-start-here/discussions/20
+    build.env-append        DYLD_LIBRARY_PATH=${prefix}/lib/libgcc:\$DYLD_LIBRARY_PATH
+    build.cmd-prepend       DYLD_LIBRARY_PATH=${prefix}/lib/libgcc:\$DYLD_LIBRARY_PATH
+    destroot.env-append     DYLD_LIBRARY_PATH=${prefix}/lib/libgcc:\$DYLD_LIBRARY_PATH
+    destroot.cmd-prepend    DYLD_LIBRARY_PATH=${prefix}/lib/libgcc:\$DYLD_LIBRARY_PATH
+}
+
+universal_variant           no
+
+set resources               ${frameworks_dir}/R.framework/Versions/${branch}/Resources
+
+post-patch {
+    reinplace "s|R_HOME|\"${resources}\"|" "${worksrcpath}/src/unix/Rscript.c"
+
+    # Build against external gettext is broken. Solution could not be easily found atm, so w/e.
+    # (Adding <xlocale.h> and passing -D_DARWIN_C_SOURCE does not solve this.)
+    # In file included from ../../src/include/Defn.h:2519,
+    #                  from dynload.c:33:
+    # /opt/local/include/libintl.h:1128:8: error: unknown type name 'locale_t'
+    # 1128 | extern locale_t newlocale (int, const char *, locale_t)
+    reinplace "s|<libintl.h>|\"libintl.h\"|" "${worksrcpath}/src/include/Defn.h"
+
+    if {${os.platform} eq "darwin" && ${os.major} < 17} {
+        reinplace "s|/var/db/timezone/zoneinfo|/usr/share/zoneinfo|g" \
+            "${worksrcpath}/src/extra/tzone/localtime.c" \
+            "${worksrcpath}/src/library/base/man/timezones.Rd" \
+            "${worksrcpath}/src/library/base/R/datetime.R"
+    }
+}
+
+configure.pre_args          --prefix=${frameworks_dir}
+
+configure.args-append       --disable-java \
+                            --disable-lto \
+                            --disable-memory-profiling \
+                            --disable-openmp \
+                            --disable-R-profiling \
+                            --enable-BLAS-shlib \
+                            --enable-byte-compiled-packages \
+                            --enable-R-framework \
+                            --enable-R-shlib \
+                            --with-ICU \
+                            --with-included-gettext \
+                            --with-jpeglib \
+                            --with-libdeflate-compression \
+                            --with-libpng \
+                            --with-libtiff \
+                            --with-readline \
+                            --without-aqua \
+                            --without-cairo \
+                            --without-recommended-packages \
+                            --without-tcltk \
+                            --without-x
+
+# Defaults, as of 4.6.0
+configure.args-append       --with-C23 \
+                            --with-CXX20
+
+# Disable tex/latex the hard way as there's no configure args for these
+configure.env-append        ac_cv_path_TEX= \
+                            ac_cv_path_PDFTEX= \
+                            ac_cv_path_PDFLATEX=
+
+# Avoid finding ${prefix}/bin/xdg-open first
+configure.env-append        R_PDFVIEWER=/usr/bin/open \
+                            R_BROWSER=/usr/bin/open
+
+# Not required, but for reproducibility:
+build.cmd                   ${prefix}/bin/gmake
+
+# Still relevant?
+platform darwin 13 {
+    configure.cflags-append -flax-vector-conversions
+}
+
+variant accelerate conflicts atlas builtin_lapack openblas description "Build using the BLAS and Lapack in Apple Accelerate framework" {
+    if {([vercmp ${xcodeversion} >= 14.3] || \
+        [vercmp ${xcodecltversion} >= 14.3]) && \
+        (${os.platform} eq "darwin" && ${os.version} >=  22.3)} {
+            configure.args-append --with-newAccelerate=lapack
+    } else {
+        configure.args-append   --with-blas="-framework Accelerate" --with-lapack
+    }
+}
+
+variant aqua description "Enable native macOS graphics support, needed by R.app and quartz variant" {
+    configure.args-replace  --without-aqua --with-aqua
+}
+
+variant builtin_lapack conflicts accelerate openblas description "Build using reference BLAS and Lapack" {
+    configure.args-append   --without-blas --without-lapack
+}
+
+variant cairo description "Use cairo and pango" {
+    depends_lib-append      path:lib/pkgconfig/cairo.pc:cairo \
+                            path:lib/pkgconfig/fontconfig.pc:fontconfig \
+                            path:lib/pkgconfig/freetype2.pc:freetype \
+                            port:gettext-runtime \
+                            path:lib/pkgconfig/glib-2.0.pc:glib2 \
+                            path:lib/pkgconfig/pango.pc:pango
+    configure.args-replace  --without-cairo --with-cairo
+}
+
+variant debug description "Build with debug symbols" {
+    configure.optflags-append -g
+}
+
+variant java description "Enable Java" {
+    if {${configure.build_arch} in [list ppc ppc64]} {
+        # It is easier to do this way rather than tweak the PG.
+        depends_lib-append  port:openjdk8
+        configure.env-append \
+                            JAVA_HOME=/Library/Java/JavaVirtualMachines/openjdk8/Contents/Home
+    } else {
+        PortGroup           java 1.0
+
+    }
+
+    configure.args-replace  --disable-java --enable-java
+}
+
+variant latex description "Build with LaTeX support and docs in PDF" {
+    depends_build-append    port:texlive-basic \
+                            port:texlive-latex \
+                            port:texlive-latex-recommended
+    configure.env-delete    ac_cv_path_TEX= \
+                            ac_cv_path_PDFTEX= \
+                            ac_cv_path_PDFLATEX=
+}
+
+variant lto description "Enable LTO" {
+    configure.args-replace  --disable-lto --enable-lto
+}
+
+variant openblas conflicts builtin_lapack accelerate description "Build using the BLAS and Lapack in the OpenBLAS port" {
+    depends_lib-append      path:lib/libopenblas.dylib:OpenBLAS
+    configure.args-delete   --enable-BLAS-shlib
+    configure.args-append   --with-blas="-L${prefix}/lib -lopenblas" --with-lapack
+}
+
+variant openmp description "Enable parallelism support using OpenMP" {
+    compiler.openmp_version 4.5
+    configure.args-replace  --disable-openmp --enable-openmp
+    notes-append "
+        Some R packages using OpenMP may require additional flags\
+        in the Makevar file (e.g. data.table) to build with OpenMP support.\
+        Please consult package documentation."
+}
+
+variant quartz requires aqua conflicts x11 {
+    notes-append "
+        Note that R with quartz variant will not work with R.app because\
+        of conflicts over the macOS menu."
+}
+
+variant tcltk description "Enable use of tcltk" {
+    depends_lib-append      port:tcl
+    if {[variant_isset quartz]} {
+        depends_lib-append      port:tk8-quartz
+        configure.args-append   --with-tk-config=${prefix}/lib/tk8-quartz/tkConfig.sh
+    } else {
+        depends_lib-append      port:tk8-x11
+        configure.args-append   --with-tk-config=${prefix}/lib/tk8-x11/tkConfig.sh
+    }
+    configure.args-replace  --without-tcltk --with-tcltk
+    configure.args-append   --with-tcl-config=${prefix}/lib/tclConfig.sh
+}
+
+variant tests description "Include tests of R installation" {
+    destroot.target-append  install-tests
+}
+
+variant x11 conflicts quartz {
+    depends_lib-append      port:xorg-libice \
+                            port:xorg-libsm \
+                            port:xorg-libX11 \
+                            port:xorg-libXmu \
+                            port:xorg-libXt
+    configure.args-replace  --without-x --with-x
+    configure.args-append   --x-include=${prefix}/include/X11 \
+                            --x-lib=${prefix}/lib
+}
+
+default_variants-append     +aqua +cairo +openmp +tcltk
+
+# clang has a broken LTO:
+# dyld: Symbol not found: _R_tzname
+# Referenced from: /opt/local/var/macports/build/R-902b3b59/work/R-4.6.1/lib/libR.dylib
+if [string match macports-gcc* ${configure.compiler}] {
+    default_variants-append +lto
+}
+
+if {![variant_isset quartz]} {
+    default_variants-append +x11
+}
+
+if {[variant_isset cairo] && [variant_isset x11]} {
+    require_active_variants path:lib/pkgconfig/cairo.pc:cairo x11
+    require_active_variants path:lib/pkgconfig/pango.pc:pango x11
+}
+
+if {[variant_isset cairo] && [variant_isset quartz]} {
+    require_active_variants path:lib/pkgconfig/cairo.pc:cairo quartz
+    require_active_variants path:lib/pkgconfig/pango.pc:pango quartz
+}
+
+if {![variant_isset accelerate] && ![variant_isset openblas] && ![variant_isset builtin_lapack]} {
+    default_variants-append +builtin_lapack
+}
+
+test.run                    yes
+test.target                 check
+
+destroot.destdir prefix=${destroot}${frameworks_dir}
+
+post-destroot {
+    xinstall -m 0644 ${destroot}${frameworks_dir}/R.framework/Resources/lib/pkgconfig/libR.pc ${destroot}${prefix}/lib/pkgconfig/libR.pc
+
+    foreach v { "rhome" "rincludedir" } {
+        reinplace "s|${v}=${destroot}|${v}=|" "${destroot}${prefix}/lib/pkgconfig/libR.pc"
+    }
+
+    reinplace "s|${destroot}||g" "${destroot}${resources}/bin/R"
+
+    reinplace "s|-F${destroot}|-F|" "${destroot}${resources}/etc/Makeconf"
+
+    foreach dylib [ exec find ${destroot}${frameworks_dir}/R.framework -name "\*.dylib" ] {
+        regsub ":$" ${dylib} "" destroot_dylib_path
+        regsub ${destroot} ${destroot_dylib_path} "" dylib_path
+        system "install_name_tool -id ${dylib_path} ${destroot_dylib_path}"
+        system "install_name_tool -change ${destroot}${resources}/lib/libR.dylib ${resources}/lib/libR.dylib \
+            ${destroot_dylib_path}"
+        system "install_name_tool -change ${destroot}${resources}/lib/libRblas.dylib ${resources}/lib/libRblas.dylib \
+            ${destroot_dylib_path}"
+        system "install_name_tool -change ${destroot}${resources}/lib/libRlapack.dylib ${resources}/lib/libRlapack.dylib \
+            ${destroot_dylib_path}"
+    }
+
+    foreach so [ exec find ${destroot}${frameworks_dir}/R.framework -name "\*.so" ] {
+        regsub ":$" ${so} "" destroot_so_path
+        regsub ${destroot} ${destroot_so_path} "" so_path
+        system "install_name_tool -id ${so_path} ${destroot_so_path}"
+        system "install_name_tool -change ${destroot}${resources}/lib/libR.dylib ${resources}/lib/libR.dylib \
+            ${destroot_so_path}"
+        system "install_name_tool -change ${destroot}${resources}/lib/libRblas.dylib ${resources}/lib/libRblas.dylib \
+            ${destroot_so_path}"
+        system "install_name_tool -change ${destroot}${resources}/lib/libRlapack.dylib ${resources}/lib/libRlapack.dylib \
+            ${destroot_so_path}"
+    }
+
+    system "install_name_tool -change ${destroot}${resources}/lib/libR.dylib ${resources}/lib/libR.dylib \
+        ${destroot}${resources}/bin/exec/R"
+    system "install_name_tool -change ${destroot}${resources}/lib/libRblas.dylib ${resources}/lib/libRblas.dylib \
+        ${destroot}${resources}/bin/exec/R"
+
+    platform darwin {
+        # LegacySupport magic does not work automatically. Re-implement it by hand:
+        set rexec ${resources}/bin/exec/R
+
+        if {${os.major} < 11} {
+            legacysupport::relink_libSystem ${destroot}${rexec}
+        }
+
+        if {${configure.cxx_stdlib} ne "libc++"} {
+            # We can’t do it in a sane way, since R build system in its wisdom assumes
+            # that R and R-orig are archs, and then package installation gets broken.
+            set rexec_orig ${resources}/bin/exec_orig/R
+
+            xinstall -d ${destroot}${resources}/bin/exec_orig
+
+            move ${destroot}${rexec} ${destroot}${rexec_orig}
+
+            set  wrapper    [open "${destroot}${rexec}" w 0755]
+            puts ${wrapper} "#!/bin/bash"
+            puts ${wrapper} ""
+            puts ${wrapper} {if [ -n "$DYLD_LIBRARY_PATH" ]; then}
+            puts ${wrapper} "   DYLD_LIBRARY_PATH=${prefix}/lib/libgcc:\${DYLD_LIBRARY_PATH}"
+            puts ${wrapper} {else}
+            puts ${wrapper} "   DYLD_LIBRARY_PATH=${prefix}/lib/libgcc"
+            puts ${wrapper} {fi}
+            puts ${wrapper} {export DYLD_LIBRARY_PATH}
+            puts ${wrapper} ""
+            puts ${wrapper} "exec ${rexec_orig} \"\$@\""
+            close $wrapper
+        }
+    }
+
+    ln -s ${resources}/bin/R ${destroot}${prefix}/bin/R
+    ln -s ${resources}/bin/Rscript ${destroot}${prefix}/bin/Rscript
+    foreach f [glob -type f -directory ${destroot}${resources}/share/man/man1 *] {
+        set fname [file tail ${f}]
+        ln -s ${resources}/share/man/man1/${fname} ${destroot}${prefix}/share/man/man1/${fname}
+    }
+}
+
+livecheck.type      regex
+livecheck.url       [lindex ${master_sites} 0]
+livecheck.regex     >${name}-(\[0-9.\]+)${extract.suffix}<

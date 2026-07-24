@@ -1,0 +1,19 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran bhh nleqslv 3.3.7
+revision            0
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Solve systems of nonlinear equations
+long_description    {*}${description}
+checksums           rmd160  3ead71e17f816c34970e2acf13fa1a6625727837 \
+                    sha256  6f29ad65049338006a52e457dbbeba529813b6dd952c4d774ef8b9c42193ef75 \
+                    size    99147
+
+compilers.setup     require_fortran
+
+test.run            yes

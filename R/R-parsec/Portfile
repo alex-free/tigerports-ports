@@ -1,0 +1,20 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran alberto.arcagni parsec 1.2.9
+revision            1
+categories-append   economics
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Partial orders in socio-economics
+long_description    {*}${description}
+checksums           rmd160  108c69abd01cc56ecf1673d6ea7b5c26a4a59380 \
+                    sha256  f7c7b89857ba5f2c4daaf1ef4d5f40cec39d0ba1f89e7b82391b8161814d9c37 \
+                    size    47768
+
+depends_lib-append  port:R-igraph \
+                    port:R-netrankr
+
+test.run            yes

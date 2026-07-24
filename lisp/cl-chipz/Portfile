@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           common_lisp 1.0
+
+name                cl-chipz
+version             20230418.git6f80368
+revision            0
+
+homepage            https://cliki.net/chipz
+
+master_sites        debian:c/${name}/
+worksrcdir          ${distname}
+distname            ${name}_${version}
+use_xz              yes
+extract.suffix      .orig.tar.xz
+
+checksums           rmd160  853fae9788786e420a43c571416d4e691f614abf \
+                    sha256  75f0244b93e692f8733eee5a7b7a3d568fd9bd3bb6716e96981840b6d0d8283d \
+                    size    31832
+
+categories-append   archive devel
+maintainers         nomaintainer
+license             MIT
+
+description         decompress DEFLATE and BZIP2 data in Common Lisp
+long_description    {*}${description}
+
+livecheck.url       http://ftp.debian.org/debian/pool/main/c/${name}/?C=N\;O=D
+livecheck.regex     ${name}_(\\d+(?:\\.git\[^-.\]+)*)

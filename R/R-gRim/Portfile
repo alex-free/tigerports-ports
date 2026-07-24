@@ -1,0 +1,33 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran sorenh gRim 0.3.4
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Graphical Interaction Models
+long_description    {*}${description}
+homepage            https://people.math.aau.dk/~sorenh/software/gR
+checksums           rmd160  7cc076ccb974d22680c801011893819df9c39253 \
+                    sha256  c048162308cdb4e481a9502082f4e3a7ad918e711a94a2c3727f979b8cdb2b9f \
+                    size    2774917
+
+depends_lib-append  port:R-doBy \
+                    port:R-glue \
+                    port:R-gRain \
+                    port:R-gRbase \
+                    port:R-igraph \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-RcppEigen
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-knitr \
+                    port:R-markdown \
+                    port:R-testthat
+
+test.run            yes

@@ -1,0 +1,41 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran keyatm keyATM 0.5.4
+revision            1
+categories-append   textproc
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Keyword Assisted Topic Models
+long_description    {*}${description}
+homepage            https://keyatm.github.io/keyATM
+checksums           rmd160  49af6509899afc1d649398bdd5f7df7a27c30634 \
+                    sha256  ae2d40811bd2090a5e1f574fed663b08fccadf6320dd62dc055b10cdc540b326 \
+                    size    155237
+
+depends_lib-append  port:R-cli \
+                    port:R-dplyr \
+                    port:R-fastmap \
+                    port:R-fs \
+                    port:R-future.apply \
+                    port:R-ggplot2 \
+                    port:R-ggrepel \
+                    port:R-magrittr \
+                    port:R-matrixNormal \
+                    port:R-pgdraw \
+                    port:R-purrr \
+                    port:R-quanteda \
+                    port:R-Rcpp \
+                    port:R-RcppEigen \
+                    port:R-rlang \
+                    port:R-stringr \
+                    port:R-tibble \
+                    port:R-tidyr \
+                    port:R-tidyselect
+
+depends_test-append port:R-readtext \
+                    port:R-testthat
+
+test.run            yes

@@ -1,0 +1,44 @@
+--- src/cmdm_functions.c.orig	2018-02-26 06:43:36.000000000 +0800
++++ src/cmdm_functions.c	2025-06-28 23:42:07.000000000 +0800
+@@ -308,10 +308,10 @@
+ double **alloc_matrix(int n, int d) {
+   int i;
+   double **M;
+-  M = Calloc(n, double *);
++  M = R_Calloc(n, double *);
+ 
+   for (i = 0; i < n; i++) {
+-    M[i] = Calloc(d, double);
++    M[i] = R_Calloc(d, double);
+   }
+   
+   return M;
+@@ -322,10 +322,10 @@
+   int i;
+ 
+   for (i = 0; i < n; i++) {
+-    Free(M[i]);
++    R_Free(M[i]);
+   }
+ 
+-  Free(M);
++  R_Free(M);
+ }
+ 
+ // compute an n x n Euclidean distance matrix of an n x d matrix
+@@ -352,7 +352,7 @@
+ void reshape_demean(double *X, double **M, int n, int d) {
+   int i, j;
+   double *sum;
+-  sum = Calloc(d, double);
++  sum = R_Calloc(d, double);
+ 
+   for (i = 0; i < n; i++) {
+     for (j = 0; j < d; j++) {
+@@ -367,5 +367,5 @@
+     }
+   }
+ 
+-  Free(sum);
++  R_Free(sum);
+ }

@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           ocaml 1.1
+
+name                ocaml-uunf
+github.setup        dbuenzli uunf 17.0.0 v
+revision            2
+categories          ocaml textproc
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             ISC
+description         Unicode text normalization for OCaml
+long_description    {*}${description}
+checksums           rmd160  2bcc5631f649d9bec55a4865ea637f6704ec724d \
+                    sha256  bd8e83ab511a951c1939146eb86407fd630eaac1e21c21396f7042bb7f74ed51 \
+                    size    54641
+github.tarball_from archive
+
+depends_lib-append  port:ocaml-cmdliner \
+                    port:ocaml-uutf
+
+ocaml.build_type    topkg

@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran yves.croissant dfidx 0.2-0
+revision            1
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Indexed data frames
+long_description    {*}${description}
+checksums           rmd160  fac4e50122e75d6f7d9c4ea8e5c82d283900a50a \
+                    sha256  65ba5e54515154a77410b65788f7e741bb706812d21acf2b20411c7d0e645ae0 \
+                    size    163138
+supported_archs     noarch
+
+depends_lib-append  port:R-Formula \
+                    port:R-Rdpack
+
+depends_test-append port:R-knitr \
+                    port:R-quarto \
+                    port:R-tinytest
+
+test.run            yes

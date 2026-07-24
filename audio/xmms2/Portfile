@@ -1,0 +1,160 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+PortGroup               ffmpeg 1.0
+PortGroup               github 1.0
+PortGroup               legacysupport 1.1
+PortGroup               openssl 1.0
+PortGroup               waf 1.0
+
+# strndup
+legacysupport.newest_darwin_requires_legacy 10
+
+name                    xmms2
+github.setup            xmms2 xmms2-devel 0.9.7
+revision                0
+categories              audio
+# Mostly LGPL, some plugins and clients are GPL
+license                 LGPL-2.1+ GPL-2+
+maintainers             nomaintainer
+
+description             Cross-Platform Music Multiplexer System
+long_description        Next generation audio player of XMMS
+
+distname                ${name}-${version}
+use_xz                  yes
+checksums               rmd160  c3fd00f8136b9f1102b7967946e983d727649224 \
+                        sha256  4f149d29a4823f720c2f8ce73a9a3c143756450cc3af60aa20d6f791e3f24864 \
+                        size    1742544
+github.tarball_from     releases
+
+depends_build-append    port:gettext \
+                        path:bin/pkg-config:pkgconfig
+
+ffmpeg.version          7
+
+# FIXME: finding mac (monkeys-audio) does not work.
+# Finding libsc68 is fixable, but the fork that we use lacks api68/api68.h header.
+depends_lib-append      port:curl \
+                        port:faad2 \
+                        port:fftw-3-single \
+                        port:flac \
+                        port:fluidsynth \
+                        port:gettext-runtime \
+                        path:lib/pkgconfig/glib-2.0.pc:glib2 \
+                        port:libao \
+                        port:libcdio-paranoia \
+                        port:libdiscid \
+                        port:libgme \
+                        port:libmad \
+                        port:libmms \
+                        port:libmodplug \
+                        port:libofa \
+                        port:libogg \
+                        port:libsamplerate \
+                        port:libshout2 \
+                        port:libsndfile \
+                        port:libvorbis \
+                        port:libxml2 \
+                        port:mpg123 \
+                        port:musepack \
+                        port:opusfile \
+                        path:lib/libspeex.dylib:speex \
+                        port:wavpack
+
+waf.python_branch       3.13
+
+configure.args-append   --conf-prefix=${prefix}
+
+post-patch {
+    fs-traverse f ${worksrcpath}/waftools {
+        if {[string match *.py ${f}]} {
+            reinplace -q "s|/usr/bin/env python$|${prefix}/bin/${waf.python_branch}|" ${f}
+        }
+    }
+}
+
+# error: incompatible function pointer types passing
+# 'void (DNSServiceRef, DNSServiceFlags, uint32_t, DNSServiceErrorType,
+# const char *, const char *, uint16_t, uint16_t, const char *, void *)'
+# to parameter of type 'DNSServiceResolveReply'
+if {[string match *clang* ${configure.compiler}]} {
+    configure.cflags-append -Wno-error=incompatible-function-pointer-types
+}
+
+# Xcode gcc fails to build this at least due to pragmas inside functions.
+# Rather use a newer compiler than carry a patch indefinitely.
+# This does not hurt, since a newer gcc is strictly required
+# anyway due to several dependencies, beginning from python312.
+compiler.blacklist-append   *gcc-4.0 *gcc-4.2
+
+options optionals
+
+options disabled_plugins
+default disabled_plugins {daap jack pulse samba}
+
+# not supported
+configure.post_args-delete  --nocache
+
+# These two introduce a dependency on avahi.
+variant avahi description "MDNS and DAAP using avahi" {
+    depends_lib-append  port:avahi
+    
+    disabled_plugins-delete daap
+    optionals-append    mdns
+}
+
+variant cpp description "C++ development support" {
+    PortGroup           boost 1.0
+
+    configure.args-append \
+                        --boost-includes [boost::include_dir] \
+                        --boost-libs [boost::lib_dir]
+    optionals-append    xmmsclient++ xmmsclient++-glib
+}
+
+variant jack description "Jack audio support" {
+    depends_lib-append  port:jack
+
+    disabled_plugins-delete jack
+}
+
+variant perl description "Perl development support" {
+    depends_lib-append  port:perl5.34 port:p5.34-pod-parser
+    configure.args-append   --with-perl-binary ${prefix}/bin/perl5.34
+    configure.env-append    PODSELECT=${prefix}/bin/podselect-5.34
+    optionals-append    perl
+}
+
+variant pulse description "Pulseaudio support" {
+    depends_lib-append  port:pulseaudio
+
+    disabled_plugins-delete pulse
+}
+
+variant ruby description "Ruby development support" {
+    depends_lib-append  port:ruby33
+    configure.args-append   --with-ruby-binary ${prefix}/bin/ruby3.3
+    optionals-append    ruby
+}
+
+variant python description "Support for Python" {
+    depends_lib-append  port:py313-cython
+    optionals-append    python
+    configure.python    ${prefix}/bin/python3.13
+    configure.env-append    CYTHON=${prefix}/bin/cython-3.13
+}
+
+variant samba description "Enable smbclient support" {
+    depends_lib-append  path:lib/pkgconfig/smbclient.pc:samba4
+
+    disabled_plugins-delete samba
+}
+
+pre-configure {
+    configure.args-append \
+                        --with-optionals=[join ${optionals} ,] \
+                        --without-plugins=[join ${disabled_plugins} ,]
+}
+
+default_variants +python

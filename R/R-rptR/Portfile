@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran mastoffel rptR 0.9.23
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             MIT
+description         Repeatability estimation for Gaussian and non-Gaussian data
+long_description    Estimating repeatability (intra-class correlation) \
+                    from Gaussian, binary, proportion and Poisson data.
+homepage            https://github.com/mastoffel/rptR
+checksums           rmd160  4c2b0fd2c43a5f3726ed70a62c659167ebf11a25 \
+                    sha256  d886ae423e844eb3a6dd87da799543f41bbf4a86aaef994b05bc4a9a0112d127 \
+                    size    1774601
+supported_archs     noarch
+
+depends_lib-append  port:R-lme4 \
+                    port:R-pbapply
+
+depends_test-append port:R-covr \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-tibble
+
+test.run            yes

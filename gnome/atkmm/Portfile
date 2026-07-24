@@ -1,0 +1,43 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           meson 1.0
+
+name                atkmm
+version             2.36.4
+revision            0
+categories          gnome devel
+license             LGPL-2.1+
+maintainers         {devans @dbevans} {mascguy @mascguy} openmaintainer
+
+description         ${name} is the C++ binding for the ATK library.
+long_description    ${description} This port is part of the GNOME C++ bindings suite.
+homepage            http://www.gtkmm.org
+
+set branch          [join [lrange [split ${version} .] 0 1] .]
+master_sites        gnome:sources/${name}/${branch}/
+dist_subdir         ${name}
+use_xz              yes
+
+checksums           rmd160  0e35abc8c4c5be4e3b92425132fa3b183a79c8df \
+                    sha256  19cd0758ed752cb89f5bf02247663dfad0926d9351984a20e3c6cf7da62552ac \
+                    size    753684
+
+# Disable unexpected download of subprojects
+meson.wrap_mode     nodownload
+
+depends_build-append \
+                    port:mm-common \
+                    path:bin/pkg-config:pkgconfig
+
+# Pull in legacy bindings via 'atkmm-1.6', so that dependents don't have to be changed
+depends_lib-append  port:atk \
+                    port:atkmm-1.6 \
+                    path:lib/pkgconfig/glibmm-2.68.pc:glibmm
+
+compiler.cxx_standard   2017
+
+configure.args-append \
+                    -Dbuild-documentation=false
+
+livecheck.type      gnome

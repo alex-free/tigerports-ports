@@ -1,0 +1,53 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran tidyverse ellmer 0.4.0
+revision            1
+categories-append   llm
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Chat with Large Language Models
+long_description    {*}${description}
+homepage            https://ellmer.tidyverse.org
+checksums           rmd160  fe64fee2573e097cef4c6ec95e6859d2666aff6f \
+                    sha256  6778c2f9b3f7046ff33b6933a17c3abe7bd64924532df7dfb10d82bf8759c8b1 \
+                    size    3092506
+supported_archs     noarch
+
+depends_lib-append  port:R-cli \
+                    port:R-coro \
+                    port:R-glue \
+                    port:R-httr2 \
+                    port:R-jsonlite \
+                    port:R-later \
+                    port:R-lifecycle \
+                    port:R-promises \
+                    port:R-R6 \
+                    port:R-rlang \
+                    port:R-S7 \
+                    port:R-tibble \
+                    port:R-vctrs
+
+# FIXME: one test fails: [ FAIL 1 | WARN 0 | SKIP 74 | PASS 97 ]
+# Error in `value[[3L]](cond)`: invalid graphics state
+# Vignettes need keys for LLM models, so will not work otherwise.
+depends_test-append port:R-connectcreds \
+                    port:R-curl \
+                    port:R-gargle \
+                    port:R-gitcreds \
+                    port:R-jose \
+                    port:R-knitr \
+                    port:R-magick \
+                    port:R-openssl \
+                    port:R-paws.common \
+                    port:R-rmarkdown \
+                    port:R-shiny \
+                    port:R-shinychat \
+                    port:R-testthat \
+                    port:R-vcr \
+                    port:R-withr
+
+test.run            yes

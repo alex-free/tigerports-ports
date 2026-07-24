@@ -1,0 +1,48 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           python 1.0
+
+github.setup        CharlesPikachu imagedl 7fc13a5b19f228aef7b4e26d37b6e811d273e18b
+# python.rootname     pyimagedl
+version             0.4.6
+revision            0
+epoch               1
+categories-prepend  net graphics
+platforms           any
+license             Apache-2
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+description         Search and download images from specific websites
+long_description    {*}${description}
+homepage            https://imagedl.readthedocs.io
+checksums           rmd160  e055d01170fb6d53477343ebd397faadf94ba3cc \
+                    sha256  e8822b5ec1654a1be6eb9e43445780128b3efe7feb9a2acd7acb16d7d2a62493 \
+                    size    482909686
+github.tarball_from archive
+supported_archs     noarch
+
+# https://github.com/CharlesPikachu/imagedl/issues/11
+patchfiles-append   no-rusty-primp.patch
+
+python.default_version  313
+
+depends_lib-append  port:freeproxy-py \
+                    port:py${python.version}-beautifulsoup4 \
+                    port:py${python.version}-brotli \
+                    port:py${python.version}-click \
+                    port:py${python.version}-cloudscraper \
+                    port:py${python.version}-drissionpage \
+                    port:py${python.version}-fake-useragent \
+                    port:py${python.version}-filetype \
+                    port:py${python.version}-json-repair \
+                    port:py${python.version}-lxml \
+                    port:py${python.version}-pathvalidate \
+                    port:py${python.version}-Pillow \
+                    port:py${python.version}-platformdirs \
+                    port:py${python.version}-prettytable \
+                    port:py${python.version}-requests \
+                    port:py${python.version}-rich \
+                    port:py${python.version}-standard-imghdr
+
+depends_run-append  port:py${python.version}-curl-cffi

@@ -1,0 +1,44 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran n-kall priorsense 1.2.0
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3+
+description         Prior diagnostics and sensitivity analysis
+long_description    ${name} provides functions for prior and likelihood \
+                    sensitivity analysis in Bayesian models.
+homepage            https://n-kall.github.io/priorsense
+checksums           rmd160  8dad95eb345ae2331b75ac366f9b0bfc0e19616e \
+                    sha256  24de6c5069b128a9169ea7c0a5a24cf9996c68eee05db29091aa4d6440193066 \
+                    size    2004440
+supported_archs     noarch
+
+depends_lib-append  port:R-checkmate \
+                    port:R-ggdist \
+                    port:R-ggh4x \
+                    port:R-ggplot2 \
+                    port:R-matrixStats \
+                    port:R-posterior \
+                    port:R-rlang \
+                    port:R-tibble
+
+depends_test-append port:R-bayesplot \
+                    port:R-brms \
+                    port:R-cmdstanr \
+                    port:R-iwmm \
+                    port:R-knitr \
+                    port:R-philentropy \
+                    port:R-quarto \
+                    port:R-R2jags \
+                    port:R-rmarkdown \
+                    port:R-rstan \
+                    port:R-testthat \
+                    port:R-transport \
+                    port:R-vdiffr
+
+test.run            yes

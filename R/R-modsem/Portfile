@@ -1,0 +1,41 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran slupphaugkjell modsem 1.0.11
+revision            1
+categories-append   math economics
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Latent interaction analysis in structural equation models
+long_description    Latent interaction (and moderation) analysis \
+                    in structural equation models (SEM).
+homepage            https://modsem.org
+checksums           rmd160  b071a6233a5a60e28fec87121c794e801edd77d7 \
+                    sha256  f7965f3ede072d5ad309c0184ce66a4ff6263ef135656efa17cd7a1feafc718d \
+                    size    1697324
+
+depends_lib-append  port:R-Amelia \
+                    port:R-cli \
+                    port:R-Deriv \
+                    port:R-dplyr \
+                    port:R-fastGHQuad \
+                    port:R-ggplot2 \
+                    port:R-lavaan \
+                    port:R-MplusAutomation \
+                    port:R-mvnfast \
+                    port:R-mvtnorm \
+                    port:R-plotly \
+                    port:R-purrr \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-rlang \
+                    port:R-stringr
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown
+
+test.run            yes

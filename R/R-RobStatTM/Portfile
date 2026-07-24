@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran matias RobStatTM 1.0.11
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-3+
+description         Robust Statistics – Theory and Methods
+long_description    {*}${description} (2nd ed.).
+checksums           rmd160  c134f5af5fa12b7369f40e33c0fdb560ff039d2c \
+                    sha256  da89c98a76fb2d8c4cd5c54a98eccf57e7ddaf67ae355e235ae93f2e1610901a \
+                    size    828413
+
+depends_lib-append  port:R-pyinit \
+                    port:R-robustbase \
+                    port:R-rrcov
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-R.rsp
+
+test.run            yes

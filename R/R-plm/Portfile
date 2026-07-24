@@ -1,0 +1,40 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github ycroissant plm 2.6-6 v
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Linear models for panel data
+long_description    {*}${description}
+checksums           rmd160  7547ed3e8e408571c26d6de68682667bd7cae012 \
+                    sha256  6a3cd336d87a5f258d5a3701640510856e4dc93924547229fe41928f6a9e2fe8 \
+                    size    1662630
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-bdsmatrix \
+                    port:R-collapse \
+                    port:R-Formula \
+                    port:R-lmtest \
+                    port:R-maxLik \
+                    port:R-Rdpack \
+                    port:R-sandwich \
+                    port:R-zoo
+
+depends_test-append port:R-AER \
+                    port:R-car \
+                    port:R-fixest \
+                    port:R-lfe \
+                    port:R-knitr \
+                    port:R-pder \
+                    port:R-rmarkdown \
+                    port:R-statmod \
+                    port:R-texreg \
+                    port:R-urca
+
+test.run            yes

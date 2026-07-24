@@ -1,0 +1,37 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran paullabonne BayesMultiMode 0.7.5
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3+
+description         Bayesian mode inference
+long_description    {*}${description}
+homepage            https://github.com/paullabonne/BayesMultiMode
+checksums           rmd160  c5d121836aa771de9f6f456d885bf44c9c56b38f \
+                    sha256  1ca7e06a3100625c75bbdc3f065cafff3476ad1a8f2bc45d3bacfa6b6bf9aed6 \
+                    size    5038687
+supported_archs     noarch
+
+depends_lib-append  port:R-assertthat \
+                    port:R-bayesplot \
+                    port:R-dplyr \
+                    port:R-ggplot2 \
+                    port:R-ggpubr \
+                    port:R-gtools \
+                    port:R-magrittr \
+                    port:R-MCMCglmm \
+                    port:R-mvtnorm \
+                    port:R-posterior \
+                    port:R-Rdpack \
+                    port:R-sn \
+                    port:R-stringr \
+                    port:R-tidyr
+
+depends_test-append port:R-testthat
+
+test.run            yes

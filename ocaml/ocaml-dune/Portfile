@@ -1,0 +1,141 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+PortGroup           ocaml 1.1
+
+legacysupport.newest_darwin_requires_legacy 8
+
+name                ocaml-dune
+github.setup        ocaml dune 3.23.1
+# When updating, reset revisions of subports.
+revision            0
+categories          ocaml devel
+license             MIT
+maintainers         {landonf @landonf} \
+                    {@barracuda156 macos-powerpc.org:barracuda} \
+                    openmaintainer
+
+description         Composable build system for OCaml
+long_description    Dune is a build system for OCaml and Reason.
+
+checksums           rmd160  6a70fa9d289732363149b72f32415d7f1bd31fdc \
+                    sha256  63fbef75d09dd4a05ee2624d41e574d658e33faff5c5b7d6bc67eab2af03dc71 \
+                    size    3710713
+github.tarball_from archive
+
+# Match OCaml port:
+compiler.blacklist  *gcc-4.0 *gcc-4.2 {clang < 400}
+configure.ccache    no
+
+if { ${subport} eq ${name} } {
+    depends_lib         port:ocaml-findlib
+    # Same issue as here: https://github.com/dbuenzli/cmdliner/issues/140
+    depends_run-append  port:groff
+
+    configure.pre_args
+    configure.args      --bindir ${prefix}/bin \
+                        --datadir ${prefix}/share/${name} \
+                        --docdir ${prefix}/share/doc \
+                        --etcdir ${prefix}/etc \
+                        --libdir ${ocaml.package_dir} \
+                        --mandir ${prefix}/share/man \
+                        --sbindir ${prefix}/sbin
+
+    # See: https://github.com/ocaml/dune/issues/8941
+    if {${os.major} < 11} {
+        build.cmd-prepend \
+                        DUNE_CONFIG__COPY_FILE=portable
+    }
+    build.target        release
+} else {
+    # Other subports use Dune
+    ocaml.build_type    dune
+}
+
+# See: https://trac.macports.org/ticket/68463
+# Fix suggested by upstream: https://github.com/ocaml/dune/issues/8941
+patchfiles-append       patch-copyfile_stubs.c-define-COPYFILE_CLONE.diff
+
+# FIXME: 3.21.1 segfaults during the build. 3.6.0–3.7.0 need a fix for fsevents.
+# For now, have at least something working.
+platform darwin 9 {
+    github.setup        ocaml dune 3.4.1
+    revision            0
+    checksums           rmd160  e9024d6263f8b95d54a8a3706ae82faf6281b745 \
+                        sha256  dc260f7f723b17cec104d394d904b402a0b0108d2d3241fe7596e6d473502cef \
+                        size    1789751
+    github.tarball_from archive
+
+    # https://github.com/Drup/ocaml-lmdb/issues/50
+    # patchfiles-append   patch-leopard.diff
+
+    patchfiles-delete   patch-copyfile_stubs.c-define-COPYFILE_CLONE.diff
+}
+
+platform darwin 8 {
+    github.setup        ocaml dune 3.4.1
+    revision            1
+    checksums           rmd160  e9024d6263f8b95d54a8a3706ae82faf6281b745 \
+                        sha256  dc260f7f723b17cec104d394d904b402a0b0108d2d3241fe7596e6d473502cef \
+                        size    1789751
+    github.tarball_from archive
+
+    depends_build-append \
+                        port:gmake
+    build.cmd           ${prefix}/bin/gmake
+
+    # No libproc on 10.4.
+    patchfiles          patch-Revert-fix-stop-relying-on-lsof-on-macos.diff
+}
+
+subport ocaml-dune-configurator {
+    # https://github.com/ocaml/dune/issues/6156
+    post-extract {
+        file delete -force ${worksrcpath}/vendor
+    }
+
+    depends_lib-append  port:ocaml-csexp
+}
+
+subport ocaml-dune-build-info { }
+
+subport ocaml-dune-private-libs {
+    depends_lib         port:ocaml-csexp \
+                        port:ocaml-dyn \
+                        port:ocaml-pp \
+                        port:ocaml-stdune
+}
+
+subport ocaml-dune-site {
+    depends_lib         port:ocaml-dune-private-libs
+}
+
+subport ocaml-dyn {
+    revision            0
+
+    depends_lib         port:ocaml-ordering \
+                        port:ocaml-pp
+}
+
+subport ocaml-fs-io { }
+
+subport ocaml-ocamlc-loc {
+    depends_lib         port:ocaml-dyn
+}
+
+subport ocaml-ordering { }
+
+subport ocaml-stdune {
+    depends_lib         port:ocaml-csexp \
+                        port:ocaml-dyn \
+                        port:ocaml-fs-io \
+                        port:ocaml-ordering \
+                        port:ocaml-pp \
+                        port:ocaml-top-closure
+}
+
+subport ocaml-top-closure { }
+
+subport ocaml-xdg { }

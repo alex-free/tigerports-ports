@@ -1,0 +1,59 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+PortGroup               github 1.0
+PortGroup               legacysupport 1.1
+PortGroup               meson 1.0
+
+# Could not find getline in c library
+legacysupport.newest_darwin_requires_legacy 10
+
+github.setup            davatorium rofi 2.0.0
+revision                0
+categories              x11 sysutils
+maintainers             {@sainnhe gmail.com:sainnhe} \
+                        openmaintainer
+license                 MIT
+
+description             Window switcher, application launcher and dmenu replacement
+
+long_description \
+    Rofi, like dmenu, will provide the user with a textual list of options where \
+    one or more can be selected. This can either be running an application, \
+    selecting a window, or options provided by an external script.
+
+github.tarball_from     releases
+
+checksums               rmd160  93461b5584c09308bb9efef174ab6f61397204f9 \
+                        sha256  f81659b175306ff487e35d88d6b36128e85a793bfb56b64fa22c62eb54c4abd0 \
+                        size    822999
+
+depends_build-append    port:bison \
+                        port:check \
+                        port:flex \
+                        path:bin/pkg-config:pkgconfig
+
+depends_lib-append      path:lib/pkgconfig/cairo.pc:cairo \
+                        path:lib/pkgconfig/gdk-pixbuf-2.0.pc:gdk-pixbuf2 \
+                        path:lib/pkgconfig/glib-2.0.pc:glib2 \
+                        port:libxkbcommon-x11 \
+                        path:lib/pkgconfig/pango.pc:pango \
+                        port:startup-notification \
+                        port:xorg-xcb-util-cursor \
+                        port:xorg-xcb-util-wm
+
+# The port needs X server to run:
+depends_run             path:bin/X:xquartz
+
+depends_run-append      port:desktop-file-utils
+
+configure.args-append   -Dwayland=disabled \
+                        -Dxcb=enabled
+
+# helper.h:463:20: error: missing binary operator before token "("
+compiler.blacklist-append \
+                        *gcc-4.0 *gcc-4.2
+
+post-activate {
+    system "${prefix}/bin/update-desktop-database ${prefix}/share/applications"
+}

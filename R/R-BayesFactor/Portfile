@@ -1,0 +1,38 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is lagging behind.
+R.setup             cran richarddmorey BayesFactor 0.9.12-4.8
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2
+description         Computation of Bayes factors for common designs
+long_description    {*}${description}
+homepage            https://richarddmorey.github.io/BayesFactor
+checksums           rmd160  5d77c69f559f768c3b7b1bad717e63866c9d828e \
+                    sha256  becd30201d6ce57dc1fd742e17881c09a253d5c7ee4c1b5b7b6cae8496326213 \
+                    size    6368319
+
+depends_lib-append  port:R-coda \
+                    port:R-hypergeo \
+                    port:R-MatrixModels \
+                    port:R-mvtnorm \
+                    port:R-pbapply \
+                    port:R-Rcpp \
+                    port:R-RcppEigen \
+                    port:R-stringr
+
+depends_test-append port:R-arm \
+                    port:R-doMC \
+                    port:R-foreach \
+                    port:R-knitr \
+                    port:R-languageR \
+                    port:R-lme4 \
+                    port:R-markdown \
+                    port:R-testthat \
+                    port:R-xtable
+
+test.run            yes

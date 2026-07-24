@@ -1,0 +1,93 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+PortGroup           meson 1.0
+
+github.setup        profanity-im profanity 0.18.2
+revision            0
+categories          net chat
+maintainers         {judaew @judaew} {@barracuda156 macos-powerpc.org:barracuda} \
+                    openmaintainer
+description         Console-based XMPP client written in C using ncurses
+long_description    Profanity is a console based XMPP client written in C using \
+                    ncurses and libstrophe, inspired by Irssi.
+homepage            https://profanity-im.github.io
+license             {GPL-3+ OpenSSLException}
+github.tarball_from archive
+checksums           rmd160  fa221b2e94b473a3ff63ceefe8545a711c9dfae1 \
+                    sha256  d5431065b4d966a745284e64337ec7e11a3fd20179de00b0f98b9cf6004e2ab5 \
+                    size    604718
+
+patchfiles          patch-find-python.diff
+
+set py_ver          3.14
+set py_ver_nodot    [string map {. {}} ${py_ver}]
+configure.python    ${prefix}/bin/python${py_ver}
+
+post-patch {
+    reinplace "s,@PY_V@,${py_ver}," ${worksrcpath}/meson.build
+}
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig \
+                    port:python${py_ver_nodot}
+
+depends_lib-append  port:curl \
+                    port:expat \
+                    path:lib/pkgconfig/glib-2.0.pc:glib2 \
+                    port:gpgme \
+                    port:libassuan \
+                    port:libgcrypt \
+                    port:libgpg-error \
+                    port:libotr \
+                    port:libsignal-protocol-c \
+                    port:libstrophe \
+                    port:ncurses \
+                    port:qrencode \
+                    port:readline \
+                    port:sqlite3
+
+depends_test-append port:cmocka
+
+compiler.c_standard 1999
+
+# Alternative omemo back-end is libomemo-c
+configure.args-append \
+                    -Dc-plugins=enabled \
+                    -Dbuildtype=release \
+                    -Dgdk-pixbuf=disabled \
+                    -Dicons-and-clipboard=disabled \
+                    -Dinstall_themes=true \
+                    -Dnotifications=disabled \
+                    -Domemo=enabled \
+                    -Domemo-backend=libsignal \
+                    -Domemo-qrcode=enabled \
+                    -Dotr=enabled \
+                    -Dpgp=enabled \
+                    -Dpython-plugins=disabled \
+                    -Dspellcheck=disabled \
+                    -Dtests=false \
+                    -Dxscreensaver=disabled
+
+variant notifications description "Enable terminal-notifier for notifications" {
+    depends_lib-append      port:terminal-notifier
+    configure.args-replace  -Dnotifications=disabled -Dnotifications=enabled
+}
+
+variant omemo_c description "Use libomemo-c instead of libsignal-protocol-c" {
+    depends_lib-replace     port:libsignal-protocol-c \
+                            port:libomemo-c
+    depends_lib-append      port:protobuf-c
+    configure.args-replace  -Domemo-backend=libsignal -Domemo-backend=libomemo-c
+}
+
+variant python description "Enable python plug-ins" {
+    depends_lib-append      port:python${py_ver_nodot}
+    compiler.c_standard     2011
+    configure.args-replace  -Dpython-plugins=disabled -Dpython-plugins=enabled
+    configure.args-append   -Dpython_framework=${frameworks_dir}/Python.framework
+}
+
+default_variants    +python

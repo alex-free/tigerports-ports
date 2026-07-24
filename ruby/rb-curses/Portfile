@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           ruby 1.0
+
+ruby.branches       4.0 3.4 3.3 3.2 3.1
+ruby.setup          curses 1.6.0 gem {} rubygems
+license             BSD
+categories-append   devel
+maintainers         nomaintainer
+description         Ruby binding for curses, ncurses and PDCurses
+long_description    {*}${description}. Formerly part of the Ruby standard library.
+homepage            https://github.com/ruby/curses
+checksums           rmd160  85ec4961a278b922ebaea572fb0c902d1671ea03 \
+                    sha256  26cf27fd523ad0f4bc00a9c05f0fe9ccb1dfcc1a8521c739fe14c8f6e34078e2 \
+                    size    528896
+
+depends_lib-append  port:ncurses
+
+destroot.post_args-append -- \
+                    --use-system-libraries \
+                    --with-ncurses-dir=${prefix}/lib

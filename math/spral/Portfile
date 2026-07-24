@@ -1,0 +1,57 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           compilers 1.0
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+PortGroup           meson 1.0
+
+# clock_gettime
+legacysupport.newest_darwin_requires_legacy 15
+
+github.setup        ralna spral 2025.09.18 v
+revision            0
+categories          math science
+license             BSD
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+description         Sparse Parallel Robust Algorithms Library
+long_description    An open-source (BSD) library for sparse linear algebra and associated algorithms. \
+                    It is primarily developed by the Numerical Analysis group at STFC Rutherford Appleton Laboratory.
+homepage            https://www.numerical.rl.ac.uk/spral
+checksums           rmd160  03e650f5491fba1ad1e1c47c1d38983586ba7d15 \
+                    sha256  1358168ac95297049e4fc810e54a16e0c765796cfbaa156e09979e2620b7dae7 \
+                    size    17177883
+github.tarball_from archive
+
+compilers.setup     require_fortran
+compiler.c_standard 2011
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+depends_lib-append  port:hwloc \
+                    port:metis \
+                    path:lib/libopenblas.dylib:OpenBLAS
+
+configure.args-append \
+                    -Dgpu=false \
+                    -Dlibblas=openblas \
+                    -Dliblapack=openblas \
+                    -Dopenmp=false \
+                    -Dtests=true
+
+variant openmp description "Enable OpenMP support" {
+    compiler.openmp_version 3.0
+
+    configure.args-delete \
+                    -Dopenmp=false -Dopenmp=true
+
+    if {[string match *clang* ${configure.compiler}]} {
+        configure.ldflags-append \
+                    -L${prefix}/lib/libomp -lomp
+    }
+}
+
+default_variants    +openmp
+
+# Some tests may fail: https://github.com/ralna/spral/issues/167
+test.run            yes

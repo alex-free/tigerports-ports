@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran RobinHankin lorentz 1.1-2
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         The Lorentz transform in relativistic physics
+long_description    {*}${description}
+homepage            https://robinhankin.github.io/lorentz
+checksums           rmd160  bdb5ef8633ddea4e52143f86663929578fc8e0e4 \
+                    sha256  a6cf7921e81cb966d6eeb7c3bee49c3e3c9599f1a9f4ce3c945cc2ab72cd1ab0 \
+                    size    452064
+supported_archs     noarch
+
+depends_lib-append  port:R-magic \
+                    port:R-magrittr \
+                    port:R-quadform \
+                    port:R-tensor
+
+depends_test-append port:R-covr \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

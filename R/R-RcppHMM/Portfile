@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran robalecarova RcppHMM 1.2.2.1
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3+
+description         Rcpp Hidden Markov Model
+long_description    {*}${description}
+checksums           rmd160  c3ae12987cf74f4e4d12f73909c063ad7d5c5324 \
+                    sha256  e1394569a3a0baff347ce222205183bd99e8a22c29bbe75452ae405f68e646e6 \
+                    size    31110
+
+depends_lib-append  port:R-Rcpp \
+                    port:R-RcppArmadillo
+
+compilers.setup     require_fortran
+
+test.run            yes

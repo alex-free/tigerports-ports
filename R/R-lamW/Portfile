@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran aadler lamW 2.2.6
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             BSD
+description         Lambert W-function
+long_description    {*}${description}
+homepage            https://github.com/aadler/lamW
+checksums           rmd160  4528ac070898d3dc1204c8b83eb4378f2fc769df \
+                    sha256  a47516f3525a390527d4684792379802117d8b9ee06a6fde459d8b6e14f432fa \
+                    size    17463
+
+depends_lib-append  port:R-Rcpp \
+                    port:R-RcppParallel
+
+depends_test-append port:R-covr \
+                    port:R-tinytest
+
+test.run            yes

@@ -1,0 +1,18 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran bates EngrExpt 0.1-8
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Data-sets from Introductory Statistics for Engineering Experimentation
+long_description    {*}${description} (2003) with sample code.
+checksums           rmd160  eb9229b922a106f464e04dbf540735a021c48555 \
+                    sha256  17e2978ed8fc39c9d0105f5ad68c17740b7128930ca2a2dd24f2442127db947d \
+                    size    82521
+supported_archs     noarch
+
+test.run            yes

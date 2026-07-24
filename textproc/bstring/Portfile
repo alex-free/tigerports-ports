@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           meson 1.0
+
+github.setup        msteinert bstring 1.1.0 v
+revision            0
+categories          textproc devel
+license             BSD
+maintainers         {@trodemaster icloud.com:manuals-unread2u} openmaintainer
+description         Better String Library for C
+long_description    {*}${description}
+use_xz              yes
+checksums           rmd160  cf8098657d90d894e911326891ab46696a174a54 \
+                    sha256  1b513965a658494193ab9431c229ea675a7b1c7c85de9d68b8cc089abfb82240 \
+                    size    121708
+github.tarball_from releases
+
+# Both needed only to build tests:
+depends_build-append \
+                    port:check \
+                    path:bin/pkg-config:pkgconfig
+
+configure.args-append \
+                    -Denable-docs=false \
+                    -Denable-tests=true
+
+test.run            yes

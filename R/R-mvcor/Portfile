@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran mtsagris mvcor 1.1
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Correlation coefficients for multivariate data
+long_description    {*}${description}
+checksums           rmd160  aa66a92faa5075230c060f84dd86e5f6a1941c0b \
+                    sha256  ab10d6e4b0d6aea193640f8eba6504a41a035c0878a4d806c808a60b32103542 \
+                    size    4575
+supported_archs     noarch
+
+depends_lib-append  port:R-Rfast
+
+depends_test-append port:R-corrfuns \
+                    port:R-Rfast2
+
+test.run            yes

@@ -1,0 +1,34 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran dkahle mpoly 1.1.2
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2
+description         Symbolic computation and more with multivariate polynomials
+long_description    {*}${description}
+homepage            https://dkahle.github.io/mpoly
+checksums           rmd160  1b42c90350e494716d30dfb1690b9a926d46367d \
+                    sha256  dbef5aff839d567c5a7e697dfb70f116832501aec79364779caf827796b50cca \
+                    size    1879213
+supported_archs     noarch
+
+depends_lib-append  port:R-ggplot2 \
+                    port:R-orthopolynom \
+                    port:R-partitions \
+                    port:R-plyr \
+                    port:R-polynom \
+                    port:R-stringi \
+                    port:R-stringr \
+                    port:R-tidyr
+
+depends_test-append port:R-covr \
+                    port:R-dplyr \
+                    port:R-magrittr \
+                    port:R-testthat
+
+test.run            yes

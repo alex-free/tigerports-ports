@@ -1,0 +1,63 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+
+github.setup        blitz tcptrace 508f73ae66dd00be213337981534ecd97e7fdf12
+version             6.6.8
+revision            0
+categories          net
+license             GPL
+maintainers         nomaintainer
+
+description         TCP dump file analysis tool
+long_description \
+    ${name} a TCP dump file analysis tool written by Shawn Ostermann at \
+    Ohio University. It is NOT a packet capture program. It reads output \
+    dump files in the formats of several popular packet capturing \
+    programs: tcpdump, snoop, etherpeek and netm. It can also output \
+    (i.e. convert thus converting to) tcpdump format files.
+
+homepage            https://sourceforge.net/projects/open-tcptrace
+
+checksums           rmd160  f4c6e30faa1384078b59e8d3b42f7e97e9990b33 \
+                    sha256  93592ebe3bfce8c666aee1f540bf9c65598195955fac4aa6e66837b207ce5106 \
+                    size    3756761
+github.tarball_from archive
+
+installs_libs       no
+
+# https://github.com/freebsd/freebsd-ports/tree/main/net/tcptrace
+patchfiles          freshports-patch.diff
+
+depends_build-append \
+                    port:bison \
+                    port:flex
+
+depends_lib         port:libpcap
+
+post-configure {
+    set path "${worksrcpath}"
+    reinplace "s|PCAP_INCS    = -I/usr/local/include -I. -I../pcap -I/usr/include/pcap|PCAP_INCS    = -I${prefix}/include|" "${path}/Makefile"
+    reinplace "s|PCAP_LDFLAGS = -L/usr/local/lib -Llib -Lpcap -L../pcap -L./cygwin-libs|PCAP_LDFLAGS = -L${prefix}/lib|" "${path}/Makefile"
+}
+
+destroot {
+    file mkdir ${destroot}${prefix}/bin
+    foreach f {tcptrace xpl2gpl} {
+        xinstall -m 755 ${worksrcpath}/$f ${destroot}${prefix}/bin/
+    }
+    file mkdir ${destroot}${prefix}/share/man/man1
+    xinstall -m 444 ${worksrcpath}/tcptrace.man ${destroot}${prefix}/share/man/man1/tcptrace.1
+    file mkdir ${destroot}${prefix}/share/doc/tcptrace
+    foreach f {ARGS COPYING COPYRIGHT README README.mailing_list
+        README.modules README.pcap README.tline_graphs
+        README.tput_graphs README.version README.xpl2gpl
+        THANKS WWW} {
+        xinstall -m 444 ${worksrcpath}/$f ${destroot}${prefix}/share/doc/tcptrace/
+    }
+}
+
+livecheck.type      regex
+livecheck.url       ${master_sites}
+livecheck.regex     {tcptrace-(\d+(?:\.\d+)*)\.[tz]}

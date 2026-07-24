@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran trimborn.econometrics gofCopula 0.4-2
+revision            1
+categories-append   math economics
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3+
+description         Goodness-of-fit tests for copulæ
+long_description    {*}${description}
+checksums           rmd160  be922a0f68a7ee82880add906d3fae3c3a044ff0 \
+                    sha256  2372889827e41559c0aa718bd884d49f69a0f8d85d4e2df3e830461a14737491 \
+                    size    175682
+supported_archs     noarch
+
+depends_lib-append  port:R-copula \
+                    port:R-crayon \
+                    port:R-doSNOW \
+                    port:R-foreach \
+                    port:R-numDeriv \
+                    port:R-progress \
+                    port:R-R.utils \
+                    port:R-SparseGrid \
+                    port:R-VineCopula \
+                    port:R-yarrr
+
+test.run            yes

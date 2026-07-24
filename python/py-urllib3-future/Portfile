@@ -1,0 +1,36 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-urllib3-future
+python.rootname     urllib3_future
+version             2.22.901
+revision            0
+categories-append   net www devel
+platforms           any
+license             MIT
+maintainers         nomaintainer
+description         powerful HTTP 1.1, 2 and 3 client
+long_description    A {*}${description} with both sync and async interfaces.
+homepage            https://github.com/jawah/urllib3.future
+checksums           rmd160  1522191056c56d341e8524668365ba3f5a0500a1 \
+                    sha256  fbece0ff51299a213c926897ffbed61d820ab5ef2ba81cece361c049fe2f51a9 \
+                    size    1306989
+supported_archs     noarch
+
+python.versions         310 311 312 313 314
+
+python.pep517_backend   hatch
+
+if {${subport} ne ${name}} {
+    conflicts       py${python.version}-urllib3
+
+    depends_lib-append \
+                    port:py${python.version}-brotli \
+                    port:py${python.version}-h11 \
+                    port:py${python.version}-jh2 \
+                    port:py${python.version}-socks \
+                    port:py${python.version}-wsproto \
+                    port:py${python.version}-pyzstd
+}

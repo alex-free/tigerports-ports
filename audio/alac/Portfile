@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+PortGroup               github 1.0
+
+github.setup            mikebrady alac 1832544d27d01335d823d639b176d1cae25ecfd4
+version                 0.0.7-2024.10.16
+revision                0
+categories              audio
+maintainers             {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license                 Apache-2
+description             Apple Lossless Audio Codec and utility
+long_description        ${description}
+
+checksums               rmd160  93e8c3981714cbaa029d76cabf6adf01d83f3c8d \
+                        sha256  7a3c806147298e676262b44f0ac6eaaad28823a7ed44ed3d5855e0ed53b7942f \
+                        size    63232
+github.tarball_from     archive
+
+use_autoreconf          yes
+
+depends_build-append    path:bin/pkg-config:pkgconfig

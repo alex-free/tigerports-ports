@@ -1,0 +1,47 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+PortGroup               cmake 1.1
+PortGroup               github 1.0
+
+github.setup            session-foundation liblogging 1.2.1 v
+name                    oxen-logging
+revision                0
+categories              devel
+maintainers             {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license                 BSD
+description             Oxen C++ logging library
+long_description        {*}${description}
+checksums               rmd160  b84bf56d3a18bc1dc03ed3fd4cbf7714353ad647 \
+                        sha256  1830e839657976935eef66d7795d8b0176b7b2bc156c2cbf82e23ad621a818e8 \
+                        size    27144
+github.tarball_from     archive
+
+# Match spdlog
+set port_libfmt         libfmt11
+cmake.prefix_path-append \
+                        ${prefix}/lib/${port_libfmt}/cmake
+
+depends_lib-append      port:${port_libfmt} \
+                        port:spdlog
+
+compiler.cxx_standard   2020
+
+configure.args-append   -DBUILD_SHARED_LIBS=ON \
+                        -DOXEN_LOGGING_FMT_HEADER_ONLY=OFF \
+                        -DOXEN_LOGGING_INSTALL=ON \
+                        -DOXEN_LOGGING_SPDLOG_HEADER_ONLY=OFF \
+                        -DUSE_LTO=OFF
+
+variant lto description "Enable LTO" {
+    compiler.blacklist-append {clang}
+
+    configure.args-replace \
+                        -DUSE_LTO=OFF -DUSE_LTO=ON
+}
+
+post-destroot {
+    set docdir ${prefix}/share/doc/${name}
+    xinstall -d ${destroot}${docdir}
+    xinstall -m 0644 -W ${worksrcpath} LICENSE README.md ${destroot}${docdir}
+}

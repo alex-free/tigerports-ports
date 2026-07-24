@@ -1,0 +1,42 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran mlr-org dsp 1.2.0
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3+
+description         Dynamic Shrinkage Process and Change Point Detection
+long_description    {*}${description}
+homepage            https://github.com/schafert/dsp
+checksums           rmd160  2698acdc4de96b83843d030780b1c4c5865114da \
+                    sha256  cc6b95737be9579a6ff74d8534ae9c74befab98294a422cc2bca028bbfc4387f \
+                    size    81915
+
+depends_lib-append  port:R-BayesLogit \
+                    port:R-coda \
+                    port:R-fda \
+                    port:R-glue \
+                    port:R-lifecycle \
+                    port:R-MCMCpack \
+                    port:R-msm \
+                    port:R-pgdraw \
+                    port:R-progress \
+                    port:R-purrr \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-RcppEigen \
+                    port:R-RcppZiggurat \
+                    port:R-rlang \
+                    port:R-spam \
+                    port:R-stochvol \
+                    port:R-truncdist
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-ggplot2 \
+                    port:R-testthat
+
+test.run            yes

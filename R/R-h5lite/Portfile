@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran cmmr h5lite 2.0.0.2
+revision            1
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Simplified HDF5 Interface
+long_description    {*}${description}, v. 2.x.
+homepage            https://cmmr.github.io/h5lite
+checksums           rmd160  f81ab1b6bbb7fbf3580cd47ab0f5e3f0ec934e2a \
+                    sha256  db1d1a0ce77626f1f3dc6f81141ca61559d6cacb30ce16aa9e75e41ee3b71c59 \
+                    size    175501
+
+depends_lib-append  port:R-hdf5lib
+
+depends_test-append port:R-bit64 \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

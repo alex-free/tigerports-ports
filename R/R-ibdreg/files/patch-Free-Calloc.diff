@@ -1,0 +1,85 @@
+--- src/lsConstrain.c.orig	2022-11-04 18:38:37.000000000 +0800
++++ src/lsConstrain.c	2025-06-28 23:39:32.000000000 +0800
+@@ -24,6 +24,7 @@
+ #include <string.h>
+ #include <R.h> 
+ #include <R_ext/Error.h>
++
+ #define ulong unsigned
+ 
+ static double **double_vec_to_mat(double *Yvec, ulong nrow, ulong ncol);
+@@ -115,15 +116,15 @@
+        /* free memory  */
+ 
+        for(i=0; i< n; i++){
+-         Free(s[i]);
++         R_Free(s[i]);
+        }
+-       Free(s);
++       R_Free(s);
+        s = NULL;
+ 
+        for(i=0; i< k; i++){
+-         Free(a[i]);
++         R_Free(a[i]);
+        }
+-       Free(a);
++       R_Free(a);
+        a = NULL;
+        return;
+ 
+@@ -211,15 +212,15 @@
+      /* free memory  */
+ 
+      for(i=0; i< n; i++){
+-        Free(s[i]);
++        R_Free(s[i]);
+      }
+-     Free(s);
++     R_Free(s);
+      s = NULL;
+ 
+      for(i=0; i< k; i++){
+-       Free(a[i]);
++       R_Free(a[i]);
+      }
+-     Free(a);
++     R_Free(a);
+      a = NULL;
+  
+      return;
+@@ -238,15 +239,15 @@
+   /* free memory  */
+ 
+   for(i=0; i< n; i++){
+-    Free(s[i]);
++    R_Free(s[i]);
+   }
+-  Free(s);
++  R_Free(s);
+   s = NULL;
+ 
+   for(i=0; i< k; i++){
+-    Free(a[i]);
++    R_Free(a[i]);
+   }
+-  Free(a);
++  R_Free(a);
+   a = NULL;
+ 
+   return;
+@@ -278,12 +279,12 @@
+         double **m;
+ 
+         /* allocate pointers to rows */
+-        m=(double **) Calloc(nrow, double *);
++        m=(double **) R_Calloc(nrow, double *);
+         if (!m) errmsg("mem alloc failure 1 in double_matrix");
+   
+ 	/* allocate vec of memory for each row */
+         for(i=0;i<nrow;i++) {
+-          m[i]=(double *) Calloc(ncol, double);
++          m[i]=(double *) R_Calloc(ncol, double);
+           if(!m[i]) errmsg("mem alloc failure 2 in double_matrix");
+ 	}
+ 

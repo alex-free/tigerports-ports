@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             bioconductor Bioconductor Icens 1.80.0
+revision            1
+categories-append   bioconductor
+platforms           {darwin any}
+maintainers         nomaintainer
+license             Artistic-2
+description         NPMLE for censored and truncated data
+long_description    {*}${description}
+checksums           rmd160  1fa79bc16aef3929ad1a0ae67c515a7598906f87 \
+                    sha256  874a6b29f439e5670366e720677be5622c7595e7e078944227cd9d25da24b688 \
+                    size    21320
+supported_archs     noarch
+
+# https://github.com/Bioconductor/Icens/issues/2
+configure.post_args-append \
+                    --no-resave-data
+
+test.run            yes

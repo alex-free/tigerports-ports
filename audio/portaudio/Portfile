@@ -1,0 +1,91 @@
+# -*- Mode: Tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:filetype=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+
+# Autotools build is broken forever, see:
+# https://github.com/PortAudio/portaudio/issues/1091
+# Just use CMake.
+
+github.setup        Portaudio portaudio b0fe9de7ec86ebe5a26086f1d662ab74d7ebfae4
+version             20260501-[string range ${github.version} 0 7]
+revision            2
+categories          audio devel
+platforms           darwin macosx
+maintainers         {ra1nb0w @ra1nb0w} {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         PortAudio is a free, cross-platform, open-source audio I/O library
+long_description    {*}${description}. It lets you write simple audio programs \
+                    in 'C' or C++ that will compile and run on many platforms \
+                    including Windows, Macintosh OS X and Unix (OSS/ALSA). \
+                    It is intended to promote the exchange of audio \
+                    software between developers on different platforms. \
+                    Many applications use PortAudio for Audio I/O.
+homepage            https://www.portaudio.com
+checksums           rmd160  8aa5b47661a655d14fd60700601d8cad05c4bf46 \
+                    sha256  b64ebc99216f260f035e010d4f8812a8646f82cb906bc5ff0850c8cb88c9f1e0 \
+                    size    1579280
+github.tarball_from archive
+
+# Otherwise the build fails to install .pc file for C++ bindings...
+cmake.build_type    Release
+
+# fatal error: 'stdatomic.h' file not found
+compiler.blacklist-append {clang < 700}
+compiler.c_standard     2011
+# Some dependents needs C++ bindings, so we enable those.
+compiler.cxx_standard   2011
+
+configure.args-append \
+                    -DPA_BUILD_EXAMPLES=OFF \
+                    -DPA_BUILD_SHARED_LIBS=ON \
+                    -DPA_BUILD_TESTS=OFF \
+                    -DPA_ENABLE_CXX=ON \
+                    -DPA_WARNINGS_ARE_ERRORS=OFF
+
+platform darwin {
+    configure.args-append \
+                    -DPA_USE_JACK=OFF \
+                    -DPA_USE_PULSEAUDIO=OFF \
+}
+
+patchfiles          patch-src__common__pa_types.h.diff \
+                    patch-audacity-portmixer.diff \
+                    patch-Restore-support-for-10.5.diff \
+                    patch-fix-installation.diff \
+                    patch-fix-options.diff
+
+variant jack description "Enable JACK support" {
+    depends_lib-append \
+                    port:jack
+    configure.args-replace \
+                    -DPA_USE_JACK=OFF -DPA_USE_JACK=ON
+}
+
+variant pulse description "Enable PulseAudio support" {
+    depends_lib-append \
+                    port:pulseaudio
+    configure.args-replace \
+                    -DPA_USE_PULSEAUDIO=OFF -DPA_USE_PULSEAUDIO=ON
+}
+
+variant tools description "Install the example and test utilities to ${prefix}/libexec/${name}" {
+    post-destroot {
+        set utildir ${destroot}${prefix}/libexec/${name}
+        xinstall -m 755 -d ${utildir}
+        # avoid installing any .dSYM directories that might have been created
+        xinstall -m 755 {*}[glob -type f ${build.dir}/bin/.libs/pa*] ${utildir}
+    }
+}
+
+post-destroot {
+    xinstall -d ${destroot}${prefix}/share/doc/${name}
+    xinstall -m 644 -W ${worksrcpath} \
+        README.md \
+        LICENSE.txt \
+        ${destroot}${prefix}/share/doc/${name}
+    # The build of PyAudio requires pa_mac_core.h.
+    xinstall -m 644 ${worksrcpath}/include/pa_mac_core.h \
+        ${destroot}${prefix}/include
+}

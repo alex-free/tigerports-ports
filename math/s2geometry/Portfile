@@ -1,0 +1,73 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           active_variants 1.1
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+PortGroup           openssl 1.0
+
+github.setup        google s2geometry 0.14.0 v
+revision            1
+categories          math science
+license             Apache-2
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+description         Computational geometry and spatial indexing on the sphere
+long_description    {*}${description}
+homepage            https://s2geometry.io
+checksums           rmd160  de03614d8bcc74780315494e0e5b520d39c458fa \
+                    sha256  8c1f0a4b98472ed9df9807f5ec10ee57928cca388e16c13f430b652790d3ad8b \
+                    size    2875152
+github.tarball_from archive
+
+# clock_gettime needed for abseil
+# https://github.com/macports/macports-ports/pull/19905#issuecomment-1680281240
+legacysupport.newest_darwin_requires_legacy 15
+
+depends_lib-append  port:abseil
+
+# https://github.com/google/s2geometry/issues/645
+patchfiles-append   patch-abseil.diff
+
+# The following is correct, i.e. not only for Darwin.
+# https://github.com/google/s2geometry/issues/279
+platform powerpc {
+    patchfiles-append \
+                    patch-ppc-constexpr.diff
+}
+
+# C++ standard should match that of abseil port:
+compiler.cxx_standard  \
+                    2017
+
+configure.args-append \
+                    -DBUILD_SHARED_LIBS=ON \
+                    -DBUILD_EXAMPLES=OFF \
+                    -DBUILD_TESTS=OFF
+
+if {[string match *gcc* ${configure.compiler}]} {
+    # https://github.com/google/s2geometry/issues/417
+    configure.optflags
+
+    configure.ldflags-append \
+                    -latomic
+}
+
+# FIXME: Big-endian platforms are partly supported.
+# A number of tests fail on ppc.
+# https://github.com/google/s2geometry/issues/316
+variant tests description "Enable testing" {
+    depends_build-append \
+                    port:gtest
+    require_active_variants gtest shared_libs
+
+    configure.args-replace \
+                    -DBUILD_TESTS=OFF -DBUILD_TESTS=ON
+
+    configure.args-append \
+                    -DGOOGLETEST_ROOT=${prefix}/src
+
+    test.env-append DYLD_LIBRARY_PATH=${cmake.build_dir}:${prefix}/lib
+
+    test.run        yes
+}

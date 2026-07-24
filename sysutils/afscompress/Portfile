@@ -1,0 +1,63 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+
+name                afscompress
+github.setup        RJVB afsctool 04471bd0184552623439fc8369e274dad9b29138
+version             1.7.3.9
+revision            0
+categories          sysutils
+platforms           {darwin >= 10}
+license             GPL-3
+maintainers         {@ylluminarious orbitalimpact.com:georgedp} openmaintainer
+description         A fork of brkirch's afsctool utility, featuring several improvements.
+long_description    AFSC (Apple File System Compression) tool is a utility that can be used to \
+    apply HFS+/APFS compression to file(s), decompress HFS+/APFS compressed file(s), \
+    or get information about existing HFS+/APFS compressed file(s). macOS 10.6 or \
+    later is required. This fork has several modifications, mostly concerning the \
+    compression feature, including: improved error reporting, an attempt to reduce \
+    memory pressure pressure compressing large files, support for multiple \
+    files/folders specified on the commandline, a backup option while compressing \
+    (that comes in addition to the existing undo if something went wrong), and \
+    support for files that are read-only (and/or write-only) by changing their \
+    permissions temporarily. No error checking is done for this feature\; failure \
+    will lead to errors that are already caught. The main new feature that justifies \
+    the version bump, however, is the parallel processing feature, allowing the user \
+    to specify an arbitrary (though positive :)) number of threads that will \
+    compress the specified files in parallel.
+
+fetch.type          git
+
+post-fetch {
+    system -W ${worksrcpath} "git submodule update --init"
+}
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  port:sparsehash \
+                    port:zlib
+
+compiler.cxx_standard   2011
+
+configure.args-append   -DCMAKE_STRIP:PATH=/bin/echo
+
+post-destroot {
+    if {[variant_isset original_name]} {
+        xinstall -m 755 ${build.dir}/zfsctool ${destroot}${prefix}/bin/zfsctool
+    } else {
+        xinstall -m 755 ${build.dir}/zfscompress ${destroot}${prefix}/bin/zfscompress
+    }
+}
+
+variant {original_name} description {Install the program as "afsctool" instead of "afscompress"} {}
+
+if {[variant_isset original_name]} {
+    configure.args-append \
+        -DNEW_DRIVER_NAMES=OFF
+} else {
+    configure.args-append \
+        -DNEW_DRIVER_NAMES=ON
+}

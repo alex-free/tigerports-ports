@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           fortran 1.0
+
+github.setup        jacobwilliams fortran-mach 0.1.0
+revision            1
+license             BSD
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+description         Modern Fortran machine constants module
+long_description    {*}${description}
+checksums           rmd160  7d33d943a6198540cd4b555bbf03a61680822dc6 \
+                    sha256  729fde6e63ce253984270d57fe86d84184d855ec78f0f9e8a6146017533ee225 \
+                    size    5790
+github.tarball_from archive
+
+post-destroot {
+    set docdir ${prefix}/share/doc/${name}
+    xinstall -d ${destroot}${docdir}
+    xinstall -m 0644 -W ${worksrcpath} LICENSE README.md ${destroot}${docdir}
+}
+
+test.run            yes

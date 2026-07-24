@@ -1,0 +1,60 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           nim 1.0
+
+# Unfortunately, original project is archived now, but we will try to keep at least downloading functional.
+# Alternatives: viu, ani-cli, aniworld, rikka.
+
+nim.vcs_revision    8739e1c31032f9a9110f12292428c0be4adb8a17
+nim.setup           github barracuda156 wewbo ${nim.vcs_revision}
+version             1.5.0
+revision            0
+categories-append   www multimedia anime
+license             GPL-3
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+
+description         application for streaming and downloading anime
+long_description    An interactive terminal {*}${description} from various streaming sources.
+
+checksums           rmd160  893893d7d81a4380072c1d3bdf477c0fa944e814 \
+                    sha256  f7550e6876c857ead7f1d7e3ea0681d2092ea6367b120039f443d35bb0dcb5dc \
+                    size    102033
+
+depends_lib-append  port:nim-htmlparser \
+                    port:nim-illwill \
+                    port:nim-malebolgia \
+                    port:nim-nimcrypto \
+                    port:nim-q.nim \
+                    port:nim-zippy
+
+# Avoiding mpv for now.
+depends_run-append  port:curl-impersonate \
+                    path:bin/ffplay:ffmpeg
+
+nim.nimble_binaries ${nim.package_name}
+
+# Prevent unnecessary runtime errors:
+nim.build_flags-append \
+                    --rangeChecks:off
+
+if {${configure.build_arch} in [list arm i386 ppc]} {
+    nim.build_flags-append \
+                    --overflowChecks:off
+}
+
+destroot {
+    xinstall -m 755 ${worksrcpath}/build/${nim.package_name} ${destroot}${prefix}/bin/
+}
+
+# FIXME: https://github.com/upi-0/wewbo/issues/86
+notes "
+Playback works via ffplay. MPV is not supported at the moment.
+
+Also, not all sources may work, if one fails, try another.
+"
+
+# Examples of commands:
+# wewbo ani-dl "date a live"
+# wewbo -s:mori -p:ffplay "date a live"
+# Expect only downloads to work.

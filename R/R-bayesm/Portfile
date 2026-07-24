@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran perossichi bayesm 3.1-7
+revision            1
+categories-append   economics
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Bayesian inference for marketing and micro-econometrics
+long_description    {*}${description}
+checksums           rmd160  422ee55d17c253ef0e092a51bd676265c07491e7 \
+                    sha256  d207debbb7c6a4e37ed2b45336df156e454f3a214d90d24e1bca8a2ba8704999 \
+                    size    2221868
+
+depends_lib-append  port:R-Rcpp \
+                    port:R-RcppArmadillo
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown
+
+test.run            yes

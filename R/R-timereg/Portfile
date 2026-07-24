@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran scheike timereg 2.0.7
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             {GPL-2 GPL-2.1}
+description         Flexible regression models for survival data
+long_description    {*}${description}
+checksums           rmd160  f59b53907255e0c6d648f5f48e75249c791ccd9d \
+                    sha256  dc87ff3785507c2f759cf876ba978f4795b3836d407be18b0630f2a451489b5f \
+                    size    406319
+
+depends_lib-append  port:R-lava \
+                    port:R-numDeriv
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-mets
+
+test.run            yes

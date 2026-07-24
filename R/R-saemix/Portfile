@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran emmanuelle.comets saemix 3.4
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Stochastic approximation expectation maximization (SAEM) algorithm
+long_description    {*}${description}
+checksums           rmd160  11b916e9f4be2261bec794e887f05a6e95c05757 \
+                    sha256  069f0667b2ebb972b53dcda8182bc8de92105230803d54f0942fb6c46be6e3ab \
+                    size    2542343
+supported_archs     noarch
+
+depends_lib-append  port:R-ggplot2 \
+                    port:R-gridExtra \
+                    port:R-mclust \
+                    port:R-npde \
+                    port:R-rlang \
+                    port:R-scales
+
+depends_test-append port:R-testthat
+
+test.run            yes

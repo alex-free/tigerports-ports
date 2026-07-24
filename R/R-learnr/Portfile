@@ -1,0 +1,53 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github rstudio learnr 0.11.5 v
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             Apache-2
+description         Interactive Tutorials for R
+long_description    {*}${description}
+homepage            https://rstudio.github.io/learnr
+checksums           rmd160  33b41f0db17ff85307def7327e00ecf30158d4d5 \
+                    sha256  f784a9de6e2dfccee835cb2c446e85c5d17af763508b28f334f95aa468f4f014 \
+                    size    5529683
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-checkmate \
+                    port:R-digest \
+                    port:R-ellipsis \
+                    port:R-evaluate \
+                    port:R-htmltools \
+                    port:R-htmlwidgets \
+                    port:R-jsonlite \
+                    port:R-knitr \
+                    port:R-lifecycle \
+                    port:R-markdown \
+                    port:R-promises \
+                    port:R-rappdirs \
+                    port:R-renv \
+                    port:R-rlang \
+                    port:R-rmarkdown \
+                    port:R-rprojroot \
+                    port:R-shiny \
+                    port:R-withr
+
+# R-shinytest2 is dropped due to being broken.
+depends_test-append port:R-bslib \
+                    port:R-callr \
+                    port:R-curl \
+                    port:R-DBI \
+                    port:R-httpuv \
+                    port:R-later \
+                    port:R-reticulate \
+                    port:R-RSQLite \
+                    port:R-rstudioapi \
+                    port:R-sortable \
+                    port:R-testthat
+
+# Some tests need R-shinytest2.
+test.run            no

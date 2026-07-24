@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran pablo-najera cdmTools 1.0.6
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Useful tools for cognitive diagnosis modelling
+long_description    {*}${description}
+homepage            https://github.com/pablo-najera/cdmTools
+checksums           rmd160  49d9de86bd046245687934fefca5857939daaef3 \
+                    sha256  5b9a188e33077a84f2f40ffd4ee79ac2d40676e4bcffdf00753d6ce54cd8bbf5 \
+                    size    67342
+supported_archs     noarch
+
+depends_lib-append  port:R-combinat \
+                    port:R-doSNOW \
+                    port:R-foreach \
+                    port:R-fungible \
+                    port:R-GDINA \
+                    port:R-ggplot2 \
+                    port:R-GPArotation \
+                    port:R-plyr \
+                    port:R-psych \
+                    port:R-sirt
+
+test.run            yes

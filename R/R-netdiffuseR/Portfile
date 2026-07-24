@@ -1,0 +1,38 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github USCCANA netdiffuseR 1.23.0 v
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Analysis of diffusion and contagion processes on networks
+long_description    {*}${description}
+homepage            https://USCCANA.github.io/netdiffuseR
+checksums           rmd160  79270f14b14ba691f4520eb8a94d91a21f961589 \
+                    sha256  6f9dddd4756bc30900bf918e070569ac68d5d774f61f27efa3ea557296912df7 \
+                    size    2765699
+github.tarball_from archive
+
+depends_lib-append  port:R-igraph \
+                    port:R-MatchIt \
+                    port:R-network \
+                    port:R-networkDynamic \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-sna \
+                    port:R-SparseM \
+                    port:R-viridisLite
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-ape \
+                    port:R-covr \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-RSiena \
+                    port:R-testthat
+
+test.run            yes

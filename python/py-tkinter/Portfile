@@ -1,0 +1,171 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem      1.0
+PortGroup       python 1.0
+
+name            py-tkinter
+version         2.4.6
+revision        2
+categories-append \
+                graphics
+license         PSF
+maintainers     nomaintainer
+description     Python bindings to the Tk widget set
+long_description \
+                {*}${description}
+
+homepage        https://docs.python.org/library/tkinter.html
+
+python.versions 27 38 39 310 311 312 313 314
+
+set extract_files [list Modules/_tkinter.c Modules/tkappinit.c]
+set module_name tkinter
+
+subport py27-tkinter {
+    maintainers {jmr @jmroot} openmaintainer
+    version     2.7.18
+    revision    1
+    homepage    https://docs.python.org/release/${version}/library/tkinter.html
+    checksums   rmd160  40a514bb05c9e631454ea8466e28f5bb229428ad \
+                sha256  b62c0e7937551d0cc02b8fd5cb0f544f9405bafc9a54d3808ed4594812edef43 \
+                size    12854736
+    set module_name Tkinter
+}
+subport py38-tkinter {
+    maintainers nomaintainer
+    version     3.8.20
+    revision    1
+    homepage    https://docs.python.org/release/${version}/library/tkinter.html
+    checksums   rmd160  1d03db4e018f2133f2b279a3a44f0c7c759c50cf \
+                sha256  6fb89a7124201c61125c0ab4cf7f6894df339a40c02833bfd28ab4d7691fafb4 \
+                size    18962788
+}
+subport py39-tkinter {
+    maintainers {jmr @jmroot}
+    version     3.9.25
+    revision    1
+    homepage    https://docs.python.org/release/${version}/library/tkinter.html
+    checksums   rmd160  20f2a519486ee697e76ca3aca14da4c29a6bd1b8 \
+                sha256  00e07d7c0f2f0cc002432d1ee84d2a40dae404a99303e3f97701c10966c91834 \
+                size    20183236
+}
+subport py310-tkinter {
+    maintainers {jmr @jmroot}
+    version     3.10.20
+    revision    1
+    homepage    https://docs.python.org/release/${version}/library/tkinter.html
+    checksums   rmd160  d62fea99cb110fed3bf0ab202aa13540d28bde15 \
+                sha256  de6517421601e39a9a3bc3e1bc4c7b2f239297423ee05e282598c83ec0647505 \
+                size    19868028
+}
+subport py311-tkinter {
+    maintainers {jmr @jmroot}
+    version     3.11.15
+    revision    1
+    homepage    https://docs.python.org/release/${version}/library/tkinter.html
+    checksums   rmd160  3ae3a6c2c447c335a6495e1088649d84327b8842 \
+                sha256  272179ddd9a2e41a0fc8e42e33dfbdca0b3711aa5abf372d3f2d51543d09b625 \
+                size    20332596
+}
+subport py312-tkinter {
+    maintainers {jmr @jmroot}
+    version     3.12.13
+    revision    1
+    homepage    https://docs.python.org/release/${version}/library/tkinter.html
+    checksums   rmd160  4c2fb4a15d8d8415056656838680f5c16ac7735c \
+                sha256  c08bc65a81971c1dd5783182826503369466c7e67374d1646519adf05207b684 \
+                size    20801708
+}
+subport py313-tkinter {
+    maintainers {jmr @jmroot}
+    version     3.13.14
+    revision    1
+    homepage    https://docs.python.org/release/${version}/library/tkinter.html
+    checksums   rmd160  755c70c2d4fd8cd2279f91b16695ae748491ef86 \
+                sha256  639e43243c620a308f968213df9e00f2f8f62332f7adbaa7a7eeb9783057c690 \
+                size    23021880
+}
+subport py314-tkinter {
+    maintainers {jmr @jmroot}
+    version     3.14.6
+    revision    1
+    homepage    https://docs.python.org/release/${version}/library/tkinter.html
+    checksums   rmd160  147551e12e7be5ce6ace0e10fdcdbaa1e7e487e8 \
+                sha256  143b1dddefaec3bd2e21e3b839b34a2b7fb9842272883c576420d605e9f30c63 \
+                size    23921184
+}
+
+master_sites    https://www.python.org/ftp/python/${version}/
+distname        Python-${version}
+
+if {${name} ne ${subport}} {
+    use_xz      yes
+
+    # TODO: update according to how MacPorts handles it.
+    # At the moment explicit dependency on unversioned tcl is required.
+    depends_lib-append \
+                port:tcl \
+                port:tk
+
+    dist_subdir python${python.version}
+
+    worksrcdir  ${worksrcdir}/Modules
+
+    if {${python.version} >= 312} {
+        compiler.c_standard 2011
+        set extra_cflags \"-std=c11\"
+    } else {
+        set extra_cflags ""
+    }
+
+    if {${python.version} >= 37} {
+        python.pep517   yes
+        set setup_files [list pyproject.toml setup-pep517.py]
+        post-destroot {
+            xinstall -d ${destroot}${python.libdir}/lib-dynload
+            move {*}[glob ${destroot}${python.pkgd}/*.so] ${destroot}${python.libdir}/lib-dynload
+            delete ${destroot}${python.pkgd}
+        }
+    } else {
+        set setup_files [list setup.py]
+    }
+
+    if {${python.version} >= 27} {
+        lappend extract_files Modules/tkinter.h
+        if {${python.version} >= 35} {
+            lappend extract_files Modules/clinic/_tkinter.c.h
+        }
+    }
+    foreach f $extract_files {
+        lappend extract_files_full [shellescape ${distname}/${f}]
+    }
+    extract.post_args   "| tar -xf - [join $extract_files_full]"
+    post-extract {
+        foreach f $setup_files {
+            if {[string match setup-*.py $f]} {
+                copy    ${filespath}/${f} ${worksrcpath}/setup.py
+            } else {
+                copy    ${filespath}/${f} ${worksrcpath}
+            }
+        }
+    }
+
+    configure {
+        reinplace "s|__PREFIX__|${prefix}|" ${worksrcpath}/setup.py
+        reinplace "s|__TK-VERSION__|8.6|" ${worksrcpath}/setup.py
+        if {[file exists ${worksrcpath}/pyproject.toml]} {
+            reinplace "s|__EXTRA_CFLAGS__|${extra_cflags}|" ${worksrcpath}/setup.py
+            reinplace "s|__PYTHON_INCDIR__|${python.include}|" ${worksrcpath}/setup.py
+            reinplace "s|__MODULE_NAME__|${module_name}|" ${worksrcpath}/pyproject.toml
+            reinplace "s|__VERSION__|${version}|" ${worksrcpath}/pyproject.toml
+        } else {
+            reinplace "s|__MODULE_NAME__|${module_name}|" ${worksrcpath}/setup.py
+        }
+    }
+
+    livecheck.type  regex
+    livecheck.url   https://www.python.org/downloads/
+    livecheck.regex Python (${python.branch}\\.\[0-9\]+)
+} else {
+    livecheck.type  none
+}

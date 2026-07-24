@@ -1,0 +1,33 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem      1.0
+
+name            xorg-libXres
+version         1.2.3
+revision        0
+categories      x11 devel
+license         X11
+maintainers     {jeremyhu @jeremyhu} openmaintainer
+description     X.org libXres
+homepage        https://www.x.org
+platforms       darwin macosx
+long_description \
+                X Resource extension
+master_sites    xorg:individual/lib/
+
+distname        libXres-${version}
+
+checksums       rmd160  9c196294a64d6ce2539692fe9f47eb8a586825b4 \
+                sha256  e1ee4845aa6a59e6ba7145422279ffc7da521b4d3dd302c0b1febdf45d06d093 \
+                size    405178
+
+depends_build   path:bin/pkg-config:pkgconfig \
+                port:xorg-xorgproto
+
+depends_lib     port:xorg-libXext
+
+configure.args  --disable-silent-rules
+
+livecheck.type  regex
+livecheck.url   https://xorg.freedesktop.org/archive/individual/lib/?C=M&O=D
+livecheck.regex libXres-(\\d+(?:\\.\\d+)*)

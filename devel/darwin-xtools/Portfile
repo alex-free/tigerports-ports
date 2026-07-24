@@ -1,0 +1,281 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:filetype=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem                  1.0
+PortGroup                   cmake 1.1
+PortGroup                   github 1.0
+
+name                        darwin-xtools
+epoch                       3
+
+categories                  devel
+maintainers                 {@barracuda156 macos-powerpc.org:barracuda}
+
+description                 Aset of modifications to ctools and ld64 that enable support \
+                            for older systems with up-to-date-tools.
+long_description            {*}${description}
+license                     {APSL-2 Apache-2}
+
+homepage                    https://github.com/iains/darwin-xtools
+
+subport ${name}-1 { conflicts ${name} ${name}-2 ${name}-3 }
+subport ${name}-2 { conflicts ${name} ${name}-1 ${name}-3 }
+subport ${name}-3 { conflicts ${name} ${name}-1 ${name}-1 }
+subport darwin-developer-tools { }
+
+if {${subport} eq "${name}-1"} {
+    set xtools_version      80ad30c3bce821f52d94e844cbb1c2d095a127c6
+    github.setup            iains darwin-xtools ${xtools_version}
+    version                 1.1.0
+    revision                0
+    description-append      Darwin Xtools branch 1.x
+    checksums               ${name}-${xtools_version}.tar.gz \
+                            rmd160  0b0c7155c63a5f962c32848cd649d98b7eef1298 \
+                            sha256  83971978f413ee309589307ed994fd7a7f2d55e818e6435b2663e8167da260d7 \
+                            size    2887509
+
+    # Newer versions are better off being built with gcc14.
+    # See: https://github.com/iains/darwin-xtools/issues/11
+    # Notice: current set-up assumes libstdc++, see below re STDLIB_FLAG.
+    # gcc10-bootstrap does not support libc++, at least as it is now.
+    # depends_build-append    port:gcc10-bootstrap
+    # configure.compiler.add_deps no
+    # configure.cc            ${prefix}/libexec/gcc10-bootstrap/bin/gcc
+    # configure.cxx           ${prefix}/libexec/gcc10-bootstrap/bin/g++
+} elseif {${subport} eq "${name}-2"} {
+    set xtools_version      6f6c04e8b25497851f6a5979a6e96023fffe22df
+    github.setup            iains darwin-xtools ${xtools_version}
+    version                 2.2.4
+    revision                0
+    description-append      Darwin Xtools branch 2.x
+    checksums               ${name}-${xtools_version}.tar.gz \
+                            rmd160  07dd50453b93f90ea4806fd8c12be3acb91c2fbd \
+                            sha256  7568104068614b8e8b1cb72fcc01219f78f90a0d14d95c255be78e2c0a899d62 \
+                            size    2932788
+} elseif {${subport} eq "${name}-3"} {
+    set xtools_version      6446947f3e99db52a40b30a38f36b9ae33492aea
+    github.setup            iains darwin-xtools ${xtools_version}
+    version                 3.3.0
+    revision                0
+    description-append      Darwin Xtools branch 3.x
+    checksums               ${name}-${xtools_version}.tar.gz \
+                            rmd160  18d99473a012f4fa48464aadd078921a25bdc322 \
+                            sha256  9167b67e128f616cef079bbeda4b116fe0d41fe54784fff85826420daae23f5f \
+                            size    2958759
+} elseif {${subport} eq "darwin-developer-tools"} {
+    set xtools_version      b3ea57d1700dd7ae7839085f201bc5220e4b160b
+    set xtools_branch       0.7.0
+    github.setup            iains darwin-xtools ${xtools_version}
+    version                 ${xtools_branch}.1
+    revision                2
+    description-append      This port is a drop-in replacement for Xcode Developer Tools.
+    checksums               ${name}-${xtools_version}.tar.gz \
+                            rmd160  9856f606273636fc5746f68564e410eae46a440a \
+                            sha256  dc123572b68f40192d52e6bb228de3d2c06de809252e01c9ae7d4fdb923221c1 \
+                            size    2794723
+
+    package.flat            no
+    default_variants        +universal
+    destroot.violate_mtree  yes
+    livecheck.type          none
+} else {
+    # Default: https://github.com/iains/darwin-xtools/issues/13#issuecomment-2799876192
+    set xtools_version      b3ea57d1700dd7ae7839085f201bc5220e4b160b
+    set xtools_branch       0.7.0
+    github.setup            iains darwin-xtools ${xtools_version}
+    version                 ${xtools_branch}.1
+    revision                2
+    description-append      Darwin Xtools branch 0.7.x
+    checksums               ${name}-${xtools_version}.tar.gz \
+                            rmd160  9856f606273636fc5746f68564e410eae46a440a \
+                            sha256  dc123572b68f40192d52e6bb228de3d2c06de809252e01c9ae7d4fdb923221c1 \
+                            size    2794723
+    github.livecheck.branch darwin-xtools-${xtools_branch}r1
+
+    platform darwin 9 {
+        default_variants-append \
+                            +universal
+    }
+}
+
+# Only relevant for some variants, but if it is set inside those, post-extract fails:
+# Error: Failed to extract darwin-xtools: can't read "libyaml_version": no such variable
+set libyaml_version         0.2.5
+
+github.tarball_from         archive
+
+if {(${subport} eq "${name}-2") || (${subport} eq "${name}-3")} {
+    patchfiles-append       0001-ld64-unwinddump-include-stdlib-for-exit-3.patch \
+                            0002-ld64-archive_file-fix-compilation-without-LTO_SUPPOR.patch \
+                            0003-cctools-cmake-as-fix-compilation-on-powerpc-apple-da.patch \
+                            0004-cctools-otool-fix-duplicate-symbol-in-arm-i386-_disa.patch \
+                            0005-cctools-cmake-cbtlibs-link-against-libstuff-for-vari.patch \
+                            0006-ld64-cmake-build-libprunetrie-as-static-archive.patch
+
+    # Tapi is not supported in branches 0.x and 1.x.
+    variant tapi conflicts tapilite description "Use standalone Tapi library" {
+        depends_lib-append  port:libtapi
+
+        configure.args-append \
+                            -DXTOOLS_TAPI_PATH=${prefix}
+    }
+
+    variant tapilite conflicts tapi description "Build replacement library for Tapi support" {
+        set libyaml_distfile    ${libyaml_version}.tar.gz
+        distfiles-append        ${libyaml_distfile}:libyaml
+        master_sites-append     https://github.com/yaml/libyaml/archive/refs/tags:libyaml
+        checksums-append        ${libyaml_distfile} \
+                                rmd160  7fe42b7d7bb0dd07aedee6c775c43fd35bb5cf3e \
+                                sha256  fa240dbf262be053f3898006d502d514936c818e422afdcf33921c63bed9bf2e \
+                                size    85055
+
+        post-extract {
+            ln -s ${workpath}/libyaml-${libyaml_version} ${worksrcpath}/libyaml
+        }
+
+        patchfiles-append   0007-tapilite-add-TAPI-emulation-library.patch \
+                            0008-ld64-cmake-use-normal-cmake-trickery-to-link-against.patch \
+                            0009-tapilite-bunch-of-fixes-and-changes.patch \
+                            0010-tapilite-cmake-explitly-build-static-library.patch \
+                            0011-libyaml-add-the-way-to-include-it.patch \
+                            0012-tapilite-fix-build-by-clang.patch
+
+        configure.args-append \
+                            -DXTOOLS_LIBYAML_PATH=${worksrcpath}/libyaml \
+                            -DXTOOLS_USE_TAPILITE=ON
+    }
+
+    # src/ld/Options.h:31:10: fatal error: tapi/tapi.h: No such file or directory
+    if {![variant_isset tapi] && ![variant_isset tapilite]} {
+        pre-fetch {
+            ui_error "Either the tapi or tapilite variant must be selected."
+            return -code error "missing variant"
+        }
+    }
+
+    if {${os.arch} ne "powerpc"} {
+        patchfiles-append   0013-ld64-fix-compilation-on-arm64.patch \
+                            0014-cctools-fix-build-on-macOS-monterey.patch \
+                            0015-cctools-removed-redundant-implementation-of-get_toc_.patch
+    }
+}
+
+# Notice, while we do not disable LTO variant for 0.7.0 in principle,
+# it does not build with Xcode gcc, which is currently used to build 0.7.0.
+# See: https://github.com/iains/darwin-xtools/issues/16
+if {${os.arch} eq "powerpc" && ${subport} ne "darwin-developer-tools"} {
+    variant lto description "Enable LLVM LTO" {
+        set llvm_v          7.1.1
+
+        depends_lib-append  port:llvm-powerpc
+
+        configure.args-append \
+                            -DXTOOLS_LTO_PATH=${prefix}/libexec/llvm-${llvm_v} \
+                            -DXTOOLS_LTO_SUPPORT=ON
+    }
+}
+
+# Use cmake-bootstrap
+depends_build-replace       path:bin/cmake:cmake port:cmake-bootstrap
+depends_skip_archcheck-append \
+                            cmake-bootstrap
+configure.cmd               ${prefix}/libexec/cmake-bootstrap/bin/cmake
+
+# Prevent finding or linking against any other ports
+compiler.cpath
+compiler.library_path
+configure.cppflags-delete   -I${prefix}/include
+configure.ldflags-delete    -L${prefix}/lib
+
+platform darwin 10 {
+    if {${subport} eq "${name}" || ${subport} eq "darwin-developer-tools"} {
+        # Help this build with Xcode 4.2
+        compiler.blacklist-append \
+                            clang llvm-gcc-4.2
+        configure.compiler  gcc-4.2
+    }
+}
+
+# v. 0.7.0 should be build with Xcode toolchain:
+# https://github.com/iains/darwin-xtools/issues/14
+if {${subport} ne "${name}" && ${subport} ne "darwin-developer-tools"} {
+    compiler.cxx_standard   2011
+
+    if {${configure.cxx_stdlib} ne "libc++"} {
+        # Prevent it from linking against gcc's libstdc++.6.dylib and libgcc_s.1.1.dylib
+        configure.ldflags-append \
+                            -static-libstdc++ -static-libgcc
+        configure.args-append \
+                            -DXTOOLS_CXX_HAS_STDLIB_FLAG=OFF
+    } else {
+        configure.ldflags-append \
+                            -static-libgcc
+    }
+} else {
+    # To be on the safe side, make sure +lto is not used by accident:
+    default_variants
+}
+
+if {${subport} eq "darwin-developer-tools"} {
+    cmake.install_prefix    /usr
+} else {
+    cmake.install_prefix    ${prefix}/libexec/${name}
+}
+
+cmake.generator             {Unix Makefiles}
+
+proc xtools_arch {arch} {
+    switch ${arch} {
+        arm64       {return aarch64}
+        ppc64       {return powerpc64}
+        ppc         {return powerpc}
+        default     {return ${arch}}
+    }
+}
+
+platform darwin {
+    set xtools_triple       [xtools_arch ${build_arch}]-apple-darwin${os.major}
+    configure.pre_args-append \
+                            -DLLVM_DEFAULT_TARGET_TRIPLE=${xtools_triple}
+}
+
+configure.pre_args-replace  -DCMAKE_BUILD_WITH_INSTALL_RPATH:BOOL=ON \
+                            -DCMAKE_BUILD_WITH_INSTALL_RPATH:BOOL=OFF
+
+if {${subport} ne "darwin-developer-tools"} {
+    configure.args-append   -DCCTOOLS_LD_CLASSIC=OFF \
+                            -DPACKAGE_VERSION="macos-powerpc"
+}
+
+# 64-bit LD requires futures patches
+if {${configure.build_arch} ni [list i386 ppc]} {
+    configure.args-append   -DXTOOLS_HOST_IS_64B=ON
+} else {
+    configure.args-append   -DXTOOLS_HOST_IS_64B=OFF
+}
+
+if {${subport} eq "${name}-2"} {
+    # cctools/misc/strings.c:357:64: error: 'OFILE_LLVM_BITCODE' undeclared (first use in this function)
+    default_variants-append +lto
+}
+
+post-destroot {
+    # Libyaml is only used for +tapilite:
+    if {([variant_isset v2] || [variant_isset v3]) && [variant_isset tapilite]} {
+        file delete -force {*}[glob -directory ${destroot}${cmake.install_prefix} \
+                            cmake/yaml* include/yaml.h lib/libyaml*]
+    }
+}
+
+if {${subport} eq "darwin-developer-tools"} {
+    # Prevent direct installation.
+    known_fail yes
+    pre-activate {
+        ui_error "Do not install this port directly."
+        ui_error "It is used to build the installer."
+        error "Installation aborted"
+    }
+}
+
+if {${subport} ne "name"} {
+    github.livecheck.branch darwin-xtools-[string map {. -} ${version}]
+}

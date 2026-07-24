@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran SciViews svGUI 1.0.2 v
+revision            1
+categories-append   sysutils
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2
+description         Manage GUIs in R
+long_description    {*}${description}
+homepage            https://www.sciviews.org/svGUI
+checksums           rmd160  177e5aa05b665ae5cd9b45c8ac607b65036a78e5 \
+                    sha256  c79ab132823444b8e292182e3c6f2944c2d7ea1ce51cc436f74c8a46ad183143 \
+                    size    51637
+supported_archs     noarch
+
+depends_test-append port:R-covr \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-spelling \
+                    port:R-testthat
+
+test.run            yes

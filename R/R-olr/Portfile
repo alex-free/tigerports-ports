@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran MatHatter olr 1.2
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Optimal Linear Regression
+long_description    {*}${description}
+homepage            https://github.com/MatHatter/olr_r
+checksums           rmd160  925281d4edeccc309ea8f4f95e6b6425913445f4 \
+                    sha256  fa69689f8a20ee8eadd2d648138621fb0e49db913f1f3ef44627cb40b9e6183e \
+                    size    43066
+supported_archs     noarch
+
+depends_lib-append  port:R-htmltools \
+                    port:R-plyr \
+                    port:R-readxl
+
+depends_test-append port:R-ggplot2 \
+                    port:R-knitr \
+                    port:R-rmarkdown
+
+test.run            yes

@@ -1,0 +1,19 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran j.c.rougier tensor 1.5.1
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Tensor product of arrays
+long_description    {*}${description}
+checksums           rmd160  b9dbe89a8daf38c65cba8f0a3827bfc55473966a \
+                    sha256  6edb07024eaaadec1f83694f5012c2355aced3e589c2c3c659021b5f03168b58 \
+                    size    2541
+supported_archs     noarch
+
+test.run            yes

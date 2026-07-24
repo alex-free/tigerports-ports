@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran milbo earth 5.3.5
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-3
+description         Multivariate adaptive regression splines
+long_description    {*}${description}
+homepage            http://www.milbo.users.sonic.net/earth
+checksums           rmd160  4bc381b53f7b414543229b9eebf9ea8c8bafb5f1 \
+                    sha256  0851043e952762ac50d568ce00073f1bacc8f3be209cb4da8a97673cc2694b77 \
+                    size    1610015
+
+depends_lib-append  port:R-Formula \
+                    port:R-plotmo
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-gam \
+                    port:R-mda
+
+test.run            yes

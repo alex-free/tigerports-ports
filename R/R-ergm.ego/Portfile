@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github statnet ergm.ego 1.1.3
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Fit, simulate and diagnose exponential-family random graph models \
+                    to egocentrically sampled network data
+long_description    {*}${description}
+checksums           rmd160  dc49e3469b4f2328e49a9bb9ba1cddc7a0f228f9 \
+                    sha256  472fa643cd8abc3e643412bbfacfe19797917595f51232601f9ae5c7c92bbf04 \
+                    size    271336
+github.tarball_from archive
+
+depends_lib-append  port:R-dplyr \
+                    port:R-ergm \
+                    port:R-egor \
+                    port:R-network \
+                    port:R-purrr \
+                    port:R-RColorBrewer \
+                    port:R-statnet.common \
+                    port:R-survey \
+                    port:R-tibble
+
+depends_test-append port:R-covr \
+                    port:R-testthat
+
+test.run            yes

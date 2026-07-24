@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran smyth statmod 1.5.1
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             {GPL-2 GPL-3}
+description         Statistical modelling
+long_description    Collection of algorithms and functions to aid statistical modelling.
+checksums           rmd160  9d5d91b418ee410f2dc3e93de1f772309c07d4f8 \
+                    sha256  8f04388117352a75e55d72f320ca12c32bca484d640216885eff378df2291397 \
+                    size    93062
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-tweedie
+
+test.run            yes

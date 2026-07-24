@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran tdhock directlabels 2025.6.24
+revision            1
+categories-append   graphics
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Direct labels for multicolor plots
+long_description    {*}${description}
+homepage            https://github.com/tdhock/directlabels
+checksums           rmd160  c006dd7abd70d94061e6d6de7314a46ed8767499 \
+                    sha256  fefd094dab12c9641134d4ceb640c9599ab50eac570080e602c44606651814a8 \
+                    size    480893
+supported_archs     noarch
+
+depends_lib-append  port:R-quadprog
+
+depends_test-append port:R-alphahull \
+                    port:R-dplyr \
+                    port:R-ggplot2 \
+                    port:R-ggthemes \
+                    port:R-inlinedocs \
+                    port:R-knitr \
+                    port:R-lars \
+                    port:R-latticeExtra \
+                    port:R-markdown \
+                    port:R-RColorBrewer \
+                    port:R-rlang \
+                    port:R-testthat
+
+test.run            yes

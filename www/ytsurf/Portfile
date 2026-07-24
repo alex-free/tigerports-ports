@@ -1,0 +1,58 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+
+# When updating, make sure to get rid of brewisms.
+github.setup        Stan-breaks ytsurf 3.1.7 v
+revision            0
+epoch               1
+categories          www multimedia
+platforms           any
+license             GPL-3
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+description         Shell script to search, download and play YouTube videos
+long_description    Simple shell script to search YouTube videos from your terminal, \
+                    play them with mpv or download.
+checksums           rmd160  73cae4656e188db8bd5e7fe3a90071c582275fdf \
+                    sha256  ba61e89fc6748c823030dec8406e4c2522aa2bb294db60a141e53b95e6bb0e22 \
+                    size    29943
+github.tarball_from archive
+supported_archs     noarch
+
+depends_run-append  port:bash \
+                    port:chafa \
+                    path:libexec/gnubin/sha256sum:coreutils \
+                    port:curl \
+                    path:bin/ffmpeg:ffmpeg \
+                    path:bin/fzf:fzfpp \
+                    port:jq \
+                    path:bin/mpv:mpv \
+                    path:bin/perl:perl5 \
+                    port:sentaku \
+                    port:yt-dlp
+
+post-patch {
+    reinplace "s|/opt/homebrew|${prefix}|g" ${worksrcpath}/ytsurf.sh
+}
+
+use_configure       no
+build               { }
+destroot {
+    xinstall -m 775 ${worksrcpath}/ytsurf.sh ${destroot}${prefix}/bin/ytsurf
+}
+
+# See: https://github.com/Stan-breaks/ytsurf/issues/13
+# Without coreutils it may work, but with an annoying issue:
+# https://github.com/Stan-breaks/ytsurf/issues/49
+notes "
+    Add gnubin to the path:\
+    `export PATH=${prefix}/libexec/gnubin:\$PATH`\
+    \
+    And run the app as `ytsurf --block` (with fzf) or `ytsurf --sentaku`.\
+    \
+    Consider also editing config file in ~/.config/ytsurf.
+
+    Streaming videos may have issues on legacy systems.\
+    However, searching and downloading works fine.
+"

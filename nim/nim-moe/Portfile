@@ -1,0 +1,80 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           nim 1.0
+
+nim.vcs_revision    8d23042d1f28b82df6a41000ce60e79f00e7dc75
+nim.setup           github fox0430 moe ${nim.vcs_revision}
+version             0.5.0
+revision            0
+categories-append   editors
+license             GPL-3
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+
+description         Command-line based text editor inspired by Vim
+long_description    Moe is a terminal-based text editor written in Nim, \
+                    inspired by Vim. It features Vim-like modes and keybindings, \
+                    Language Server Protocol support, syntax highlighting for \
+                    multiple languages, configurable themes, and aims for high \
+                    performance and user-friendliness.
+
+homepage            https://editor.moe
+
+checksums           rmd160  13e966e50048ea4f6e3aff9d8a99e9673b5b4384 \
+                    sha256  28a660c7f6492bf737fdaf0423f6c255c19340e667f03c8073fbbd40b5357804 \
+                    size    1020382
+
+depends_lib-append  port:nim-celina \
+                    port:nim-chronos \
+                    port:nim-editorconfig-nim \
+                    port:nim-parsetoml \
+                    port:nim-regex \
+                    port:nim-results \
+                    port:nim-stew
+
+nim.nimble_binaries {moe}
+
+if {${configure.build_arch} in [list arm i386 ppc]} {
+    nim.build_flags-append \
+                    --overflowChecks:off
+}
+
+post-destroot {
+    xinstall -d ${destroot}${prefix}/share/doc/${name}
+
+    # Install README and documentation if available
+    if {[file exists ${worksrcpath}/README.md]} {
+        xinstall -m 644 ${worksrcpath}/README.md \
+            ${destroot}${prefix}/share/doc/${name}/
+    }
+
+    if {[file exists ${worksrcpath}/LICENSE]} {
+        xinstall -m 644 ${worksrcpath}/LICENSE \
+            ${destroot}${prefix}/share/doc/${name}/
+    }
+
+    # Install example config if available
+    if {[file exists ${worksrcpath}/example/moerc.toml]} {
+        xinstall -d ${destroot}${prefix}/share/examples/${name}
+        xinstall -m 644 ${worksrcpath}/example/moerc.toml \
+            ${destroot}${prefix}/share/examples/${name}/
+    }
+}
+
+notes "
+Moe is now installed.
+
+To run Moe:
+    moe \[filename\]
+
+Use a terminal emulator with true color support like iTerm2 or mlterm(-minimal) port.
+You may need to `export TERM=xterm-256color` prior to launching the app.
+
+Configuration file location:
+    ~/.config/moe/moerc.toml
+
+An example configuration file is available at:
+    ${prefix}/share/examples/${name}/moerc.toml
+
+For more information, visit: https://editor.moe
+"

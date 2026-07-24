@@ -1,0 +1,44 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran tidyverse vitals 0.1.0
+revision            1
+categories-append   llm
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Large language model evaluation
+long_description    {*}${description}
+homepage            https://vitals.tidyverse.org
+checksums           rmd160  b4cfe58453cd894067073ad3c165d32ce0193b6d \
+                    sha256  17feb91d17822388dd57d9354cbf4b3907179d78a03fe15a4d8c95da19585100 \
+                    size    4498281
+supported_archs     noarch
+
+depends_lib-append  port:R-cli \
+                    port:R-dplyr \
+                    port:R-ellmer \
+                    port:R-glue \
+                    port:R-httpuv \
+                    port:R-jsonlite \
+                    port:R-purrr \
+                    port:R-R6 \
+                    port:R-rlang \
+                    port:R-rstudioapi \
+                    port:R-S7 \
+                    port:R-tibble \
+                    port:R-tidyr \
+                    port:R-withr
+
+depends_test-append port:R-ggplot2 \
+                    port:R-here \
+                    port:R-htmltools \
+                    port:R-knitr \
+                    port:R-ordinal \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes
+test.args-append    --ignore-vignettes

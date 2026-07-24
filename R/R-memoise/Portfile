@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github r-lib memoise 2.0.1 v
+revision            4
+categories-append   devel
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Memoisation of functions
+long_description    {*}${description}
+homepage            https://memoise.r-lib.org
+checksums           rmd160  ecb617a69bf1bda0a7d3d220ed1e1ff676da0c44 \
+                    sha256  b0ca4f47f6b24aaa9f86f99c5eea4f748f882b72ab57bf8c698dcca01e731139 \
+                    size    27363
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-cachem \
+                    port:R-rlang
+
+depends_test-append port:R-aws.s3 \
+                    port:R-covr \
+                    port:R-digest \
+                    port:R-googleAuthR \
+                    port:R-googleCloudStorageR \
+                    port:R-httr \
+                    port:R-testthat
+
+test.run            yes

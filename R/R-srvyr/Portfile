@@ -1,0 +1,42 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is outdated.
+R.setup             cran gergness srvyr 1.3.0
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             {GPL-2 GPL-3}
+description         R-dplyr-like syntax for summary statistics of survey data
+long_description    {*}${description}
+homepage            http://gdfe.co/srvyr
+checksums           rmd160  6f2ed7c9ac86354c597c38325b13ff58fb51f2e3 \
+                    sha256  ec367d8e4dd8df22b2da3fa1b1431c754b5adfb5a3306b72d0b33b6ff793e614 \
+                    size    2999322
+supported_archs     noarch
+
+depends_lib-append  port:R-dplyr \
+                    port:R-magrittr \
+                    port:R-rlang \
+                    port:R-survey \
+                    port:R-tibble \
+                    port:R-tidyr \
+                    port:R-tidyselect \
+                    port:R-vctrs
+
+depends_test-append port:R-convey \
+                    port:R-covr \
+                    port:R-DBI \
+                    port:R-dbplyr \
+                    port:R-ggplot2 \
+                    port:R-knitr \
+                    port:R-laeken \
+                    port:R-pander \
+                    port:R-rmarkdown \
+                    port:R-RSQLite \
+                    port:R-spelling \
+                    port:R-testthat
+
+test.run            yes

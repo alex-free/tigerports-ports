@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github nealrichardson distro 0.1.1 v
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             Apache-2
+description         Linux distribution properties
+long_description    {*}${description}
+homepage            https://enpiar.com/distro
+checksums           rmd160  7f21137d6a9188cfcb40e48b6d0b869317b27cf1 \
+                    sha256  b0b69d04172cda6d741daf213c171cb3c02a8ccd4b64f49843e26ae1b0d92241 \
+                    size    6064
+github.tarball_from archive
+supported_archs     noarch
+
+depends_test-append port:R-testthat
+
+test.run            yes

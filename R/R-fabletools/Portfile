@@ -1,0 +1,53 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran tidyverts fabletools 0.6.1
+revision            1
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Core tools for packages in the fable framework
+long_description    {*}${description}
+homepage            https://fabletools.tidyverts.org
+checksums           rmd160  8c68454c5b0de53fed5d79d685f4710e3fdb00e9 \
+                    sha256  dad22066c4bfff1cb279c6a80c8c5851e561b17f3d9c00b6e0e6b0da26fd4f7c \
+                    size    208683
+supported_archs     noarch
+
+depends_lib-append  port:R-distributional \
+                    port:R-dplyr \
+                    port:R-generics \
+                    port:R-ggdist \
+                    port:R-ggplot2 \
+                    port:R-lifecycle \
+                    port:R-progressr \
+                    port:R-R6 \
+                    port:R-rlang \
+                    port:R-scales \
+                    port:R-tibble \
+                    port:R-tidyr \
+                    port:R-tidyselect \
+                    port:R-tsibble \
+                    port:R-vctrs
+
+depends_test-append port:R-covr \
+                    port:R-crayon \
+                    port:R-fable \
+                    port:R-feasts \
+                    port:R-future \
+                    port:R-future.apply \
+                    port:R-ggtime \
+                    port:R-knitr \
+                    port:R-lubridate \
+                    port:R-mvtnorm \
+                    port:R-pillar \
+                    port:R-rmarkdown \
+                    port:R-spelling \
+                    port:R-testthat \
+                    port:R-tsibbledata \
+                    port:R-urca
+
+test.run            yes

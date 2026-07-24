@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran functionaldata fdadensity 0.1.4
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             BSD
+description         Functional data analysis for density functions \
+                    by transformation to a Hilbert space
+long_description    {*}${description}
+homepage            https://github.com/functionaldata/tDENS
+checksums           rmd160  8fcd0d8b9ac011c56e2903cca3f966ddd7235eff \
+                    sha256  8fe37f5cbbc44e9086fecdadc228134f0f486283d6337440163fb0dc2ffe556b \
+                    size    3521555
+
+depends_lib-append  port:R-fdapace \
+                    port:R-Rcpp
+
+depends_test-append port:R-testthat
+
+test.run            yes

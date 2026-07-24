@@ -1,0 +1,18 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran micheledemeo bethel 0.2
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Bethel algorithm
+long_description    The sample size according to the Bethel procedure.
+checksums           rmd160  069caf86846e99a415c7f540a1efa516fd21f35d \
+                    sha256  201253eb0b459fda0d04e2bbb8e1dc0624c1c7dc42dd7548bf8585298ee193fe \
+                    size    122976
+supported_archs     noarch
+
+test.run            yes

@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran vincent.audigier micemd 1.10.0
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             {GPL-2 GPL-3}
+description         Multiple Imputation by Chained Equations with Multilevel Data
+long_description    {*}${description}
+checksums           rmd160  c1bac3147667bf279ebd83173f75e965081cf06f \
+                    sha256  4647cd621913fca3181f00935a801cc0b6193e6166c8d20033b4feb46324f6e7 \
+                    size    308554
+supported_archs     noarch
+
+depends_lib-append  port:R-abind \
+                    port:R-digest \
+                    port:R-GJRM \
+                    port:R-jomo \
+                    port:R-lme4 \
+                    port:R-mice \
+                    port:R-mixmeta \
+                    port:R-mvmeta \
+                    port:R-mvtnorm \
+                    port:R-pbivnorm
+
+depends_test-append port:R-broom.mixed \
+                    port:R-data.table \
+                    port:R-ggplot2 \
+                    port:R-VIM
+
+test.run            yes

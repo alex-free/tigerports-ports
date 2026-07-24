@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github chainsawriot rrrrrr 9b3526c6253e49027f201a74b7fd2780892c8acf
+version             0.0.0.9000
+revision            1
+maintainers         nomaintainer
+license             EUPL-1.2
+description         Package to be used for testing misc functions
+long_description    {*}${description}
+checksums           rmd160  78f6af7c5e24cf1e2c926cfdfbf93cf7d90f272c \
+                    sha256  18c2d411e68a18dbc66d42a7904f3c7025ef809e415a856681d37acac3c9ea73 \
+                    size    28639
+github.tarball_from archive
+
+depends_lib-append  port:R-cpp11
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

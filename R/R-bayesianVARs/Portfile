@@ -1,0 +1,40 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran luisgruber bayesianVARs 0.1.8 v
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3+
+description         MCMC estimation of Bayesian vector autoregressions
+long_description    {*}${description}
+homepage            https://luisgruber.github.io/bayesianVARs
+checksums           rmd160  5f98e347a4bbf44198eda3ff7bba5b3ab185be3d \
+                    sha256  05fb6601492f0fdf566b8e985120d26989c708fe5025e67e4d6e8b2e5952276d \
+                    size    792654
+# github.tarball_from archive
+
+depends_lib-append  port:R-colorspace \
+                    port:R-factorstochvol \
+                    port:R-GIGrvg \
+                    port:R-lpSolveAPI \
+                    port:R-mvtnorm \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-RcppProgress \
+                    port:R-scales \
+                    port:R-stochvol
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-bsvarSIGNs \
+                    port:R-coda \
+                    port:R-knitr \
+                    port:R-quarto \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

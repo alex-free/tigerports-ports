@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github mihaiconstantin doParabar 1.0.2 v
+revision            1
+platforms           {darwin any}
+categories-append   parallel
+maintainers         nomaintainer
+license             MIT
+description         R-foreach parallel adapter for R-parabar back-ends
+long_description    {*}${description}
+checksums           rmd160  ef6af6ac09a642cd679ad55c8df9df4f6e8ff69e \
+                    sha256  1e730c7b8912f0bf5d81da9fd9f33a52fa971ff791a551483de2ff02b9899e52 \
+                    size    351529
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-foreach \
+                    port:R-iterators \
+                    port:R-parabar
+
+depends_test-append port:R-testthat
+
+test.run            yes

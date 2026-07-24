@@ -1,0 +1,73 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+PortGroup           openssl 1.0
+
+# strnlen
+legacysupport.newest_darwin_requires_legacy 10
+
+github.setup        lanthora candy 6.1.8 v
+revision            0
+categories          net security
+license             MIT
+maintainers         {@barracuda156 macos-powerpc.org:barracuda}
+
+description         Reliable, low-latency and anti-censorship VPN
+long_description    ${name} is a reliable, low-latency and anti-censorship \
+                    virtual private network.
+homepage            https://docs.canets.org
+checksums           rmd160  3d3dce27b6a71d0aed165fc8f6b710af1e030ba5 \
+                    sha256  fb67cc5fe7a2dffa7681483efc65e5d25f29645953c7bdd00eab8fead44e84a6 \
+                    size    338319
+github.tarball_from archive
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+
+set libfmt_v        11
+cmake.prefix_path-append \
+                    ${prefix}/lib/libfmt${libfmt_v}/cmake
+
+depends_lib-append  port:expat \
+                    port:libfmt${libfmt_v} \
+                    port:pcre2 \
+                    port:poco \
+                    port:spdlog \
+                    port:zlib
+
+configure.args-append \
+                    -DCANDY_STATIC_OPENSSL=OFF \
+                    -DCANDY_STATIC_POCO=OFF \
+                    -DCANDY_STATIC_SPDLOG=OFF
+
+# Not sure why we had 2020, looks like upstream uses 2017 at the moment.
+compiler.cxx_standard           2017
+compiler.thread_local_storage   yes
+
+set sharedir        ${prefix}/share/${name}
+
+post-destroot {
+    set docdir ${prefix}/share/doc/${name}
+    xinstall -m 755 -d ${destroot}${docdir}
+    xinstall -m 755 -d ${destroot}${sharedir}
+    xinstall -m 644 -W ${worksrcpath} candy.cfg candy.initd ${destroot}${sharedir}/
+    copy ${worksrcpath}/docs ${destroot}${docdir}/
+    xinstall -m 644 -W ${worksrcpath} LICENSE README.md ${destroot}${docdir}/
+}
+
+post-activate {
+    if {![file exists ${prefix}/etc/${name}]} {
+        xinstall -d ${prefix}/etc/${name}
+    }
+    foreach f { candy.cfg candy.initd } {
+        if {![file exists ${prefix}/etc/${name}/${f}]} {
+            copy ${sharedir}/${f} ${prefix}/etc/${name}/
+        }
+    }
+}
+
+startupitem.create      yes
+startupitem.executable  ${prefix}/bin/${name} -c ${prefix}/etc/${name}/candy.cfg

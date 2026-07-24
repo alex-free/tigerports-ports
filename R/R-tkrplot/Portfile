@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran luke-tierney tkrplot 0.0-30
+revision            1
+categories-append   graphics
+maintainers         nomaintainer
+license             GPL
+description         Simple mechanism for placing R graphics in a Tk widget
+long_description    {*}${description}
+checksums           rmd160  4bf0d9bf40aca9fc9423ab9436dfe28cac408d4a \
+                    sha256  cc6c997a1f4102fed2ce75d4c6dd057c4017c2ae1c930c8b37ca51a9a22ccbe1 \
+                    size    33492
+
+depends_lib-append  port:xorg-libX11
+
+pre-fetch {
+    if {![catch {set result [active_variants R "tcltk"]}]} {
+        if !{$result} {
+            ui_msg "Error: to install ${name}, R should be installed with +tcltk variant."
+            return -code error "Required variant missing."
+        }
+    }
+}
+
+test.run            yes

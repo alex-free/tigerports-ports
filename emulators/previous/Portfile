@@ -1,0 +1,61 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           legacysupport 1.1
+
+# AT_FDCWD
+legacysupport.newest_darwin_requires_legacy 13
+
+name                previous
+version             4.3
+revision            0
+categories          emulators
+license             GPL-2+
+maintainers         {@trodemaster icloud.com:manuals-unread2u} openmaintainer
+
+description         NeXT computer emulator
+long_description    ${name} is an open source NeXT computer emulator based on \
+                    the Atari emulator Hatari. It emulates NeXT's 68030 and 68040 \
+                    machines running NeXTSTEP operating system.
+
+homepage            https://sourceforge.net/projects/previous
+
+fetch.type          svn
+svn.url             https://svn.code.sf.net/p/previous/code/trunk
+svn.revision        1822
+worksrcdir          trunk
+
+depends_lib-append  port:libpcap \
+                    port:libpng \
+                    port:readline \
+                    port:SDL3 \
+                    port:zlib
+
+# Patch to allow configurable installation directory
+patchfiles          patch-macports-appdir.diff \
+                    patch-cmakelists-macports.diff
+
+patchfiles-append   patch-sdl3-no-cocoa.diff
+
+# sdlscreen.c:37: error: initializer element is not constant
+compiler.blacklist-append \
+                    *gcc-4.*
+
+# Configure CMake build type and set bundle installation directory
+configure.args-append \
+                    -DBUNDLE_INSTALL_DIR=${applications_dir} \
+                    -DCMAKE_BUILD_TYPE=Release \
+                    -DENABLE_OSX_BUNDLE=OFF
+
+if {${os.platform} eq "darwin" && ${os.major} < 13} {
+    configure.cflags-append \
+                    -D_MACPORTS_LEGACY_COMPATIBLE_SCANDIR=1
+}
+
+notes "
+Previous is a NeXT computer emulator that can run NeXTSTEP 0.8
+through 3.3 and OPENSTEP 4.0-4.2. It emulates the NeXT Computer,
+NeXTcube, NeXTstation, and NeXTdimension hardware.
+"
+

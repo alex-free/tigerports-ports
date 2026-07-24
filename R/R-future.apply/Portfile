@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github HenrikBengtsson future.apply 1.20.2
+revision            1
+categories-append   parallel
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Apply function to elements in parallel using futures
+long_description    {*}${description}
+homepage            https://future.apply.futureverse.org
+checksums           rmd160  5d1886aba5ee7b27e0f7a0b1bcbf40160b9589ca \
+                    sha256  92c0e0f34540c513f6c125c12cb8e2d78a44a5399f23af4c2fa4df49cf23fe27 \
+                    size    132980
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-globals \
+                    port:R-future
+
+depends_test-append port:R-listenv \
+                    port:R-markdown \
+                    port:R-R.rsp
+
+test.run            yes

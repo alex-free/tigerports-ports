@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran ropensci bibtex 0.5.2
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Utility to parse bibtex files
+long_description    {*}${description}
+homepage            https://docs.ropensci.org/bibtex
+checksums           rmd160  5381faee7bed7a150f06d8b1b1e3276dd7101be8 \
+                    sha256  a8e309708370800109ca67e307c68206ab098b8791de0b19b91d3001eca2a91f \
+                    size    88331
+supported_archs     noarch
+
+depends_lib-append  port:R-backports
+
+depends_test-append port:R-testthat
+
+test.run            yes

@@ -1,0 +1,43 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github r-dbi RSQLite 3.53.3 v
+revision            0
+categories-append   databases
+maintainers         nomaintainer
+license             LGPL-2.1+
+description         SQLite interface for R
+long_description    {*}${description}
+homepage            https://rsqlite.r-dbi.org
+checksums           rmd160  0e97c9d0625cc00cfe31ee5f05cde959fa540d58 \
+                    sha256  e3de71accd6c8e716671e3c65903df0238079beb0e6fa596f606a242bbcf7b29 \
+                    size    4396002
+github.tarball_from archive
+
+depends_lib-append  port:R-bit64 \
+                    port:R-blob \
+                    port:R-cpp11 \
+                    port:R-DBI \
+                    port:R-memoise \
+                    port:R-pkgconfig \
+                    port:R-rlang
+
+depends_test-append port:R-callr \
+                    port:R-cli \
+                    port:R-DBItest \
+                    port:R-decor \
+                    port:R-gert \
+                    port:R-gh \
+                    port:R-hms \
+                    port:R-httpuv \
+                    port:R-knitr \
+                    port:R-magrittr \
+                    port:R-rmarkdown \
+                    port:R-rvest \
+                    port:R-testthat \
+                    port:R-withr \
+                    port:R-xml2
+
+test.run            yes

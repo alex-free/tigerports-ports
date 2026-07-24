@@ -1,0 +1,38 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran klausnordhausenR ICtest 0.3-6
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             {GPL-2 GPL-3}
+description         Estimating and testing the number of interesting components \
+                    in linear dimension reduction
+long_description    {*}${description}
+checksums           rmd160  13404c4a7b24503bf8a1f69cc3a917be951c0b87 \
+                    sha256  b30475147e7debbbe3e740a22dbc1307f2cd3a708a57d5becd29fae79677edff \
+                    size    940176
+
+depends_lib-append  port:R-GGally \
+                    port:R-ggplot2 \
+                    port:R-ICS \
+                    port:R-ICSNP \
+                    port:R-JADE \
+                    port:R-mvtnorm \
+                    port:R-png \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-RcppRoll \
+                    port:R-survey \
+                    port:R-xts \
+                    port:R-zoo
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-fICA \
+                    port:R-knitr \
+                    port:R-rmarkdown
+
+test.run            yes

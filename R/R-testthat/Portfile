@@ -1,0 +1,53 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran r-lib testthat 3.3.2 v
+revision            1
+categories-append   devel
+maintainers         nomaintainer
+license             MIT
+description         Unit Testing for R
+long_description    {*}${description}
+homepage            https://testthat.r-lib.org
+checksums           rmd160  64d6858b4480706216e9f7f337e4adb02fc58613 \
+                    sha256  5d2e2fa2c3dcb523afb6898c02be9544c24c1c7e0789149c436fef768a409808 \
+                    size    834043
+# github.tarball_from archive
+
+depends_lib-append  port:R-brio \
+                    port:R-callr \
+                    port:R-cli \
+                    port:R-desc \
+                    port:R-evaluate \
+                    port:R-jsonlite \
+                    port:R-lifecycle \
+                    port:R-magrittr \
+                    port:R-pkgload \
+                    port:R-praise \
+                    port:R-processx \
+                    port:R-ps \
+                    port:R-R6 \
+                    port:R-rlang \
+                    port:R-waldo \
+                    port:R-withr
+
+# R-otelsdk is omitted until fixed and added.
+depends_test-append port:R-covr \
+                    port:R-curl \
+                    port:R-diffviewer \
+                    port:R-digest \
+                    port:R-gh \
+                    port:R-knitr \
+                    port:R-otel \
+                    port:R-rmarkdown \
+                    port:R-rstudioapi \
+                    port:R-S7 \
+                    port:R-shiny \
+                    port:R-usethis \
+                    port:R-vctrs \
+                    port:R-xml2
+
+test.run            yes

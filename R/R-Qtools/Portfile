@@ -1,0 +1,33 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran marco.geraci Qtools 1.6.0
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Utilities for quantiles
+long_description    {*}${description}
+checksums           rmd160  32b7592265977f328b2bb259a289b0bb778cadde \
+                    sha256  d4bb217512ac3260e9601a4c06a37deb7a058e8fc5e6cde2ef9325818e50cd0a \
+                    size    353184
+
+depends_lib-append  port:R-conquer \
+                    port:R-corpcor \
+                    port:R-glmx \
+                    port:R-gtools \
+                    port:R-np \
+                    port:R-numDeriv \
+                    port:R-quantdr \
+                    port:R-quantreg \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo
+
+depends_test-append port:R-knitr \
+                    port:R-mice \
+                    port:R-rmarkdown \
+                    port:R-survey
+
+test.run            yes

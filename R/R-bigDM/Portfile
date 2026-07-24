@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran spatialstatisticsupna bigDM 0.5.6
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Scalable Bayesian disease mapping models for high-dimensional data
+long_description    {*}${description}.
+homepage            https://github.com/spatialstatisticsupna/bigDM
+checksums           rmd160  c9f108c73585cb6056601e5e61bf6676e4fdf133 \
+                    sha256  ce043247d62a992481ccf15a4846b6aeed9305567e6f58fe182fb7e552e9e2ba \
+                    size    4862355
+supported_archs     noarch
+
+depends_lib-append  port:R-crayon \
+                    port:R-doParallel \
+                    port:R-fastDummies \
+                    port:R-foreach \
+                    port:R-future \
+                    port:R-future.apply \
+                    port:R-geos \
+                    port:R-parallelly \
+                    port:R-RColorBrewer \
+                    port:R-Rdpack \
+                    port:R-rlist \
+                    port:R-sf \
+                    port:R-spatialreg \
+                    port:R-spdep

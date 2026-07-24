@@ -1,0 +1,42 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran friendly nestedLogit 0.3.4 v.
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Nested dichotomy logistic regression models
+long_description    {*}${description}
+homepage            https://friendly.github.io/nestedLogit
+checksums           rmd160  732ccbce85e573fcdf1263eab939a217024d1e6d \
+                    sha256  e54eaa56b563f96c41361d499fb728e50b53004d11645651ea141a5f51fc7a05 \
+                    size    794283
+# github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-broom \
+                    port:R-car \
+                    port:R-dplyr \
+                    port:R-effects \
+                    port:R-stringr \
+                    port:R-tibble
+
+depends_test-append port:R-carData \
+                    port:R-geomtextpath \
+                    port:R-ggplot2 \
+                    port:R-ggeffects \
+                    port:R-here \
+                    port:R-lobstr \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-scales \
+                    port:R-spelling \
+                    port:R-testthat \
+                    port:R-tidyr
+
+test.run            yes

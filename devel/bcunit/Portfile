@@ -1,0 +1,40 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+
+github.setup        BelledonneCommunications bcunit 5.4.66
+revision            0
+categories          devel
+license             LGPL-2
+maintainers         {judaew @judaew} openmaintainer
+
+description         This is BCUnit, a fork of the defunct project CUnit
+long_description    {*}${description} \
+    with several fixes and patches applied. CUnit is a Unit testing framework \
+    for C. It is a lightweight system for writing, administering and running \
+    unit tests in C.
+
+checksums           rmd160  6dd78823ce906aafd1085cc29a45632e3e3f7573 \
+                    sha256  39464c34593c3e4891c6140bc374bd65e297bafdf33d68bd6e0dff9eec93a474 \
+                    size    378810
+github.tarball_from archive
+
+# cc1: error: unrecognized command line option "-Wno-clobbered"
+patchfiles-append   patch-drop-unsupported-flags.diff
+
+post-patch {
+        reinplace "s,@prefix@,${prefix},g" ${worksrcpath}/bcunit.pc.in
+}
+
+compiler.c_standard 1999
+
+configure.args-append \
+                    -DCMAKE_INSTALL_BINDIR=${prefix} \
+                    -DCMAKE_INSTALL_LIBDIR=${prefix}/lib \
+                    -DCMAKE_INSTALL_INCLUDEDIR=${prefix}/include \
+                    -DENABLE_DOC=ON \
+                    -DENABLE_STATIC=OFF
+
+github.livecheck.regex  {([0-9.]+)}

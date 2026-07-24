@@ -1,0 +1,39 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran AndreasNordland polle 1.6.2
+revision            1
+categories-append   economics
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             Apache-2
+description         Policy Learning
+long_description    {*}${description}
+homepage            https://github.com/AndreasNordland/polle
+checksums           rmd160  34593221ed45cd46f66b54f389076f64c5ae0886 \
+                    sha256  faa9e3835d04239cd15724dafd37bb12e3f9a4d7383d03cf56c652fae35c85c9 \
+                    size    412582
+supported_archs     noarch
+
+depends_lib-append  port:R-data.table \
+                    port:R-DynTxRegime \
+                    port:R-future.apply \
+                    port:R-lava \
+                    port:R-policytree \
+                    port:R-progressr \
+                    port:R-SuperLearner \
+                    port:R-targeted
+
+depends_test-append port:R-DTRlearn2 \
+                    port:R-ggplot2 \
+                    port:R-glmnet \
+                    port:R-knitr \
+                    port:R-mets \
+                    port:R-ranger \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-xgboost
+
+test.run            yes

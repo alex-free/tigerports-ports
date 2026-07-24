@@ -1,0 +1,46 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+
+github.setup        Benexl yt-x 0.8.6 v
+revision            0
+categories          www multimedia
+license             MIT
+platforms           any
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} \
+                    openmaintainer
+description         Browse YouTube from your terminal
+long_description    {*}${description}
+checksums           rmd160  816a58b5510dd03ee5600f1ed34d2c9d4707b70a \
+                    sha256  292f4eca4d8f321cb9f98c1999cc9f154dee61d7cc7fd8aa6b11c38a0505e75c \
+                    size    82624
+github.tarball_from archive
+supported_archs     noarch
+
+# FIXME: on older OS it seems not to work at the moment:
+# search works, but downloading/streaming fail with Invalid Action error.
+
+# No official fallback for fzf:
+# https://github.com/Benexl/yt-x/issues/104
+depends_run-append  port:bash \
+                    port:chafa \
+                    port:curl \
+                    path:bin/ffmpeg:ffmpeg \
+                    path:bin/fzf:fzfpp \
+                    port:jq \
+                    path:bin/mpv:mpv \
+                    port:rofi \
+                    port:ttf-nerd-fonts-symbols \
+                    port:yt-dlp
+
+# https://github.com/Benexl/yt-x/issues/148
+post-patch {
+    reinplace "s|/bin/sh|${prefix}/bin/bash|" ${worksrcpath}/${name}
+}
+
+use_configure       no
+build               { }
+destroot {
+    xinstall -m 755 ${worksrcpath}/${name} ${destroot}${prefix}/bin/
+}

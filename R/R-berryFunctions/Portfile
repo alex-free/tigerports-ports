@@ -1,0 +1,19 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran brry berryFunctions 1.22.13
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Functions collection related to plotting and hydrology
+long_description    {*}${description}
+homepage            https://github.com/brry/berryFunctions
+checksums           rmd160  dcf8bdfb1c9c60084ed67a18749d7fa728b8290f \
+                    sha256  a0f1d191622cc14c68e65100ed0e276975eb9960c8cdd4db18f18d167235df51 \
+                    size    1248838
+supported_archs     noarch
+
+depends_lib-append  port:R-abind

@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran wolfgang.rolke Rgof 3.3.0
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-2+
+description         1d goodness of fit tests
+long_description    {*}${description}
+checksums           rmd160  1fc9cd9b32fd7e9a15594f9f7b676b7343e5f9f1 \
+                    sha256  6d16a0efbb2bcc056924b17b302701b007f474523104a6ff57ec063d1ff91efa \
+                    size    118277
+
+depends_lib-append  port:R-ggplot2 \
+                    port:R-microbenchmark \
+                    port:R-nortest \
+                    port:R-Rcpp
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown
+
+test.run            yes

@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github mschubert narray 0.5.2 v
+revision            0
+categories-append   devel
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             Apache-2
+description         Subset- and name-aware array utility functions
+long_description    {*}${description}
+checksums           rmd160  9af97c55e07210457335611fa659e06a2a08dcd4 \
+                    sha256  e5a43a95375b3e677cb8084d518f2158c85b14d84187e6640e57978e6999bfaf \
+                    size    90691
+github.tarball_from archive
+
+depends_lib-append  port:R-progress \
+                    port:R-Rcpp \
+                    port:R-stringr
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

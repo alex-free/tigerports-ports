@@ -1,0 +1,39 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           makefile 1.0
+
+set modname         ken
+name                lib${modname}
+github.setup        TTK-qmmp qmmp-${modname} d9dcb2f2b0b401ebfec25e0be7a35eaa014a9e1a
+version             20260303
+revision            0
+categories          audio
+license             GPL-3
+maintainers         nomaintainer
+description         Input plugin for qmmp to play ${modname} modules
+long_description    {*}${description}
+checksums           rmd160  adbc00156f8423190ced5818b10bf7d9571d3423 \
+                    sha256  255e95c24523ef7b29a44ea490815e1e61667a78008f3e57be3ea3777e76a532 \
+                    size    30901
+github.tarball_from archive
+
+worksrcdir          ${worksrcpath}/${name}
+
+post-extract {
+    copy ${filespath}/Makefile ${worksrcpath}/
+}
+
+compiler.cxx_standard   2011
+
+destroot {
+    copy ${worksrcpath}/${name}.dylib ${destroot}${prefix}/lib/
+    set incdir ${prefix}/include/${name}
+    xinstall -d ${destroot}${incdir}
+    fs-traverse h ${worksrcpath} {
+        if {[file isfile ${h}] && [file extension ${h}] == ".h"} {
+            copy ${h} ${destroot}${incdir}/
+        }
+    }
+}

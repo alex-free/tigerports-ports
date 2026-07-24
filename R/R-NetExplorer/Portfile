@@ -1,0 +1,18 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran s.sosa NetExplorer 0.0.2
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3+
+description         Network Explorer
+long_description    ${name} allows to visualize and explore complex systems.
+checksums           rmd160  0ce83e983335bf8a46b527ea8b46a9184878cfac \
+                    sha256  d8f218ff8dbe5ea8593924ef975cb01b39c7e602f91c483a2de436710185124d \
+                    size    269482
+supported_archs     noarch
+
+test.run            yes

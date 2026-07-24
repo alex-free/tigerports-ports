@@ -1,0 +1,55 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran quarto-dev quarto 1.5.1
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         R interface to Quarto markdown publishing system
+long_description    {*}${description}
+homepage            https://quarto-dev.github.io/quarto-r
+checksums           rmd160  368b94b626c53634778a14caa00785c77baf27d9 \
+                    sha256  4c79dbcffc1786c660c9c5acb55ba1e63bcc59aeece14451acf96635c9673920 \
+                    size    411776
+supported_archs     noarch
+
+depends_lib-append  port:R-cli \
+                    port:R-fs \
+                    port:R-htmltools \
+                    port:R-jsonlite \
+                    port:R-later \
+                    port:R-lifecycle \
+                    port:R-processx \
+                    port:R-rlang \
+                    port:R-rmarkdown \
+                    port:R-rstudioapi \
+                    port:R-xfun \
+                    port:R-yaml
+
+depends_test-append port:R-bslib \
+                    port:R-callr \
+                    port:R-curl \
+                    port:R-dplyr \
+                    port:R-flextable \
+                    port:R-ggiraph \
+                    port:R-ggplot2 \
+                    port:R-gt \
+                    port:R-heatmaply \
+                    port:R-kableExtra \
+                    port:R-knitr \
+                    port:R-palmerpenguins \
+                    port:R-patchwork \
+                    port:R-pkgload \
+                    port:R-plotly \
+                    port:R-rsconnect \
+                    port:R-testthat \
+                    port:R-thematic \
+                    port:R-tidyverse \
+                    port:R-tinytable \
+                    port:R-whoami \
+                    port:R-withr
+
+test.run            yes

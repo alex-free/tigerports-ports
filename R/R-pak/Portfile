@@ -1,0 +1,51 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran r-lib pak 0.9.2
+revision            1
+categories-append   devel
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Another approach to package installation
+long_description    {*}${description}
+homepage            https://pak.r-lib.org
+checksums           rmd160  19a038e5394f0073ca6d4904ef8938d0c3696e97 \
+                    sha256  67315a4853787404c53134226075da92187c9942d6d1736fc9c967db6623a14b \
+                    size    3328805
+# github.tarball_from archive
+
+# A bug in the bundled R-ps:
+# arch/macos/apps.m:40:3: error: 'for' loop initial declarations are only allowed in C99 or C11 mode
+patchfiles-append   0001-patch-ps-diff
+# A bug in the bundled R-keyring:
+# keyring_macos.c:257:31: error: 'kSecMatchLimit' undeclared (first use in this function)
+patchfiles-append   0002-patch-keyring.diff
+
+depends_test-append port:R-callr \
+                    port:R-cli \
+                    port:R-covr \
+                    port:R-curl \
+                    port:R-desc \
+                    port:R-filelock \
+                    port:R-gitcreds \
+                    port:R-glue \
+                    port:R-jsonlite \
+                    port:R-mockery \
+                    port:R-pingr \
+                    port:R-pkgbuild \
+                    port:R-pkgcache \
+                    port:R-pkgdepends \
+                    port:R-pkgload \
+                    port:R-pkgsearch \
+                    port:R-processx \
+                    port:R-ps \
+                    port:R-rstudioapi \
+                    port:R-testthat \
+                    port:R-webfakes \
+                    port:R-withr \
+                    port:R-yaml
+
+test.run            yes

@@ -1,0 +1,20 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github statnet rle 0.10.0
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-3
+description         Common functions for run-length encoded vectors
+long_description    {*}${description}
+checksums           rmd160  ad2bd4a52c4bcdc199f6bf4d6560a60b95164866 \
+                    sha256  62a72bbf9c46fbf3b9e7598c9228e2da566510374f188b28b7d4955c3b6198d4 \
+                    size    23000
+github.tarball_from tarball
+
+depends_test-append port:R-covr
+
+test.run            yes

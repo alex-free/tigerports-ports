@@ -1,0 +1,33 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran datacloning dclone 2.3-3
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2
+description         Data cloning and MCMC tools for maximum likelihood methods
+long_description    {*}${description}
+homepage            https://github.com/datacloning/dclone
+checksums           rmd160  eb689480a94be80b66d767647821724211a09597 \
+                    sha256  5ad1797acd3c78674db31f551f3e1a4ad55713e469a73d2c47d138f28febd3a1 \
+                    size    420584
+supported_archs     noarch
+
+depends_lib-append  port:R-coda \
+                    port:R-R2OpenBUGS \
+                    port:R-rjags \
+                    port:R-rstan
+
+depends_run-append  port:jags
+
+patchfiles          patch-no-brugs.diff
+
+depends_test-append port:R-R2WinBUGS \
+                    port:R-rlecuyer
+
+test.run            yes

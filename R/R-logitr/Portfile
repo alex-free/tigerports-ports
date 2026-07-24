@@ -1,0 +1,43 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran jhelvy logitr 1.2.0
+revision            0
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Logit models w/Preference & WTP space utility parameterizations
+long_description    {*}${description}
+checksums           rmd160  fcd295ae0e1c61c798f8e6a67e5d5d621417eafb \
+                    sha256  6dcb9421bd392e2afe4f8c1b387ca31052a7c4d7c3bd5b518404e1858da94a8b \
+                    size    4353097
+
+depends_lib-append  port:R-generics \
+                    port:R-mirai \
+                    port:R-nloptr \
+                    port:R-randtoolbox \
+                    port:R-Rcpp \
+                    port:R-RcppParallel \
+                    port:R-tibble
+
+depends_test-append port:R-apollo \
+                    port:R-broom \
+                    port:R-dplyr \
+                    port:R-fastDummies \
+                    port:R-ggplot2 \
+                    port:R-ggrepel \
+                    port:R-gmnl \
+                    port:R-gtsummary \
+                    port:R-here \
+                    port:R-kableExtra \
+                    port:R-knitr \
+                    port:R-mixl \
+                    port:R-mlogit \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-texreg \
+                    port:R-tidyr
+
+test.run            yes

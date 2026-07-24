@@ -1,0 +1,42 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran tidyverts fable 0.5.0
+revision            1
+categories-append   economics finance
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Forecasting models for tidy time series
+long_description    {*}${description}
+homepage            https://fable.tidyverts.org
+checksums           rmd160  54e54aa90c66b503d4066a1c4a65c9e0d3bb8ae0 \
+                    sha256  a1f1e39b0dd0491182d7394aa28b831005197ebe34fc04b35e61b49c96ac3586 \
+                    size    390762
+
+depends_lib-append  port:R-cli \
+                    port:R-distributional \
+                    port:R-dplyr \
+                    port:R-fabletools \
+                    port:R-Rcpp \
+                    port:R-rlang \
+                    port:R-tibble \
+                    port:R-tidyr \
+                    port:R-tsibble
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-covr \
+                    port:R-feasts \
+                    port:R-forecast \
+                    port:R-knitr \
+                    port:R-MTS \
+                    port:R-rmarkdown \
+                    port:R-spelling \
+                    port:R-testthat \
+                    port:R-tsibbledata \
+                    port:R-urca
+
+test.run            yes

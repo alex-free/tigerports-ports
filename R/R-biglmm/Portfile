@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran mark_purver biglmm 0.9-3
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL
+description         Bounded memory linear and generalized linear models
+long_description    {*}${description}
+checksums           rmd160  fc6984c111a3286498defdfc788b250e96a66dcf \
+                    sha256  e288a9fe814f65c9c187c7c46c7696614b0d04ce8adf20c0699d81599fb979b9 \
+                    size    13185
+
+depends_lib-append  port:R-DBI
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-leaps \
+                    port:R-RODBC \
+                    port:R-RSQLite
+
+test.run            yes

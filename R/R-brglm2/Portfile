@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran ikosmidis brglm2 1.0.0
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Bias reduction in generalized linear models
+long_description    {*}${description}
+checksums           rmd160  185d35ae919ebaae124539f2cb4944c4d6837187 \
+                    sha256  a98e8bea3b85629399215a3b6a42a673ed9638ed8e450078279ab05b7edcb634 \
+                    size    2368876
+
+depends_lib-append  port:R-enrichwith \
+                    port:R-nleqslv \
+                    port:R-numDeriv \
+                    port:R-statmod
+
+depends_test-append port:R-brglm \
+                    port:R-covr \
+                    port:R-detectseparation \
+                    port:R-knitr \
+                    port:R-mbrglm \
+                    port:R-rmarkdown \
+                    port:R-tinytest \
+                    port:R-VGAM
+
+test.run            yes

@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran jon.skoien intamap 1.5-11
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Procedures for automated interpolation
+long_description    {*}${description}
+checksums           rmd160  2ad772d950289565def87c8fb1e53f0d0004cb86 \
+                    sha256  f50c030a84d592976a69a730482ef76612b6472a217042e7b145828c46cc37df \
+                    size    226598
+supported_archs     noarch
+
+depends_lib-append  port:R-automap \
+                    port:R-doParallel \
+                    port:R-evd \
+                    port:R-foreach \
+                    port:R-gstat \
+                    port:R-MBA \
+                    port:R-mvtnorm \
+                    port:R-sf \
+                    port:R-sp
+
+# Test dep on R-rworldmap is dropped.
+
+test.run            yes

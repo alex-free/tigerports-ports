@@ -1,0 +1,133 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           fuse 1.0
+PortGroup           legacysupport 1.1
+PortGroup           meson 1.0
+
+# O_CLOEXEC
+legacysupport.newest_darwin_requires_legacy 10
+
+name                gvfs
+epoch               1
+version             1.60.1
+revision            0
+set branch          [join [lrange [split ${version} .] 0 1] .]
+maintainers         {devans @dbevans} openmaintainer
+categories          devel gnome
+license             {LGPL GPL-3}
+description         The Gnome Virtual File System
+long_description    ${name} is a userspace virtual filesystem designed \
+                    to work with the i/o abstractions of gio (a new \
+                    library available with glib). It installs several \
+                    modules that are automatically used by applications \
+                    using the APIs of libgio. The gvfs model differs \
+                    from e.g. gnome-vfs in that filesystems must be \
+                    mounted before they are used. There is a central \
+                    daemon (gvfsd) that handles coordinting mounts, and \
+                    then each mount is (typically) in its own daemon \
+                    process (although mounts can share daemon process). \
+                    gvfs comes with a set of backends, including trash \
+                    support, sftp, smb, http, dav and others. There is \
+                    a set of command line programs starting with gvfs- \
+                    that lets you run commands (like cat, ls, stat etc.) \
+                    on files in the gvfs.
+
+homepage            https://wiki.gnome.org/Projects/gvfs
+master_sites        gnome:sources/${name}/${branch}/
+
+use_xz              yes
+
+checksums           rmd160  e6efe217913448d9909096b571333fd7b8e33ef1 \
+                    sha256  90eaba333ab7d31a7fdeade45954a513c3661ccebbd9a138aab3fb481dfb9e40 \
+                    size    1306872
+
+patchfiles          patch-test-run-in-tree.sh.diff \
+                    patch-test-gvfs-test.diff \
+                    patch-missing-header.diff
+
+patchfiles-append   patch-fuse2.diff
+
+set python_branch   3.14
+set python_version  [string map {. {}} ${python_branch}]
+
+post-patch {
+    reinplace "s|^#!.*|#!${prefix}/bin/python${python_branch}|" \
+                    ${worksrcpath}/test/gvfs-test \
+                    ${worksrcpath}/test/test_polkitd.py
+}
+
+depends_build-append \
+                    port:gettext \
+                    port:gsed \
+                    port:libxslt \
+                    path:bin/pkg-config:pkgconfig \
+                    port:py${python_version}-gobject3 \
+                    port:python${python_version}
+
+depends_lib-append  port:avahi \
+                    port:dbus \
+                    port:gcr4 \
+                    port:gettext-runtime \
+                    path:lib/pkgconfig/glib-2.0.pc:glib2 \
+                    path:lib/pkgconfig/gtk4.pc:gtk4 \
+                    port:libarchive \
+                    port:libbluray \
+                    port:libgcrypt \
+                    port:libgdata \
+                    port:libimobiledevice \
+                    port:libnfs \
+                    port:libplist \
+                    port:libsecret \
+                    path:lib/pkgconfig/libsoup-3.0.pc:libsoup \
+                    port:libusb \
+                    port:libxml2 \
+                    port:openssh \
+                    port:samba4
+
+# Type redefinition
+compiler.c_standard 2011
+
+configure.args-append \
+                    -Dadmin=false \
+                    -Ddevel_utils=false \
+                    -Dfuse=true \
+                    -Dgoa=false \
+                    -Dgoogle=false \
+                    -Dinstalled_tests=false \
+                    -Dlibusb=true \
+                    -Dlogind=false \
+                    -Dman=false \
+                    -Donedrive=false \
+                    -Dsystemduserunitdir=no \
+                    -Dtmpfilesdir=no
+
+platform darwin {
+    # Require linuxisms, gphoto2 is poisoned by udev.
+    configure.args-append \
+                    -Dcdda=false \
+                    -Dgphoto2=false \
+                    -Dgudev=false \
+                    -Dmtp=false \
+                    -Dudisks2=false
+}
+
+destroot.keepdirs   ${destroot}${prefix}/share/gvfs/remote-volume-monitors
+
+post-destroot {
+    xinstall -d ${destroot}${prefix}/share/gvfs/remote-volume-monitors
+    set docdir ${prefix}/share/doc/${name}
+    xinstall -d ${destroot}${docdir}
+    xinstall -m 644 -W ${worksrcpath} COPYING NEWS README.md \
+        ${destroot}${docdir}
+}
+
+post-activate {
+    system "${prefix}/bin/glib-compile-schemas ${prefix}/share/glib-2.0/schemas"
+    system "${prefix}/bin/gio-querymodules ${prefix}/lib/gio/modules"
+}
+
+test.run            yes
+test.target         check
+
+livecheck.type      gnome

@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran onnokleen mfGARCH 0.2.2 v
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             MIT
+description         Mixed-Frequency GARCH models
+long_description    {*}${description}
+checksums           rmd160  f264afaf5179ee44081ef1939c47da0efb466c39 \
+                    sha256  c6588708a6ddc3ecf7225a71dac5455a1347b870f89e464f0f46dd2fffa2c8cb \
+                    size    454077
+# github.tarball_from archive
+
+depends_lib-append  port:R-maxLik \
+                    port:R-numDeriv \
+                    port:R-Rcpp \
+                    port:R-zoo
+
+depends_test-append port:R-covr \
+                    port:R-dplyr \
+                    port:R-ggplot2 \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

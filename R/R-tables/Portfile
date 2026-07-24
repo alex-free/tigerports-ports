@@ -1,0 +1,33 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran dmurdoch tables 0.9.33
+revision            1
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2
+description         Formula-driven table generation
+long_description    Computes and displays complex tables of summary statistics. \
+                    Output may be in LaTeX, HTML, plain text or an R matrix \
+                    for further processing.
+homepage            https://dmurdoch.github.io/tables
+checksums           rmd160  0829ff8f8e6f984b79a6c234644031c7e364d528 \
+                    sha256  7b9287aaceda7f0a18fcc67ddece476ef47fe8d7a85b8091c94e215e5e52f26f \
+                    size    720111
+supported_archs     noarch
+
+depends_lib-append  port:R-htmltools \
+                    port:R-knitr
+
+depends_test-append port:R-bookdown \
+                    port:R-formatters \
+                    port:R-Hmisc \
+                    port:R-kableExtra \
+                    port:R-magrittr \
+                    port:R-pkgdown \
+                    port:R-rmarkdown \
+                    port:R-tinytable
+
+test.run            yes

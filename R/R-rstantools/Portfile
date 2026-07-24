@@ -1,0 +1,34 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran stan-dev rstantools 2.6.0
+revision            1
+categories-append   devel math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3+
+description         Tools for developing R packages interfacing with Stan
+long_description    {*}${description}
+homepage            https://mc-stan.org/rstantools
+checksums           rmd160  ab834feeb44761f28315959ce1b60170b9b75a28 \
+                    sha256  6fe4d8f48e42bb48a0d65aedf017b4e1a919a29e3431301cc0295f7777a7f837 \
+                    size    81100
+supported_archs     noarch
+
+depends_lib-append  port:R-desc \
+                    port:R-Rcpp \
+                    port:R-RcppParallel
+
+depends_test-append port:R-knitr \
+                    port:R-pkgbuild \
+                    port:R-pkgload \
+                    port:R-rmarkdown \
+                    port:R-roxygen2 \
+                    port:R-rstan \
+                    port:R-rstudioapi \
+                    port:R-testthat \
+                    port:R-usethis
+
+test.run            yes

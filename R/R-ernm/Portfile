@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran dac6 ernm 1.0.2
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             LGPL-2.1
+description         Exponential-Family Random Network Models
+long_description    {*}${description}
+checksums           rmd160  0fb5902273ce88c8d477a80a841fd5f4c5f2f0c8 \
+                    sha256  855421dc71faa043c93643e496becb2ffcfccc95371ba3480fc6136c2c96b823 \
+                    size    528095
+
+depends_lib-append  port:R-BH \
+                    port:R-dplyr \
+                    port:R-ggplot2 \
+                    port:R-moments \
+                    port:R-network \
+                    port:R-Rcpp \
+                    port:R-rlang \
+                    port:R-tidyr \
+                    port:R-trust
+
+depends_test-append port:R-spelling \
+                    port:R-testthat
+
+test.run            yes

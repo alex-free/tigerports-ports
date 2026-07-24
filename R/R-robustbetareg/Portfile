@@ -1,0 +1,34 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran ffelipeq robustbetareg 0.3.1
+revision            1
+platforms           {darwin any}
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Robust Beta regression
+long_description    {*}${description}
+checksums           rmd160  d1614323be423be4b4dac1bd3248d7802ce0abce \
+                    sha256  0ae38f076893eeba28899dac09e5bf09592a6361d16241fc1d3f1f6c1a804611 \
+                    size    44599
+supported_archs     noarch
+
+depends_lib-append  port:R-BBmisc \
+                    port:R-betareg \
+                    port:R-crayon \
+                    port:R-Formula \
+                    port:R-miscTools \
+                    port:R-numDeriv \
+                    port:R-pracma \
+                    port:R-Rmpfr \
+                    port:R-robustbase \
+                    port:R-rstudioapi \
+                    port:R-zoo
+
+depends_test-append port:R-covr \
+                    port:R-testthat
+
+test.run            yes

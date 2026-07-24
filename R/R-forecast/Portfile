@@ -1,0 +1,43 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran robjhyndman forecast 9.0.0
+revision            1
+categories-append   math finance
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Forecasting functions for time series and linear models
+long_description    {*}${description}
+homepage            https://pkg.robjhyndman.com/forecast
+checksums           rmd160  7c39db4d218a27454fc1f87003c3c4c1c9522765 \
+                    sha256  cd87ed85a29ddd9e9db53ad8482ef53ead18947c29502ded0c8123f40a538617 \
+                    size    589836
+
+depends_lib-append  port:R-colorspace \
+                    port:R-fracdiff \
+                    port:R-generics \
+                    port:R-ggplot2 \
+                    port:R-lmtest \
+                    port:R-magrittr \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-timeDate \
+                    port:R-tseries \
+                    port:R-urca \
+                    port:R-withr \
+                    port:R-zoo
+
+compilers.setup     require_fortran
+
+# Test dep on R-seasonal is dropped.
+depends_test-append port:R-forecTheta \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-rticles \
+                    port:R-scales \
+                    port:R-testthat \
+                    port:R-uroot
+
+test.run            yes

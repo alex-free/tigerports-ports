@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           fortran 1.0
+
+github.setup        perazz fortran-lapack 9982df3b660918761b993eaf0ff2e507547e25b2
+version             1.0.0
+revision            2
+epoch               1
+categories-append   math
+license             BSD
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+description         Modularized Fortran LAPACK implementation
+long_description    ${name} contains a Modern Fortran implementation \
+                    of the Reference-LAPACK library.
+checksums           rmd160  68d536074d2e19fc2f7f85dd5148265b7913eb96 \
+                    sha256  51b01bce948fa66dcb3f919073c82ba99d7c9685d3c9a6563b6d392543fe0169 \
+                    size    6521629
+github.tarball_from archive
+
+post-destroot {
+    set docdir ${prefix}/share/doc/${name}
+    xinstall -d ${destroot}${docdir}
+    xinstall -m 0644 -W ${worksrcpath} LICENSE README.md ${destroot}${docdir}
+}

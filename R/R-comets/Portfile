@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github LucasKook comets 0.2-1
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-3
+description         Covariance measure tests for conditional independence
+long_description    {*}${description}
+checksums           rmd160  4ea3bb3727ac2a2be54b7227abd56ef273d44342 \
+                    sha256  9f7ec4c544f2de7d5ab31cda03146076e693062ca187b66214bcb011b8bd4e90 \
+                    size    239639
+github.tarball_from archive
+
+depends_lib-append  port:R-coin \
+                    port:R-Formula \
+                    port:R-glmnet \
+                    port:R-ranger \
+                    port:R-Rcpp
+
+depends_test-append port:R-dplyr \
+                    port:R-ggplot2 \
+                    port:R-lightgbm \
+                    port:R-testthat \
+                    port:R-tidyr \
+                    port:R-xgboost
+
+test.run            yes

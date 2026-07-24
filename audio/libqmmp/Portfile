@@ -1,0 +1,125 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           qmake 1.0
+
+set myname          qmmp
+name                lib${myname}
+# 2026-03-14
+github.setup        Greedysky TTKMusicPlayer ec4d0e9bb4edcffececf3c6be91152fab2e8972f
+version             4.3.0.0
+# Not used below, but for the reference:
+set qmmp_v          1.7.9
+revision            6
+categories          audio
+license             {GPL-3 LGPL-3}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+description         Libary for TTKMusicPlayer
+long_description    {*}${description}
+checksums           rmd160  824a2824f91445801dd44ae0ee4080f8ca97dad1 \
+                    sha256  82114d77d918ed77c2f894b40061c981cf14f143d50e48e08844e40145edfce4 \
+                    size    618606
+github.tarball_from     archive
+github.livecheck.branch plugins
+
+worksrcdir          ${github.project}-${github.version}/${myname}
+
+patch.pre_args-replace  -p0 -p1
+
+patchfiles-append   0001-v2m-fix-CheckV2MVersion-signature.patch \
+                    0002-Fix-dependencies-headers.patch
+
+# TODO: still needed? https://github.com/Greedysky/TTKMusicPlayer/issues/171
+patchfiles-append   0003-find-xgm.patch
+
+# https://github.com/Greedysky/TTKMusicPlayer/commit/70d7c0c62ca8cf9f6c10dad47d771e52e1e51aae
+# With a fix for https://github.com/Greedysky/TTKMusicPlayer/issues/177
+patchfiles-append   70d7c0c62ca8cf9f6c10dad47d771e52e1e51aae.patch
+
+post-patch {
+    reinplace "s|CONFIG += USE_STATIC_LIBRARY||" ${worksrcpath}/${myname}.pri
+    reinplace "s|Visual||" ${worksrcpath}/src/plugins/plugins.pro
+    reinplace "s|@PREFIX@|${prefix}|g" ${worksrcpath}/src/plugins/Input/tracker/xgm/xgm.pro
+}
+
+depends_lib-append  port:adplug \
+                    port:enca \
+                    port:faad2 \
+                    port:ffmpeg \
+                    port:flac \
+                    port:libADLMIDI \
+                    port:libarchive \
+                    port:libasap \
+                    port:libayfly \
+                    port:libbs2b \
+                    port:libbuzzic \
+                    port:libcddb \
+                    port:libcdio \
+                    port:libcdio-paranoia \
+                    port:libdca \
+                    port:libfc14audiodecoder \
+                    port:libgme \
+                    port:libhively \
+                    port:libken \
+                    port:libmms \
+                    port:libmodplug \
+                    port:libogg \
+                    port:libopenmpt \
+                    port:libopus \
+                    port:libpsf \
+                    port:libs98 \
+                    port:libsamplerate \
+                    port:libsc68 \
+                    port:libsidplayfp \
+                    port:libsndfile \
+                    port:libsoundmon \
+                    port:libtfmx \
+                    port:libvorbis \
+                    port:libxgm \
+                    port:libxmp \
+                    port:mpg123 \
+                    port:musepack \
+                    port:opusfile \
+                    port:organya \
+                    port:portaudio \
+                    port:pulseaudio \
+                    port:qoa \
+                    port:sonic \
+                    port:soxr \
+                    port:speex \
+                    port:stsound \
+                    port:taglib \
+                    port:v2m \
+                    port:wavpack \
+                    port:zlib
+
+depends_run-append  path:bin/mplayer:MPlayer
+
+configure.args-append \
+                    ${worksrcpath}/${myname}.pro
+
+compiler.cxx_standard   2011
+# ffap.c:1238:1: error: function multiversioning is not supported on the current target
+compiler.blacklist-append \
+                    {clang}
+
+set ttkroot         ${prefix}/libexec/TTKMusicPlayer
+
+destroot {
+    xinstall -d ${destroot}${ttkroot}
+    copy ${worksrcpath}/bin/${version} ${destroot}${ttkroot}/
+}
+
+post-destroot {
+    set mainlib ${ttkroot}/${version}/libTTKqmmp.dylib
+    system "install_name_tool -id ${mainlib} ${destroot}${mainlib}"
+    foreach dylib [ exec find ${destroot}${ttkroot}/${version} -name "\*.dylib" ] {
+        regsub ":$" ${dylib} "" destroot_dylib_path
+        regsub ${destroot} ${destroot_dylib_path} "" dylib_path
+        system "install_name_tool -id ${dylib_path} ${destroot_dylib_path}"
+        system "install_name_tool -change libTTKqmmp.dylib ${mainlib} ${destroot_dylib_path}"
+    }
+    system "install_name_tool -change libTTKqmmp.dylib ${mainlib} \
+        ${destroot}${ttkroot}/${version}/demo.app/Contents/MacOS/demo"
+}

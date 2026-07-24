@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran pierdutt cmgnd 0.1.1
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3+
+description         Constrained Mixture of Generalized Normal Distributions
+long_description    {*}${description}
+homepage            https://github.com/pierdutt/cmgnd
+checksums           rmd160  05e8661f4f121d4aa8589f5e9f4d7726798fc3cb \
+                    sha256  cde92f76e8405a7bce4c2fdbf221c2304474b10f5b9742fe70b8e62190e610cc \
+                    size    132271
+supported_archs     noarch
+
+depends_lib-append  port:R-ggplot2 \
+                    port:R-gnorm \
+                    port:R-lubridate \
+                    port:R-purrr \
+                    port:R-RcppAlgos
+
+test.run            yes

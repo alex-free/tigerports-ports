@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran traversc stringfish 0.19.0
+revision            0
+categories-append   devel
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Alternative string implementation
+long_description    {*}${description}
+checksums           rmd160  be4e9e0b35175b841ee6a06585cd95915493b677 \
+                    sha256  07006737df89adff2673ba8a6ead64f64c391ebd646d3ee014f90a9e410c1af2 \
+                    size    1076732
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  port:pcre2 \
+                    port:R-Rcpp \
+                    port:R-RcppParallel
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown
+
+# Tests fail atm on Big-endian systems: https://github.com/traversc/stringfish/issues/18
+test.run            yes

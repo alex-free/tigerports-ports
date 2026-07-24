@@ -1,0 +1,60 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github tidymodels tune 2.0.1 v
+revision            1
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Tidy tuning tools
+long_description    {*}${description}
+homepage            https://tune.tidymodels.org
+checksums           rmd160  76e088c32ab5891a9b61c0b2bffd9fe9b452641b \
+                    sha256  75d94e15261eb61079ded5cde010a19e577258c386004f31b722046fd3432d98 \
+                    size    1334946
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-cli \
+                    port:R-dials \
+                    port:R-dplyr \
+                    port:R-generics \
+                    port:R-ggplot2 \
+                    port:R-glue \
+                    port:R-GPfit \
+                    port:R-hardhat \
+                    port:R-parsnip \
+                    port:R-purrr \
+                    port:R-recipes \
+                    port:R-rlang \
+                    port:R-rsample \
+                    port:R-tailor \
+                    port:R-tibble \
+                    port:R-tidyr \
+                    port:R-tidyselect \
+                    port:R-vctrs \
+                    port:R-withr \
+                    port:R-workflows \
+                    port:R-yardstick
+
+depends_test-append port:R-C50 \
+                    port:R-censored \
+                    port:R-covr \
+                    port:R-future \
+                    port:R-future.apply \
+                    port:R-kernlab \
+                    port:R-kknn \
+                    port:R-knitr \
+                    port:R-mirai \
+                    port:R-modeldata \
+                    port:R-probably \
+                    port:R-scales \
+                    port:R-spelling \
+                    port:R-splines2 \
+                    port:R-testthat \
+                    port:R-xgboost \
+                    port:R-xml2
+
+test.run            yes

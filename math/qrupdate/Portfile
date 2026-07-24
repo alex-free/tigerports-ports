@@ -1,0 +1,38 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           compilers 1.0
+PortGroup           github 1.0
+PortGroup           linear_algebra 1.1
+PortGroup           muniversal 1.0
+
+name                qrupdate
+github.setup        mpimd-csc qrupdate-ng 1.1.5 v
+revision            1
+categories          math science
+license             GPL-3+
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+description         Library for fast updates of QR and Cholesky decompositions
+long_description    Fortran library for fast updates of QR and Cholesky decompositions
+checksums           rmd160  be17785f5885aedb1bcc14fe497c71503dd9ec8a \
+                    sha256  912426f7cb9436bb3490c3102a64d9a2c3883d700268a26d4d738b7607903757 \
+                    size    875316
+github.tarball_from archive
+
+compilers.choose    fc
+compilers.setup     require_fortran
+
+# TODO: add static lib, see: https://github.com/mpimd-csc/qrupdate-ng/issues/5
+
+if {![variant_isset accelerate] && ![variant_isset atlas] && ![variant_isset blis] \
+    && ![variant_isset flexiblas] && ![variant_isset openblas]} {
+        default_variants-append +accelerate
+}
+
+# Needed in order for correct version of BLAS to be picked:
+pre-configure {
+    configure.args-append ${cmake_linalglib}
+}
+
+test.run            yes

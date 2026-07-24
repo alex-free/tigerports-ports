@@ -1,0 +1,81 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem                      1.0
+PortGroup                       cmake 1.1
+PortGroup                       github 1.0
+
+github.setup                    Tencent rapidjson 24b5e7a8b27f42fa16b96fc70aade9106cf7102f
+version                         20250205
+revision                        0
+name                            rapidjson-devel
+
+checksums                       rmd160  6ed42f771c3f5ae21c6a1315a23238d646ec3620 \
+                                sha256  2d2601a82d2d3b7e143a3c8d43ef616671391034bc46891a9816b79cf2d3e7a8 \
+                                size    1116703
+github.tarball_from             archive
+license                         MIT
+categories                      devel
+if {![variant_isset examples]} {
+    platforms                   any
+    supported_archs             noarch
+}
+
+# original by {@Lord-Kamina gmail.com:g.litenstein}
+maintainers                     {@barracuda156 macos-powerpc.org:barracuda}
+
+conflicts                       rapidjson
+
+description                     A fast JSON parser/generator for C++ with both SAX/DOM style API.
+long_description                RapidJSON is a fast, unicode-friendly, self-contained \
+                                and header-only library without any dependencies for parsing JSON.
+
+homepage                        https://rapidjson.org
+
+patchfiles-append               0001-CMakeLists-fix-optflags-for-ppc.patch \
+                                0002-Wno-sign-conversion-Wno-sign-compare-with-GCC.patch
+
+compiler.cxx_standard           2011
+
+configure.args-append           -DRAPIDJSON_HAS_STDSTRING=ON \
+                                -DRAPIDJSON_BUILD_DOC=OFF \
+                                -DRAPIDJSON_BUILD_EXAMPLES=OFF \
+                                -DRAPIDJSON_BUILD_TESTS=OFF
+
+variant docs description {Build documentation} {
+    depends_build-append        path:bin/doxygen:doxygen \
+                                path:bin/dot:graphviz
+    configure.args-delete       -DRAPIDJSON_BUILD_DOC=OFF
+}
+
+variant examples description {Build examples} {
+    configure.args-delete       -DRAPIDJSON_BUILD_EXAMPLES=OFF
+}
+
+post-destroot {
+    if {[variant_isset examples]} {
+        xinstall -d -m 0755 ${destroot}${prefix}/share/examples
+        move    ${destroot}${prefix}/share/doc/RapidJSON/examples \
+                ${destroot}${prefix}/share/examples/RapidJSON
+        # Otherwise destroot code fails:
+        move    ${cmake.build_dir}/bin/archivertest ${cmake.build_dir}/bin/archiver
+
+        foreach example [glob -tails -directory ${cmake.build_dir}/bin *] {
+            xinstall -m 0755 \
+                ${cmake.build_dir}/bin/${example} \
+                ${destroot}${prefix}/share/examples/RapidJSON/${example}/
+        }
+    } else {
+        delete  ${destroot}${prefix}/share/doc/RapidJSON/examples
+    }
+}
+
+variant tests description {Build and run unit tests} {
+    # https://github.com/Tencent/rapidjson/issues/2118
+    compiler.cxx_standard       2014
+    patchfiles-append           patch-fix-cxx-standard.diff
+    depends_build-append        port:gtest
+    configure.args-append       -DRAPIDJSON_BUILD_THIRDPARTY_GTEST=ON \
+                                -DGTEST_SOURCE_DIR=${prefix}/src/googletest
+    configure.args-replace      -DRAPIDJSON_BUILD_TESTS=OFF -DRAPIDJSON_BUILD_TESTS=ON
+    test.run                    yes
+}

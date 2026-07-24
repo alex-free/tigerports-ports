@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran faosorios L1pack 0.62-4
+revision            0
+categories-append   math
+maintainers         nomaintainer
+license             GPL-3
+description         Routines for L1 estimation
+long_description    {*}${description}
+homepage            https://github.com/faosorios/L1pack
+checksums           rmd160  1befce7de8fb5e4805555829bddd99412071b24c \
+                    sha256  7001695cff505a3d00a083414801bea089aef2c9d700fd66d19b3ae9d0f55bc5 \
+                    size    39320
+
+depends_lib-append  port:R-fastmatrix
+
+compilers.setup     require_fortran
+
+test.run            yes

@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran fbertran bigalgebra 3.0.0
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             {Apache-2 LGPL-3}
+description         BLAS/LAPACK routines for native R matrices and big.matrix objects
+long_description    {*}${description}
+homepage            https://fbertran.github.io/bigalgebra
+checksums           rmd160  9f92121567f13b7193e18043260b2596e362503e \
+                    sha256  eee9fcf90704a23e9dc5359b01a0fc5555d53f7af10cbf8a4f71ee5a40427780 \
+                    size    72959
+
+depends_lib-append  port:R-BH \
+                    port:R-bigmemory \
+                    port:R-Rcpp
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

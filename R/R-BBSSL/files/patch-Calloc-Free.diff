@@ -1,0 +1,83 @@
+--- src/SSL_gaussian.c	2020-05-18 10:38:25.000000000 +0800
++++ src/SSL_gaussian.c	2025-07-15 21:39:17.000000000 +0800
+@@ -19,11 +19,11 @@
+ 
+ SEXP cleanupG(double *a, double *r, int *e1, int *e2, double *z, SEXP beta, SEXP loss, SEXP iter, SEXP thetas_export, SEXP sigmas_export) {
+ 
+-  Free(a);
+-  Free(r);
+-  Free(e1);
+-  Free(e2);
+-  Free(z);
++  R_Free(a);
++  R_Free(r);
++  R_Free(e1);
++  R_Free(e2);
++  R_Free(z);
+ 
+   SEXP res;
+   PROTECT(res = allocVector(VECSXP, 5));
+@@ -112,11 +112,11 @@
+     INTEGER(iter)[i] = 0;
+   }
+ 
+-  double *delta = Calloc(p, double); 
++  double *delta = R_Calloc(p, double); 
+ 
+   // Beta from previous iteration
+-  double *a = Calloc(p, double); 
+-  double *newa = Calloc(p, double);
++  double *a = R_Calloc(p, double); 
++  double *newa = R_Calloc(p, double);
+   
+   for (int j = 0; j < p; j++) {
+     a[j] = initialbeta[j];
+@@ -125,22 +125,22 @@
+ 
+ 
+   // Index of an active set
+-  int *e1 = Calloc(p, int); 
++  int *e1 = R_Calloc(p, int); 
+ 
+   for (int j=0; j<p; j++) {
+     e1[j] = 1-(a[j]==0);
+   }
+ 
+   // Index of an elible set from the strong rule
+-  int *e2 = Calloc(p, int); 
++  int *e2 = R_Calloc(p, int); 
+ 
+   for (int j=0; j<p; j++) {
+     e2[j] = 1-(a[j]==0);
+   }
+ 
+-  double *r = Calloc(n, double);
+-  double *XTY = Calloc(p, double);
+-  double *XTX = Calloc(p*p, double);
++  double *r = R_Calloc(n, double);
++  double *XTY = R_Calloc(p, double);
++  double *XTX = R_Calloc(p*p, double);
+   
+   for (int i=0; i<n; i++) {
+     r[i] = y[i];
+@@ -149,7 +149,7 @@
+     }
+   }
+   
+-  double *z = Calloc(p, double);
++  double *z = R_Calloc(p, double);
+   
+   for (int j=0; j<p; j++) {
+     z[j] = crossprod(X, r, n, j);							// O(np)
+@@ -184,9 +184,9 @@
+   
+   
+   // Thresholds for the strong screening rule
+-  double *thresholds = Calloc(p, double); 
++  double *thresholds = R_Calloc(p, double); 
+ 
+-  double *cutoff = Calloc(p, double);
++  double *cutoff = R_Calloc(p, double);
+   int converged = 0;
+   int counter = 0;
+   int violations = 0;

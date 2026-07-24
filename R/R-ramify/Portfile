@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran bgreenwell ramify 0.4.0
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Additional matrix functionality
+long_description    {*}${description} for R.
+homepage            http://bgreenwell.github.io/ramify
+checksums           rmd160  60742413babbdd6e549b996b8cebbc9d6aa0b56e \
+                    sha256  0464abe032aa218c3fcca381ea2728094b1b83fccf88c048393369547e1aac73 \
+                    size    221927
+supported_archs     noarch
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

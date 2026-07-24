@@ -1,0 +1,19 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran bingshu.chen lpl 0.13
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2
+description         Local Partial Likelihood estimation and simultaneous confidence band
+long_description    {*}${description}
+checksums           rmd160  67137beecbcbdd32ac4cea170a2bac35892c6529 \
+                    sha256  273566be472c630ddbef84b1ac9b5e8c9d0082551a78394835364d903d5a5c89 \
+                    size    26706
+supported_archs     noarch
+
+test.run            yes

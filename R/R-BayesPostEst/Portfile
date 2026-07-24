@@ -1,0 +1,54 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github ShanaScogin BayesPostEst 0.3.2
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Generate postestimation quantities for Bayesian MCMC estimation
+long_description    {*}${description}
+homepage            https://github.com/PierreMasselot/cgaim
+checksums           rmd160  c58f1bec837ae5923033e9b14b15ac94d0a6fd31 \
+                    sha256  5ae7339e6d3c85540e6c25757b88acddd9446478c9a38270c2e7e905b41ab58c \
+                    size    5146341
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-brms \
+                    port:R-carData \
+                    port:R-caTools \
+                    port:R-coda \
+                    port:R-dplyr \
+                    port:R-ggplot2 \
+                    port:R-ggridges \
+                    port:R-HDInterval \
+                    port:R-MCMCpack \
+                    port:R-R2jags \
+                    port:R-R2WinBUGS \
+                    port:R-reshape2 \
+                    port:R-rjags \
+                    port:R-rlang \
+                    port:R-ROCR \
+                    port:R-runjags \
+                    port:R-rstanarm \
+                    port:R-texreg \
+                    port:R-tidyr
+
+depends_run-append  port:jags
+
+depends_test-append port:R-covr \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-rstan \
+                    port:R-testthat
+
+test.run            yes
+# Vignettes use ridiculous volume of data, which fails.
+# R(92904,0xa01ba620) malloc: *** mmap(size=909443072) failed (error code=12)
+# *** error: can't allocate region
+# Error: cannot allocate vector of size 867.3 Mb
+test.args-append    --ignore-vignettes

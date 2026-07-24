@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran joshuaulrich quantmod 0.4.28
+revision            1
+categories-append   finance
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Quantitative financial modelling framework
+long_description    {*}${description}
+homepage            https://www.quantmod.com
+checksums           rmd160  170b73ac136e471ea579df3bcf7328e360060991 \
+                    sha256  d1d4215ae0caba96ecf16e5ff8bbef047e88d1b1e60bb3e9e42e7c26b26ed338 \
+                    size    156731
+supported_archs     noarch
+
+depends_lib-append  port:R-curl \
+                    port:R-jsonlite \
+                    port:R-TTR \
+                    port:R-xts \
+                    port:R-zoo
+
+depends_test-append port:R-DBI \
+                    port:R-downloader \
+                    port:R-RMySQL \
+                    port:R-RSQLite \
+                    port:R-timeSeries \
+                    port:R-tinytest \
+                    port:R-xml2
+
+test.run            yes

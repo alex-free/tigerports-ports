@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github JanMarvin openxlsx2 1.28 v
+revision            0
+categories-append   office
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Read, write and edit xlsx files
+long_description    {*}${description}
+homepage            https://janmarvin.github.io/openxlsx2
+checksums           rmd160  e6045912f9b2d1b708ad1c5307464a25c66782f6 \
+                    sha256  fd992c01d2cea10eb3cbf8b28620c49fa377519df84a62569f9ce70724d9651f \
+                    size    5888993
+github.tarball_from archive
+
+depends_lib-append  port:R-R6 \
+                    port:R-Rcpp \
+                    port:R-stringi
+
+depends_test-append port:R-encharter \
+                    port:R-ggplot2 \
+                    port:R-knitr \
+                    port:R-mschart \
+                    port:R-openssl \
+                    port:R-rmarkdown \
+                    port:R-rvg \
+                    port:R-testthat \
+                    port:R-zip
+
+# One test fails on 32-bit, apparently due to rounding: https://github.com/JanMarvin/openxlsx2/issues/566
+# Some more testing on Big-endian: https://github.com/JanMarvin/openxlsx2/pull/688
+test.run            yes

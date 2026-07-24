@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           ocaml 1.1
+
+name                ocaml-uuseg
+github.setup        dbuenzli uuseg 17.0.0 v
+revision            2
+categories          ocaml textproc
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             ISC
+description         Unicode text segmentation for OCaml
+long_description    {*}${description}
+checksums           rmd160  1c7ce9073f3627a3218551e481c6a6d1d549f01c \
+                    sha256  db7a163fc85a42f4cc5d4db1b59f84db085d94ade79e8416719367d578d364ba \
+                    size    26444
+github.tarball_from archive
+
+depends_lib-append  port:ocaml-cmdliner \
+                    port:ocaml-uucp \
+                    port:ocaml-uutf
+
+ocaml.build_type    topkg

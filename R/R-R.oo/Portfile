@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github HenrikBengtsson R.oo 1.27.1
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             LGPL-2.1+
+description         R object-oriented programming with or without references
+long_description    {*}${description}
+homepage            https://henrikbengtsson.github.io/R.oo
+checksums           rmd160  4a57ce63703eb48acf662d4e4c7ae08ab74de55d \
+                    sha256  b8549df7bfcb7cc7f6acb93eb74932182aa97090dad4f409ea5c5fd249890f9b \
+                    size    392784
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-R.methodsS3
+
+test.run            yes

@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github shabbychef epsiwal 0.1.0 r
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             LGPL-3
+description         Exact Post Selection Inference with Applications to the Lasso
+long_description    {*}${description}
+checksums           rmd160  740635c4eb334ff2e089db9f813efd4b441814b3 \
+                    sha256  573224bbc85c6c819abe9e4d8daabfd06127d239873263619cff3f6646c0a429 \
+                    size    43973
+github.tarball_from archive
+supported_archs     noarch
+
+depends_test-append port:R-testthat
+
+test.run            yes

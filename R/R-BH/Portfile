@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran eddelbuettel BH 1.90.0-1
+revision            1
+categories-append   devel
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             Boost-1
+description         Boost C++ Header Files
+long_description    {*}${description}
+homepage            https://dirk.eddelbuettel.com/code/bh.html
+checksums           rmd160  a6382b898499a525ebfe22734bfcc61fcd6a19d3 \
+                    sha256  2e1fafb05938e81073561ae4892dc543ef15807e375e0ea8fa75e3ab79f0281b \
+                    size    14307014
+supported_archs     noarch
+
+# Backport from upstream:
+patchfiles-append   patch-powerpc-atomic.diff
+
+test.run            yes

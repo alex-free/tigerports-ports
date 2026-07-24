@@ -1,0 +1,41 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github mlr-org mlr3learners 0.12.0 v
+revision            1
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             LGPL-3
+description         Recommended Learners for R-mlr3
+long_description    {*}${description}
+homepage            https://mlr3learners.mlr-org.com
+checksums           rmd160  6179956b40ed2bf4a71e0ab9e8b3f87e99f5e7bc \
+                    sha256  df6b681c1ad00d2aedf3e5e8409e2e6a565a17fe979ae2c2d315600d21f2a4fd \
+                    size    84738
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-checkmate \
+                    port:R-data.table \
+                    port:R-mlr3 \
+                    port:R-mlr3misc \
+                    port:R-paradox \
+                    port:R-R6
+
+depends_test-append port:R-DiceKriging \
+                    port:R-e1071 \
+                    port:R-glmnet \
+                    port:R-kknn \
+                    port:R-knitr \
+                    port:R-lgr \
+                    port:R-pracma \
+                    port:R-ranger \
+                    port:R-rgenoud \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-xgboost
+
+# See: https://github.com/mlr-org/mlr3learners/issues/295
+test.run            yes

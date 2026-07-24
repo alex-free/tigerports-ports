@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           compilers 1.0
+PortGroup           github 1.0
+
+github.setup        szaghi FACE 1.1.15 v
+revision            0
+categories          fortran devel
+license             {BSD GPL-3 MIT}
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+description         Fortran Ansi Colors (and Styles) Environment
+long_description    A KISS pure Fortran Library for easy colorize (and stylize) strings.
+checksums           rmd160  2ff33d26cdd48b849c507ac822f1518aab8448fb \
+                    sha256  cbb426b46cd14bd8fe9ec725caf395bda970f227b6ec10082bf65a383392f301 \
+                    size    187712
+github.tarball_from archive
+
+compilers.choose    fc f90
+compilers.setup     require_fortran
+
+configure.args-append \
+                    -DBUILD_TESTING=ON
+
+test.run            yes
+test.cmd            ctest

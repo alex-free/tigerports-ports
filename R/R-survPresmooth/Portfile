@@ -1,0 +1,18 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran ilu survPresmooth 1.1-12
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-2+
+description         Presmoothed estimators of survival, density, cumulative and non-cumulative \
+                    hazard functions with right-censored survival data
+long_description    {*}${description}
+checksums           rmd160  edcbacdfaae5b34d29481a926f2b065f8e9a6205 \
+                    sha256  9370b21b370bb2308597ada70decceecd6b93ca0ea45e70259f977c7304dc589 \
+                    size    30124
+
+test.run            yes

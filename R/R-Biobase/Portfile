@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             bioconductor Bioconductor Biobase 2.68.0
+revision            1
+categories-append   bioconductor
+maintainers         nomaintainer
+license             Artistic-2
+description         Base functions for Bioconductor
+long_description    {*}${description}
+checksums           rmd160  7d099e1c65a9cd381efed3431509fbdde783aef3 \
+                    sha256  993b30779a3e5043151db876d771b2913b69f26778cc93d2cb7571544dd57f0f \
+                    size    1977543
+
+depends_lib-append  port:R-BiocGenerics
+
+depends_test-append port:R-ALL \
+                    port:R-BiocStyle \
+                    port:R-golubEsets \
+                    port:R-knitr \
+                    port:R-limma \
+                    port:R-RUnit \
+                    port:R-tkWidgets
+
+test.run            yes

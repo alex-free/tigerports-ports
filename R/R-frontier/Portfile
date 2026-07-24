@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran arne.henningsen frontier 1.1-8
+revision            1
+categories-append   economics
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Stochastic Frontier Analysis
+long_description    {*}${description}
+checksums           rmd160  05295ed785a95f602687fcb1b13a8fa864977b2c \
+                    sha256  228607bb0f614bf40754337fdb89ebe10bacab38fc34b26085d10f51add70ae2 \
+                    size    102375
+
+depends_lib-append  port:R-Formula \
+                    port:R-lmtest \
+                    port:R-micEcon \
+                    port:R-moments \
+                    port:R-miscTools \
+                    port:R-plm
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-fdrtool \
+                    port:R-MCMCpack
+
+test.run            yes

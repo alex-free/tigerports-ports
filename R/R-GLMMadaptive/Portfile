@@ -1,0 +1,33 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is outdated.
+R.setup             cran drizopoulos GLMMadaptive 0.9-7
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3+
+description         Generalized linear mixed models using adaptive Gaussian quadrature
+long_description    {*}${description}
+homepage            https://drizopoulos.github.io/GLMMadaptive
+checksums           rmd160  6b138336e8d092073ffa975fcec39e532d33904a \
+                    sha256  3f1cc2e49099d1110ada120ec1da806546e00aa142a70a762af3921794f6e13c \
+                    size    85352
+supported_archs     noarch
+
+depends_lib-append  port:R-matrixStats
+
+depends_test-append port:R-DHARMa \
+                    port:R-effects \
+                    port:R-emmeans \
+                    port:R-estimability \
+                    port:R-knitr \
+                    port:R-multcomp \
+                    port:R-optimParallel \
+                    port:R-pkgdown \
+                    port:R-rmarkdown
+
+test.run            yes

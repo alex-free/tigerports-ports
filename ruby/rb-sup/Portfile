@@ -1,0 +1,83 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           ruby 1.0
+
+ruby.branches       3.3 3.2 3.1
+set sup_v           1.3
+ruby.setup          sup ${sup_v} fetch
+revision            1
+epoch               1
+github.setup        sup-heliotrope sup ${sup_v} release-
+categories-append   mail
+license             GPL-2
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+description         Console-based e-mail client for people with a lot of e-mail
+long_description    {*}${description}
+homepage            https://sup-heliotrope.github.io
+checksums           rmd160  df05c2bbb7ffe00ae35846836d9ce9a245f325e3 \
+                    sha256  0dd90b6cc6c9b85f2d4740300ac0ccc316b47646e3018239f2bbcffeec052e1c \
+                    size    206283
+github.tarball_from archive
+
+if {${subport} ne ${name}} {
+    depends_lib-append \
+                    port:xapian-bindings-ruby${ruby.suffix}
+    depends_run-append \
+                    port:rb${ruby.suffix}-benchmark \
+                    port:rb${ruby.suffix}-chronic \
+                    port:rb${ruby.suffix}-fiddle \
+                    port:rb${ruby.suffix}-gpgme \
+                    port:rb${ruby.suffix}-highline \
+                    port:rb${ruby.suffix}-locale \
+                    port:rb${ruby.suffix}-lockfile \
+                    port:rb${ruby.suffix}-mime-types \
+                    port:rb${ruby.suffix}-ncursesw \
+                    port:rb${ruby.suffix}-optimist \
+                    port:rb${ruby.suffix}-rmail \
+                    port:rb${ruby.suffix}-unicode \
+                    port:rb${ruby.suffix}-unicode-display_width
+
+    patchfiles      patch-set-version.diff
+
+    post-patch {
+        reinplace "s|@VERSION@|${version}|" ${worksrcpath}/sup.gemspec
+    }
+
+    use_configure   no
+
+    build.cmd       ${ruby.gem}
+    build.target    build
+    build.args      ${ruby.module}.gemspec
+
+    build {
+        command_exec build
+    }
+
+    destroot.cmd        ${ruby.gem}
+    destroot.target     install
+    destroot.args       --local --force --install-dir ${destroot}${ruby.gemdir}
+    destroot.env-append rake=${ruby.rake} SUP_SKIP_XAPIAN_GEM_INSTALL=1
+    destroot.post_args  ${ruby.module}-${version}.gem
+
+    destroot {
+        command_exec destroot
+
+        set binDir ${destroot}${ruby.gemdir}/bin
+        if {[file isdirectory $binDir]} {
+            foreach file [readdir $binDir] {
+                file copy [file join $binDir $file] ${destroot}${ruby.bindir}
+            }
+        }
+    }
+    # Verify this works as intended upon updating:
+    post-destroot {
+        # rb-ncursesw
+        reinplace "s|~> 1.4.0|>= 1.4.0|g" ${destroot}${ruby.gemdir}/specifications/${ruby.module}-${version}.gemspec
+        # rb-locale
+        reinplace "s|~> 2.0|>= 2.0|g" ${destroot}${ruby.gemdir}/specifications/${ruby.module}-${version}.gemspec
+        # rb-unicode
+        reinplace "s|~> 0.4.4|>= 0.4.4|g" ${destroot}${ruby.gemdir}/specifications/${ruby.module}-${version}.gemspec
+    }
+}

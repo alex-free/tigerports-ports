@@ -1,0 +1,103 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+
+# Needed for clock_gettime()
+legacysupport.newest_darwin_requires_legacy \
+                    15
+
+github.setup        gpac gpac 26.02.0 v
+revision            0
+categories          multimedia
+maintainers         {makr @mohd-akram} openmaintainer
+license             LGPL-2.1+
+
+description         Multimedia framework for research and academic purposes
+long_description    GPAC is an Open Source multimedia framework for \
+                    research and academic purposes. The project \
+                    covers different aspects of multimedia, with \
+                    a focus on presentation technologies (graphics, \
+                    animation and interactivity). Includes MP4Box \
+                    and Osmo4.
+
+homepage            https://gpac.wp.imt.fr
+
+checksums           rmd160  3a725afab382bc2f33e082100dc7c3ad7a6935a0 \
+                    sha256  7a265e1cd58b317d8c9175816a54e0ab14199c21d81eb779047d7088fca52ae4 \
+                    size    10775839
+github.tarball_from archive
+
+set ffmpeg_ver      7
+
+depends_build       path:bin/pkg-config:pkgconfig
+
+depends_lib-append  port:a52dec \
+                    port:curl \
+                    port:faad2 \
+                    port:ffmpeg${ffmpeg_ver} \
+                    port:freetype \
+                    port:libcaca \
+                    path:include/turbojpeg.h:libjpeg-turbo \
+                    port:libmad \
+                    port:libogg \
+                    port:libpng \
+                    port:libsdl2 \
+                    port:libtheora \
+                    port:libvorbis \
+                    port:nghttp2 \
+                    port:openjpeg \
+                    path:lib/libssl.dylib:openssl \
+                    port:pulseaudio \
+                    port:XviD \
+                    port:xz \
+                    port:zlib
+
+patchfiles          patch-configure.diff
+
+post-patch {
+    reinplace "s|@APPLICATIONS_DIR@|${applications_dir}|g" ${worksrcpath}/configure
+}
+
+# fatal error: 'stdatomic.h' file not found
+compiler.blacklist-append {clang < 700}
+compiler.c_standard 2011
+
+configure.pkg_config_path   ${prefix}/libexec/ffmpeg${ffmpeg_ver}/lib/pkgconfig
+
+configure.args-append \
+                    --cc="${configure.cc}" \
+                    --cxx="${configure.cxx}" \
+                    --disable-x11 \
+                    --extra-cflags="${configure.cc_archflags}" \
+                    --extra-ldflags="${configure.ld_archflags}" \
+                    --mandir=${prefix}/share/man \
+                    --verbose
+
+variant x11 {
+    # compositor/visual_manager_3d_gl.c:377:33: error: passing argument 1 of 'glGetInfoLogARB'
+    # makes pointer from integer without a cast [-Wint-conversion]
+    platform darwin {
+        patchfiles-append \
+                    patch-opengl.diff
+    }
+
+    depends_lib-append \
+                    port:libGLU \
+                    port:mesa \
+                    port:xorg-libX11 \
+                    port:xorg-libXext \
+                    port:xorg-libXv
+
+    configure.args-delete \
+                    --disable-x11
+}
+
+# FIXME: linking against Apple frameworks fails:
+# Undefined symbols for architecture ppc: "_glBindFramebuffer" etc.
+default_variants    +x11
+
+# This project's build system detects CPU and endianness at configure time.
+# muniversal is worth a try.
+universal_variant   no

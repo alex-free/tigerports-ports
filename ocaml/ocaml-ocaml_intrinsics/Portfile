@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           ocaml 1.1
+
+name                ocaml-ocaml_intrinsics
+github.setup        janestreet ocaml_intrinsics 0.16.2 v
+revision            2
+categories          ocaml devel
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             MIT
+description         Library of intrinsics for OCaml
+long_description    The ocaml_intrinsics library provides an OCaml interface to operations \
+                    that have dedicated hardware instructions on some micro-architectures.
+
+checksums           rmd160  9d5debc90a873beb1b5116cf31c7cd1a50598282 \
+                    sha256  b16385ed02f591ca37e55640a8de22ff53e5c76c593d09101d53c41b24de2c3e \
+                    size    39096
+github.tarball_from archive
+
+# FIXME: add an implementation for these.
+# See also: https://github.com/janestreet/ocaml_intrinsics/issues/9
+patchfiles          0001-crc_stubs.c-abort-instead-of-error-on-unsupported-pl.patch
+
+# https://github.com/janestreet/ocaml_intrinsics/issues/12
+if {[string match *gcc* ${configure.compiler}] && ${configure.build_arch} in [list arm i386 ppc]} {
+    patchfiles-append \
+                    0002-atomics-32.patch
+}
+
+depends_build-append \
+                    port:ocaml-dune-configurator
+
+ocaml.build_type    dune

@@ -1,0 +1,54 @@
+From ad8b50e89e459d2ee8b26ee181ce57c87b5df658 Mon Sep 17 00:00:00 2001
+From: Sergey Fedorov <barracuda@macos-powerpc.org>
+Date: Fri, 17 Jul 2026 19:41:33 +0000
+Subject: [PATCH 6/6] 0006-QRawFont
+
+---
+ src/gui/PlayClass.cpp | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
+
+diff --git a/src/gui/PlayClass.cpp b/src/gui/PlayClass.cpp
+index ce75a0e5..5544a084 100644
+--- a/src/gui/PlayClass.cpp
++++ b/src/gui/PlayClass.cpp
+@@ -37,10 +37,15 @@
+ #include <QApplication>
+ #include <QVarLengthArray>
+ #include <QMessageBox>
+-#include <QRawFont>
+ #include <QAction>
+ #include <QDir>
+ 
++#ifdef USE_QRAWFONT
++#include <QRawFont>
++#else
++#include <QFontDatabase>
++#endif
++
+ #include <cmath>
+ 
+ PlayClass::PlayClass() :
+@@ -397,9 +402,20 @@ void PlayClass::loadSubsFile(const QString &fileName, const QList<StreamInfo *>
+                     {
+                         const QByteArray fontData = f.readAll();
+                         f.close();
++#ifdef USE_QRAWFONT
+                         const QString fontName = QRawFont(fontData, 0.0).familyName();
+                         if (!fontName.isEmpty())
+                             ass->addFont(fontName.toUtf8(), fontData);
++#else
++						const int fontID = QFontDatabase::addApplicationFontFromData(fontData);
++						if (fontID != -1)
++						{
++							const QStringList fontFamilies = QFontDatabase::applicationFontFamilies(fontID);
++							QFontDatabase::removeApplicationFont(fontID);
++							if (!fontFamilies.isEmpty())
++								ass->addFont(fontFamilies.first().toUtf8(), fontData);
++						}
++#endif
+                     }
+                 }
+ 
+-- 
+2.43.0
+

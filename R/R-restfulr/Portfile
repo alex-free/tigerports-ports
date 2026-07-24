@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran michafla restfulr 0.0.16
+revision            1
+categories-append   www
+maintainers         nomaintainer
+license             Artistic-2
+description         R interface to RESTful web services
+long_description    {*}${description}
+checksums           rmd160  274228a0cec1ecc8d02a8cf30c9a5839db0771cf \
+                    sha256  574fd11a3f23f494ff8e94ce84d767f49d3399600d617ad26fb71b8332e93725 \
+                    size    14980
+
+depends_lib-append  port:R-RCurl \
+                    port:R-rjson \
+                    port:R-S4Vectors \
+                    port:R-XML \
+                    port:R-yaml
+
+# R-rsolr would require installation of Solr.
+patchfiles          patch-no-rsolr.diff
+
+depends_test-append port:R-getPass \
+                    port:R-RUnit
+
+test.run            yes

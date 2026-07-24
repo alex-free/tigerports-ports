@@ -1,0 +1,61 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem                      1.0
+PortGroup                       cmake 1.1
+PortGroup                       github 1.0
+PortGroup                       muniversal 1.1
+
+github.setup                    ampl asl 1.0.1 v
+revision                        0
+epoch                           1
+categories                      math
+maintainers                     nomaintainer
+license                         BSD
+description                     ASL is A Modeling Language for Mathematical Programming (AMPL) Solver Library
+long_description                {*}${description}.
+
+checksums                       rmd160  df9aadf76af655ddccaddf6bb1397d24a9f0b115 \
+                                sha256  57b767161fd95869757daa0761d9b19fa39ad5de4315f95a3c0dff08b0d4c4f2 \
+                                size    1589055
+github.tarball_from             archive
+
+# LTO breaks the build: https://github.com/ampl/asl/issues/24
+configure.args-append           -DBUILD_SHARED_LIBS=ON \
+                                -DBUILD_CPP=ON \
+                                -DUSE_LTO=OFF
+
+# https://github.com/coin-or/Ipopt/issues/852
+if {${configure.build_arch} ni [list i386 x86_64]} {
+    configure.args-append       -DGENERATE_ARITH=ON
+}
+
+variant threads description "Build multi-threaded libraries, using OpenMP switches" {
+    compiler.openmp_version     3.0
+
+    if {[string match *clang* ${configure.compiler}]} {
+        depends_lib-append      port:libomp
+
+        configure.cflags-append -I${prefix}/include/libomp
+        configure.ldflags-append \
+                                -L${prefix}/lib/libomp -lomp
+    } elseif {[string match *gcc* ${configure.compiler}]} {
+        # The build fails to add needed flags automatically:
+        # https://github.com/ampl/asl/issues/17
+        configure.cflags-append -fopenmp
+        configure.ldflags-append \
+                                -fopenmp
+    }
+
+    configure.args-append       -DBUILD_MT_LIBS=ON
+}
+
+# cc1: error: unrecognized command line option "-Wno-unused-result"
+# arith.h: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘byte’
+compiler.blacklist-append       *gcc-4.0 *gcc-4.2
+
+# PowerPC support should be enabled manually
+if {${build_arch} in [list ppc ppc64]} {
+    configure.args-append       -Dppc_support=ON
+}
+
+default_variants-append         +threads

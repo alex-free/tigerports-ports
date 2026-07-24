@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github TomKellyGenetics vioplot 0.5.1
+revision            1
+categories-append   graphics
+platforms           {darwin any}
+maintainers         nomaintainer
+license             BSD
+description         Violin Plot
+long_description    {*}${description}
+checksums           rmd160  73af063b724ad1c38a7f3c491d3d61eb985df7e0 \
+                    sha256  757c90aa9f5aef0a1c53fb5377def24ccaeae600b47b506c68cd02f6e0d04575 \
+                    size    399657
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-sm \
+                    port:R-zoo
+
+depends_test-append port:R-ggplot2 \
+                    port:R-knitr \
+                    port:R-RColorBrewer \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

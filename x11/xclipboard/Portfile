@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           gitlab 1.0
+
+name                xclipboard
+gitlab.instance     https://gitlab.freedesktop.org/xorg
+gitlab.setup        app ${name} 1.1.5 ${name}-
+revision            0
+categories          x11
+license             X11
+maintainers         {jeremyhu @jeremyhu} openmaintainer
+description         X11 clipboard client
+long_description    The ${name} program is used to collect and display text selections \
+                    that are sent to the CLIPBOARD by other clients.
+
+homepage            https://www.x.org
+use_bzip2           yes
+
+checksums           rmd160  08c69b4373a8cda1092ed11878c3951536a49f15 \
+                    sha256  76b7b19ece5c413398f4a6c1b404b63161afb8bd3f9aa6a6877e2422e9c16cc8 \
+                    size    14930
+
+use_autoreconf      yes
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig \
+                    port:xorg-util-macros
+
+depends_lib         port:xorg-libXaw \
+                    port:xorg-libxkbfile

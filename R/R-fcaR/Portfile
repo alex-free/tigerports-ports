@@ -1,0 +1,56 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version is old.
+R.setup             cran Malaga-FCA-group fcaR 1.3.0
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Formal Concept Analysis
+long_description    ${name} provides tools to perform fuzzy formal concept analysis.
+homepage            https://github.com/Malaga-FCA-group/fcaR
+checksums           rmd160  21d65717ca0a9e63bcb10da9cd3574e7342b172b \
+                    sha256  9063695a2bb2f5d645754815f99ae89518bfb3503da8b8b6d2d04298b440b1f1 \
+                    size    1196219
+
+depends_lib-append  port:R-BH \
+                    port:R-cli \
+                    port:R-dplyr \
+                    port:R-forcats \
+                    port:R-ggplot2 \
+                    port:R-ggraph \
+                    port:R-glue \
+                    port:R-igraph \
+                    port:R-magrittr \
+                    port:R-POSetR \
+                    port:R-purrr \
+                    port:R-R6 \
+                    port:R-Rcpp \
+                    port:R-registry \
+                    port:R-rlang \
+                    port:R-rstudioapi \
+                    port:R-settings \
+                    port:R-stringr \
+                    port:R-tibble \
+                    port:R-tidyr \
+                    port:R-tikzDevice \
+                    port:R-yaml
+
+depends_test-append port:R-arules \
+                    port:R-covr \
+                    port:R-DT \
+                    port:R-fractional \
+                    port:R-knitr \
+                    port:R-markdown \
+                    port:R-miniUI \
+                    port:R-rmarkdown \
+                    port:R-shiny \
+                    port:R-testthat \
+                    port:R-tictoc \
+                    port:R-tikzDevice \
+                    port:R-tinytex
+
+test.run            yes

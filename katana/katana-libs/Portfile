@@ -1,0 +1,110 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           active_variants 1.1
+PortGroup           bitbucket 1.0
+PortGroup           cmake 1.1
+PortGroup           legacysupport 1.1
+PortGroup           openssl 1.0
+
+# strnlen
+legacysupport.newest_darwin_requires_legacy 10
+
+set component       libs
+
+name                katana-${component}
+bitbucket.setup     smil3y kde${component} 7e37d290b05e4a9750fb0f80666fb2d85294919d
+version             4.25.0-20260320
+revision            3
+categories          katana devel kde
+conflicts           kdelibs4
+license             BSD LGPL-2.1
+maintainers         {@barracuda156 macos-powerpc.org:barracuda}
+homepage            https://bitbucket.org/smil3y/kde${component}
+description         Kde${component} for Katana
+long_description    {*}${description}, a fork of KDE4.
+
+checksums           rmd160  9e549d513bafab165dbaed07a108836853dff72b \
+                    sha256  0070c5604ca0d3e682bd9181e3bc2a638009b8b9a34c990e1ae2475f75c8e5a2 \
+                    size    5943612
+
+extract.rename      yes
+
+patch.pre_args-replace  -p0 -p1
+
+patchfiles-append   0001-Fix-broken-shared-mime-info-search.patch \
+                    0002-ksavefile.cpp-undefine-HAVE_FDATASYNC-on-Apple-it-do.patch \
+                    0003-kpty.cpp-fix-for-Apple.patch \
+                    0004-karchive.cpp-fix-for-Apple.patch \
+                    0005-Fix-webp-linking.patch \
+                    0006-Fix-sig-macros-usage.patch \
+                    0007-kde4_exec.sh-fix-dbus-session-for-macOS.patch \
+                    0008-kded_kpowermanager-temporarily-exclude-KNotification.patch \
+                    0009-karchive.cpp-include-missing-limits.h.patch \
+                    0010-kurlcompletion.cpp-fix-environ-for-Apple.patch \
+                    0011-Fix-ACL-detection-for-macOS.patch
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  port:avahi \
+                    port:bzip2 \
+                    port:curl \
+                    port:dbus \
+                    port:djvulibre \
+                    port:enchant \
+                    port:exiv2 \
+                    port:ffmpeg \
+                    path:lib/pkgconfig/freetype2.pc:freetype \
+                    port:katie \
+                    port:libarchive \
+                    port:libavif \
+                    port:libcdio \
+                    port:libdeflate \
+                    path:include/turbojpeg.h:libjpeg-turbo \
+                    port:libraw \
+                    port:libspectre \
+                    path:lib/pkgconfig/mpv.pc:mpv \
+                    port:openjpeg \
+                    path:lib/pkgconfig/poppler.pc:poppler \
+                    port:setxkbmap \
+                    port:shared-mime-info \
+                    port:taglib \
+                    port:tiff \
+                    port:webp \
+                    port:xdg-utils \
+                    port:xorg-libX11 \
+                    port:xorg-libXcursor \
+                    port:xorg-libXext \
+                    port:xorg-libXfixes \
+                    port:xorg-libXScrnSaver \
+                    port:xz
+
+depends_run-append  port:ariya-icons
+
+require_active_variants ffmpeg x11
+require_active_variants mpv x11
+
+# This is required:
+configure.pre_args-replace \
+                    -DCMAKE_BUILD_WITH_INSTALL_RPATH:BOOL=ON \
+                    -DCMAKE_BUILD_WITH_INSTALL_RPATH:BOOL=OFF
+
+configure.args-append \
+                    -DENABLE_TESTING=OFF \
+                    -DKDE4_SYSCONF_INSTALL_DIR=${cmake.install_prefix}/etc
+
+compiler.cxx_standard       2014
+compiler.blacklist-append   {clang}
+
+# This prevents from using C++17 or higher:
+# /opt/local/include/exiv2/value.hpp:54:17: error: no template named 'auto_ptr'
+# in namespace 'std'; did you mean simply 'auto_ptr'?
+# However, this needs gcc extensions or a switch to C++20:
+# kdecore/io/kdebug.h:98:72: error: expected primary-expression before ')' token
+configure.cxxflags-append   -std=gnu++14
+
+# Just to pick +x11 variants for dependencies:
+variant x11 { }
+
+default_variants +x11

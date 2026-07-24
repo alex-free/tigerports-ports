@@ -1,0 +1,16 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran alexia.jolicoeur-martineau BayesTreePrior 1.0.1
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-3
+description         Bayesian Tree Prior Simulation
+long_description    {*}${description}
+checksums           rmd160  8ebc99c90d063e306fd36d2a8c9a65948d4aae9b \
+                    sha256  5c5d3d7c9e561e67bc0a27865433de644f51326e30eb2fa3fb13491ef8ae2f8e \
+                    size    8914
+supported_archs     noarch

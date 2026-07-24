@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran twolodzko extraDistr 1.10.0.2
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2
+description         Additional univariate and multivariate distributions
+long_description    {*}${description}
+checksums           rmd160  ffd0f399cef6ddc1c55bc3171ed73f13d2b61080 \
+                    sha256  a0290ac118af4123278742804aec4454ab363f6634bbdbe74334fbf58506a71a \
+                    size    148559
+# github.tarball_from archive
+
+depends_lib-append  port:R-Rcpp
+
+depends_test-append port:R-actuar \
+                    port:R-evd \
+                    port:R-LaplacesDemon \
+                    port:R-skellam \
+                    port:R-testthat \
+                    port:R-triangle \
+                    port:R-VGAM
+
+test.run            yes

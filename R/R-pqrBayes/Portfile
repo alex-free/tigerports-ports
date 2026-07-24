@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran cenwu pqrBayes 1.1.4
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2
+description         Bayesian penalized quantile regression
+long_description    {*}${description}
+homepage            https://github.com/cenwu/pqrBayes
+checksums           rmd160  8cd760555a0d3cb31302bac387e5abd2298ccce7 \
+                    sha256  4bd2f6dfef96515fb5dcc009717d5d28e5af5678fb315c74ea4e0a705c6e7a06 \
+                    size    52556
+
+depends_lib-append  port:R-glmnet \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo
+
+compilers.setup     require_fortran
+
+test.run            yes

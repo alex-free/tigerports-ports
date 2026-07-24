@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran zubizarreta sbw 1.1.9
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             {GPL-2 GPL-3}
+description         Stable balancing weights for causal inference and missing data
+long_description    {*}${description}
+checksums           rmd160  d395842034e8fd99cfbb0bde8a384819e2f270d2 \
+                    sha256  27ebfa6e448d5fe8e014564c11bd70c61bda08099c9197f64a6781ff5fef2520 \
+                    size    37421
+supported_archs     noarch
+
+depends_lib-append  port:R-quadprog \
+                    port:R-slam \
+                    port:R-spatstat.univar
+
+# Some optional packages are omitted.
+depends_test-append port:R-knitr \
+                    port:R-osqp \
+                    port:R-rmarkdown \
+                    port:R-Rmosek
+
+test.run            yes

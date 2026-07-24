@@ -1,0 +1,43 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran tidymodels tidyposterior 1.0.2 v
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Bayesian analysis to compare models using resampling statistics
+long_description    {*}${description}
+homepage            https://tidyposterior.tidymodels.org
+checksums           rmd160  cfc7d945b9c69ef46fae92af894e86d1c2c581b7 \
+                    sha256  0400b009939d2d527e1803f192d31ed8ffdbcc890a5931675359230cb873b2e1 \
+                    size    271820
+# github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-dplyr \
+                    port:R-generics \
+                    port:R-ggplot2 \
+                    port:R-purrr \
+                    port:R-rlang \
+                    port:R-rsample \
+                    port:R-rstanarm \
+                    port:R-tibble \
+                    port:R-tidyr \
+                    port:R-tune \
+                    port:R-vctrs \
+                    port:R-workflowsets
+
+depends_test-append port:R-covr \
+                    port:R-knitr \
+                    port:R-parsnip \
+                    port:R-rmarkdown \
+                    port:R-splines2 \
+                    port:R-testthat \
+                    port:R-yardstick
+
+test.run            yes

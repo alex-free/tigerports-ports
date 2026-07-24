@@ -1,0 +1,92 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem                1.0
+PortGroup                 boost 1.0
+PortGroup                 cmake 1.1
+PortGroup                 fuse 1.0
+PortGroup                 github 1.0
+PortGroup                 openssl 1.0
+
+# Turns out, this bug existed forever, and was fixed only after 1.87.
+# boost/process/detail/posix/handles.hpp:34:20:
+# error: expected id-expression before '(' token
+# auto my_fd = ::dirfd(dir.get());
+# My 1.87 port has a backport of the upstream fix.
+boost.version             1.87
+
+# Notice, while version/revision may be identical to upstream MacPorts,
+# the port is broken there, as of 0.11.4, and cannot be used.
+github.setup              cryfs cryfs 1.0.3
+revision                  0
+license                   LGPL-3
+categories                fuse net
+maintainers               {@jolan78 gmail.com:jolan78} openmaintainer
+
+description               Cryptographic filesystem for the cloud
+long_description          CryFS encrypts your files, so you can safely store them anywhere.\
+                          It works well together with cloud services like Dropbox, iCloud,\
+                          OneDrive and others.
+
+homepage                  https://www.cryfs.org
+
+checksums                 rmd160  36fad48c2ce26303882a82a561365707033b908f \
+                          sha256  5550f612f7b692e60c0c10a0331dcefbcc9616ad1411a016de7e4503ad866696 \
+                          size    9526454
+github.tarball_from       releases
+
+extract.mkdir             yes
+
+# This has to match the version of libfmt used by spdlog.
+# See https://trac.macports.org/ticket/68248
+set libfmt_ver            11
+set python_branch         3.13
+set python_version        [string map {. ""} ${python_branch}]
+
+patchfiles                gitversion_python3_fix.diff
+
+post-patch {
+    reinplace "s|@@PYTHONBIN@@|${prefix}/bin/python${python_branch}|g" ${worksrcpath}/src/gitversion/gitversion.cmake
+}
+
+depends_build-append      port:python${python_version} \
+                          port:range-v3
+
+depends_lib-append        port:curl \
+                          port:libfmt${libfmt_ver} \
+                          port:spdlog
+
+cmake.prefix_path-append  ${prefix}/lib/libfmt${libfmt_ver}/cmake
+
+cmake.build_type          Release
+universal_variant         no
+
+compiler.cxx_standard     2014
+compiler.thread_local_storage \
+                          yes
+
+# Unfortunately, the build does a meaningless check if compiler supports fancy flags,
+# but does not care if assembler supports them.
+# 1.0.1 added a garbage TargetArch.cmake module via vendor/cryptopp, so we pass an extra arg now.
+configure.args-append     -DBoost_USE_MULTITHREADED=ON \
+                          -DBoost_USE_STATIC_LIBS=OFF \
+                          -DCRYFS_UPDATE_CHECKS=OFF \
+                          -DDEPENDENCY_CONFIG=${worksrcpath}/cmake-utils/DependenciesFromLocalSystem.cmake \
+                          -DDISABLE_POWER7=ON \
+                          -DDISABLE_POWER8=ON \
+                          -DDISABLE_POWER9=ON \
+                          -Dppc_support=ON
+
+variant fs_link description "Link ${name} to a .fs bundle in /Library/Filesystems" {
+    post-destroot {
+        set dir /Library/Filesystems/${name}.fs/Contents/Resources
+        xinstall -d ${destroot}${dir}
+        ln -s ${prefix}/bin/${name} ${destroot}${dir}/mount_${name}
+    }
+
+    destroot.violate_mtree \
+                        yes
+
+    notes-append "
+        With +fs_link, you may use \'mount -t ${name}\' and use ${name} in /etc/fstab.
+    "
+}

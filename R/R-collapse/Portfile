@@ -1,0 +1,44 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github SebKrantz collapse 2.1.7 v
+revision            0
+categories-append   economics math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Advanced and fast data transformation
+long_description    {*}${description}
+homepage            https://sebkrantz.github.io/collapse
+checksums           rmd160  832f027735006372540dfef6acac553e1659ce82 \
+                    sha256  00a58e9676b50edcf30f29ef20df5beae8406fccdc5de083eb56bd7e6eabc4df \
+                    size    14633274
+github.tarball_from archive
+
+depends_lib-append  port:R-Rcpp
+
+depends_test-append port:R-bit64 \
+                    port:R-covr \
+                    port:R-data.table \
+                    port:R-dplyr \
+                    port:R-fastverse \
+                    port:R-fixest \
+                    port:R-ggplot2 \
+                    port:R-kit \
+                    port:R-knitr \
+                    port:R-magrittr \
+                    port:R-microbenchmark \
+                    port:R-plm \
+                    port:R-RcppArmadillo \
+                    port:R-RcppEigen \
+                    port:R-rmarkdown \
+                    port:R-scales \
+                    port:R-testthat \
+                    port:R-tibble \
+                    port:R-vars \
+                    port:R-withr \
+                    port:R-xts \
+                    port:R-zoo
+
+test.run            yes

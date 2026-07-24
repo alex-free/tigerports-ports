@@ -1,0 +1,76 @@
+--- configure	2025-07-15 03:15:08.000000000 +0800
++++ configure	2025-07-15 22:29:21.000000000 +0800
+@@ -44,7 +44,6 @@
+   -DR_RHOME="$R_HOME" \
+   -DBUILD_SHARED_LIBS=OFF \
+   -DCMAKE_INSTALL_PREFIX=$R_PACKAGE_DIR \
+-  -DCMAKE_OSX_DEPLOYMENT_TARGET="11" \
+   ${CMAKE_ARGS}
+ 
+ echo "" >>  _deps/highfive-src/include/highfive/bits/H5Friends.hpp
+
+--- src/planc/CMakeLists.txt	2025-07-15 01:06:45.000000000 +0800
++++ src/planc/CMakeLists.txt	2025-07-15 18:19:09.000000000 +0800
+@@ -100,8 +100,8 @@
+     unset(CMAKE_REQUIRED_LIBRARIES)
+     unset(CMAKE_REQUIRED_INCLUDES)
+ endif()
+-find_package(BLAS QUIET)
+-find_package(LAPACK QUIET)
++find_package(BLAS)
++find_package(LAPACK)
+ find_package(OpenBLAS CONFIG)
+ if (MKL_DIR AND MKL_LINKS AND NOT BLA_VENDOR MATCHES "Generic")
+     message(STATUS "found MKL")
+@@ -109,7 +109,7 @@
+     unset(LAPACK_LIBRARIES)
+     set(CBLAS_H_DIR "${MKL_INCLUDE}")
+     add_compile_definitions("MKL_FOUND")
+-elseif ((BUILD_RCPP AND WIN32))
++elseif (BUILD_RCPP)
+     find_package(OpenBLAS CONFIG REQUIRED)
+     set(USING_OPENBLAS 1)
+ else ()
+@@ -302,7 +302,7 @@
+     endif ()
+ endif ()
+ 
+-if (NOT USING_OPENBLAS_H AND NOT USING_MKL)
++if (NOT USING_OPENBLAS AND NOT USING_MKL)
+     if (CBLAS_H_DIR)
+         include_directories(BEFORE ${CBLAS_H_DIR})
+     else ()
+@@ -322,7 +322,9 @@
+ 
+ add_library(hw_detect OBJECT ${PROJECT_SOURCE_DIR}/common/hw_detect.c)
+ 
+-find_package(HWLOC)
++find_package(PkgConfig)
++
++pkg_check_modules(HWLOC hwloc)
+ 
+ if (HWLOC_FOUND)
+     target_link_libraries(hw_detect PUBLIC "$<IF:$<BOOL:pkgcfg_lib_HWLOC_hwloc>,${pkgcfg_lib_HWLOC_hwloc},${HWLOC_LDFLAGS}>")
+@@ -405,7 +407,7 @@
+     target_link_libraries(detect_blas PUBLIC "$<$<BOOL:${DLFCN_LINK}>:dlfcn-win32::dl>")
+ endif ()
+ if (APPLE)
+-    set(HWLOC_FRAMEWORKS "-framework Foundation" "-framework IOKit" "-framework OpenCL")
++    set(HWLOC_FRAMEWORKS "-framework Foundation" "-framework IOKit")
+ endif ()
+ 
+ set(PLANC_COMMON ${PROJECT_SOURCE_DIR}/common)
+@@ -439,12 +441,7 @@
+     set(EXTRA_LD_ARGS "")
+     endif ()
+     else ()
+-        if(APPLE AND ((CMAKE_HOST_SYSTEM_PROCESSOR MATCHES arm64) OR NOT OpenMP_CXX_FOUND))
+-            set(BLAS_LIBRARIES_EXTRACT '-L-framework -LAccelerate')
+-            unset(BLAS_LIBRARIES)
+-            unset(LAPACK_LIBRARIES)
+-        endif()
+-        set(EXTRA_LD_ARGS ${BLAS_LIBRARIES_EXTRACT} ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES} ${pkgcfg_lib_HWLOC_hwloc} ${HWLOC_LDFLAGS} "$<$<BOOL:${HWLOC_FRAMEWORKS}>:${HWLOC_FRAMEWORKS}>" ${HDF5_LIBRARIES} ${R_LDFLAGS} ${RCPP_FLIBS})
++        set(EXTRA_LD_ARGS ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES} ${pkgcfg_lib_HWLOC_hwloc} ${HWLOC_LDFLAGS} "$<$<BOOL:${HWLOC_FRAMEWORKS}>:${HWLOC_FRAMEWORKS}>" ${HDF5_LIBRARIES} ${R_LDFLAGS} ${RCPP_FLIBS})
+     list(JOIN EXTRA_LD_ARGS " " EXTRA_LD_ARGS)
+     endif ()
+     install(TARGETS nmflib RUNTIME DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/../" ARCHIVE DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/../" LIBRARY DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/../")

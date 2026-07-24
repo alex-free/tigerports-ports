@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran gastonstat plspm 0.5.2
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Partial least squares path modelling
+long_description    {*}${description} (PLS-PM).
+homepage            https://github.com/gastonstat/plspm
+checksums           rmd160  3c8d77c53bfbb852f61391c6d505589281c2262e \
+                    sha256  7e225876ba3fe865eef0219e84d2b73dc119bc0ef43034b46b4e946d4e74b33a \
+                    size    370762
+supported_archs     noarch
+
+depends_lib-append  port:R-amap \
+                    port:R-diagram \
+                    port:R-shape \
+                    port:R-tester \
+                    port:R-turner
+
+depends_test-append port:R-FactoMineR \
+                    port:R-ggplot2 \
+                    port:R-knitr \
+                    port:R-reshape \
+                    port:R-testthat
+
+test.run            yes

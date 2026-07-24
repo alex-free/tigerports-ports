@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran sorenh gRain 1.4.6
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Graphical Independence Networks
+long_description    {*}${description}
+homepage            https://people.math.aau.dk/~sorenh/software/gR
+checksums           rmd160  1b6b9a6f22fb1e8eaa80c48e8306f3dcfc23e6ee \
+                    sha256  3bbacfcc0966d7b6024099d385f7204e863e3dfa491747c504e260c67d7fdef3 \
+                    size    301825
+
+depends_lib-append  port:R-broom \
+                    port:R-gRbase \
+                    port:R-igraph \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-RcppEigen
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-bnlearn \
+                    port:R-gRim \
+                    port:R-knitr \
+                    port:R-markdown \
+                    port:R-microbenchmark \
+                    port:R-Rgraphviz \
+                    port:R-testthat
+
+test.run            yes

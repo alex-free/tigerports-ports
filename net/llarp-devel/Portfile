@@ -1,0 +1,141 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+PortGroup           openssl 1.0
+
+# llarp/net/address_info.cpp:142:48: error: 'strnlen' was not declared in this scope
+legacysupport.newest_darwin_requires_legacy 10
+legacysupport.redirect_bins llarpd
+
+# This is a development fork of Lokinet.
+# https://github.com/majestrate/llarp/issues/26
+# https://github.com/majestrate/llarp/pull/43
+name                llarp-devel
+github.setup        majestrate llarp 5f2a092bf1be8fa4df21bb82dd3ceffeaa4ecfdc
+version             2026.03.25
+revision            0
+
+categories          net p2p
+license             GPL-3
+maintainers         {@barracuda156 macos-powerpc.org:barracuda}
+
+# FIXME: build may fail on 10.15 x86_64: https://github.com/majestrate/llarp/issues/37
+
+description         Anonymous, decentralized and IP-based overlay network
+long_description    ${name} is the reference implementation of LLARP \
+                    (low latency anonymous routing protocol), a layer 3 onion routing protocol.
+homepage            https://lokinet.org
+checksums           rmd160  6566e61b614004af8903c4b966aa59b0c841a3b8 \
+                    sha256  ca4a7c652daaf902a64cc7a6cf8b836e2017c5ccca938708ded1fe54568a4634 \
+                    size    519043
+github.tarball_from archive
+github.livecheck.branch dev
+
+fetch.type          git
+
+post-fetch {
+    system -W ${worksrcpath} "git submodule update --init --recursive"
+}
+
+patch.pre_args-replace  -p0 -p1
+
+# apple.hpp:104:49: error: conversion from 'llarp::net::ipv4addr_t' {aka 'llarp::nuint_t<unsigned int>'} to non-scalar type 'const llarp::huint32_t' {aka 'const llarp::huint_t<unsigned int>'} requested
+patchfiles-append   0001-llarp-vpn-apple.hpp-use-ToHost-to-fix-build-error.patch
+
+# Use the right prefix
+patchfiles-append   0002-Use-prefix-for-datadir.patch
+
+# Still relevant?
+# https://github.com/majestrate/llarp/pull/43#issuecomment-2994950170
+patchfiles-append   36d65a7eb1fa7d80fe00105808cde338792e5bb0.patch
+
+# Use system header on 10.6+, fallback to declaration on earlier OS:
+patchfiles-append   patch-UTUN_CONTROL_NAME.diff
+
+post-patch {
+    reinplace "s|@PREFIX@|${prefix}|" ${worksrcpath}/llarp/constants/files.hpp
+}
+
+depends_build-append \
+                    port:CLI11 \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  port:libsodium \
+                    path:lib/pkgconfig/libuv.pc:libuv \
+                    port:oxenc \
+                    port:unbound
+
+configure.args-append \
+                    -DBUILD_DAEMON=ON \
+                    -DBUILD_GUI=OFF \
+                    -DBUILD_PACKAGE=OFF \
+                    -DBUILD_SHARED_LIBS=OFF \
+                    -DNATIVE_BUILD=OFF \
+                    -DSTRIP_SYMBOLS=OFF \
+                    -DTESTNET=OFF \
+                    -DUSE_AVX2=OFF \
+                    -DUSE_JEMALLOC=OFF \
+                    -DUSE_NETNS=OFF \
+                    -DWARNINGS_AS_ERRORS=OFF \
+                    -DWITH_COVERAGE=OFF \
+                    -DWITH_EMBEDDED_LOKINET=OFF \
+                    -DWITH_HIVE=OFF \
+                    -DWITH_IOURING=OFF \
+                    -DWITH_LIBCRYPT=OFF \
+                    -DWITH_LIBUV=ON \
+                    -DWITH_LTO=OFF \
+                    -DWITH_PEERSTATS=OFF \
+                    -DWITH_TESTS=OFF \
+                    -DXSAN=OFF
+
+# Safer for now
+configure.optflags
+
+compiler.c_standard     1999
+compiler.cxx_standard   2020
+
+# error: implicit instantiation of undefined template 'std::char_traits<unsigned char>'
+compiler.blacklist-append \
+                    macports-clang-19
+
+# ___atomic_fetch_add_8
+# Included check fails to pass the flag.
+if {[string match *gcc* ${configure.compiler}] && \
+    ${configure.build_arch} in [list arm i386 ppc]} {
+    configure.ldflags-append    -latomic
+}
+
+variant jemalloc description "Use JeMalloc" {
+    depends_lib-append \
+                    path:lib/pkgconfig/jemalloc.pc:jemalloc
+    configure.args-replace \
+                    -DUSE_JEMALLOC=OFF \
+                    -DUSE_JEMALLOC=ON
+}
+
+set realname        llarpd
+set lokidir         ${prefix}/var/lib/${realname}
+
+post-destroot {
+    xinstall -d ${destroot}${prefix}/etc/${realname}
+    copy ${worksrcpath}/contrib/bootstrap/opennet.signed ${destroot}${prefix}/etc/${realname}/
+
+    xinstall -d ${destroot}${prefix}/share/${realname}
+    foreach item {bootstrap configs NetworkManager py lokinet-resolvconf} {
+        move ${worksrcpath}/contrib/${item} ${destroot}${prefix}/share/${realname}
+    }
+
+    xinstall -d ${destroot}${prefix}/share/doc/${realname}
+    xinstall -W ${worksrcpath} -m 0644 LICENSE readme.md ${destroot}${prefix}/share/doc/${realname}/
+    move ${worksrcpath}/docs ${destroot}${prefix}/share/doc/${realname}/
+
+    xinstall -d ${destroot}${lokidir}
+    ln -sf ${prefix}/etc/${realname}/opennet.signed ${destroot}${lokidir}/bootstrap.signed
+}
+
+notes "
+Currently llarp must be launched under the root user.
+"

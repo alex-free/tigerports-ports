@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran cmmr hdf5lib 2.0.0.5
+revision            1
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Headers and static libraries for HDF5
+long_description    {*}${description} v. 2.x.
+homepage            https://cmmr.github.io/hdf5lib
+checksums           rmd160  e81f240dfe0556b2243adc9049477b17e10526b8 \
+                    sha256  596621e4d4e520f18ed2b3b1dd08fe7e2a3632c2e0179f99cf9758feb730f849 \
+                    size    1869933
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

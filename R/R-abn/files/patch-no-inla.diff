@@ -1,0 +1,11 @@
+--- DESCRIPTION	2025-06-06 21:30:05.000000000 +0800
++++ DESCRIPTION	2025-06-14 16:44:28.000000000 +0800
+@@ -42,7 +42,7 @@
+ Imports: doParallel, foreach, graph, lme4, mclogit, methods, nnet,
+         Rcpp, Rgraphviz, rjags, stringi
+ Suggests: bookdown, boot, brglm, devtools (>= 2.4.5), ggplot2,
+-        gridExtra, INLA, knitr, Matrix, MatrixModels (>= 0.5.3),
++        gridExtra, knitr, Matrix, MatrixModels (>= 0.5.3),
+         microbenchmark, R.rsp, RhpcBLASctl, rmarkdown, testthat (>=
+         3.0.0), entropy, moments, R6
+ LinkingTo: Rcpp, RcppArmadillo

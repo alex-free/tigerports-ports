@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran GuangchuangYu shadowtext 0.1.6
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             Artistic-2
+description         Shadow text grob and layer
+long_description    {*}${description}
+homepage            https://github.com/GuangchuangYu/shadowtext
+checksums           rmd160  800a82d73813087721bab974929b22d2c2b410e4 \
+                    sha256  aa9b9b3d4e11f6cd57476b798fa61780bb89a6bf5baac8be3707d87507ead870 \
+                    size    174300
+supported_archs     noarch
+
+depends_lib-append  port:R-ggiraph \
+                    port:R-ggplot2 \
+                    port:R-purrr \
+                    port:R-rlang \
+                    port:R-S7 \
+                    port:R-scales
+
+depends_test-append port:R-knitr \
+                    port:R-prettydoc \
+                    port:R-rmarkdown
+
+test.run            yes

@@ -1,0 +1,19 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran r-project LBI 0.2.3
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Likelihood-Based Inference
+long_description    {*}${description}
+checksums           rmd160  6db956fe17d0fd70c4466ff8aef7e2b8dbbbf504 \
+                    sha256  80abb44cc259329948103b75357a732b8361ed6624852ce736598aeac34a7289 \
+                    size    116466
+supported_archs     noarch
+
+test.run            yes

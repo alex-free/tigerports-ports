@@ -1,0 +1,43 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           meson 1.0
+
+name                nickle
+version             2.108
+revision            0
+categories          math lang
+license             MIT
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+description         Desk calculator language
+long_description    Nickle is a programming language based prototyping environment \
+                    with powerful programming and scripting capabilities. Nickle supports \
+                    a variety of datatypes, especially arbitrary precision numbers. \
+                    The programming language vaguely resembles C. Some things in C \
+                    which do not translate easily are different, some design choices \
+                    have been made differently, and a very few features are simply missing.
+homepage            https://nickle.org
+master_sites        ${homepage}/release/
+use_xz              yes
+checksums           rmd160  0079050a4c833b8f86f8887bfea3be17d8548397 \
+                    sha256  0b68a2f3e123f27c32b971029658abaae00b4c3ae6e79c3f2c18c5dbbfe554d3 \
+                    size    2187692
+
+# Without pkgconfig readline is not found.
+depends_build-append \
+                    port:bison \
+                    path:libexec/gnubin/fmt:coreutils \
+                    port:flex \
+                    path:bin/pkg-config:pkgconfig
+depends_lib-append  port:readline
+
+# This is now required.
+compiler.c_standard 2018
+
+# libedit can be used in place of readline.
+configure.args-append \
+                    -Dlibedit=false
+
+build.env-append    PATH=${prefix}/libexec/gnubin:${prefix}/bin:${prefix}/sbin:/usr/bin:/usr/sbin:/bin:/sbin
+
+test.run            yes

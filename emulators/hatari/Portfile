@@ -1,0 +1,78 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+PortGroup               cmake 1.1
+PortGroup               gitlab 1.0
+PortGroup               legacysupport 1.1
+
+# _strnlen
+legacysupport.newest_darwin_requires_legacy 10
+
+gitlab.instance         https://framagit.org
+gitlab.setup            hatari hatari 2.6.1 v
+revision                0
+categories              emulators
+license                 GPL-2+
+maintainers             nomaintainer
+description             Atari ST/STe/STfm emulator
+long_description        Hatari is an actively developed Atari ST/STe/STfm and Falcon emulator
+homepage                http://hatari.tuxfamily.org
+checksums               sha256  3b1686d85240d1872c83dc34b017bbaaff784963e7c5085e17df62be819ae2a8 \
+                        rmd160  39ba51ac8ef15d27b5ad71e02ed252e9d8d223c9 \
+                        size    2131134
+use_bzip2               yes
+
+set py_ver              3.14
+set py_ver_nodot        [string map {. {}} ${py_ver}]
+configure.python        ${prefix}/bin/python${py_ver}
+
+depends_build-append    path:bin/pkg-config:pkgconfig
+
+depends_lib-append      port:capstone \
+                        path:lib/pkgconfig/gdk-pixbuf-2.0.pc:gdk-pixbuf2 \
+                        path:lib/pkgconfig/glib-2.0.pc:glib2 \
+                        path:lib/pkgconfig/gtk+-3.0.pc:gtk3 \
+                        port:libpng \
+                        port:libsdl2 \
+                        port:portaudio \
+                        port:portmidi \
+                        port:py${py_ver_nodot}-gobject3 \
+                        port:python${py_ver_nodot} \
+                        port:readline \
+                        port:xorg-libice \
+                        port:xorg-libsm \
+                        port:xorg-libX11 \
+                        port:xorg-libXext \
+                        port:zlib
+
+depends_run-append      port:desktop-file-utils
+
+# TODO: do we need to enforce x11 variant of SDL2?
+
+post-patch {
+    reinplace "s|-Wno-maybe-uninitialized||g" ${worksrcpath}/src/cpu/CMakeLists.txt
+    reinplace "s|/usr/bin/python3|${configure.python}|" ${worksrcpath}/python-ui/gentypes.py
+}
+
+compiler.c_standard     1999
+
+configure.args-append   -DENABLE_OSX_BUNDLE=OFF \
+                        -DENABLE_WERROR=OFF \
+                        -DPython_EXECUTABLE=${configure.python}
+
+post-activate {
+    system "${prefix}/bin/update-desktop-database ${prefix}/share/applications"
+    system "${prefix}/bin/gtk-update-icon-cache -f -t ${prefix}/share/icons/hicolor"
+}
+
+notes "
+A free Atari-compatible ROM, EmuTOS, is installed with this port.
+
+    http://sourceforge.net/projects/emutos
+
+An online manual has been installed at
+
+    file://${prefix}/share/doc/hatari/manual.html
+
+and can be accessed via the Help menu in the application.
+"

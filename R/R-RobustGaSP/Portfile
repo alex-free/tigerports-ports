@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran mengyang RobustGaSP 0.6.8
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             {GPL-2 GPL-3}
+description         Robust Gaussian stochastic process emulation
+long_description    Robust parameter estimation and prediction \
+                    of Gaussian stochastic process emulators.
+checksums           rmd160  fc74d8bd2c87b1f09299e479887d223594af6757 \
+                    sha256  d49148d65713a60c65549d87cc9d3e07cdeb0f6c4fc14551c78c2809e594b062 \
+                    size    263088
+
+depends_lib-append  port:R-nloptr \
+                    port:R-Rcpp \
+                    port:R-RcppEigen
+
+test.run            yes

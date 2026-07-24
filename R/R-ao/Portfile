@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran loelschlaeger ao 1.2.2
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Alternating Optimization
+long_description    {*}${description}
+homepage            https://loelschlaeger.de/ao
+checksums           rmd160  44b43c6e7335bd6e6a8c2c33edb9cb8d85edb25d \
+                    sha256  aac06df7e0902f779a209d8ff891ed456e8b1b8546e1a93a5fa2c30f04e5fc62 \
+                    size    193224
+supported_archs     noarch
+
+depends_lib-append  port:R-checkmate \
+                    port:R-cli \
+                    port:R-future.apply \
+                    port:R-oeli \
+                    port:R-optimizeR \
+                    port:R-progressr \
+                    port:R-R6
+
+depends_test-append port:R-devtools \
+                    port:R-ggplot2 \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

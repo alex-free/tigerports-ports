@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran briatte ggnetwork 0.5.14 v.
+revision            1
+categories-append   graphics
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Geometries to plot network objects with R-ggplot2
+long_description    {*}${description}
+homepage            https://github.com/briatte/ggnetwork
+checksums           rmd160  408de517fa7348cc95e30009f48e3be562f0aec9 \
+                    sha256  caab79d85a817608e9a9d827783f157393fc3f2b9de8c20669699175a19f3ff0 \
+                    size    1889616
+supported_archs     noarch
+
+depends_lib-append  port:R-igraph \
+                    port:R-ggplot2 \
+                    port:R-ggrepel \
+                    port:R-network \
+                    port:R-sna
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

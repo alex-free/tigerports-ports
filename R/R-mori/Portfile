@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github shikokuchuo mori 0.2.1 v
+revision            0
+categories-append   devel
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Shared memory for R objects
+long_description    {*}${description}
+homepage            https://shikokuchuo.net/${R.package}
+checksums           rmd160  dd4553509692af89c564105cc9391a416002ce12 \
+                    sha256  0ec0361323e7aa79c2bdcb62bb2e0db876d50f7a31a50806135d23b18ee912b5 \
+                    size    55967
+github.tarball_from archive
+
+depends_test-append port:R-lobstr \
+                    port:R-mirai \
+                    port:R-testthat
+
+# FIXME: https://github.com/shikokuchuo/mori/issues/48
+# On powerpc: [ FAIL 1 | WARN 0 | SKIP 8 | PASS 387 ]
+test.run            yes

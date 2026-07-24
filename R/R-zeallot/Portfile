@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github r-lib zeallot 0.2.0 v
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Variable assignment with zeal
+long_description    {*}${description}
+checksums           rmd160  410a157520dc5dd2098d3f8cae4957260b3870a0 \
+                    sha256  5b95eba5f96f7dc76a9da21bbe468fe2201e5122063908a28829a7329e1e7b06 \
+                    size    32829
+github.tarball_from archive
+supported_archs     noarch
+
+depends_test-append port:R-knitr \
+                    port:R-magrittr \
+                    port:R-purrr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

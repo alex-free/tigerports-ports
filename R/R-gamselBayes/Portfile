@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran matt.wand gamselBayes 2.0-3
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Bayesian generalized additive model selection
+long_description    {*}${description}
+checksums           rmd160  3d2befe825750f867ac698d515453001e0e5a4bb \
+                    sha256  a5efae6048deb379750ad64ef8e0d06e795ddb45d7b8c518a7ca3530343e69bc \
+                    size    1836910
+
+depends_lib-append  port:R-Rcpp \
+                    port:R-RcppArmadillo
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-Ecdat
+
+test.run            yes

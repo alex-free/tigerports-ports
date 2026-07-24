@@ -1,0 +1,51 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github r-lib systemfonts 1.3.2 v
+revision            0
+categories-append   sysutils
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         System native font handling
+long_description    {*}${description} in R.
+homepage            https://systemfonts.r-lib.org
+checksums           rmd160  f7a3f0fa693bf0945a887df0a40d950a2f94dc0d \
+                    sha256  8a26e7e57d4ce66547e94860d4221ecfafc466ecbf9d48d715682b535f4b0313 \
+                    size    232264
+github.tarball_from archive
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  path:lib/pkgconfig/fontconfig.pc:fontconfig \
+                    path:lib/pkgconfig/freetype2.pc:freetype \
+                    port:R-base64enc \
+                    port:R-cpp11 \
+                    port:R-jsonlite \
+                    port:R-lifecycle
+
+platform darwin {
+    if {[string match *gcc* ${configure.compiler}] || ${os.major} < 13} {
+        # Older OS do not support native API, but GCC gonna fail anyway:
+        # g++-mp-12: error: unrecognized command-line option '-fobjc-arc'
+        # https://trac.macports.org/ticket/67174
+        patchfiles-append \
+                    patch-older-macos.diff
+    }
+}
+
+configure.env-append \
+                    RBIN=${r.cmd}
+
+depends_test-append port:R-covr \
+                    port:R-farver \
+                    port:R-ggplot2 \
+                    port:R-knitr \
+                    port:R-ragg \
+                    port:R-rmarkdown \
+                    port:R-svglite \
+                    port:R-testthat
+
+test.run            yes

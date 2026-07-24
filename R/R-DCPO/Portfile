@@ -1,0 +1,33 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran frederick-solt DCPO 0.5.3
+revision            1
+categories-append   economics
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             GPL-3+
+description         Dynamic Comparative Public Opinion
+long_description    {*}${description}
+checksums           rmd160  645f19ec0d6e0da11d97b8229009f1916382aa4d \
+                    sha256  589bf47bff3bf51e17a7a41bf2ba75b102b9868b5475770fd3664f13a3ed24c0 \
+                    size    173870
+
+depends_lib-append  port:R-beepr \
+                    port:R-BH \
+                    port:R-dplyr \
+                    port:R-forcats \
+                    port:R-janitor \
+                    port:R-purrr \
+                    port:R-Rcpp \
+                    port:R-RcppEigen \
+                    port:R-rstan \
+                    port:R-rstantools \
+                    port:R-StanHeaders \
+                    port:R-tibble \
+                    port:R-tidyr
+
+depends_test-append port:R-knitr
+
+test.run            yes

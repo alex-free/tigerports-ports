@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran mlr-org mlr3pipelines 0.9.0 v
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             LGPL-3
+description         Preprocessing operators and pipelines for R-mlr3
+long_description    {*}${description}
+homepage            https://mlr3pipelines.mlr-org.com
+checksums           rmd160  627fb3e6dafb37a1066b2cb21cbd1d7946a54571 \
+                    sha256  3bcc615106cb8953ff66df11aa061d6d60986b88142af86a2819e999268cc04e \
+                    size    807376
+# github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-backports \
+                    port:R-checkmate \
+                    port:R-data.table \
+                    port:R-digest \
+                    port:R-lgr \
+                    port:R-mlr3 \
+                    port:R-mlr3misc \
+                    port:R-paradox \
+                    port:R-R6 \
+                    port:R-withr

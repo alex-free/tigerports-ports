@@ -1,0 +1,97 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           active_variants 1.1
+PortGroup           github 1.0
+
+# FreeBSD uses this fork
+github.setup        sergiomb2 ufraw efd041fbda0b34dc836aa88413fb4567961b50ba
+version             0.22-20241024
+revision            16
+license             GPL-2+
+categories          graphics
+maintainers         {mascguy @mascguy} openmaintainer
+description         Unidentified Flying Raw (UFRaw)
+
+long_description    The Unidentified Flying Raw (UFRaw) is a utility to read and \
+                    manipulate raw images from digital cameras. It can be used on \
+                    its own or as a Gimp plug-in. It reads raw images using Dave Coffin's \
+                    raw conversion utility – DCRaw. UFRaw supports basic color management \
+                    using Little CMS, allowing the user to apply color profiles.
+
+homepage            https://ufraw.sourceforge.net
+
+checksums           rmd160  fcf10143e52a7c2c3075ffd371c051e5c2a11dae \
+                    sha256  211cc4eef7058c8883b2fcf479a89afb76529088634404aa0a450062b9d427b5 \
+                    size    872784
+github.tarball_from archive
+
+use_autoreconf      yes
+
+depends_build-append \
+                    port:gettext \
+                    path:bin/perl:perl5 \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib         port:cfitsio \
+                    port:dcraw \
+                    port:exiv2 \
+                    path:lib/pkgconfig/fontconfig.pc:fontconfig \
+                    path:lib/pkgconfig/freetype2.pc:freetype \
+                    path:lib/pkgconfig/gdk-pixbuf-2.0.pc:gdk-pixbuf2 \
+                    port:gettext-runtime \
+                    path:lib/pkgconfig/gtk+-2.0.pc:gtk2 \
+                    port:gtkimageview \
+                    path:lib/pkgconfig/harfbuzz.pc:harfbuzz \
+                    port:jasper \
+                    path:include/turbojpeg.h:libjpeg-turbo \
+                    port:lcms2 \
+                    port:libpng \
+                    port:lensfun \
+                    port:tiff
+
+depends_run-append  port:desktop-file-utils
+
+patchfiles-append   patch-ufraw_exiv2.cc.diff
+
+platform darwin {
+    if {${os.major} < 11} {
+        patchfiles-append snowleopard-strnlen.patch
+    }
+}
+
+compiler.cxx_standard   2014
+
+# GIMP plugin is incompatible with new raw file API in gimp 2.10+, disable
+# https://sourceforge.net/p/ufraw/feature-requests/323/
+
+configure.args      --enable-contrast \
+                    --enable-jasper \
+                    --without-gimp
+
+build.args          V=1
+
+# the following dummy variants are used
+# to identify this port's binary dependencies
+# based on which variant of gtk2 is used for the build
+
+variant x11 conflicts quartz {}
+variant quartz conflicts x11 {}
+
+if {[variant_isset quartz]} {
+    require_active_variants path:lib/pkgconfig/gtk+-2.0.pc:gtk2 quartz
+} else {
+    default_variants +x11
+    require_active_variants path:lib/pkgconfig/gtk+-2.0.pc:gtk2 x11
+}
+
+post-destroot {
+    set docdir ${destroot}${prefix}/share/doc/${name}
+    xinstall -d ${docdir}
+    xinstall -m 644 -W ${worksrcpath} \
+        COPYING \
+        MANIFEST \
+        README \
+        TODO \
+        ${docdir}
+}

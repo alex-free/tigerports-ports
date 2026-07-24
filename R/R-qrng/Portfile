@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran mhofert qrng 0.0-11
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             {GPL-2 GPL-3}
+description         Quasi-random number generators
+long_description    {*}${description}
+checksums           rmd160  3d322bc14acfe118983231ec33f3bc28d6ae4f76 \
+                    sha256  e72e8d0818093d978d5dc70548f8286544e18cb6badfa8f9f3e106c7a20a8bb1 \
+                    size    311247
+
+depends_test-append port:R-copula \
+                    port:R-randtoolbox \
+                    port:R-simsalapar \
+                    port:R-spacefillr
+
+test.run            yes

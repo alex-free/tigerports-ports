@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+
+name                libgme
+github.setup        ${name} game-music-emu 0.6.5
+revision            0
+categories          audio multimedia
+license             LGPL-2.1
+maintainers         nomaintainer
+description         Blargg’s video game music emulation library
+long_description    {*}${description}
+distname            libgme-${version}-src
+checksums           rmd160  5745ce48d278712373fb974cca04f003cae0fa64 \
+                    sha256  a133f19278222136ba0d8c27b64a07987ba05fec9d2e6d293ccd8cabdd97ddbb \
+                    size    347787
+github.tarball_from releases
+
+worksrcdir              libgme-${version}
+
+depends_build-append    path:bin/pkg-config:pkgconfig
+depends_lib-append      port:zlib
+
+compiler.cxx_standard   2011
+
+configure.args-append   -DBUILD_SHARED_LIBS=ON \
+                        -DGME_BUILD_EXAMPLES=OFF

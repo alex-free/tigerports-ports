@@ -1,0 +1,39 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran rstudio sass 0.4.10
+revision            2
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Syntactically Awesome Style Sheets
+long_description    {*}${description}
+checksums           rmd160  fa28bbd00f768b0da53d57dfecb53c8906694cac \
+                    sha256  4adb4c243f74d811276529e346deaa064bce28dbfbb837208fc85f2c47b79b30 \
+                    size    3025163
+
+depends_lib-append  port:R-fs \
+                    port:R-htmltools \
+                    port:R-R6 \
+                    port:R-rappdirs \
+                    port:R-rlang
+
+if {${configure.cxx_stdlib} ne "libc++"} {
+    # error: unrecognized command-line option '-stdlib=libc++'.
+    # Set ABI explicitly, since the build does not respect flags from R settings.
+    # Somehow the port still builds, but the library has ABI-specific symbols
+    # like __ZTINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE, which we do not want.
+    post-patch {
+        reinplace "s|-stdlib=libc++|-D_GLIBCXX_USE_CXX11_ABI=0|g" ${worksrcpath}/src/libsass/Makefile
+    }
+}
+
+depends_test-append port:R-curl \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-shiny \
+                    port:R-testthat \
+                    port:R-withr
+
+test.run            yes

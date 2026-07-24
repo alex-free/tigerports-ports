@@ -1,0 +1,45 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran insightsengineering rbmi 1.6.0
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             Apache-2+
+description         Reference-Based Multiple Imputation
+long_description    Implements standard and reference-based multiple imputation methods \
+                    for continuous longitudinal endpoints.
+homepage            https://insightsengineering.github.io/rbmi
+checksums           rmd160  bd11407f88eae32f7e6a510b4f39782ad4e0ed6f \
+                    sha256  25e8cad534e95db3b4301cad8e0ce251ced025173e56654fff4860b2ada61bac \
+                    size    407572
+supported_archs     noarch
+
+depends_lib-append  port:R-assertthat \
+                    port:R-fs \
+                    port:R-jinjar \
+                    port:R-mmrm \
+                    port:R-pkgload \
+                    port:R-R6 \
+                    port:R-stringr
+
+depends_test-append port:R-bookdown \
+                    port:R-dplyr \
+                    port:R-emmeans \
+                    port:R-ggplot2 \
+                    port:R-knitr \
+                    port:R-lubridate \
+                    port:R-mvtnorm \
+                    port:R-purrr \
+                    port:R-R.rsp \
+                    port:R-rmarkdown \
+                    port:R-rstan \
+                    port:R-testthat \
+                    port:R-tibble \
+                    port:R-tidyr \
+                    port:R-withr
+
+test.run            yes

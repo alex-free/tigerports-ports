@@ -1,0 +1,33 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran m.li.3 eFCM 1.0
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3+
+description         Exponential Factor Copula Model
+long_description    ${name} implements the exponential Factor Copula Model (eFCM).
+checksums           rmd160  01ef81a6ae5c9ca4e9ec351065a7ee0645c3bdac \
+                    sha256  21ed5c19fd25097a30a57998c1f95bec4cdbd03bb9148c8caba8d03c95c501bf \
+                    size    1710362
+
+depends_lib-append  port:R-fields \
+                    port:R-ismev \
+                    port:R-mnormt \
+                    port:R-nsRFA \
+                    port:R-numDeriv \
+                    port:R-pbmcapply \
+                    port:R-progress \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

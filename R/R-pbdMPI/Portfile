@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           compilers 1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran snoweye pbdMPI 0.5-3
+revision            1
+categories-append   parallel
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MPL-2
+description         Interface to MPI
+long_description    {*}${description}
+homepage            https://github.com/snoweye/pbdMPI
+checksums           rmd160  43496047ec4c67c2b39528c594988aca48678fa8 \
+                    sha256  0b547a04decd83a7825cb07eeae869a476ca2735e3973d226a5a7633010cf208 \
+                    size    421138
+
+set mpi_suffix      mp
+set mpi_port        mpich-default
+
+depends_lib-append  port:${mpi_port} \
+                    port:R-float
+
+# At the moment there is no MPICH4 type. However, it does build against MPICH4.
+build.args-append   --configure-args="--with-mpi=${prefix} \
+                        --with-mpi-include=${prefix}/include/mpich-${mpi_suffix} \
+                        --with-mpi-libpath=${prefix}/lib/mpich-${mpi_suffix} \
+                        --with-mpi-type=MPICH3"
+
+test.run            no

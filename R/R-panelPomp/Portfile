@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran jeswheel panelPomp 1.7.0.0
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-3
+description         Inference for panel partially observed Markov processes
+long_description    {*}${description}
+checksums           rmd160  5098b2a5dd5287255c7d8fd4131113b937b4ffc1 \
+                    sha256  c466721e5e3215d9cd77821d6ddebbd2f78a7ae3a1b0e5d15a96af0d9c2ad1fb \
+                    size    712650
+
+depends_lib-append  port:R-pomp
+
+depends_test-append port:R-bookdown \
+                    port:R-knitr \
+                    port:R-rmarkdown
+
+test.run            yes

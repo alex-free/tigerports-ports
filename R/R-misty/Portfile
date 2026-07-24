@@ -1,0 +1,36 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran takuya.yanagida misty 0.8.0
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Miscellaneous functions for descriptive statistics
+long_description    {*}${description}
+checksums           rmd160  8594c91909ec86145e5d06a63ec5ca67b44b02e9 \
+                    sha256  5a44cce537be75611b5c23be1f013fd1f589f561656c2903366ada4296fde9bf \
+                    size    916505
+supported_archs     noarch
+
+depends_lib-append  port:R-ggplot2 \
+                    port:R-haven \
+                    port:R-lavaan \
+                    port:R-lme4 \
+                    port:R-rstudioapi
+
+depends_test-append port:R-clubSandwich \
+                    port:R-data.table \
+                    port:R-hdf5r \
+                    port:R-mice \
+                    port:R-mnormt \
+                    port:R-mvnmle \
+                    port:R-patchwork \
+                    port:R-plyr \
+                    port:R-readxl \
+                    port:R-robustlmm \
+                    port:R-writexl
+
+test.run            yes

@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran sachaepskamp.com mlVAR 0.5.5
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2
+description         Multi-level vector autoregression
+long_description    {*}${description}
+checksums           rmd160  f1e5d89c8e3132372f2e8b9b9778c5835fd898ce \
+                    sha256  5c3d81e31cbcefa9ca7086d6553f3c970a4b727f3c0329f79de131f02915b90c \
+                    size    64266
+supported_archs     noarch
+
+depends_lib-append  port:R-abind \
+                    port:R-arm \
+                    port:R-clusterGeneration \
+                    port:R-corpcor \
+                    port:R-dplyr \
+                    port:R-graphicalVAR \
+                    port:R-lme4 \
+                    port:R-MplusAutomation \
+                    port:R-mvtnorm \
+                    port:R-qgraph \
+                    port:R-plyr \
+                    port:R-rlang
+
+test.run            yes

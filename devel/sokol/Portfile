@@ -1,0 +1,38 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+
+github.setup        floooh sokol d134baeaecfc082deebdd9c9eafd6b8127e926af
+version             2025.10.11
+revision            0
+categories          devel
+platforms           any
+maintainers         nomaintainer
+supported_archs     noarch
+license             Zlib
+description         Minimal cross-platform standalone C headers
+long_description    {*}${description}
+homepage            https://floooh.github.io/sokol-html5
+checksums           rmd160  9065f3038b558e61ce4f2887a6c306c4029bd9d2 \
+                    sha256  4ac0e7f9a739bda129c5d64805724f84785e2f35454835da32a6fad09a5f2477 \
+                    size    1385229
+github.tarball_from archive
+
+use_configure       no
+
+build               {}
+
+destroot {
+    set incdir ${destroot}${prefix}/include/${name}
+    xinstall -d ${incdir}
+    move ${worksrcpath}/util ${incdir}/util
+    fs-traverse h ${worksrcpath} {
+        if {[file isfile ${h}] && [file extension ${h}] == ".h"} {
+            copy ${h} ${incdir}/
+        }
+    }
+    set docdir ${destroot}${prefix}/share/doc/${name}
+    xinstall -d ${docdir}
+    xinstall -m 644 -W ${worksrcpath} CHANGELOG.md LICENSE README.md ${docdir}
+}

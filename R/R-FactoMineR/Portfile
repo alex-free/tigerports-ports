@@ -1,0 +1,33 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran husson FactoMineR 2.13
+revision            1
+maintainers         nomaintainer
+license             GPL-2+
+description         Multivariate exploratory data analysis and data mining
+long_description    {*}${description}
+homepage            http://factominer.free.fr
+checksums           rmd160  5d0c1377fc5fc15d4341a3a03cf48edcf472242f \
+                    sha256  0967669c4b1fdbf3a34bacba353b95238f437e4ef6975f1751408d5d5eee3e6b \
+                    size    2838632
+
+depends_lib-append  port:R-car \
+                    port:R-DT \
+                    port:R-ellipse \
+                    port:R-emmeans \
+                    port:R-flashClust \
+                    port:R-ggplot2 \
+                    port:R-ggrepel \
+                    port:R-leaps \
+                    port:R-multcompView \
+                    port:R-scatterplot3d
+
+depends_test-append port:R-Factoshiny \
+                    port:R-knitr \
+                    port:R-markdown \
+                    port:R-missMDA
+
+test.run            yes

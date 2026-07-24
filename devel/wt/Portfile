@@ -1,0 +1,161 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           active_variants 1.1
+PortGroup           boost 1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+PortGroup           openssl 1.0
+
+boost.version       1.81
+
+github.setup        emweb wt 4.13.2
+revision            1
+categories          devel www
+license             GPL-2
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+description         C++ Web Toolkit
+long_description    Wt is a C++ library for developing web applications.
+homepage            https://www.webtoolkit.eu/wt
+checksums           rmd160  9702b415bb49b8a77a72bbcf9de6c903c1952efe \
+                    sha256  10955bf9ffa912fb00314f0969e51128d25940effdeee9059d74257fcc5a6c16 \
+                    size    11033297
+github.tarball_from archive
+
+depends_build-append \
+                    port:asciidoctor \
+                    path:bin/doxygen:doxygen \
+                    path:bin/pkg-config:pkgconfig
+
+set maria_v         10.11
+set pg_v            17
+
+depends_lib-append  path:lib/pkgconfig/fontconfig.pc:fontconfig \
+                    path:lib/pkgconfig/freetype2.pc:freetype \
+                    port:gettext-runtime \
+                    path:lib/pkgconfig/glib-2.0.pc:glib2 \
+                    port:GraphicsMagick \
+                    path:lib/pkgconfig/harfbuzz.pc:harfbuzz \
+                    port:libharu \
+                    port:libpng \
+                    port:log4shib \
+                    path:lib/pkgconfig/pango.pc:pango \
+                    port:postgresql${pg_v} \
+                    port:sqlite3 \
+                    port:xercesc3 \
+                    port:xml-security-c \
+                    port:xmltooling \
+                    port:zlib
+
+compiler.cxx_standard   2014
+
+# Qt is only used in examples, no need to enable it by default.
+# Also do not force Qt5+ on 10.6 and below in any case.
+
+# WT_CPP17_FILESYSTEM_IMPLEMENTATION defaults to boost, so just use that.
+# Alternative value is "std".
+
+# WT_ASIO_DEFAULT_IMPLEMENTATION alternative value is "standalone".
+
+configure.args-append \
+                    -DBUILD_EXAMPLES=OFF \
+                    -DDEBUG_JS=OFF \
+                    -DENABLE_QT4=OFF \
+                    -DENABLE_QT5=OFF \
+                    -DENABLE_QT6=OFF \
+                    -DENABLE_FIREBIRD=OFF \
+                    -DENABLE_HARU=ON \
+                    -DENABLE_LIBWTDBO=ON \
+                    -DENABLE_LIBWTTEST=OFF \
+                    -DENABLE_MSSQLSERVER=OFF \
+                    -DENABLE_MYSQL=OFF \
+                    -DENABLE_OPENGL=OFF \
+                    -DENABLE_PANGO=ON \
+                    -DENABLE_POSTGRES=ON \
+                    -DENABLE_SAML=OFF \
+                    -DENABLE_SQLITE=ON \
+                    -DENABLE_SSL=ON \
+                    -DENABLE_UNWIND=OFF \
+                    -DGM_PREFIX=${prefix} \
+                    -DMULTI_THREADED_BUILD=ON \
+                    -DPOSTGRES_INCLUDE=${prefix}/include/postgresql${pg_v} \
+                    -DPOSTGRES_LIB=${prefix}/lib/postgresql${pg_v}/libpq.dylib \
+                    -DSHARED_LIBS=ON \
+                    -DWT_ASIO_DEFAULT_IMPLEMENTATION="boost" \
+                    -DWT_CPP17_FILESYSTEM_IMPLEMENTATION="boost" \
+                    -DWT_CPP20_DATE_TZ_IMPLEMENTATION="date" \
+                    -DWT_WRASTERIMAGE_IMPLEMENTATION="GraphicsMagick"
+
+# GL
+
+variant apple_gl conflicts mesa_gl description "Enable Apple OpenGL support" {
+    require_active_variants glew {} x11
+
+    # https://github.com/emweb/wt/pull/232
+    patchfiles-append \
+                    0001-WServerGLWidget.C-fix-Apple-GL-for-10.7.patch
+}
+
+# TODO: rename to x11?
+# Once the patch for Apple GL is merged, these should be rebased:
+variant mesa_gl conflicts apple_gl description "Enable OpenGL via mesa" {
+    require_active_variants glew x11
+
+    patchfiles-append \
+                    0001-src-CMakeLists-fix-OpenGL-linking.patch \
+                    0002-WServerGLWidget.C-do-not-hardcode-OpenGL-implementat.patch
+
+    depends_lib-append \
+                    port:libGLU \
+                    port:mesa \
+                    port:xorg-libX11
+}
+
+if {[variant_isset apple_gl] || [variant_isset mesa_gl]} {
+    depends_lib-append \
+                    port:glew
+
+    configure.args-replace \
+                    -DENABLE_OPENGL=OFF -DENABLE_OPENGL=ON
+}
+
+if {![variant_isset apple_gl] && ![variant_isset mesa_gl]} {
+    if {${os.platform} eq "darwin"} {
+        default_variants-append \
+                    +apple_gl
+    } else {
+        default_variants-append \
+                    +mesa_gl
+    }
+}
+
+# Databases
+
+variant maria description "Enable MariaDB support" {
+    depends_lib-append \
+                    port:mariadb-${maria_v}
+
+    configure.pkg_config_path-prepend \
+                    ${prefix}/lib/mariadb-${maria_v}/pkgconfig
+
+    configure.args-replace \
+                    -DENABLE_MYSQL=OFF -DENABLE_MYSQL=ON
+}
+
+variant unixODBC description "Enable ODBC support" {
+    depends_lib-append \
+                    port:unixODBC
+
+    configure.args-replace \
+                    -DENABLE_MSSQLSERVER=OFF -DENABLE_MSSQLSERVER=ON
+}
+
+# Misc
+
+variant saml description "Enable OpenSAML support" {
+    depends_lib-append \
+                    port:opensaml
+
+    configure.args-replace \
+                    -DENABLE_SAML=OFF -DENABLE_SAML=ON
+}

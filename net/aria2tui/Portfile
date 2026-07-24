@@ -1,0 +1,33 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                aria2tui
+version             0.1.13.4
+revision            0
+categories-prepend  net
+platforms           {darwin any}
+license             MIT
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+description         TUI front-end for the Aria2c download manager
+long_description    ${name} is a {*}${description}.
+homepage            https://github.com/grimandgreedy/Aria2TUI
+checksums           rmd160  6e59507e66dec816e9872ce048227804449fe2b8 \
+                    sha256  08e41b3c686b3344cc158a1cd6e611d6e2dc446ac61aa84fb64bb9b913576d2b \
+                    size    2740036
+supported_archs     noarch
+
+python.default_version  313
+
+depends_lib-append  port:py${python.version}-listpick \
+                    port:py${python.version}-plotille \
+                    port:py${python.version}-requests \
+                    port:py${python.version}-tabulate \
+                    port:py${python.version}-toml
+depends_run-append  port:aria2
+
+notes "
+On older macOS versions you may need to run this port\
+in a modern terminal, such as mlterm.
+"

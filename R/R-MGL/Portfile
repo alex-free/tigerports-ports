@@ -1,0 +1,18 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran safiye MGL 1.1
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-2+
+description         Module Graphical Lasso
+long_description    {*}${description}
+homepage            https://sites.google.com/a/cs.washington.edu/mgl
+checksums           rmd160  fd1162b6ac3e49b5a8ef3dad21dcbcad74e11798 \
+                    sha256  4792d80103ce56cf73b98ac6cbc3ddc5b3fb05ff506e4b98efcf2acbf528040f \
+                    size    5233
+
+test.run            yes

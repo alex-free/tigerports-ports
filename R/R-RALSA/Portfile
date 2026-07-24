@@ -1,0 +1,38 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran plamen.mirazchiyski RALSA 1.6.2
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2
+description         R Analyzer for Large-Scale Assessments
+long_description    {*}${description}
+homepage            https://ralsa.ineri.org
+checksums           rmd160  e6d2365b32d084633db70949bb492b4746e9085d \
+                    sha256  7ab71a59ec7cbd4657b0adc40a58a52fcd7e98b58b5dca61da3467adf12af593 \
+                    size    410111
+supported_archs     noarch
+
+depends_lib-append  port:R-archive \
+                    port:R-data.table \
+                    port:R-DT \
+                    port:R-ggplot2 \
+                    port:R-haven \
+                    port:R-Hmisc \
+                    port:R-import \
+                    port:R-openxlsx \
+                    port:R-rclipboard \
+                    port:R-readr \
+                    port:R-rstudioapi \
+                    port:R-shiny \
+                    port:R-shinydashboard \
+                    port:R-shinyFiles \
+                    port:R-shinyjs \
+                    port:R-shinyWidgets \
+                    port:R-stringi \
+                    port:R-stringr
+
+test.run            yes

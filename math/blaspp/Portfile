@@ -1,0 +1,95 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+PortGroup           linear_algebra 1.1
+
+github.setup        icl-utk-edu blaspp 2025.05.28 v
+revision            0
+categories          math science
+license             BSD
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+description         C++ API for the Basic Linear Algebra Subroutines
+long_description    {*}${description}
+checksums           rmd160  026af9dff96f91b8875ef060c7471db1fe411b60 \
+                    sha256  8a4254e672e7f422eb62f70861f70bfa9582b622ef9e448bec3b6639b8077f8c \
+                    size    252966
+github.tarball_from archive
+
+platform darwin {
+    if {${os.major} < 13} {
+        depends_build-append    path:bin/git:git
+        git.cmd                 ${prefix}/bin/git
+    }
+}
+
+set py_ver          3.12
+set py_ver_nodot    [string map {. {}} ${py_ver}]
+configure.python    ${prefix}/bin/python${py_ver}
+
+post-patch {
+    reinplace "s,/usr/bin/env python3,${configure.python}," ${worksrcpath}/configure.py
+    reinplace "s,/usr/bin/env python3,${configure.python}," ${worksrcpath}/test/run_tests.py
+    reinplace "s,python3,${configure.python}," ${worksrcpath}/test/CMakeLists.txt
+
+    if {[variant_isset openblas]} {
+        reinplace "s,<cblas.h>,<cblas_openblas.h>,g" ${worksrcpath}/config/cblas.cc
+        reinplace "s,<cblas.h>,<cblas_openblas.h>," ${worksrcpath}/config/openblas_version.cc
+        reinplace "s,<cblas.h>,<cblas_openblas.h>,g" ${worksrcpath}/test/cblas_wrappers.hh
+        reinplace "s,<cblas.h>,<cblas_openblas.h>," ${worksrcpath}/test/test.cc
+    }
+}
+
+compiler.cxx_standard   2017
+compiler.openmp_version 3.0
+
+pre-configure {
+    if {[variant_isset accelerate]} {
+        veclibfort  no
+        configure.args-append \
+                    -Dblas="Apple Accelerate" \
+                    -Dlapack="auto" \
+                    -Dblaspp_cblas_include=/System/Library/Frameworks/Accelerate.framework/Frameworks/vecLib.framework/Headers
+    } elseif {[variant_isset openblas]} {
+        configure.args-append \
+                    -Dblas="OpenBLAS" \
+                    -Dlapack="auto" \
+                    -Dblaspp_cblas_include=${prefix}/include
+    }
+}
+
+if {![variant_isset accelerate]} {
+    default_variants +openblas
+}
+
+configure.args-append \
+                    -DBUILD_SHARED_LIBS:BOOL=ON \
+                    -DBUILD_TESTING:BOOL=ON \
+                    -Dgpu_backend=none \
+                    -Duse_openmp:BOOL=ON \
+                    --log-level=trace
+
+if {[string match *clang* ${configure.compiler}]} {
+    configure.ldflags-append \
+                    -L${prefix}/lib/libomp \
+                    -lomp
+}
+
+# https://github.com/icl-utk-edu/blaspp/issues/90
+if {[string match *gcc* ${configure.compiler}]} {
+    configure.ldflags-append \
+                    -latomic
+}
+
+depends_test-append port:python${py_ver_nodot}
+
+# https://github.com/icl-utk-edu/blaspp/issues/34
+pre-test {
+    system -W ${cmake.build_dir} "make tester"
+    system -W ${cmake.build_dir}/test "install_name_tool -change @rpath/libtestsweeper.dylib ${cmake.build_dir}/_deps/testsweeper-build/libtestsweeper.dylib ./tester"
+}
+
+test.run            yes
+test.cmd            make
+test.target         check

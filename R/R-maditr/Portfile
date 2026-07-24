@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran gdemin maditr 0.8.7
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2
+description         Fast data aggregation, modification and filtering \
+                    with pipes and R-data.table
+long_description    {*}${description}
+homepage            https://github.com/gdemin/maditr
+checksums           rmd160  ca454ab4bb9ac61e00268e0953388a582c71fe05 \
+                    sha256  6142f05d5368d5a8fe8a9d7e2d81b73410c31bc6681e174a83d57718141e97e6 \
+                    size    290343
+supported_archs     noarch
+
+depends_lib-append  port:R-data.table \
+                    port:R-magrittr
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-tinytest
+
+test.run            yes

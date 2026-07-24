@@ -1,0 +1,20 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran y.chen101 scar 0.2-2
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-2+
+description         Shape-Constrained Additive Regression
+long_description    {*}${description}\: a maximum likelihood approach.
+checksums           rmd160  87eded22e013694795f0711841b09bd29bf4a7ca \
+                    sha256  72e14db71f14590c6f4bf398a093f6cfc30fb611c8d6a98a6099968895a95b50 \
+                    size    71618
+
+depends_test-append port:R-gam \
+                    port:R-scam
+
+test.run            yes

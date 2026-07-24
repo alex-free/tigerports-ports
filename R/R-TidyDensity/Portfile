@@ -1,0 +1,39 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github spsanderson TidyDensity 1.5.2 v
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Functions for tidy analysis and generation of random data
+long_description    {*}${description}
+checksums           rmd160  9d43e4757001d5ce973c927322144395dacfc6d6 \
+                    sha256  d88c6e73af06b7ece246eccae213815b34f285d28a6e5456c0bceb496d275a5e \
+                    size    16436860
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-actuar \
+                    port:R-broom \
+                    port:R-data.table \
+                    port:R-dplyr \
+                    port:R-ggplot2 \
+                    port:R-magrittr \
+                    port:R-nloptr \
+                    port:R-patchwork \
+                    port:R-plotly \
+                    port:R-purrr \
+                    port:R-rlang \
+                    port:R-stringr \
+                    port:R-tidyr \
+                    port:R-tidyselect
+
+depends_test-append port:R-EnvStats \
+                    port:R-knitr \
+                    port:R-rmarkdown
+
+test.run            yes

@@ -1,0 +1,16 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran jochen.einbeck LPCM 0.47-6
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Local Principal Curve Methods
+long_description    {*}${description}
+checksums           rmd160  09f51f2f23a048cb65cf587e2d9262d47851436f \
+                    sha256  d1fe11eb39839f9f21b7c02b9966e892e3ea2b0875dffeb0fabca98e4310e620 \
+                    size    553847
+supported_archs     noarch

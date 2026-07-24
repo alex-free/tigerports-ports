@@ -1,0 +1,37 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran gforge forestplot 3.1.7
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2
+description         Advanced forest plot using grid graphics
+long_description    {*}${description}
+homepage            https://gforge.se/packages
+checksums           rmd160  5fb9cd1cc9d41613a9235919748eaa6b749a4edb \
+                    sha256  b71882cd25ae5caa9ca41b3e0294d42f7756ea35c3d9a2fe0245ef8ab2491f4a \
+                    size    209549
+supported_archs     noarch
+
+depends_lib-append  port:R-abind \
+                    port:R-checkmate
+
+depends_test-append port:R-dplyr \
+                    port:R-Gmisc \
+                    port:R-Greg \
+                    port:R-knitr \
+                    port:R-purrr \
+                    port:R-rlang \
+                    port:R-rmarkdown \
+                    port:R-rmeta \
+                    port:R-rms \
+                    port:R-testthat \
+                    port:R-tibble \
+                    port:R-tidyr \
+                    port:R-tidyselect \
+                    port:R-tidyverse
+
+test.run            yes

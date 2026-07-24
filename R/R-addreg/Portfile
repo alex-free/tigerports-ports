@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github mdonoghoe addreg 3.0 v
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             GPL-2+
+description         Additive Regression for Discrete Data
+long_description    {*}${description}
+checksums           rmd160  ee76c92710e1e3b750e7dd0cc856129bef7192f1 \
+                    sha256  0b3432d0ea1646a67531caa424afece17d3c9cacb643a4e0f864773ce650e231 \
+                    size    42278
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-combinat \
+                    port:R-glm2 \
+                    port:R-turboEM
+
+test.run            yes

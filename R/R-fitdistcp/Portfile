@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran stephenjewson fitdistcp 0.1.1
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Distribution fitting with calibrating priors
+long_description    {*}${description} for commonly used distributions.
+homepage            https://fitdistcp.info
+checksums           rmd160  fb340db9c96edc1990e3dc95a021d2e39e4dcb10 \
+                    sha256  3ad8bef3540b178db98c4f09bb9a048f9d4383784e87d2ffe2d74fd964640ff4 \
+                    size    505151
+supported_archs     noarch
+
+depends_lib-append  port:R-actuar \
+                    port:R-extraDistr \
+                    port:R-fdrtool \
+                    port:R-fExtremes \
+                    port:R-gnorm \
+                    port:R-mev \
+                    port:R-pracma \
+                    port:R-rust
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown
+
+test.run            yes

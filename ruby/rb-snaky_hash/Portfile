@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           ruby 1.0
+
+ruby.branches       3.4 3.3 3.2 3.1
+ruby.setup          snaky_hash 2.0.3 gem {} rubygems
+categories-append   devel
+platforms           any
+license             MIT
+maintainers         nomaintainer
+description         Hashie::Mash joint to make snakelife better
+long_description    {*}${description}
+homepage            https://gitlab.com/oauth-xx/snaky_hash
+checksums           rmd160  a8063f7dc50e0fef2ba5fce6273e72b483707629 \
+                    sha256  25a3d299566e8153fb02fa23fd9a9358845950f7a523ddbbe1fa1e0d79a6d456 \
+                    size    31232
+supported_archs     noarch
+
+if {${subport} ne ${name}} {
+    depends_run-append \
+                    port:rb${ruby.suffix}-hashie \
+                    port:rb${ruby.suffix}-version_gem
+}

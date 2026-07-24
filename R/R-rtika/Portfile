@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran ropensci rtika 2.7.0 v
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         R interface to Apache Tika
+long_description    {*}${description}
+homepage            https://docs.ropensci.org/rtika
+checksums           rmd160  0f10502e2e78fd2ba8b25f2687a71d52fb27be06 \
+                    sha256  7a6583c9ed1b463f02b067c6569300ee1f52bf359aac31196bcb476ef467a486 \
+                    size    717274
+supported_archs     noarch
+
+depends_lib-append  port:R-backports \
+                    port:R-curl \
+                    port:R-digest \
+                    port:R-sys
+
+depends_test-append port:R-covr \
+                    port:R-jsonlite \
+                    port:R-knitr \
+                    port:R-magrittr \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-xml2
+
+test.run            yes

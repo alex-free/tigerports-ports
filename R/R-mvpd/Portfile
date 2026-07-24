@@ -1,0 +1,38 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github swihart mvpd 0.0.5 v
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         Multivariate product distributions for elliptically-contoured distributions
+long_description    {*}${description}
+homepage            https://swihart.github.io/mvpd
+checksums           rmd160  2d33c4918c6e79a3adaaaf75b992baf33a5b8e87 \
+                    sha256  9900602a991e61ed4fa8e2e77c5de0b367a15e353f2b4bbeb64b9fda2d27d367 \
+                    size    70179
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-cubature \
+                    port:R-libstable4u \
+                    port:R-matrixStats \
+                    port:R-mvtnorm \
+                    port:R-stabledist
+
+depends_lib-append  port:R-expint \
+                    port:R-invgamma \
+                    port:R-knitr \
+                    port:R-LNPar \
+                    port:R-rgl \
+                    port:R-rmarkdown \
+                    port:R-scales \
+                    port:R-testthat \
+                    port:R-uniformly \
+                    port:R-VGAMextra
+
+test.run            yes

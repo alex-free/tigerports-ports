@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran mlr-org mlr3tuning 1.4.0 v
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             LGPL-3
+description         Hyperparameter optimization for R-mlr3
+long_description    {*}${description}
+homepage            https://mlr3tuning.mlr-org.com
+checksums           rmd160  8773a6203afdf8e31e78d95e95de67254f295936 \
+                    sha256  784c7590d6eb945d49364cefdd4640433340962e6705b8c26844fba300426449 \
+                    size    130719
+# github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-bbotk \
+                    port:R-checkmate \
+                    port:R-cli \
+                    port:R-data.table \
+                    port:R-lgr \
+                    port:R-mlr3 \
+                    port:R-mlr3misc \
+                    port:R-paradox \
+                    port:R-R6

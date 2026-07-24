@@ -1,0 +1,381 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           active_variants 1.1
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+PortGroup           openssl 1.0
+
+# NOTE: Also rev-bump 'apache-arrow' when updating this port
+github.setup        grpc grpc 1.82.1 v
+revision            0
+categories          devel
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             Apache-2
+homepage            https://grpc.io
+description         High-performance, open-source universal RPC framework.
+long_description    gRPC is a modern, open-source, high-performance \
+                    remote procedure call (RPC) framework that can run \
+                    anywhere. gRPC enables client and server \
+                    applications to communicate transparently, \
+                    and simplifies the building of connected systems.
+
+github.tarball_from archive
+
+# https://github.com/grpc/grpc/tree/acccf84c0df20487d64101f528e5d426541ca4e5/third_party
+set benchmark_v     12235e24652fc7f809373e7c11a5f73c5763fc4c
+set cel_spec_v      9f069b3ee58b02d6f6736c5ebd6587075c1a1b22
+set envoy_api_v     6ef568cf4a67362849911d1d2a546fd9f35db2ff
+set googleapis_v    2193a2bfcecb92b92aad7a4d81baa428cafd7dfd
+set opencensus_v    4aa53e15cbf1a47bc9087e6cfdca214c1eea4e89
+set protoc_gen_v    7b06248484ceeaa947e93ca2747eccf336a88ecc
+set xds_v           ee656c7534f5d7dc23d44dd611689568f72017a6
+
+master_sites-append https://github.com/google/benchmark/archive/${benchmark_v}/:benchmark
+master_sites-append https://github.com/cel-expr/cel-spec/archive/${cel_spec_v}/:cel_spec
+master_sites-append https://github.com/envoyproxy/data-plane-api/archive/${envoy_api_v}/:envoy_api
+master_sites-append https://github.com/googleapis/googleapis/archive/${googleapis_v}/:googleapis
+master_sites-append https://github.com/census-instrumentation/opencensus-proto/archive/${opencensus_v}/:opencensus
+master_sites-append https://github.com/bufbuild/protoc-gen-validate/archive/${protoc_gen_v}/:protoc_gen
+master_sites-append https://github.com/cncf/xds/archive/${xds_v}/:xds
+
+distfiles-append    benchmark-${benchmark_v}${extract.suffix}:benchmark
+distfiles-append    cel-spec-${cel_spec_v}${extract.suffix}:cel_spec
+distfiles-append    data-plane-api-${envoy_api_v}${extract.suffix}:envoy_api
+distfiles-append    googleapis-${googleapis_v}${extract.suffix}:googleapis
+distfiles-append    opencensus-proto-${opencensus_v}${extract.suffix}:opencensus
+distfiles-append    protoc-gen-validate-${protoc_gen_v}${extract.suffix}:protoc_gen
+distfiles-append    xds-${xds_v}${extract.suffix}:xds
+
+checksums           ${distname}${extract.suffix} \
+                    rmd160  e9fea34275dc17101fc8bc9f1286dbb8c107086d \
+                    sha256  d74186d8fa221cc7f07ec2db970098302559f73612f6cf340cfe754848c4fc29 \
+                    size    16053195 \
+                    benchmark-${benchmark_v}${extract.suffix} \
+                    rmd160  3708988f7bfbdc5ccfd4f14e17fefae99c99e3f6 \
+                    sha256  11f344710a80fd73db0fc686b4fe40867dc34d914d9cdfd7a4b416a65d1e692f \
+                    size    254083 \
+                    cel-spec-${cel_spec_v}${extract.suffix} \
+                    rmd160  00eac91a6b3913d73e1077afcbc26d3a2774b664 \
+                    sha256  d6cb6b4ed272500d16546c672a65a7452b241462a200dda3f62a7de413883344 \
+                    size    224265 \
+                    data-plane-api-${envoy_api_v}${extract.suffix} \
+                    rmd160  6d034fae60cabbc1d235f31631d4c91ae81bbad1 \
+                    sha256  ed5e6c319f8ebcdf24a9491f866a599bb9a3c193b859a94ad13bd31f85b46855 \
+                    size    774790 \
+                    googleapis-${googleapis_v}${extract.suffix} \
+                    rmd160  0a99d348bfb055ef3ce7e70531a97fc1e7d79c5b \
+                    sha256  3de3a199400eea7a766091aeb96c4b84c86266ad1f933f9933bbb7c359e727fe \
+                    size    11605037 \
+                    opencensus-proto-${opencensus_v}${extract.suffix} \
+                    rmd160  fc1cf505cdb5c6f7ac17e4158da733ed9bf239ea \
+                    sha256  27b7982d3ab3a0a66e09d997bbb373e1c83a48abad6da09bbc866428f443a727 \
+                    size    163555 \
+                    protoc-gen-validate-${protoc_gen_v}${extract.suffix} \
+                    rmd160  b72f185e312d99aef05922ddad529924e2fa84e5 \
+                    sha256  4549d83e759ca553d49688e2ab5c07654f01035387feb6cac8892536a016901b \
+                    size    193674 \
+                    xds-${xds_v}${extract.suffix} \
+                    rmd160  1c92f2ac1828cfdd32faf8c2cc45d8395995e92e \
+                    sha256  49535f3c3370004309da50194c09bbfc528d4702424dd46e7d56a278a3dfc15d \
+                    size    181554
+
+extract.only        ${distname}${extract.suffix}
+
+post-extract {
+    foreach dir { benchmark bloaty cares cel-spec envoy-api googleapis opencensus-proto protoc-gen-validate xds xxhash zlib } {
+        delete -f ${worksrcpath}/third_party/${dir}
+    }
+    set tar [findBinary tar ${portutil::autoconf::tar_command}]
+    system -W ${workpath} "${tar} -zxf ${distpath}/benchmark-${benchmark_v}${extract.suffix}"
+    system -W ${workpath} "${tar} -zxf ${distpath}/cel-spec-${cel_spec_v}${extract.suffix}"
+    system -W ${workpath} "${tar} -zxf ${distpath}/data-plane-api-${envoy_api_v}${extract.suffix}"
+    system -W ${workpath} "${tar} -zxf ${distpath}/googleapis-${googleapis_v}${extract.suffix}"
+    system -W ${workpath} "${tar} -zxf ${distpath}/opencensus-proto-${opencensus_v}${extract.suffix}"
+    system -W ${workpath} "${tar} -zxf ${distpath}/protoc-gen-validate-${protoc_gen_v}${extract.suffix}"
+    system -W ${workpath} "${tar} -zxf ${distpath}/xds-${xds_v}${extract.suffix}"
+    move ${workpath}/benchmark-${benchmark_v} ${worksrcpath}/third_party/benchmark
+    move ${workpath}/cel-spec-${cel_spec_v} ${worksrcpath}/third_party/cel-spec
+    move ${workpath}/data-plane-api-${envoy_api_v} ${worksrcpath}/third_party/envoy-api
+    move ${workpath}/googleapis-${googleapis_v} ${worksrcpath}/third_party/googleapis
+    move ${workpath}/opencensus-proto-${opencensus_v} ${worksrcpath}/third_party/opencensus-proto
+    move ${workpath}/protoc-gen-validate-${protoc_gen_v} ${worksrcpath}/third_party/protoc-gen-validate
+    move ${workpath}/xds-${xds_v} ${worksrcpath}/third_party/xds
+}
+
+set name_io         ${name}io
+
+patchfiles-append   patch-avoid-overlinking-abseil.diff
+
+patchfiles-append   patch-xxhash.cmake.diff
+
+cmake.generator     Ninja
+
+compiler.c_standard     2011
+# abseil and re2 require C++17/C++20
+compiler.cxx_standard   2017
+# https://github.com/grpc/grpc/commit/f15ba1ffc73c5d0b63754df72fc47c567b9c7252
+compiler.thread_local_storage yes
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig \
+                    port:xxhashlib
+
+depends_lib-append  port:abseil \
+                    port:c-ares \
+                    port:protobuf \
+                    port:re2 \
+                    port:zlib
+
+configure.args-append \
+                    -DBUILD_SHARED_LIBS:BOOL=ON \
+                    -DCMAKE_SHARED_LINKER_FLAGS="-Wl,-undefined,dynamic_lookup" \
+                    -DCMAKE_EXE_LINKER_FLAGS="-Wl,-undefined,dynamic_lookup,-rpath,${prefix}/lib,-rpath,${prefix}/lib" \
+                    -DgRPC_BUILD_TESTS=OFF \
+                    -DgRPC_ABSL_PROVIDER=package \
+                    -DgRPC_CARES_PROVIDER=package \
+                    -DgRPC_DOWNLOAD_ARCHIVES=OFF \
+                    -DgRPC_PROTOBUF_PROVIDER=package \
+                    -DgRPC_RE2_PROVIDER=package \
+                    -DgRPC_SSL_PROVIDER=package \
+                    -DgRPC_USE_PROTO_LITE=OFF \
+                    -DgRPC_XXHASH_INCLUDE_DIR=${prefix}/include \
+                    -DgRPC_ZLIB_PROVIDER=package
+
+if {${build_arch} in [list i386 ppc] && [string match *gcc* ${configure.compiler}]} {
+    # ___atomic_fetch_sub_8 etc.
+    configure.ldflags-append -latomic
+}
+
+configure.pre_args-replace \
+                    -DCMAKE_BUILD_WITH_INSTALL_RPATH:BOOL=ON \
+                    -DCMAKE_BUILD_WITH_INSTALL_RPATH:BOOL=OFF
+
+# Remove incorrect cmake dependency on SDK that cmake adds on some systems
+# See https://github.com/grpc/grpc/issues/24902
+set macos_sdk [file tail ${configure.sdkroot}]
+set macos_sdk_dir [file dirname ${configure.sdkroot}]
+set xcode_sdk_dir /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs
+
+if {[info exists cmake.build_dir]
+    && ${macos_sdk_dir} ne ${xcode_sdk_dir}
+    && ![file isdirectory ${xcode_sdk_dir}/${macos_sdk}]} {
+    post-configure {
+        set cmakefiles_dirs {}
+        fs-traverse f ${cmake.build_dir} {
+            if { [file isdirectory ${f}]
+                 && [string match "CMakeFiles" [file tail ${f}]] } {
+                append cmakefiles_dirs " " ${f}
+            }
+        }
+        foreach d ${cmakefiles_dirs} {
+            foreach f [glob -nocomplain -type f ${d}/*.dir/*.make] {
+                # delete incorrect Makefile targets to Xcode SDKs
+                reinplace -q -E "/:\[\[:space:]]+\\/\[^\[:space:]]+\\/${macos_sdk}\\/\[^\[:space:]]+\\/CoreFoundation\\.framework/d" ${f}
+                # correct incorrect build flags
+                reinplace -q -E "s|(\[\[:space:]]+-F)${xcode_sdk_dir}(/${macos_sdk}/System/Library/Frameworks\[\[:space:]]+)|\\1${macos_sdk_dir}\\2|g" ${f}
+            }
+            foreach f [glob -nocomplain -type f ${d}/*.dir/link.txt] {
+                # correct incorrect build flags
+                reinplace -q -E "s|(\[\[:space:]]+)/\[^\[:space:]]+/${macos_sdk}/\[^\[:space:]]+/CoreFoundation\.framework\[\[:space:]]*| |g" ${f}
+                # correct incorrect build flags
+                reinplace -q -E "s|(\[\[:space:]]+-F)${xcode_sdk_dir}(/${macos_sdk}/System/Library/Frameworks\[\[:space:]]+)|\\1${macos_sdk_dir}\\2|g" ${f}
+            }
+        }
+    }
+}
+
+build.target
+
+variant cxx17 conflicts cxx20 description "Use C++17" {
+    require_active_variants abseil cxx17
+    require_active_variants protobuf cxx17
+    configure.args-append   -DCMAKE_CXX_STANDARD=17
+}
+
+variant cxx20 conflicts cxx17 description "Use C++20" {
+    require_active_variants abseil cxx20
+    require_active_variants protobuf cxx20
+    compiler.cxx_standard   2020
+    configure.args-append   -DCMAKE_CXX_STANDARD=20
+}
+
+if ![variant_isset cxx17] {
+    default_variants +cxx20
+}
+
+variant test description "Build and run unit testing framework" {
+    depends_test-append \
+                    port:gperftools
+
+    configure.args-replace \
+                    -DgRPC_BUILD_TESTS=OFF \
+                    -DgRPC_BUILD_TESTS=ON
+
+    test.run         yes
+
+    test {
+        system -W ${workpath} \
+            "${configure.cc} ${filespath}/test.cc -I${worksrcpath}/include -L${cmake.build_dir} -lgrpc -o test"
+        set libgrpc [file tail [lindex [glob -type f ${cmake.build_dir}/libgrpc.*.dylib] 0]]
+        system -W ${workpath} \
+            "install_name_tool -change @rpath/${libgrpc} ${cmake.build_dir}/${libgrpc} ./test"
+        system -W ${workpath} \
+            "./test"
+    }
+}
+
+# ignore pre releases
+github.livecheck.regex  {([0-9.]+)}
+
+# create Python subports
+set python_versions {310 311 312 313 314}
+
+# Python modules grpcio and grpcio-tools
+foreach v ${python_versions} {
+    subport py${v}-${name_io} {
+        PortGroup   python 1.0
+
+        categories-prepend  devel
+        maintainers {emcrisostomo @emcrisostomo} openmaintainer
+
+        description Python bindings for gRPC HTTP/2-based RPC framework
+        long_description \
+                    {*}${description}
+
+        homepage    https://github.com/grpc/grpc
+
+        python.default_version  ${v}
+    }
+
+    subport py${v}-${name_io}-tools {
+        PortGroup   python 1.0
+        PortGroup   compiler_wrapper 1.0
+
+        categories-prepend  devel
+        maintainers nomaintainer
+
+        # https://github.com/macports/macports-ports/commit/9f4926a2ada59c0f2d54b5e923e4a7d99a7e67b6#commitcomment-53546190
+        compwrap.add_compiler_flags no
+
+        description Protobuf code generator for gRPC
+        long_description \
+                    {*}${description}
+
+        homepage    https://github.com/grpc/grpc
+
+        python.default_version  ${v}
+    }
+}
+
+# common settings for all Python ports
+if {[string match "py*" ${subport}]} {
+    pre-patch {
+        reinplace "s|/usr|${prefix}|g" ${worksrcpath}/setup.py
+    }
+
+    use_configure   yes
+
+    configure.pre_args-delete \
+                    --prefix=${prefix}
+    configure.pre_args-replace \
+                    {-DCMAKE_C_COMPILER="$CC"} \
+                    -DCMAKE_C_COMPILER=${configure.cc}
+    configure.pre_args-replace \
+                    {-DCMAKE_CXX_COMPILER="$CXX"} \
+                    -DCMAKE_CXX_COMPILER=${configure.cxx}
+    configure.pre_args-replace \
+                    "-DCMAKE_MAKE_PROGRAM=${python.bin} setup.py --no-user-cfg" \
+                    -DCMAKE_MAKE_PROGRAM=[portbuild::build_getmaketype]
+
+    configure.args-append \
+                    -DPython_EXECUTABLE=${python.bin}
+
+    foreach phase {build destroot} {
+        ${phase}.env-append \
+                    GRPC_PYTHON_BUILD_SYSTEM_ABSL=1 \
+                    GRPC_PYTHON_BUILD_SYSTEM_CARES=1 \
+                    GRPC_PYTHON_BUILD_SYSTEM_OPENSSL=1 \
+                    GRPC_PYTHON_BUILD_SYSTEM_RE2=1 \
+                    GRPC_PYTHON_BUILD_SYSTEM_ZLIB=1 \
+                    GRPC_PYTHON_BUILD_WITH_CYTHON=1
+    }
+
+    python.pep517   no
+
+    # Build instructions:
+    # https://github.com/grpc/grpc/tree/master/src/python/grpcio#installing-from-source
+
+    build.dir       ${worksrcpath}
+    build.target    build
+    build.post_args-delete \
+                    VERBOSE=ON
+
+    destroot.dir    ${build.dir}
+    destroot.target install
+
+    test.run        yes
+}
+
+# Python bindings for grpcio
+if {[string match "py*${name_io}" ${subport}]} {
+    depends_build-append \
+                    port:py${python.version}-coverage \
+                    port:py${python.version}-setuptools
+
+    depends_lib-append \
+                    port:py${python.version}-cython \
+                    port:py${python.version}-protobuf \
+                    port:py${python.version}-six
+
+    depends_test-append \
+                    port:py${python.version}-twisted
+
+    if {${python.version} >= 313} {
+        depends_build-append \
+                        port:py${python.version}-cython
+    } else {
+        depends_build-append \
+                        port:py${python.version}-cython-compat
+        # Not yet compatible with Cython 3
+        set compat_path [string replace ${python.pkgd} 0 [string length ${python.prefix}]-1 ${prefix}/lib/py${python.version}-cython-compat]
+        build.env-append    PYTHONPATH=${compat_path}
+        destroot.env-append PYTHONPATH=${compat_path}
+    }
+}
+
+# Python bindings for grpcio-tools
+if {[string match "py*-${name_io}-tools" ${subport}]} {
+    set grpc_submodules [list \
+                    abseil-cpp \
+                    protobuf \
+    ]
+
+    depends_build-append \
+                    port:py${python.version}-setuptools
+
+    depends_lib-append \
+                    port:py${python.version}-${name_io} \
+                    port:py${python.version}-protobuf
+
+    # Build instructions:
+    # https://github.com/grpc/grpc/tree/master/tools/distrib/python/grpcio_tools
+
+    use_configure   no
+
+    pre-build {
+        system -W ${build.dir} "${python.bin} ../make_grpcio_tools.py"
+    }
+
+    build.dir       ${worksrcpath}/tools/distrib/python/grpcio_tools
+    build.target    build
+    build.post_args-delete \
+                    VERBOSE=ON
+
+    destroot.dir    ${build.dir}
+    destroot.target install
+
+    test.run        yes
+    test.dir        ${build.dir}/grpc_tools
+}

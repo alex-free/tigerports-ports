@@ -1,0 +1,47 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+PortGroup           openssl 1.0
+
+github.setup        awslabs aws-c-s3 0.13.1 v
+revision            0
+categories          devel
+license             Apache-2
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+description         C99 library implementation for communicating with the S3 service
+long_description    {*}${description}
+checksums           rmd160  10c0599485aaa99e3f8dabea95cae2f1f9654608 \
+                    sha256  30cd8deec12a6995b8dda32d8f3a53b3c1f2d2dcad56287aab64dfee80eb7630 \
+                    size    460654
+github.tarball_from archive
+
+depends_lib-append  port:aws-c-auth \
+                    port:aws-c-cal \
+                    port:aws-c-common \
+                    port:aws-c-compression \
+                    port:aws-c-http \
+                    port:aws-c-io \
+                    port:aws-c-sdkutils \
+                    port:aws-checksums \
+                    port:s2n-tls
+
+compiler.c_standard 1999
+# ___builtin_add_overflow, ___builtin_mul_overflow
+compiler.blacklist-append \
+                    *gcc-4.* {clang < 421}
+
+configure.args-append \
+                    -DBUILD_SHARED_LIBS=ON \
+                    -DBUILD_TESTING=ON \
+                    -DENABLE_NET_TESTS=OFF
+
+# For tests:
+configure.pre_args-replace \
+                    -DCMAKE_BUILD_WITH_INSTALL_RPATH:BOOL=ON \
+                    -DCMAKE_BUILD_WITH_INSTALL_RPATH:BOOL=OFF
+
+# On powerpc: 100% tests passed, 0 tests failed out of 95.
+# test.env-append     AWS_CRT_USE_NON_FIPS_TLS_13=1
+test.run            yes

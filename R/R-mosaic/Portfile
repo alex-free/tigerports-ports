@@ -1,0 +1,57 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran ProjectMOSAIC mosaic 1.9.2
+revision            1
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Project MOSAIC statistics and mathematics teaching utilities
+long_description    {*}${description}
+homepage            https://www.mosaic-web.org/mosaic
+checksums           rmd160  fd988231a56df3badfd4f0015aa1d07c6aa24d59 \
+                    sha256  1e56bca7f331bb2a2943a09ae9f36c35f6e69d71f6741d6dd56e8d370db75e1e \
+                    size    2752274
+supported_archs     noarch
+
+depends_lib-append  port:R-dplyr \
+                    port:R-ggformula \
+                    port:R-ggplot2 \
+                    port:R-mosaicCore \
+                    port:R-mosaicData \
+                    port:R-rlang \
+                    port:R-purrr \
+                    port:R-tibble \
+                    port:R-tidyr
+
+depends_test-append port:R-broom \
+                    port:R-covr \
+                    port:R-formatR \
+                    port:R-ggdendro \
+                    port:R-ggrepel \
+                    port:R-ggridges \
+                    port:R-ggstance \
+                    port:R-glue \
+                    port:R-gridExtra \
+                    port:R-knitr \
+                    port:R-latticeExtra \
+                    port:R-leaflet \
+                    port:R-lubridate \
+                    port:R-magrittr \
+                    port:R-manipulate \
+                    port:R-mapproj \
+                    port:R-maptools \
+                    port:R-NHANES \
+                    port:R-palmerpenguins \
+                    port:R-RCurl \
+                    port:R-readr \
+                    port:R-rgl \
+                    port:R-rmarkdown \
+                    port:R-sp \
+                    port:R-testthat \
+                    port:R-vcd \
+                    port:R-vdiffr
+
+test.run            yes

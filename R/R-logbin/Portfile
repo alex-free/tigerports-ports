@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github mdonoghoe logbin 2.0.6 v
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Relative risk regression using the log-binomial model
+long_description    {*}${description}
+checksums           rmd160  5b185657f78583d1bc8170287b6dfd45092fb620 \
+                    sha256  c4815e21ccd5dccc1dd1723af98881513d58ad4df5d030a819cb3cfd97e0d3fe \
+                    size    41548
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-glm2 \
+                    port:R-iterators \
+                    port:R-itertools2 \
+                    port:R-turboEM
+
+depends_test-append port:R-testthat \
+                    port:R-vctrs
+
+test.run            yes

@@ -1,0 +1,39 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran r-spatial sftime 0.3.1
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             Apache
+description         Classes and methods for simple feature objects that have a time column
+long_description    {*}${description}
+homepage            https://r-spatial.github.io/sftime
+checksums           rmd160  09d46b84ee9bf415e1b96dc38d20054a25fcc78a \
+                    sha256  d1df6a2f611059e1949a3b2ef75ec5310e7cca4289dcf7af369197f4d5c68874 \
+                    size    88783
+supported_archs     noarch
+
+depends_lib-append  port:R-sf
+
+depends_test-append port:R-cubble \
+                    port:R-dplyr \
+                    port:R-ggplot2 \
+                    port:R-knitr \
+                    port:R-magrittr \
+                    port:R-ncmeta \
+                    port:R-rlang \
+                    port:R-rmarkdown \
+                    port:R-sftrack \
+                    port:R-sp \
+                    port:R-spacetime \
+                    port:R-spatstat.geom \
+                    port:R-spatstat.linnet \
+                    port:R-stars \
+                    port:R-tidyr \
+                    port:R-trajectories \
+                    port:R-vctrs
+
+test.run            yes

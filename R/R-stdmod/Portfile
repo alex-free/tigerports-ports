@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran sfcheung stdmod 0.2.12
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Standardized moderation effect and its confidence interval
+long_description    {*}${description}
+homepage            https://sfcheung.github.io/stdmod
+checksums           rmd160  3871e951fdc7f1542d978a297a7c787e37654bf9 \
+                    sha256  3e31a87a433b51748ebae2f596dd32c9fbdae8bd79e26e1dbc1dfb449c843681 \
+                    size    683485
+supported_archs     noarch
+
+depends_lib-append  port:R-ggplot2 \
+                    port:R-lavaan \
+                    port:R-manymome \
+                    port:R-rlang
+
+depends_test-append port:R-knitr \
+                    port:R-lm.beta \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-visreg
+
+test.run            yes

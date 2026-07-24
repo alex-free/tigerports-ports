@@ -1,0 +1,40 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=portfile:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           python 1.0
+
+name                veld
+github.setup        BranBushes veld-fm b03cd8a7b697c0bfed96e3f549f1e0d0d89c97e1
+# As set in pyproject.toml
+version             0.1.0-20251113
+revision            0
+categories          sysutils
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+description         ${name} is a modern, tileable, terminal-based file manager
+long_description    {*}${description}, built with Python and Textual.
+license             MIT
+checksums           rmd160  3493456e3e12f80f69fd80be5d24a39cf064ca83 \
+                    sha256  d63d521dbdad67aa9970ad4a3cf6c15cea83c60bf29f29e4e4638315e65af586 \
+                    size    139781
+github.tarball_from archive
+supported_archs     noarch
+
+python.default_version 313
+
+depends_lib-append  port:py${python.version}-linkify-it-py \
+                    port:py${python.version}-markdown-it-py \
+                    port:py${python.version}-mdit-py-plugins \
+                    port:py${python.version}-mdurl \
+                    port:py${python.version}-Pillow \
+                    port:py${python.version}-platformdirs \
+                    port:py${python.version}-pygments \
+                    port:py${python.version}-rich \
+                    port:py${python.version}-textual \
+                    port:py${python.version}-textual-autocomplete \
+                    port:py${python.version}-textual-image \
+                    port:py${python.version}-toml \
+                    port:py${python.version}-typing_extensions \
+                    port:py${python.version}-uc-micro-py
+depends_run-append  port:libsixel

@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran karline.soetaert plot3D 1.4.2
+revision            1
+categories-append   graphics
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3+
+description         Plot multi-dimensional data
+long_description    {*}${description}
+checksums           rmd160  ca8bdd35bc024699859f146ec8be58fc8d01aa8e \
+                    sha256  88b17af8b0eeb16e0ab69378c800eb843f5834acc100eb79e54338b9f1a5fd75 \
+                    size    1930761
+supported_archs     noarch
+
+depends_lib-append  port:R-misc3d
+
+test.run            yes

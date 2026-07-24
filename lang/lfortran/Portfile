@@ -1,0 +1,127 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+PortGroup               cmake 1.1
+PortGroup               github 1.0
+PortGroup               legacysupport 1.1
+
+# clock_gettime
+legacysupport.newest_darwin_requires_legacy 16
+
+github.setup            lfortran lfortran 0.63.0 v
+revision                0
+categories              lang fortran
+maintainers             {@barracuda156 macos-powerpc.org:barracuda}
+license                 BSD
+description             Modern open-source interactive Fortran compiler
+long_description        LFortran is a modern open-source interactive Fortran compiler built on top of LLVM. \
+                        It can execute user’s code interactively to allow exploratory work \
+                        (much like Python, MATLAB or Julia) as well as compile to binaries \
+                        with the goal to run user’s code on modern architectures such as multi-core CPUs and GPUs.
+homepage                https://lfortran.org
+
+checksums               rmd160  a64b6d33ce794a8ecf9b0094c5fdcfc1d6ec36ac \
+                        sha256  aba82a4d30a69c6d04234edad113d86100405f03ea6a3f3ca15087ce4975824c \
+                        size    4602146
+github.tarball_from     archive
+
+set libfmt_v            12
+cmake.prefix_path-append \
+                        ${prefix}/lib/libfmt${libfmt_v}/cmake
+
+depends_build-append    port:bash \
+                        port:bison \
+                        path:bin/pkg-config:pkgconfig \
+                        port:re2c
+depends_lib-append      port:libfmt${libfmt_v} \
+                        path:lib/pkgconfig/RapidJSON.pc:rapidjson \
+                        port:zlib
+
+set py_ver              3.14
+set py_ver_nodot        [string map {. {}} ${py_ver}]
+depends_lib-append      port:python${py_ver_nodot}
+
+# Install into meaningful locations:
+patchfiles-append       patch-use-sane-install-dirs.diff \
+                        patch-version.diff
+
+# TODO: add CMake config files.
+
+configure.python        ${prefix}/bin/python${py_ver}
+
+post-patch {
+    reinplace "s|@VERSION@|${version}|" ${worksrcpath}/ci/version.sh
+    reinplace "s|python src|${configure.python} src|g" ${worksrcpath}/build0.sh
+    reinplace "s|/usr/bin/env python|${configure.python}|" ${worksrcpath}/run_tests.py
+}
+
+# FIXME: this is likely wrong: https://github.com/lfortran/lfortran/issues/2689
+compiler.cxx_standard   2017
+# Use LLVM clangs
+compiler.blacklist-append {clang}
+# Avoid very recent clangs, they are known to causes errors:
+compiler.blacklist-append {macports-clang-1[8-9]} {macports-clang-2[0-9]}
+
+configure.args-append   -DLFORTRAN_BUILD_ALL=YES \
+                        -DLFORTRAN_STATIC_BIN=NO \
+                        -DWITH_FMT=YES \
+                        -DWITH_JSON=YES \
+                        -DWITH_KOKKOS=NO \
+                        -DWITH_LLVM=NO \
+                        -DWITH_RUNTIME_LIBRARY=YES \
+                        -DWITH_XEUS=NO \
+                        -DWITH_ZLIB=YES
+
+platform darwin {
+    configure.args-append \
+                        -DWITH_MACHO=YES
+}
+
+cmake.build_type        Release
+
+# FIXME: in the very end of the build CMake runs configure again,
+# ignoring compiler settings. It does not break the build,
+# as long as some working compiler is found, but this is still a bug.
+
+variant llvm description "Build with LLVM support" {
+    if {${os.platform} eq "darwin" && ${configure.build_arch} in [list ppc ppc64]} {
+        set llvm_version    7.1.1
+        depends_lib-append  port:llvm-powerpc
+    } else {
+        set llvm_version    17
+        depends_lib-append  port:llvm-${llvm_version}
+    }
+    set llvm_prefix         ${prefix}/libexec/llvm-${llvm_version}
+    set llvm_bin            ${llvm_prefix}/bin
+
+    depends_lib-append      port:zstd
+
+    cmake.prefix_path-append \
+                            ${llvm_prefix}/lib/cmake/llvm
+
+    configure.args-append   -DLLVM_ROOT:PATH=${llvm_prefix}
+    configure.args-replace  -DWITH_LLVM=NO -DWITH_LLVM=YES
+}
+
+variant kokkos description "Enable Kokkos support" {
+    depends_lib-append  path:lib/libkokkoscore.dylib:kokkos
+    configure.args-replace \
+                        -DWITH_KOKKOS=NO -DWITH_KOKKOS=YES                        
+}
+
+variant xeus description "Enable Xeus support" {
+    depends_lib-append  port:xeus-zmq
+    configure.args-replace \
+                        -DWITH_XEUS=NO -DWITH_XEUS=YES
+}
+
+default_variants-append +kokkos +llvm
+
+# Some tests may fail; see also: https://github.com/lfortran/lfortran/issues/6621
+test.run                yes
+
+notes "
+Environment may need the following variables to be set:\
+`export LFORTRAN_LINKER=${configure.cc} FC=${configure.fc}`\
+Notice, this port is still experimental.
+"

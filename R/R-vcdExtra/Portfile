@@ -1,0 +1,49 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran friendly vcdExtra 0.9.0
+revision            1
+categories-append   graphics
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Extensions and additions to vcd (Visualizing Categorical Data)
+long_description    {*}${description}
+homepage            https://friendly.github.io/vcdExtra
+checksums           rmd160  1ee7ff82796286acbc23bf9b5e08fa2bf5c8612b \
+                    sha256  36352c311c8e56982a48e9ab5a928dec45442ca2884b131b870df2dcb5c093c1 \
+                    size    4239328
+supported_archs     noarch
+
+depends_lib-append  port:R-ca \
+                    port:R-gnm \
+                    port:R-rgl \
+                    port:R-vcd
+
+depends_test-append port:R-AER \
+                    port:R-car \
+                    port:R-coin \
+                    port:R-dplyr \
+                    port:R-effects \
+                    port:R-Fahrmeir \
+                    port:R-ggplot2 \
+                    port:R-glue \
+                    port:R-gmodels \
+                    port:R-here \
+                    port:R-Hmisc \
+                    port:R-knitr \
+                    port:R-lmtest \
+                    port:R-plyr \
+                    port:R-purrr \
+                    port:R-readxl \
+                    port:R-rmarkdown \
+                    port:R-seriation \
+                    port:R-Sleuth2 \
+                    port:R-stringr \
+                    port:R-tidyr \
+                    port:R-VGAM
+
+test.run            yes

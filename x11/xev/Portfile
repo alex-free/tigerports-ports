@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           gitlab 1.0
+
+name                xev
+gitlab.instance     https://gitlab.freedesktop.org/xorg
+gitlab.setup        app ${name} 1.2.6 ${name}-
+revision            0
+categories          x11
+license             X11
+maintainers         {jeremyhu @jeremyhu} openmaintainer
+description         Print contents of X11 events
+long_description    ${name} creates a window and then asks the X server to send it events \
+                    whenever anything happens to the window (such as it being moved, resized, \
+                    typed in, clicked in etc.). You can also attach it to an existing \
+                    window. It is useful for seeing what causes events to occur and to \
+                    display the information that they contain. It is essentially a debugging \
+                    and development tool, and should not be needed in normal usage.
+
+homepage            https://www.x.org
+use_bzip2           yes
+
+checksums           rmd160  dbef30a081d06f4ca3b9f1cbaa46da6421260b1d \
+                    sha256  d4ade6cee9551e9945a67373becfdbae051705989016d57cb1218056fafc5c3c \
+                    size    14021
+
+use_autoreconf      yes
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig \
+                    port:xorg-util-macros
+
+depends_lib         port:xorg-libX11 \
+                    port:xorg-libXrandr

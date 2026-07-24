@@ -1,0 +1,39 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran nerler JointAI 1.1.0
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Joint Analysis and Imputation of Incomplete Data
+long_description    {*}${description}
+homepage            https://nerler.github.io/JointAI
+checksums           rmd160  7804e2d832aaa372ca18538f0a7cd7df3cb7bc93 \
+                    sha256  6432b56edde209b419729042b66ddf44cf13bbb4b7f894a0fda0da62ad7796d6 \
+                    size    3796401
+supported_archs     noarch
+
+depends_lib-append  port:R-coda \
+                    port:R-future \
+                    port:R-mathjaxr \
+                    port:R-mcmcse \
+                    port:R-rjags \
+                    port:R-rlang
+
+depends_run-append  port:jags
+
+depends_test-append port:R-bookdown \
+                    port:R-corrplot \
+                    port:R-covr \
+                    port:R-knitr \
+                    port:R-ggplot2 \
+                    port:R-ggpubr \
+                    port:R-rmarkdown \
+                    port:R-svglite \
+                    port:R-testthat
+
+test.run            yes

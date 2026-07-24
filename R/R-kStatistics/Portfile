@@ -1,0 +1,19 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran giuseppe.guarino kStatistics 2.1.1
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL
+description         Unbiased estimators for cumulant products
+long_description    {*}${description} and Faa Di Bruno's formula.
+checksums           rmd160  c314cd0b66898ef4d52de9f7e1627de3d13349ad \
+                    sha256  c41f9cc7c95365efe028f0f30649f6de8be88d0c063de8f7259a9e3a8ea72a91 \
+                    size    46880
+supported_archs     noarch
+
+test.run            yes

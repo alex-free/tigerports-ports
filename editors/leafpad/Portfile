@@ -1,0 +1,47 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem      1.0
+
+name            leafpad
+version         0.8.19
+license         GPL-2+
+description     A simple GTK+ 2 text editor
+long_description \
+                ${description} that emphasizes simplicity.
+maintainers     nomaintainer
+categories      editors gnome
+homepage        http://tarot.freeshell.org/leafpad
+master_sites    https://savannah.nongnu.org/download/leafpad/
+
+checksums       rmd160  51e0193c637f24c5b585fd783a089478e566b70c \
+                sha256  07d3f712f4dbd0a33251fd1dee14e21afdc9f92090fc768c11ab0ac556adbe97 \
+                size    294448
+
+depends_build-append \
+                port:gettext \
+                port:intltool \
+                path:bin/pkg-config:pkgconfig
+
+depends_lib-append \
+                port:desktop-file-utils \
+                port:freetype \
+                port:gettext-runtime \
+                path:lib/pkgconfig/gtk+-2.0.pc:gtk2
+
+# reconfigure using intltoolize and autoreconf (no autogen.sh available) for intltool 0.51 compatibility
+
+pre-configure {
+    system -W ${worksrcpath} "${prefix}/bin/intltoolize --force --copy --automake"
+}
+
+use_autoreconf  yes
+autoreconf.args -fvi
+
+post-activate {
+    system "${prefix}/bin/update-desktop-database ${prefix}/share/applications"
+    system "${prefix}/bin/gtk-update-icon-cache-2.0 -f -t ${prefix}/share/icons/hicolor"
+}
+
+livecheck.type  regex
+livecheck.url   ${master_sites}
+livecheck.regex "${name}-(\\d+(?:\\.\\d+)*)${extract.suffix}"

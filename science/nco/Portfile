@@ -1,0 +1,86 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           compilers 1.0
+PortGroup           github 1.0
+
+github.setup        nco nco 5.3.9
+revision            0
+maintainers         {takeshi @tenomoto} \
+                    {me.com:remko.scharroo @remkos} \
+                    openmaintainer
+license             GPL-3
+categories          science
+description         The netCDF Operators
+
+homepage            https://nco.sourceforge.net
+long_description \
+    Each NCO operator (e.g., ncks) takes netCDF or HDF input file(s), \
+    performs an operation (e.g., averaging, hyperslabbing or renaming), \
+    and outputs a processed netCDF file. Although most users of netCDF \
+    and HDF data are involved in scientific research, these data formats, \
+    and thus NCO, are generic and are equally useful in fields like finance. \
+    This version is OPeNDAP/DODS enabled, so it can be given \
+    URLs to read remote datasets as if they were local netCDF files.
+
+checksums           rmd160  47c90836b07a3190f46513d271a46ea6013911e2 \
+                    sha256  705ffa98a78d468cdfaa5858f09213142265120fc26a78249a442ae2fa92ae96 \
+                    size    6895863
+github.tarball_from archive
+
+depends_build       port:antlr \
+                    port:bison \
+                    port:m4 \
+                    port:texinfo
+depends_lib         port:curl \
+                    port:gettext \
+                    port:gsl \
+                    port:netcdf \
+                    port:udunits2
+depends_run         port:wget
+
+compilers.choose    cc cxx
+if {${os.major} > 12} {
+    compilers.setup -clang33 -clang34 -gcc
+} else {
+    compilers.setup -clang33 -clang34
+}
+
+# cc1: error: unrecognized command line option "-std=gnu11"
+compiler.c_standard     2011
+# Undefined symbols for architecture ppc:
+# "antlr::ASTFactory::create(int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)"
+compiler.cxx_standard   2011
+
+configure.env       HAVE_ANTLR=yes ANTLR_ROOT=${prefix} \
+                    PATH_TO_NCGEN=${prefix}/bin/ncgen
+
+configure.args      --disable-dependency-tracking \
+                    --disable-openmp \
+                    --disable-shared \
+                    --mandir=${prefix}/share/man
+
+configure.cppflags-append \
+                    -I${prefix}/include/udunits2 \
+                    -I${prefix}/include \
+                    -DENABLE_NETCDF4
+
+if {[gcc_variant_isset] || [clang_variant_isset]} {
+    default_variants-append +openmp
+}
+
+post-destroot {
+    xinstall -m 0755 -d ${destroot}${prefix}/share/doc/${name}
+    foreach f {ANNOUNCE ChangeLog LICENSE TODO VERSION *.txt *.pdf} {
+        xinstall -m 0644 {*}[glob ${worksrcpath}/doc/${f}] \
+            ${destroot}${prefix}/share/doc/${name}
+    }
+}
+
+variant openmp description "Enable support for OpenMP" {
+    configure.args-replace  --disable-openmp --enable-openmp
+    configure.args-append   --disable-ncoxx
+    compiler.openmp_version 2.5
+}
+
+github.livecheck.regex      {([^"rba]+)}

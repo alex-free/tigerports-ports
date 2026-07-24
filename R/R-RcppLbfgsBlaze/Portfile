@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran ChingChuan-Chen RcppLbfgsBlaze 0.1.0
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             MIT
+description         L-BFGS algorithm based on Blaze for R and Rcpp
+long_description    {*}${description}
+homepage            https://github.com/ChingChuan-Chen/RcppLbfgsBlaze
+checksums           rmd160  f9f46361f5054a6d56891c4b0d3771189c071d74 \
+                    sha256  014b9f6564830b1cbc729ef1622bf15e09d3a4338128b50840daf6a5a06d6cb0 \
+                    size    16738
+
+depends_lib-append  port:R-Rcpp \
+                    port:R-RcppBlaze
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-microbenchmark \
+                    port:R-tinytest
+
+test.run            yes

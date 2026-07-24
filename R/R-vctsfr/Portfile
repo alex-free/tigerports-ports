@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github franciscomartinezdelrio vctsfr 0.1.1 v
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Visualize collections of time series forecasts
+long_description    {*}${description}
+checksums           rmd160  babc1250a18b1d5decf869bb5b56b3f8e37fd1fb \
+                    sha256  7882ee24e06e42ac16ce06292640c559f58c2bbc061d207a9bfdfb97436a619d \
+                    size    105504
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-ggplot2 \
+                    port:R-shiny
+
+depends_test-append port:R-forecast \
+                    port:R-knitr \
+                    port:R-Mcomp \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

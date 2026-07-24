@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub package lies about its version.
+R.setup             cran queelius algebraic.dist 0.1.0 v
+revision            0
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3+
+description         Algebra over Probability Distributions
+long_description    Provides an algebra over probability distributions enabling composition, \
+                    sampling and automatic simplification to closed forms.
+homepage            https://queelius.github.io/algebraic.dist
+checksums           rmd160  ce7888bf2c58fe0b640ee811f72d12dab55cd56c \
+                    sha256  3a3ee34e5b4f843095897da1d57fb7a3c5fba2b7b28e70da61c47e2c2de20be3 \
+                    size    135403
+# github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-mvtnorm \
+                    port:R-R6
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

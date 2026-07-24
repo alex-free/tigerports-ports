@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran HenrikBengtsson R.utils 2.13.0
+revision            1
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             LGPL-2.1+
+description         R object-oriented programming with or without references
+long_description    {*}${description}
+checksums           rmd160  545bd6823247854e6cddabb5ca8447c73f8b6df3 \
+                    sha256  ab2043c34e129928ff85a037ce7a3f7791f245f49a55ee9a95bd7df0813bcf25 \
+                    size    367225
+# github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-R.methodsS3 \
+                    port:R-R.oo
+
+depends_test-append port:R-digest
+
+test.run            yes

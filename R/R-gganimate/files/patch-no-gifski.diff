@@ -1,0 +1,11 @@
+--- DESCRIPTION	2025-06-22 14:48:06.000000000 +0800
++++ DESCRIPTION	2025-06-22 15:29:45.000000000 +0800
+@@ -22,7 +22,7 @@
+ Imports: cli, glue, grDevices, grid, lifecycle, progress, rlang,
+         scales, stringi, transformr (>= 0.1.5), tweenr (>= 2.0.3),
+         utils, vctrs
+-Suggests: av, base64enc, covr, gifski (>= 1.4.3), htmltools, knitr,
++Suggests: av, base64enc, covr, htmltools, knitr,
+         magick, ragg, rmarkdown, sf, svglite, testthat
+ VignetteBuilder: knitr
+ Encoding: UTF-8

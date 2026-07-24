@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran JeffreyRacine crs 0.15-45
+revision            0
+categories-append   math
+maintainers         nomaintainer
+license             GPL-3+
+description         Categorical Regression Splines
+long_description    {*}${description}
+homepage            https://github.com/JeffreyRacine/R-Package-crs
+checksums           rmd160  ddb09e85ef94c9880b83cc4fc1e02a0fd27d842b \
+                    sha256  22159548a4211cd658834983d2fe5ecc14155d746bc9c0904d8f96f26e69b1b7 \
+                    size    1600270
+
+depends_lib-append  port:R-quantreg
+
+depends_test-append port:R-ggplot2 \
+                    port:R-knitr \
+                    port:R-logspline \
+                    port:R-quadprog \
+                    port:R-rgl \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

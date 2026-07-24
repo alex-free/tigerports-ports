@@ -1,0 +1,45 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           common_lisp 1.0
+PortGroup           github 1.0
+
+github.setup        cffi cffi 48eaef6f64c2c4830f3a1104432c66e6bad721a4
+name                cl-cffi
+version             0.24.1.20250311
+revision            0
+
+checksums           rmd160  b1110282ac44130ab5b68669902e456b51177a6e \
+                    sha256  4e0a6bfd3551fa8f2b73c6c985ce893e91159189ecfe1c1ea031d7427209468d \
+                    size    258281
+github.tarball_from archive
+
+categories-append   devel
+maintainers         nomaintainer
+license             MIT
+
+description         The Common Foreign Function Interface
+long_description    {*}${description}
+
+patchfiles-append   enforce-MacPorts-libffi.patch \
+                    patch-disable-broken-test.diff
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig
+
+depends_lib-append  port:cl-alexandria \
+                    port:cl-babel \
+                    port:cl-bordeaux-threads \
+                    port:cl-rt \
+                    port:cl-trivial-features \
+                    port:libffi
+
+common_lisp.ffi     yes
+common_lisp.threads yes
+
+post-patch {
+    reinplace -W ${worksrcpath} "s|@@MACPORTS_PREFIX@@|${prefix}|g" \
+        libffi/libffi-types.lisp \
+        src/darwin-frameworks.lisp \
+        toolchain/c-toolchain.lisp
+}

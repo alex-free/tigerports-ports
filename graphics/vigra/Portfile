@@ -1,0 +1,145 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           active_variants 1.1
+PortGroup           boost 1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+
+boost.version       1.81
+
+github.setup        ukoethe vigra 1-12-4 Version-
+version             [strsed ${github.version} {g/-/./}]
+revision            1
+categories          graphics
+license             MIT
+maintainers         {gmail.com:benjamin.seppke @BSeppke}
+description         Generic Image Processing Library for C++
+long_description    VIGRA stands for \"Vision with Generic Algorithms\". \
+                    It's a novel computer vision library that puts its \
+                    main emphasis on customizable algorithms and data \
+                    structures. By using template techniques similar to \
+                    those in the C++ Standard Template Library, you can \
+                    easily adapt any VIGRA component to the needs of your \
+                    application, without thereby giving up execution speed.
+homepage            https://ukoethe.github.io/vigra
+checksums           rmd160  e6d867be21a4af624fc834ed4d09e8db273abb40 \
+                    sha256  fa516eeb19f72ae98a6d5a284c033bc0e0070cb73a8c72985696d2ad73a9292a \
+                    size    34207556
+github.tarball_from archive
+
+depends_build-append \
+                    path:bin/git:git
+depends_lib-append  port:fftw-3-single \
+                    port:hdf5 \
+                    path:include/turbojpeg.h:libjpeg-turbo \
+                    port:libpng \
+                    port:openexr \
+                    port:szip \
+                    port:tiff \
+                    port:zlib
+
+compiler.cxx_standard   2017
+
+# allow cmake to find MacPorts boost_python library
+patchfiles-append   patch-boost_python.diff
+# CMake Error at CMakeLists.txt:347 (ADD_DEPENDENCIES):
+# The dependency target "doc_cpp" of target "PACKAGE_SRC_TAR" does not exist
+patchfiles-append   patch-unbreak-configure.diff
+# https://github.com/ukoethe/vigra/pull/606
+patchfiles-append   0002-CMakeLists-fix-finding-boost_python.patch
+
+post-patch {
+    reinplace "s|@DOCDIR@|${prefix}/share/doc/${name}|g" ${worksrcpath}/config/vigra-config.in
+    # MacPorts Boost is compiled with C++17 now, due to ICU requirements.
+    reinplace "s|CMAKE_CXX_STANDARD 11|CMAKE_CXX_STANDARD 17|" ${worksrcpath}/CMakeLists.txt
+}
+
+# Some additional parameters for cmake. All other params have already been set
+# by the cmake PortGroup.
+configure.args-append \
+                    -DBUILD_DOCS=OFF \
+                    -DBUILD_SHARED_LIBS=ON \
+                    -DWITH_BOOST_GRAPH=ON \
+                    -DWITH_HDF5=ON \
+                    -DWITH_LEMON=OFF \
+                    -DWITH_OPENEXR=ON \
+                    -DWITH_VALGRIND=OFF \
+                    -DWITH_VIGRANUMPY=OFF
+
+# recursive template instantiation exceeded maximum depth of 128
+configure.cxxflags-append   -ftemplate-depth-1024
+
+# The -Os setting causes errors w.r.t. libc++ and clang++. Use -O3 instead
+configure.cxxflags-replace  -Os -O3
+
+# https://github.com/ukoethe/vigra/issues/608
+# call_method.hpp:61:9: error: there are no arguments to 'PyEval_CallMethod' that depend on a template parameter,
+# so a declaration of 'PyEval_CallMethod' must be available [-fpermissive]
+if {[string match *gcc* ${configure.compiler}]} {
+    configure.cxxflags-append \
+                            -fpermissive
+}
+
+destroot.env-append DESTDIR=${destroot}
+
+post-destroot {
+    if {[variant_isset docs]} {
+        # move documentation to a unversioned directory
+        xinstall -m 755 -d ${destroot}${prefix}/share/doc
+        move ${destroot}${prefix}/doc/${name} \
+             ${destroot}${prefix}/share/doc/${name}
+    }
+    # delete whatever is left in the doc directory
+    delete ${destroot}${prefix}/doc
+}
+
+variant docs description "Build documentation" {}
+if {[variant_isset docs]} {
+    depends_build-append path:bin/doxygen:doxygen
+    depends_skip_archcheck  doxygen
+    configure.args-replace  -DBUILD_DOCS=OFF -DBUILD_DOCS=ON
+}
+
+variant valgrind description "Include support for VALGRIND" {}
+if {[variant_isset valgrind]} {
+    depends_lib-append port:valgrind
+    configure.args-replace  -DWITH_VALGRIND=OFF -DWITH_VALGRIND=ON
+}
+
+set py_vers [list 2.7 3.10 3.11 3.12 3.13 3.14]
+
+proc py_conflict_list {py_vers py_ver} {
+    set py_conf_vers [lsearch -inline -all -not -exact $py_vers $py_ver]
+    set conf [list]
+    foreach v [string map {. {}} ${py_conf_vers}] {
+        lappend conf python${v}
+    }
+    return ${conf}
+}
+
+set active_py ""
+foreach py_ver ${py_vers} {
+    set py_ver_nodot [string map {. {}} ${py_ver}]
+    if { [variant_isset python${py_ver_nodot}] } {
+        set active_py ${py_ver}
+        set active_py_nodot [string map {. {}} ${py_ver}]
+    }
+    variant python${py_ver_nodot} conflicts [py_conflict_list ${py_vers} ${py_ver}] \
+        description "Also build vigranumpy python ${py_ver} bindings" {
+            configure.args-replace -DWITH_VIGRANUMPY=OFF -DWITH_VIGRANUMPY=ON
+            configure.args-append  -DPython_EXECUTABLE=${prefix}/bin/python${active_py} \
+                                   -DPython_SPHINX=${prefix}/bin/sphinx-build-${active_py}
+            depends_lib-append  port:python${active_py_nodot} \
+                                port:py${active_py_nodot}-numpy \
+                                port:py${active_py_nodot}-sphinx
+            require_active_variants [boost::depends_portname] python${active_py_nodot}
+        }
+}
+
+if { ${active_py} eq "" } {
+    # default for boost
+    set active_py 3.13
+    set active_py_nodot [string map {. {}} ${active_py}]
+    default_variants +python${active_py_nodot}
+}

@@ -1,0 +1,31 @@
+--- configure	2025-04-21 02:28:36.000000000 +0800
++++ configure	2025-04-26 01:58:31.000000000 +0800
+@@ -1,27 +1,12 @@
+ #!/bin/sh
+ 
+ echo "Use 'configure'"
+-# export R_HIGHS_LIB_DIR=/home/f/lib/highslib
+-
+-if test -z "${R_HIGHS_LIB_DIR}"; then
+-    R_HIGHS_PKG_HOME=`pwd`
+-    bash inst/build_highs.sh
+-    cd ${R_HIGHS_PKG_HOME}
+-    rm -rf inst/HiGHS
+-    R_HIGHS_LIB_DIR=${R_HIGHS_PKG_HOME}/src/highslib
+-    
+-    # development
+-    # rm -rf /home/f/lib/highslib
+-    # cp -rf ${R_HIGHS_LIB_DIR} /home/f/lib/
+-fi
+ 
++export R_HIGHS_LIB_DIR=@PREFIX@
+ 
+ sed -e "s|@RHIGHS_LIB_DIR@|$R_HIGHS_LIB_DIR|g" src/Makevars.in > src/Makevars
+ 
+-
+ if [ -z "$(ls ${R_HIGHS_LIB_DIR} | grep 'include')" ]; then
+     echo "'HiGHS' libraries could not be found!"
+     exit 1
+ fi
+-
+-

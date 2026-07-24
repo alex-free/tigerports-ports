@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+
+# Commit-based until the next release.
+github.setup        zyantific zydis 652bea99fedf1201b3a00a1162500f81d26207c6
+version             5.0.0
+revision            0
+categories          devel
+maintainers         nomaintainer
+license             MIT
+description         x86/x86-64 disassembler and code generation library 
+long_description    Fast and lightweight {*}${description}.
+homepage            https://zydis.re
+checksums           rmd160  37d12f91ab5da6761f719940e33838dc6f2b2235 \
+                    sha256  4c5bec5d292c1943a08fcce4d50995ff6766d4ea5a9faad2ce20afcaef959ce1 \
+                    size    1008518
+github.tarball_from archive
+
+depends_lib-append  port:zycore-c
+
+# Type redefinition
+compiler.c_standard 2011
+
+configure.args-append \
+                    -DZYAN_SYSTEM_ZYCORE=ON \
+                    -DZYDIS_BUILD_MAN=OFF \
+                    -DZYDIS_BUILD_SHARED_LIB=ON \
+                    -DZYDIS_BUILD_TESTS=OFF

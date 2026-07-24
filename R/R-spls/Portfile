@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran valentint spls 2.3-2
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3+
+description         Sparse partial least squares (SPLS) regression \
+                    and classification
+long_description    {*}${description}
+homepage            https://github.com/valentint/spls
+checksums           rmd160  e5bbd9117ae45613492ec921b619e037547ab8a9 \
+                    sha256  16c045555fa0cc27b3cc29a2c72310dc24b6ab5b26953ea7706fa1d675051184 \
+                    size    2440416
+supported_archs     noarch
+
+depends_lib-append  port:R-pls
+
+test.run            yes

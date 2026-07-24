@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran ocbe-uio TruncExpFam 1.2.1
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-3
+description         Truncated Exponential Family
+long_description    {*}${description}
+homepage            https://ocbe-uio.github.io/TruncExpFam
+checksums           rmd160  4848fa9be43f62680884582e57cf8060dadf457c \
+                    sha256  d2443cd2b89a341db1f540effd8986993cd574ce2816709f84e84b84ce2adcee \
+                    size    59637
+supported_archs     noarch
+
+depends_lib-append  port:R-invgamma \
+                    port:R-rmutil
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

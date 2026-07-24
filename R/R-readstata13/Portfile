@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github sjewo readstata13 0.11.0 v
+revision            1
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2
+description         Import Stata data files
+long_description    {*}${description}
+checksums           rmd160  6c8523a49fceef79f27b859799264b1ab6b82f0c \
+                    sha256  913c6fa830fa1ff1dfa8930c11748e15171e66a814171adde2e172b6795e6506 \
+                    size    113103
+github.tarball_from archive
+
+depends_lib-append  port:R-Rcpp
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-curl \
+                    port:R-expss \
+                    port:R-knitr \
+                    port:R-labelled \
+                    port:R-png \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

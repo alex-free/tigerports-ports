@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran jacek.bialek PriceIndices 0.2.7
+revision            1
+categories-append   economics
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Calculate bilateral and multilateral price indices
+long_description    {*}${description}
+checksums           rmd160  85b00f3652a7f266f3e91d6aec75c413a18a76b8 \
+                    sha256  0e8ec93a49a7e199b857c550d2562e9b8f0eb4a142f349b9d68ec33e353a35e2 \
+                    size    741639
+supported_archs     noarch
+
+depends_lib-append  port:R-dplyr \
+                    port:R-ggplot2 \
+                    port:R-lubridate \
+                    port:R-reclin2 \
+                    port:R-reshape \
+                    port:R-strex \
+                    port:R-stringr
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

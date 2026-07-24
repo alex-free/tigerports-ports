@@ -1,0 +1,19 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran huno survC1 1.0-3
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2
+description         C-statistics for risk prediction models \
+                    with censored survival data
+long_description    {*}${description}
+checksums           rmd160  0b49c7c4838c46988978a5b65e467b3173b1da6c \
+                    sha256  7ccf59ad2674463bd2ca2f33dfed243f3220a74e21e0be33b8e139952906daab \
+                    size    9650
+supported_archs     noarch
+
+test.run            yes

@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           common_lisp 1.0
+PortGroup           github 1.0
+
+github.setup        Bike introspect-environment 69a50ac84b4c23447521dfab008cc20e4bfbee82
+name                cl-introspect-environment
+version             20240404
+revision            0
+
+checksums           rmd160  ac0456c97964b0d00a2021361aabd0081d1806ad \
+                    sha256  1a7fb5b25ff5c07f9e34ab3338a5a86acf533f7bfb98faeb0e3e7290f2352704 \
+                    size    9790
+github.tarball_from archive
+
+categories-append   devel
+maintainers         nomaintainer
+license             WTFPL
+
+description         CL environment introspection portability layer
+long_description    {*}${description}.
+
+depends_lib-append  port:cl-fiveam
+
+# See: https://github.com/Bike/introspect-environment/issues/5
+common_lisp.ecl     no
+common_lisp.clisp   no

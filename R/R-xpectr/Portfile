@@ -1,0 +1,35 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github ludvigolsen xpectr 0.4.4 v
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             MIT
+description         Generate expectations for R-testthat unit testing
+long_description    {*}${description}
+checksums           rmd160  50f982662b649cd290c167dc0267296d29247ab3 \
+                    sha256  5d353ce82c4d496bdaeed9c114dbb554a443314b341dc2f53f1ba035fcad2b68 \
+                    size    94815
+github.tarball_from archive
+supported_archs     noarch
+
+depends_lib-append  port:R-checkmate \
+                    port:R-clipr \
+                    port:R-dplyr \
+                    port:R-fansi \
+                    port:R-lifecycle \
+                    port:R-plyr \
+                    port:R-rlang \
+                    port:R-rstudioapi \
+                    port:R-testthat \
+                    port:R-tibble \
+                    port:R-withr
+
+depends_test-append port:R-data.table \
+                    port:R-knitr \
+                    port:R-rmarkdown
+
+test.run            yes

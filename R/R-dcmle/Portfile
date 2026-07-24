@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran datacloning dcmle 0.4-2
+revision            1
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2
+description         Hierarchical models made easy with data cloning
+long_description    {*}${description}
+homepage            https://github.com/datacloning/dcmle
+checksums           rmd160  414f3755a9981cee5b866d36ee52924e0b2f957a \
+                    sha256  dab6a7c87424c754ecfd3cbde38aeb5ea9de6f18d0d1875551c8d18e3c2490bd \
+                    size    19598
+supported_archs     noarch
+
+depends_lib-append  port:R-coda \
+                    port:R-dclone
+
+depends_run-append  port:jags
+
+depends_test-append port:R-rjags
+
+test.run            yes

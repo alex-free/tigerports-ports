@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             r-forge r-project Rmpfr 1.1-2
+revision            1
+categories-append   math
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+license             GPL-2+
+description         Multiple precision floating-point reliable
+long_description    {*}${description}
+homepage            https://rmpfr.r-forge.r-project.org
+checksums           rmd160  493717fdfb025f878e7b54704582cdc3cff494e7 \
+                    sha256  f038600c09b1ca61091b48e32411475ccefe0cebf1b749d80819d2b26f2f84d5 \
+                    size    1621369
+
+depends_lib-append  port:gmp \
+                    port:mpfr \
+                    port:R-gmp
+
+depends_test-append port:R-Bessel \
+                    port:R-dfoptim \
+                    port:R-DPQ \
+                    port:R-DPQmpfr \
+                    port:R-polynom \
+                    port:R-pracma \
+                    port:R-sfsmisc
+
+test.run            yes

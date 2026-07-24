@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-flask-socketio
+python.rootname     flask_socketio
+version             5.6.1
+revision            0
+categories-append   devel www
+platforms           any
+license             MIT
+maintainers         nomaintainer
+description         Socket.IO integration for Flask applications
+long_description    {*}${description}
+homepage            https://github.com/miguelgrinberg/Flask-SocketIO
+checksums           rmd160  454fa80b0147f3ee3b6bf2019cbbaa99cd27c142 \
+                    sha256  fe5bd995c3ed4da9a98f335d0d830fa1a19d84a64789f6265642a671fdacaeac \
+                    size    37857
+supported_archs     noarch
+
+python.versions     310 311 312 313
+
+if {${subport} ne ${name}} {
+    depends_lib-append \
+                    port:py${python.version}-flask \
+                    port:py${python.version}-socketio
+}

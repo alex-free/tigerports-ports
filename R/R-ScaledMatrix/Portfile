@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             bioconductor LTLA ScaledMatrix 1.16.0
+revision            1
+categories-append   bioconductor
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-3
+description         Creating a DelayedMatrix of scaled and centered values
+long_description    {*}${description}
+homepage            https://github.com/LTLA/ScaledMatrix
+checksums           rmd160  b900e929c92e4b5c53313be0fc23f9287d7dddf2 \
+                    sha256  a13bee9fe160c757b2ae758d904624c0c799178c00dba68893984154be270323 \
+                    size    313750
+supported_archs     noarch
+
+depends_lib-append  port:R-DelayedArray \
+                    port:R-S4Vectors
+
+depends_test-append port:R-BiocSingular \
+                    port:R-BiocStyle \
+                    port:R-DelayedMatrixStats \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

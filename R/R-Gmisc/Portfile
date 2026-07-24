@@ -1,0 +1,39 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran gforge Gmisc 3.1.0
+revision            1
+maintainers         nomaintainer
+license             GPL-3+
+description         Descriptive statistics, transition plots and more
+long_description    {*}${description}
+homepage            https://gforge.se
+checksums           rmd160  fba42ebf332d5d3fc1a646c6490f061995c01c13 \
+                    sha256  4ead388af4bf3dbc8f634f20646f270af5b25b55bdb8493af6c767e1b5f2de82 \
+                    size    1154452
+
+depends_lib-append  port:R-abind \
+                    port:R-checkmate \
+                    port:R-forestplot \
+                    port:R-Hmisc \
+                    port:R-htmlTable \
+                    port:R-glue \
+                    port:R-knitr \
+                    port:R-lubridate \
+                    port:R-magrittr \
+                    port:R-Rcpp \
+                    port:R-rlang \
+                    port:R-rmarkdown \
+                    port:R-stringr \
+                    port:R-XML \
+                    port:R-yaml
+
+depends_test-append port:R-dplyr \
+                    port:R-jsonlite \
+                    port:R-testthat \
+                    port:R-tidyselect
+
+test.run            yes

@@ -1,0 +1,16 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran mehmet.suzen isingLenzMC 0.2.5
+revision            1
+maintainers         nomaintainer
+license             GPL-3+
+description         Monte Carlo for Classical Ising Model
+long_description    {*}${description}
+checksums           rmd160  c660bf58ed17a46a3a56825a25193a0e5ac94fcb \
+                    sha256  a12c08745c9c25aa3e1e50fc4f6a2c1ce92b1b7f37ac565aa7fbec1cd4d0a1dd \
+                    size    261382
+
+test.run            yes

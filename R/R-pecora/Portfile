@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran angela.andreella pecora 0.1.2
+revision            1
+categories-append   math
+maintainers         nomaintainer
+license             Apache-2
+description         Permutation Conditional Random Tests
+long_description    {*}${description}. Unrelated to ペコラ, but we wish.
+checksums           rmd160  f48d56571b3a50e32ee1bd27bfa79f7d0f7cadf5 \
+                    sha256  aae9b56d1f08a7bb0b4fb6aae3f78559de7e8f36bf5b9fffe62b39c5f82b07c9 \
+                    size    6900
+
+depends_lib-append  port:R-matrixStats \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo
+
+compilers.setup     require_fortran
+
+test.run            yes

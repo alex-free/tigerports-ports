@@ -1,0 +1,52 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem                  1.0
+PortGroup                   github 1.0
+PortGroup                   muniversal 1.1
+
+github.setup                flintlib flint 3.6.0 v
+revision                    0
+categories                  math devel
+license                     LGPL-2.1+
+maintainers                 {mcalhoun @MarcusCalhoun-Lopez} openmaintainer
+description                 Fast Library for Number Theory
+long_description            FLINT is a C library for doing number theory
+
+homepage                    https://www.flintlib.org
+
+checksums                   rmd160  c6c079c71a4b57cd883ec11f89259e6badee7e1c \
+                            sha256  b95e2c7792f5eea4a1c8d2d42c4098434756832e57a094b295eb5dfdc9b4c36b \
+                            size    9313139
+github.tarball_from         releases
+
+# Autotools are explicitly preferred by upstream
+# for anything but Windows. As of now (2024.04),
+# CMake implementation has a number of bugs,
+# and there is no interest to address them;
+# instead, autotools build is advised, and it works.
+# https://github.com/flintlib/flint/issues/1905
+# https://github.com/flintlib/flint/pull/1906
+# https://github.com/flintlib/flint/issues/1907
+
+use_autoreconf              yes
+
+compiler.cxx_standard           2011
+compiler.thread_local_storage   yes
+
+depends_lib-append          port:gmp \
+                            port:mpfr \
+                            port:ntl
+
+# We do not want pre-built ports with -march.
+configure.args-append       --disable-arch
+
+configure.args-append       --with-ntl
+# NTL requires C++11
+configure.cxxflags-append   -std=c++11
+
+build.args                  V=1
+
+test.run                    yes
+test.target                 check
+
+livecheck.url               ${homepage}/downloads.html

@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           fortran 1.0
+
+github.setup        jacobwilliams conmax 0.0.1
+revision            2
+categories-append   math
+license             BSD
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+description         Modern Fortran CONMAX optimization method \
+                    for general non-linearly constrained function minimization.
+long_description    {*}${description}
+checksums           rmd160  a8ae3957936f8d90ba3845e3a7292883bfd7db78 \
+                    sha256  4d59f5c8125cf981bcc547cb34e53bd8ff0414f4e1fea052354fde8b8159ba46 \
+                    size    80562
+github.tarball_from archive
+
+post-destroot {
+    set docdir ${prefix}/share/doc/${name}
+    xinstall -d ${destroot}${docdir}
+    xinstall -m 0644 -W ${worksrcpath} LICENSE.txt README.md ${destroot}${docdir}
+}
+
+test.run            yes

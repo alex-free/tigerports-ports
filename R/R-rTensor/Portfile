@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran rikenbit rTensor 1.4.9 v
+revision            1
+categories-append   math
+platforms           {darwin any}
+maintainers         nomaintainer
+license             GPL-2+
+description         Tools for tensor analysis and decomposition
+long_description    {*}${description}
+homepage            https://jamesyili.github.io/rTensor
+checksums           rmd160  1a2894efa295ef599e36b875224c7e9b36b3e5c0 \
+                    sha256  a8a12e050e881fa24568f362489f503a08160a8dcf356af09c25bdd06d91435e \
+                    size    33111
+# github.tarball_from archive
+supported_archs     noarch
+
+test.run            yes
