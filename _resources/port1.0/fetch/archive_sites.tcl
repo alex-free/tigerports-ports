@@ -43,21 +43,6 @@ variable tigerports.com http
 # Keep the primary packages server first in the list
 set sites(macports_archives) [lsearch -all -glob -inline -not "
     ${tigerports.com}://tigerports.com/macports/packages/:nosubdir
-    ${fastly}://packages.macports.org/:nosubdir
-    ${nue.de}://nue.de.packages.macports.org/:nosubdir
-    ${fcix.net}://mirror.fcix.net/macports/packages/:nosubdir
-    ${aarnet.au}://aarnet.au.packages.macports.org/macports-archives/:nosubdir
-    ${atl.us}://atl.us.packages.macports.org/:nosubdir
-    ${bos.us}://bos.us.packages.macports.org/:nosubdir
-    ${cph.dk}://cph.dk.packages.macports.org/:nosubdir
-    ${fco.it}://fco.it.packages.macports.org/:nosubdir
-    ${fra.de}://fra.de.packages.macports.org/:nosubdir
-    ${jog.id}://jog.id.packages.macports.org/macports/packages/:nosubdir
-    ${kmq.jp}://kmq.jp.packages.macports.org/:nosubdir
-    ${mse.uk}://mse.uk.packages.macports.org/:nosubdir
-    ${pek.cn}://pek.cn.packages.macports.org/macports/packages/:nosubdir
-    ${sjtu.edu.cn}://mirror.sjtu.edu.cn/macports/packages/:nosubdir
-    ${vie.at}://vie.at.packages.macports.org/:nosubdir
 " {:*}]
 
 variable archive_type
