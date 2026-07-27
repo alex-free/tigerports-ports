@@ -100,6 +100,14 @@ platform darwin 8 {
 
     # Avoid troublesome Xcode 2.5 linker on 10.4
     configure.compiler      apple-gcc-4.2
+    
+    # Tiger linker doesn't support -rexxport_library. While a newer cctools
+    # could provide this, that itself needs libunwind-headers, which needs
+    # legacy_support.
+    post-patch {
+        reinplace "s|-Wl,-reexport_library,\$(OSLIBDIR)/lib\$(OSLIBNAME)\$(SOEXT)||" \
+            ${worksrcpath}/Makefile
+    }
 }
 
 # Include Leopard-specific additions
