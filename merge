@@ -22,7 +22,7 @@ find "$tmp/macports-ports" -name .gitmodules -exec rm -f {} +
 mv $tmp/macports-ports/README.md macports-ports-readme.md
 
 echo "Pulling powerpc-ports"
-git clone --recursive https://github.com/alex-free/powerpc-ports $tmp/powerpc-ports
+git clone -b tigerports --recursive https://github.com/alex-free/powerpc-ports $tmp/powerpc-ports
 powerpc_ports_commit="$(git -C $tmp/powerpc-ports rev-parse HEAD)"
 mv $tmp/powerpc-ports/README.md powerpc-ports-readme.md
 # Recursively delete .git and .gitmodules files inside powerpc-ports.
