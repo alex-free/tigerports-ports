@@ -56,4 +56,4 @@ echo "Patching _resources/port1.0/fetch/mirror_sites.tcl  to use tigerports.com 
 patch _resources/port1.0/fetch/mirror_sites.tcl < mirror_sites.tcl.patch
 
 # Gen readme.md
-echo -e "TigerPorts Ports Tree\n$(date)\nhttps://github.com/macports/macports-ports: $macports_ports_commit\nhttps://github.com/alex-free/powerpc-ports: $powerpc_ports_commit\n" > readme.md
+echo -e "TigerPorts Ports Tree\n\n$(date)\n\nhttps://github.com/macports/macports-ports: $macports_ports_commit\n\nhttps://github.com/alex-free/powerpc-ports/tree/tigerports: $powerpc_ports_commit\n\n" > readme.md
