@@ -4,17 +4,17 @@ PortSystem          1.0
 PortGroup           R 1.0
 
 # Revert to GitHub once updated there.
-R.setup             cran alexpghayes distributions3 0.2.3 v
-revision            1
+R.setup             cran alexpghayes distributions3 0.2.4 v
+revision            0
 categories-append   math
 platforms           {darwin any}
 maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
 license             MIT
 description         Probability distributions as S3 Objects
 long_description    {*}${description}
-checksums           rmd160  a1ad6f6501af1a9448ec04c2df3bc2a63e296b4d \
-                    sha256  0eb57b179c899e658d4f6b2c16df4bba25bec3e21ab6887f886f90c8ee84724b \
-                    size    444865
+checksums           rmd160  3fab67e348df7b9e56bf655c5b82823702a6ec29 \
+                    sha256  8c2367a735f9f47de5a33a9d4c8953ca21ae3768c0b142cdd0dad36a4fbf1322 \
+                    size    373066
 # github.tarball_from archive
 supported_archs     noarch
 

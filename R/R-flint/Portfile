@@ -3,17 +3,17 @@
 PortSystem          1.0
 PortGroup           R 1.0
 
-R.setup             cran jaganmn flint 0.1.4
-revision            1
+R.setup             cran jaganmn flint 0.1.5
+revision            0
 categories-append   math
 maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
 license             GPL-2+
 description         Fast Library for Number Theory
 long_description    {*}${description}
 homepage            https://github.com/jaganmn/flint
-checksums           rmd160  e13c912540b70fcf721214ab67bb5986484e54ee \
-                    sha256  5feb02f7755ad08c8349a76ffc407fb5f6bf754fb48c5a1d5659f0fc1ba22556 \
-                    size    245334
+checksums           rmd160  407dd4cc8d4078e466c7fdc76efaa1bb4700684d \
+                    sha256  79330bbb60e5cbd22cb62a08063a75489536a8418d04f15a536422df69e18f09 \
+                    size    245521
 
 depends_lib-append  port:flint \
                     port:gmp \

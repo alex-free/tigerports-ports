@@ -3,17 +3,17 @@
 PortSystem          1.0
 PortGroup           R 1.0
 
-R.setup             cran gbm-developers gbm3 3.0
-revision            3
+R.setup             cran gbm-developers gbm3 3.0.2
+revision            0
 categories-append   math
 maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
 license             GPL-2+
 description         Generalized boosted regression models
 long_description    {*}${description}
 homepage            https://github.com/gbm-developers/gbm3
-checksums           rmd160  c8505ed3c93cbd43fa741214b24bf463cf8effe0 \
-                    sha256  eaf0b82a83cea1e641c4a9d302508f88d6cb20db6db7c34837bfac4828d9e4bf \
-                    size    404603
+checksums           rmd160  66998894ed10b712473641ad25f00b1a2ed97492 \
+                    sha256  31cba184f9dfedde2e02729d39506d379d93f5817e4662acd6abf5430db237db \
+                    size    1310050
 
 depends_lib-append  port:R-Rcpp
 

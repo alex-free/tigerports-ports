@@ -3,7 +3,7 @@
 PortSystem          1.0
 PortGroup           R 1.0
 
-R.setup             cran RcppCore RcppParallel 5.1.11-2
+R.setup             cran RcppCore RcppParallel 6.2.0
 revision            0
 categories-append   devel
 maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
@@ -11,9 +11,9 @@ license             GPL-3+
 description         High level functions for parallel programming with Rcpp
 long_description    {*}${description}
 homepage            https://rcppcore.github.io/RcppParallel
-checksums           rmd160  7509ec4c0f2c51a4dfab7308f0352d079d2c1abd \
-                    sha256  350d013d62cd80175e1b13fd5bbf973755e331a5d4d4590a163778a24b27980b \
-                    size    1634090
+checksums           rmd160  b438d2d3da21117d16d0062bdad1cd578fc75ca1 \
+                    sha256  3b6eaf73a696059552186292c79233916267f8e2b5c9a309519391d16c5a8bbe \
+                    size    760608
 
 # Use our standalone OneTBB instead of the bundled one,
 # which does not work correctly in some instances.
@@ -25,8 +25,7 @@ build.env-append    TBB_INC=${prefix}/libexec/onetbb/include \
 
 depends_test-append port:R-knitr \
                     port:R-Rcpp \
-                    port:R-rmarkdown \
-                    port:R-RUnit
+                    port:R-rmarkdown
 
 test.run            yes
 test.env-append     TBB_INC=${prefix}/libexec/onetbb/include \

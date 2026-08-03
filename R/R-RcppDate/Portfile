@@ -3,17 +3,17 @@
 PortSystem          1.0
 PortGroup           R 1.0
 
-R.setup             cran eddelbuettel RcppDate 0.0.6
-revision            1
+R.setup             cran eddelbuettel RcppDate 0.0.7
+revision            0
 platforms           {darwin any}
 maintainers         nomaintainer
 license             GPL-2+
 description         C++ header library for date and time functionality
 long_description    {*}${description}
 homepage            https://dirk.eddelbuettel.com/code/rcpp.date.html
-checksums           rmd160  a0773eda29bc05c86f1982d82067e3ce811367ac \
-                    sha256  b32fa402cc282488a4061a12619308342df1a9d5145a412078014850f2fe6b50 \
-                    size    91075
+checksums           rmd160  f0188ffed4798c9888bb72581f390d0173cc5b3e \
+                    sha256  7bdf39aac13a2abf15792e63569f36a9d23a040a558b0b3b23acb449e341617d \
+                    size    91646
 supported_archs     noarch
 
 depends_test-append port:R-Rcpp

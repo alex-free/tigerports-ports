@@ -3,7 +3,7 @@
 PortSystem                  1.0
 PortGroup                   github 1.0
 
-github.setup                DrTimothyAldenDavis SuiteSparse 7.12.2 v
+github.setup                DrTimothyAldenDavis SuiteSparse 7.12.3 v
 github.tarball_from         archive
 # subports have independent revisions
 revision                    0
@@ -18,9 +18,9 @@ long_description            SuiteSparse is a single archive that contains all pa
 
 homepage                    https://people.engr.tamu.edu/davis/suitesparse.html
 
-checksums                   rmd160  1c1c897d3695745cc9d6be205216c3b4db27ce44 \
-                            sha256  679412daa5f69af96d6976595c1ac64f252287a56e98cc4a8155d09cc7fd69e8 \
-                            size    95337908
+checksums                   rmd160  b3b7e7733fece7c72054c6076f963daf31636962 \
+                            sha256  158ee4ed2ce3fdcbf52c4e47e94b0d1a8ae13344b4a835991d78a3ad20f08086 \
+                            size    95359625
 
 configure.optflags          -O3
 
@@ -44,7 +44,7 @@ compiler.log_verbose_output no
 subport SuiteSparse_config {
     PortGroup               linear_algebra 1.0
 
-    version                 7.12.2
+    version                 7.12.3
     revision                0
     # from the README.txt:
     #    "[n]o licensing restrictions apply"
@@ -92,7 +92,7 @@ subport SuiteSparse_CCOLAMD {
 subport SuiteSparse_CHOLMOD {
     PortGroup               linear_algebra 1.0
 
-    version                 5.3.4
+    version                 5.3.5
     revision                0
     depends_lib-append      port:SuiteSparse_config port:SuiteSparse_AMD port:SuiteSparse_CAMD port:SuiteSparse_COLAMD port:SuiteSparse_CCOLAMD
     license                 LGPL-2.1+
@@ -113,6 +113,14 @@ subport SuiteSparse_COLAMD {
     long_description-append ${subport}: column approximate minimum degree ordering.
 }
 
+# subport SuiteSparse_CSparse {
+#     version                 4.4.2
+#     revision                0
+#     depends_lib-append      port:SuiteSparse_config
+#     license                 LGPL-2.1+
+#     long_description-append ${subport}: a concise sparse matrix package.
+# }
+
 subport SuiteSparse_CXSparse {
     version                 4.4.2
     revision                0
@@ -122,7 +130,7 @@ subport SuiteSparse_CXSparse {
 }
 
 subport SuiteSparse_GraphBLAS {
-    version                 10.3.1
+    version                 10.3.2
     revision                0
     license                 Apache-2
     long_description-append ${subport}: graph algorithms in the language of linear algebra.
@@ -154,7 +162,7 @@ subport SuiteSparse_LDL {
 }
 
 subport SuiteSparse_LAGraph {
-    version                 1.2.1
+    version                 1.2.2
     revision                0
     depends_lib-append      port:SuiteSparse_GraphBLAS
     license                 BSD
@@ -176,7 +184,7 @@ subport SuiteSparse_Mongoose {
 subport SuiteSparse_ParU {
     PortGroup               linear_algebra 1.0
 
-    version                 1.1.0
+    version                 1.1.1
     revision                0
     depends_lib-append      port:SuiteSparse_config port:SuiteSparse_CHOLMOD port:SuiteSparse_UMFPACK port:SuiteSparse_AMD port:SuiteSparse_COLAMD port:SuiteSparse_CAMD port:SuiteSparse_CCOLAMD
     license                 GPL-3
@@ -225,7 +233,7 @@ subport SuiteSparse_SPQR {
 subport SuiteSparse_UMFPACK {
     PortGroup               linear_algebra 1.0
 
-    version                 6.3.7
+    version                 6.3.8
     revision                0
     depends_lib-append      port:SuiteSparse_config port:SuiteSparse_AMD port:SuiteSparse_CHOLMOD
     license                 GPL-2+
@@ -239,23 +247,23 @@ subport SuiteSparse_UMFPACK {
 
 if {${subport} eq ${name}} {
     depends_lib-append      port:SuiteSparse_config \
-                            port:SuiteSparse_GraphBLAS \
-                            port:SuiteSparse_LAGraph \
-                            port:SuiteSparse_Mongoose \
                             port:SuiteSparse_AMD \
                             port:SuiteSparse_BTF \
                             port:SuiteSparse_CAMD \
                             port:SuiteSparse_CCOLAMD \
-                            port:SuiteSparse_COLAMD \
                             port:SuiteSparse_CHOLMOD \
+                            port:SuiteSparse_COLAMD \
                             port:SuiteSparse_CXSparse \
-                            port:SuiteSparse_LDL \
+                            port:SuiteSparse_GraphBLAS \
                             port:SuiteSparse_KLU \
-                            port:SuiteSparse_UMFPACK \
+                            port:SuiteSparse_LAGraph \
+                            port:SuiteSparse_LDL \
+                            port:SuiteSparse_Mongoose \
                             port:SuiteSparse_ParU \
                             port:SuiteSparse_RBio \
+                            port:SuiteSparse_SPEX \
                             port:SuiteSparse_SPQR \
-                            port:SuiteSparse_SPEX
+                            port:SuiteSparse_UMFPACK
 
     license                 BSD
     master_sites
@@ -266,7 +274,7 @@ if {${subport} eq ${name}} {
     supported_archs         noarch
     platforms               any
     build {}
-    # create a dummy file so the port can be successfully activated
+    # Create a dummy file so the port can be successfully activated
     destroot {
         xinstall -d -m 0755 ${destroot}${prefix}/share/doc/${subport}
         set    docfile      [open ${destroot}${prefix}/share/doc/${subport}/README.txt "w"]
@@ -275,8 +283,8 @@ if {${subport} eq ${name}} {
         close ${docfile}
     }
 } else {
-    PortGroup               compilers 1.0
     PortGroup               cmake 1.1
+    PortGroup               compilers 1.0
 
     compilers.choose        cc cpp cxx
     compilers.setup

@@ -351,21 +351,21 @@ diff --git folly/synchronization/AtomicRef.h folly/synchronization/AtomicRef.h
 index b82c47155..7904a6c52 100644
 --- folly/synchronization/AtomicRef.h
 +++ folly/synchronization/AtomicRef.h
-@@ -186,8 +186,11 @@
-       typename ATD = std::atomic<TD>,
+@@ -168,9 +168,11 @@ struct make_atomic_ref_t {
+       typename T,
        std::enable_if_t<
-           std::is_trivially_copyable_v<TD> && //
--              sizeof(TD) == sizeof(ATD) && alignof(TD) == alignof(ATD),
+           std::is_trivially_copyable_v<T> &&
+-              sizeof(T) == sizeof(std::atomic<T>) &&
+-              alignof(T) == alignof(std::atomic<T>),
 -          int> = 0>
-+              sizeof(TD) == sizeof(ATD)
++              sizeof(T) == sizeof(std::atomic<T>)
 +#ifndef __ppc__
-+              && alignof(TD) == alignof(ATD)
++               && alignof(T) == alignof(std::atomic<T>)
 +#endif
 +          , int> = 0>
    atomic_ref<T> operator()(T& ref) const {
      return atomic_ref<T>{ref};
    }
-
 diff --git folly/synchronization/NativeSemaphore.h folly/synchronization/NativeSemaphore.h
 index f894eed63..2d7c195af 100644
 --- folly/synchronization/NativeSemaphore.h
@@ -385,7 +385,7 @@ index f894eed63..2d7c195af 100644
  #if defined(_WIN32)
  
 -#elif defined(__APPLE__)
-+#elif defined(__APPLE__) && (MAC_OS_X_VERSION_MIN_REQUIRED > 1050)
++#elif defined(__APPLE__) && (MAC_OS_X_VERSION_MIN_REQUIRED > 1050) && !defined(__ppc__)
  
  #include <dispatch/dispatch.h> // @manual
  
@@ -394,7 +394,7 @@ index f894eed63..2d7c195af 100644
  };
  
 -#elif defined(__APPLE__)
-+#elif defined(__APPLE__) && (MAC_OS_X_VERSION_MIN_REQUIRED > 1050)
++#elif defined(__APPLE__) && (MAC_OS_X_VERSION_MIN_REQUIRED > 1050) && !defined(__ppc__)
  
  class NativeSemaphore {
   public:
@@ -449,27 +449,25 @@ diff --git folly/test/IteratorsTest.cpp folly/test/IteratorsTest.cpp
 index 63195eced..21741776a 100644
 --- folly/test/IteratorsTest.cpp
 +++ folly/test/IteratorsTest.cpp
-@@ -42,7 +42,9 @@
-   static_assert(std::is_same<TR::pointer, int const*>::value);
+@@ -42,7 +42,9 @@ TEST(IteratorsTest, IterFacadeHasCorrectTraits) {
    static_assert(
-       std::is_same<TR::iterator_category, std::forward_iterator_tag>::value);
+       std::is_same<TR::iterator_category, std::forward_iterator_tag>::value,
+       "");
 +#if !FOLLY_PPC
-   static_assert(std::is_same<TR::difference_type, ssize_t>::value);
+   static_assert(std::is_same<TR::difference_type, ssize_t>::value, "");
 +#endif
  }
  
  TEST(IteratorsTest, SimpleIteratorFacade) {
-@@ -85,7 +87,9 @@
-   static_assert(std::is_same<TR::pointer, int const*>::value);
+@@ -85,7 +87,9 @@ TEST(IteratorsTest, IterAdaptorHasCorrectTraits) {
    static_assert(
-       std::is_same<TR::iterator_category, std::forward_iterator_tag>::value);
+       std::is_same<TR::iterator_category, std::forward_iterator_tag>::value,
+       "");
 +#if !FOLLY_PPC
-   static_assert(std::is_same<TR::difference_type, ssize_t>::value);
+   static_assert(std::is_same<TR::difference_type, ssize_t>::value, "");
 +#endif
  }
  
- TEST(IteratorsTest, IterAdaptorWithPointer) {
-
  TEST(IteratorsTest, IterAdaptorWithPointer) {
 diff --git folly/test/MemsetBenchmark.cpp folly/test/MemsetBenchmark.cpp
 index 139987d0d..afe5af1aa 100644
@@ -545,16 +543,16 @@ diff --git folly/test/OptionalTest.cpp folly/test/OptionalTest.cpp
 index 060b3bd76..941750aa8 100644
 --- folly/test/OptionalTest.cpp
 +++ folly/test/OptionalTest.cpp
-@@ -75,9 +75,11 @@
+@@ -74,9 +74,11 @@ struct NoDefault {
  
  } // namespace
  
 +#if !FOLLY_PPC
- static_assert(sizeof(Optional<char>) == 2);
--static_assert(sizeof(Optional<int>) == 8);
- static_assert(sizeof(Optional<NoDefault>) == 4);
+ static_assert(sizeof(Optional<char>) == 2, "");
+-static_assert(sizeof(Optional<int>) == 8, "");
+ static_assert(sizeof(Optional<NoDefault>) == 4, "");
 +#endif
-+static_assert(sizeof(Optional<int>) == 8);
- static_assert(sizeof(Optional<char>) == sizeof(std::optional<char>));
- static_assert(sizeof(Optional<short>) == sizeof(std::optional<short>));
- static_assert(sizeof(Optional<int>) == sizeof(std::optional<int>));
++static_assert(sizeof(Optional<int>) == 8, "");
+ static_assert(sizeof(Optional<char>) == sizeof(std::optional<char>), "");
+ static_assert(sizeof(Optional<short>) == sizeof(std::optional<short>), "");
+ static_assert(sizeof(Optional<int>) == sizeof(std::optional<int>), "");

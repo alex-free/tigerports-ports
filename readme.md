@@ -1,9 +1,9 @@
 TigerPorts Ports Tree
 
-Wed Jul 29 01:13:40 MDT 2026
+Sun Aug  2 18:35:53 MDT 2026
 
-https://github.com/macports/macports-ports: 8fe59e07a994b719c9a3438057f03e67c29e213f
+https://github.com/macports/macports-ports: 708bc073d94e34fc95e458f7faadb0728271da42
 
-https://github.com/alex-free/powerpc-ports/tree/tigerports: 3a620985880066545d108d29f97b8013f1589fbc
+https://github.com/alex-free/powerpc-ports/tree/tigerports: 162cced60db0b94c7c90e1c370127f5226a7ba68
 
 

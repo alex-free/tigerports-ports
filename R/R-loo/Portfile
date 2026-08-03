@@ -4,7 +4,7 @@ PortSystem          1.0
 PortGroup           R 1.0
 
 # Revert to GitHub once updated there.
-R.setup             cran stan-dev loo 2.10.0 v
+R.setup             cran stan-dev loo 2.10.1 v
 revision            0
 categories-append   math
 platforms           {darwin any}
@@ -13,9 +13,9 @@ license             GPL-3+
 description         Efficient Leave-One-Out Cross-Validation and WAIC for Bayesian Models
 long_description    {*}${description}
 homepage            https://mc-stan.org/loo
-checksums           rmd160  b1ca2fd1553971628b5c574474883c00d1f3eedd \
-                    sha256  d17c8c45905e2b935398156a5ebb610e11549b2c81cf184fbf2e8041b6d89bcb \
-                    size    2880695
+checksums           rmd160  091db392ab19d4fa29f184c9073a076c7530e130 \
+                    sha256  a4c7759ec0923f775fd7b5e4cf8341e7f7c3520d6b68d2d5b3af0aafc465b432 \
+                    size    2882328
 # github.tarball_from archive
 supported_archs     noarch
 
