@@ -1,58 +1,54 @@
-From cf7f2080fbf1ee2f9a49ee5c0c6bb10cc0b4600e Mon Sep 17 00:00:00 2001
+From 5c532c00e87135cab34c7a52339f12893b428148 Mon Sep 17 00:00:00 2001
 From: Sergey Fedorov <barracuda@macos-powerpc.org>
-Date: Thu, 6 Feb 2025 09:50:28 +0800
-Subject: [PATCH] memory_apple: fix for 32-bit
+Date: Sun, 4 Aug 2024 00:58:05 +0800
+Subject: [PATCH 06/12] memory_apple: fix for 32-bit
 
 ---
- src/detection/memory/memory_apple.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ src/detection/memory/memory_apple.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
 diff --git a/src/detection/memory/memory_apple.c b/src/detection/memory/memory_apple.c
-index cabdab26..b4d608bf 100644
+index cabdab26..cdfdee12 100644
 --- a/src/detection/memory/memory_apple.c
 +++ b/src/detection/memory/memory_apple.c
-@@ -5,6 +5,7 @@
+@@ -4,6 +4,7 @@
  #include <mach/mach.h>
  #include <sys/sysctl.h>
  #include <unistd.h>
 +#include <AvailabilityMacros.h>
  
- const char* ffDetectMemory(FFMemoryResult* ram) {
-     size_t length = sizeof(ram->bytesTotal);
-@@ -19,17 +20,33 @@
-     }
- #endif
+ const char* ffDetectMemory(FFMemoryResult* ram)
+ {
+@@ -11,10 +12,17 @@ const char* ffDetectMemory(FFMemoryResult* ram)
+     if (sysctl((int[]){ CTL_HW, HW_MEMSIZE }, 2, &ram->bytesTotal, &length, NULL, 0))
+         return "Failed to read hw.memsize";
  
-+#if defined(__i386__) || defined(__ppc__) || MAC_OS_X_VERSION_MIN_REQUIRED < 1060
++#if defined(__i386__) || defined(__ppc__)
 +    mach_msg_type_number_t count = HOST_VM_INFO_COUNT;
 +    vm_statistics_data_t vmstat;
-+    if(host_statistics(mach_host_self(), HOST_VM_INFO, (host_info_t) (&vmstat), &count) != KERN_SUCCESS) {
++    if(host_statistics(mach_host_self(), HOST_VM_INFO, (host_info_t) (&vmstat), &count) != KERN_SUCCESS)
 +        return "Failed to read host_statistics";
-+    }
 +#else
      mach_msg_type_number_t count = HOST_VM_INFO64_COUNT;
      vm_statistics64_data_t vmstat;
-     if (host_statistics64(mach_host_self(), HOST_VM_INFO64, (host_info64_t) (&vmstat), &count) != KERN_SUCCESS) {
+     if(host_statistics64(mach_host_self(), HOST_VM_INFO64, (host_info64_t) (&vmstat), &count) != KERN_SUCCESS)
          return "Failed to read host_statistics64";
-     }
--
 +#endif
-     // https://github.com/st3fan/osx-10.9/blob/34e34a6a539b5a822cda4074e56a7ced9b57da71/system_cmds-597.1.1/vm_stat.tproj/vm_stat.c#L139
--
-+#if MAC_OS_X_VERSION_MIN_REQUIRED < 1070
-+    uint64_t pagesFree = vmstat.free_count;
-+#ifdef VM_STAT_HAS_SPECULATIVE_COUNT
-+    if (count >= HOST_VM_INFO_REV2_COUNT) {
-+        pagesFree -= vmstat.speculative_count; // speculative pages are included in free_count
-+    }
+ 
+     // https://github.com/exelban/stats/blob/master/Modules/RAM/readers.swift#L56
+     ram->bytesUsed = ((uint64_t)
+@@ -22,9 +30,11 @@ const char* ffDetectMemory(FFMemoryResult* ram)
+         + vmstat.inactive_count
+         + vmstat.speculative_count
+         + vmstat.wire_count
++#if (MAC_OS_X_VERSION_MIN_REQUIRED >= 1060) && !defined(__ppc__)
+         + vmstat.compressor_page_count
+         - vmstat.purgeable_count
+         - vmstat.external_page_count
 +#endif
-+    uint64_t pagesAvailable = pagesFree + vmstat.inactive_count + vmstat.purgeable_count;
-+    ram->bytesUsed = ram->bytesTotal - pagesAvailable * instance.state.platform.sysinfo.pageSize;
-+#else
-     uint64_t pagesFree = vmstat.free_count - vmstat.speculative_count;
-     uint64_t pagesFileBacked = vmstat.external_page_count; // Cached files
-     ram->bytesUsed = ram->bytesTotal - (pagesFree + pagesFileBacked) * instance.state.platform.sysinfo.pageSize;
--
-+#endif
+     ) * instance.state.platform.sysinfo.pageSize;
+ 
      return NULL;
- }
+-- 
+2.47.0
+
