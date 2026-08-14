@@ -4,23 +4,26 @@ PortSystem          1.0
 PortGroup           R 1.0
 
 # GitHub version is old.
-R.setup             cran ropensci writexl 1.5.4 v
-revision            1
+R.setup             cran ropensci writexl 2.0.0 v
+revision            0
 maintainers         nomaintainer
 license             BSD
 description         Export data frames to Excel xlsx format
 long_description    Portable, light-weight data frame to xlsx exporter for R.
 homepage            https://docs.ropensci.org/writexl
-checksums           rmd160  a411bbe48f7be12802bf945b64ab1657db9ec6cb \
-                    sha256  d0574a29ea22bd78785f50c7cd23c6e10036f65321e26d55a694e931467660d3 \
-                    size    278312
+checksums           rmd160  042d5ac9780d11c223582f2896668ea0311a40c4 \
+                    sha256  dc464354abc68f4aa023ca17d126758fdfadcb21aec1cf5c40f16f34e00dbd3d \
+                    size    637999
 
 depends_lib-append  port:zlib
 
 depends_test-append port:R-bit64 \
+                    port:R-knitr \
                     port:R-nycflights13 \
                     port:R-readxl \
+                    port:R-rmarkdown \
                     port:R-spelling \
-                    port:R-testthat
+                    port:R-testthat \
+                    port:R-xml2
 
 test.run            yes

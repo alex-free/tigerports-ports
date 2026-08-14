@@ -3,7 +3,7 @@
 PortSystem          1.0
 PortGroup           R 1.0
 
-R.setup             github shikokuchuo nanonext 1.10.0 v
+R.setup             github shikokuchuo nanonext 1.10.2 v
 revision            0
 categories-append   devel
 maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
@@ -11,13 +11,14 @@ license             GPL-3+
 description         NNG (Nanomsg Next Gen) lightweight messaging library
 long_description    {*}${description}
 homepage            https://shikokuchuo.net/nanonext
-checksums           rmd160  66ab2dcb90ac836fa4f1fcf11b960e55b099b094 \
-                    sha256  f3387dfa901c5faae76c2c1ba0035bcb1d43b4f8d8025ab2c625973b612d19b7 \
-                    size    1085072
+checksums           rmd160  7b292a09a4151e91debaf5091aa5324a29d28b7e \
+                    sha256  18bd75b2714dfbacd8627de54787955974e71bef529d3c77006fcdcfa5c72956 \
+                    size    1211729
 github.tarball_from archive
 
+patchfiles-append   patch-configure-nng.diff
+
 depends_build-append \
-                    path:bin/cmake:cmake \
                     path:bin/pkg-config:pkgconfig \
                     port:xz
 

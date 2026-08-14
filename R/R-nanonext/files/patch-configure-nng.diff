@@ -1,0 +1,20 @@
+--- configure.orig	2026-08-04 23:46:13.000000000 +0800
++++ configure	2026-08-14 11:15:36.000000000 +0800
+@@ -220,7 +220,7 @@
+   # Find NNG
+   find_lib_paths "nng" "-lnng"
+   NNG_SYS_CFLAGS="$LIB_CFLAGS"
+-  NNG_SYS_LIBS="$LIB_LIBS"
++  NNG_SYS_LIBS="$LIB_DIR/libnng.a"
+ 
+   echo "#include <nng/nng.h>
+ int main() {
+@@ -229,7 +229,7 @@
+ #endif
+ }" | ${CC} ${NNG_SYS_CFLAGS} -xc - -o /dev/null > /dev/null 2>&1
+   if [ $? -ne 0 ]; then
+-    compile_nng=1
++    compile_nng=0
+   else
+     echo "Found 'libnng' $NNG_SYS_CFLAGS"
+   fi

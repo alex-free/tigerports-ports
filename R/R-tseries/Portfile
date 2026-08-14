@@ -3,19 +3,18 @@
 PortSystem          1.0
 PortGroup           R 1.0
 
-R.setup             cran r-project tseries 0.10-59
-revision            1
+R.setup             cran r-project tseries 0.10-63
+revision            0
 categories-append   math finance
 maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
 license             {GPL-2 GPL-3}
 description         Time series analysis and computational finance
 long_description    {*}${description}
-checksums           rmd160  e4e679a53602d08fb14f2dae7b817369aecdfc6d \
-                    sha256  f443638f92f33a335ff9f7533d1a4c66c7560a479ca4596c4482e81d2d0f73bf \
-                    size    165634
+checksums           rmd160  9d95f86c42ed43342622a1ab8c7b248fd8815c61 \
+                    sha256  b99eba075d8dedef20cffb89a185be247f8f87ffeb65af96e2487d36a6f5cae2 \
+                    size    238639
 
-depends_lib-append  port:R-jsonlite \
-                    port:R-quadprog \
+depends_lib-append  port:R-quadprog \
                     port:R-quantmod \
                     port:R-zoo
 

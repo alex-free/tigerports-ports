@@ -1,51 +1,44 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
-# kate: backspace-indents true; indent-pasted-text true; indent-width 4; keep-extra-spaces true; remove-trailing-spaces modified; replace-tabs true; replace-tabs-save true; syntax Tcl/Tk; tab-indents true; tab-width 4;
 
 PortSystem          1.0
-PortGroup           boost 1.0
-PortGroup           kde4 1.1
+PortGroup           kde4    1.1
+PortGroup           boost   1.0
 
-boost.version       1.71
-
+#Fetch from git repository to follow updates after the end of KDE4 public releases
 fetch.type          git
 git.url             https://github.com/KDE/akonadi.git
-git.branch          1fc0e05b4bba6d95595c69899c1b38599942a13c
+git.branch          c733429f
 
 name                akonadi
 set akoversion      1.13.1
-version             ${akoversion}.20161023
-revision            2
+version             ${akoversion}.20141210
+revision            6
 categories          devel kde kde4
 maintainers         nomaintainer
 license             LGPL-2+
 description         A personal information management storage service.
 long_description    Akonadi is an extensible cross-desktop storage service \
-                    for PIM data and metadata providing concurrent read, \
-                    write and query access.
+for PIM data and metadata providing concurrent read, write, and query access.
+platforms           darwin
 homepage            https://community.kde.org/KDE_PIM/Akonadi
 
-worksrcdir          ${name}-${akoversion}
-distname            ${name}-${akoversion}
+depends_lib-append  port:soprano \
+                    port:shared-mime-info
 
-depends_lib-append  port:shared-mime-info
+compiler.cxx_standard 2011
 
-compiler.cxx_standard       2011
-compiler.blacklist-append   {clang < 500}
+post-patch {
+    reinplace "s/c++0x/c++11/" ${worksrcpath}/CMakeLists.txt
+}
 
-configure.args-append       -DPOSTGRES_PATH=Off
+configure.args-append  -DPOSTGRES_PATH=Off
 # mute akonadiserver which is usually overly chatty:
 configure.cflags-append     -DQT_NO_DEBUG_OUTPUT
 configure.cxxflags-append   -DQT_NO_DEBUG_OUTPUT
-# Install the headerfiles in their own directory to prevent clashes with KF5 headers
-configure.args-append       -DINCLUDE_INSTALL_DIR=${kde4.include_dirs}
 
 set startup_root ""
 post-destroot {
-    if {[file exists ${destroot}${prefix}/lib/cmake/KDE4/Akonadi/AkonadiConfig.cmake]} {
-        # add the extra level of indirection!
-        reinplace "s|/../../../|/../../../../|g" ${destroot}${prefix}/lib/cmake/KDE4/Akonadi/AkonadiConfig.cmake
-    }
-    # Create a simple startup item
+    #Create a simple startup item
     xinstall -d -m 755 ${destroot}${prefix}/Library/LaunchDaemons
     set plist [open "${destroot}${prefix}/Library/LaunchDaemons/org.macports.akonadi.plist" w 0644]
 
@@ -117,13 +110,10 @@ variant no_root description {Run the akonadi server start as MacPorts install us
     destroot.violate_mtree  yes
 }
 
-variant mysql5 requires mysql51 description {Legacy compatibility variant} {}
-
 variant mysql51 \
-   conflicts sqlite mysql55 mysql56 mariadb55 percona55 \
+   conflicts sqlite mysql55 mysql56 mariadb55 \
    description {build with mysql51 port} {
 
-   ui_msg "Make qt4-mac-mysql51-plugin dependency a path:-style dependency"
    depends_lib-append      port:qt4-mac-mysql51-plugin
    depends_run-append      port:mysql51-server
    configure.args-append   -DDATABASE_BACKEND=MYSQL \
@@ -131,10 +121,9 @@ variant mysql51 \
 }
 
 variant mysql55 \
-   conflicts sqlite mysql51 mysql56 mariadb55 percona55 \
+   conflicts sqlite mysql51 mysql56 mariadb55 \
    description {build with mysql55 port} {
 
-   ui_msg "Make qt4-mac-mysql55-plugin dependency a path:-style dependency"
    depends_lib-append      port:qt4-mac-mysql55-plugin
    depends_run-append      port:mysql55-server
    configure.args-append   -DDATABASE_BACKEND=MYSQL \
@@ -142,71 +131,47 @@ variant mysql55 \
 }
 
 variant mysql56 \
-   conflicts sqlite mysql51 mysql55 mariadb55 percona55 \
+   conflicts sqlite mysql51 mysql55 mariadb55 \
    description {build with mysql56 port} {
 
-   ui_msg "Make qt4-mac-mysql56-plugin dependency a path:-style dependency"
    depends_lib-append      port:qt4-mac-mysql56-plugin
    depends_run-append      port:mysql56-server
    configure.args-append   -DDATABASE_BACKEND=MYSQL \
                            -DMYSQLD_EXECUTABLE=${prefix}/lib/mysql55/bin/mysqld
 }
 
-variant mariadb requires mariadb55 description {Legacy compatibility variant} {}
-
-# Switched to qt4-mac-devel-mariadb-plugin to avoid pulling in a regular qt4-mac by default:
 variant mariadb55 \
-   conflicts sqlite mysql51 mysql55 mysql56 percona55 \
+   conflicts sqlite mysql51 mysql55 mysql56 \
    description {build with mariadb port} {
 
-   depends_lib-append      path:${qt_plugins_dir}/sqldrivers/libqsqlmysql.dylib:qt4-mac-devel-mariadb-plugin
+   depends_lib-append      port:qt4-mac-mariadb-plugin
    depends_run-append      port:mariadb-server
    configure.args-append   -DDATABASE_BACKEND=MYSQL \
                            -DMYSQLD_EXECUTABLE=${prefix}/lib/mariadb/bin/mysqld
 }
 
-variant percona requires percona55 description {Legacy compatibility variant} {}
-
-variant percona55 \
-   conflicts sqlite mysql51 mysql55 mysql56 mariadb55 \
-   description {build with percona55 port} {
-
-   ui_msg "Make qt4-mac-percona-plugin dependency a path:-style dependency"
-   depends_lib-append      port:qt4-mac-percona-plugin
-   depends_run-append      port:percona-server
-   configure.args-append   -DDATABASE_BACKEND=MYSQL \
-                           -DMYSQLD_EXECUTABLE=${prefix}/lib/percona/bin/mysqld
-}
-
 variant sqlite \
-   conflicts mysql51 mysql55 mysql56 mariadb55 percona55 \
+   conflicts mysql51 mysql55 mysql56 mariadb55 \
    description {Use sqlite backend instead of MySQL} {
 
+   depends_lib-append      port:qt4-mac-sqlite3-plugin          
    configure.args-append   -DDATABASE_BACKEND=SQLITE \
                            -DMYSQLD_EXECUTABLE=Off
 }
 
-if {![variant_isset mysql5] && ![variant_isset mysql51] && ![variant_isset mysql55] \
-    && ![variant_isset mysql56] && ![variant_isset mariadb55] && ![variant_isset percona55] \
+if {![variant_isset mysql51] && ![variant_isset mysql55] \
+    && ![variant_isset mysql56] && ![variant_isset mariadb55] \
     && ![variant_isset sqlite]} {
     default_variants +mariadb55
 }
 
-# package require fileutil
 post-patch {
     fs-traverse item ${workpath}/${distname}/server {
         if {[file isfile ${item}]} {
-#             # fix '#include "utils.h"' -> "src/utils.h" to avoid a conflict
-#             # with the 'utils.h' header installed by the cdparanoia port
-#             # do this only on the files actually containing the pattern (which would also exclude the
-#             # .git directory)
-#             if {[::fileutil::grep "include.*utils.h" ${item}] != ""} {
-#                 reinplace "/include/s@\\(utils\\.h\\)@src/\\1@g" ${item}
-#             }
             reinplace "/include/s@\\(utils\\.h\\)@src/\\1@g" ${item}
         }
     }
-	reinplace "s|/Applications|${applications_dir}|" ${worksrcpath}/CMakeLists.txt
+    reinplace "s|/Applications|${applications_dir}|" ${worksrcpath}/CMakeLists.txt
 }
 
 variant verbose description {Enable debug output (chatty!)} {

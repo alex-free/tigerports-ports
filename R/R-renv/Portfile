@@ -3,8 +3,8 @@
 PortSystem          1.0
 PortGroup           R 1.0
 
-R.setup             github rstudio renv 1.1.7 v
-revision            1
+R.setup             github rstudio renv 1.2.4 v
+revision            0
 categories-append   devel
 platforms           {darwin any}
 maintainers         nomaintainer
@@ -15,9 +15,9 @@ long_description    A dependency management toolkit for R. Using renv, \
                     save the state of these libraries to a lockfile \
                     and later restore your library as required.
 homepage            https://rstudio.github.io/renv
-checksums           rmd160  c11c2b734d99228ad2fa7e4db24c0eba3af1249e \
-                    sha256  a555e91a8ff90e798b5fee5d8d4691332f43b330040b6cd042b1dada9d7ce84e \
-                    size    1079915
+checksums           rmd160  36c7b5afcf7826ed022f7559e0c2bd3e3ed5e275 \
+                    sha256  28989155097d2cbf3022b39744d67c278db6a2977a8d763ddf87fbe98c82669b \
+                    size    1164341
 github.tarball_from archive
 supported_archs     noarch
 

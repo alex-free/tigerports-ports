@@ -1,52 +1,39 @@
---- configure	2025-06-23 16:49:26.000000000 +0800
-+++ configure	2025-06-25 01:26:58.000000000 +0800
-@@ -44,18 +44,18 @@
-   MBEDTLS_LIBS="-L$LIB_DIR $MBEDTLS_LIBS"
+--- configure	2024-03-12 23:11:11
++++ configure	2024-03-12 23:13:46
+@@ -11,7 +11,7 @@
+ NNG_LIBS=""
+ 
+ # Find compiler and export flags
+-CC=`"${R_HOME}/bin/R" CMD config CC`
++CC=@CC@
+ export CC
+ 
+ if [ -z "$MACOSX_DEPLOYMENT_TARGET" ]; then
+@@ -40,10 +40,10 @@
+   PKG_LIBS="-L$LIB_DIR $PKG_LIBS"
    echo "Found INCLUDE_DIR $INCLUDE_DIR"
    echo "Found LIB_DIR $LIB_DIR"
 -elif [ -d "/usr/local/include/mbedtls" ]
 +elif [ -d "@PREFIX@/include/mbedtls" ]
  then
--  MBEDTLS_CFLAGS="-I/usr/local/include"
--  MBEDTLS_LIBS="-L/usr/local/lib $MBEDTLS_LIBS"
-+  MBEDTLS_CFLAGS="-I@PREFIX@/include"
-+  MBEDTLS_LIBS="-L@PREFIX@/lib $MBEDTLS_LIBS"
+-  PKG_CFLAGS="-I/usr/local/include $PKG_CFLAGS"
+-  PKG_LIBS="-L/usr/local/lib $PKG_LIBS"
++  PKG_CFLAGS="-I@PREFIX@/include $PKG_CFLAGS"
++  PKG_LIBS="-L@PREFIX@/lib $PKG_LIBS"
+   echo "Found 'libmbedtls' $PKG_CFLAGS"
  elif [ -d "/usr/include/mbedtls" ]
  then
-   MBEDTLS_CFLAGS="-I/usr/include"
-   MBEDTLS_LIBS="-L/usr/lib $MBEDTLS_LIBS"
--elif [ -d "/usr/local/opt/mbedtls" ]
-+elif [ -d "/usr/local/mbedtls" ]
- then
--  MBEDTLS_CFLAGS="-I/usr/local/opt/mbedtls/include"
--  MBEDTLS_LIBS="-L/usr/local/opt/mbedtls/lib $MBEDTLS_LIBS"
-+  MBEDTLS_CFLAGS="-I/usr/local/mbedtls/include"
-+  MBEDTLS_LIBS="-L/usr/local/mbedtls/lib $MBEDTLS_LIBS"
- fi
- echo "#include <mbedtls/version.h>
- int main() {
-@@ -117,18 +117,18 @@
+@@ -112,10 +112,10 @@
  then
    NNG_CFLAGS="-I$INCLUDE_DIR"
-   NNG_LIBS="-L$LIB_DIR $NNG_LIBS"
+   NNG_LIBS="-L$LIB_DIR"
 -elif [ -d "/usr/local/include/nng" ]
 +elif [ -d "@PREFIX@/include/nng" ]
  then
 -  NNG_CFLAGS="-I/usr/local/include"
--  NNG_LIBS="-L/usr/local/lib $NNG_LIBS"
+-  NNG_LIBS="-L/usr/local/lib"
 +  NNG_CFLAGS="-I@PREFIX@/include"
-+  NNG_LIBS="-L@PREFIX@/lib $NNG_LIBS"
++  NNG_LIBS="-L@PREFIX@/lib"
  elif [ -d "/usr/include/nng" ]
  then
    NNG_CFLAGS="-I/usr/include"
-   NNG_LIBS="-L/usr/lib $NNG_LIBS"
--elif [ -d "/usr/local/opt/nng" ]
-+elif [ -d "/usr/local/nng" ]
- then
--  NNG_CFLAGS="-I/usr/local/opt/nng/include"
--  NNG_LIBS="-L/usr/local/opt/nng/lib $NNG_LIBS"
-+  NNG_CFLAGS="-I/usr/local/nng/include"
-+  NNG_LIBS="-L/usr/local/nng/lib $NNG_LIBS"
- fi
- 
- echo "#include <nng/nng.h>

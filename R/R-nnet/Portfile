@@ -6,15 +6,15 @@ PortGroup           R 1.0
 R.recommended       yes
 
 # This is a recommended package. Keep it CRAN-sourced.
-R.setup             cran r-project nnet 7.3-20
-revision            2
+R.setup             cran r-project nnet 7.3-21
+revision            0
 maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
 license             {GPL-2 GPL-3}
 description         Feed-forward neural networks and multinomial log-linear models
 long_description    {*}${description}. Recommended package.
-checksums           rmd160  4ce4eefa68975a8333ebacfdfef64eb359f3b788 \
-                    sha256  8f33e17e0eb161cfbc1bfee4875baa23c66fcdba8215a64a63402b099db2b555 \
-                    size    31285
+checksums           rmd160  df5d672d635d982d26397f7dff93c888ae2ae31d \
+                    sha256  c3914e2b8fd2cc2df7afb60cfa106070fc43cd5b60f877f3790303fc6513895b \
+                    size    31369
 
 depends_test-append port:R-MASS
 

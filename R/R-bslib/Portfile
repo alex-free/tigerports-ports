@@ -3,7 +3,7 @@
 PortSystem          1.0
 PortGroup           R 1.0
 
-R.setup             github rstudio bslib 0.11.0 v
+R.setup             github rstudio bslib 0.12.0 v
 revision            0
 platforms           {darwin any}
 maintainers         nomaintainer
@@ -11,9 +11,9 @@ license             MIT
 description         Custom bootstrap SASS themes
 long_description    {*}${description} for R-shiny and R-rmarkdown.
 homepage            https://rstudio.github.io/bslib
-checksums           rmd160  cde841cb9f38e6370f2ee18c8aa0f03c947f7516 \
-                    sha256  d548d9ca8c29b6db101e566a82bb270c985075aae03f9edbb0cdc2d51ba7282c \
-                    size    12976088
+checksums           rmd160  697a253508ac2b462b2d0eb3890a1122ff4ef2c2 \
+                    sha256  06c9feddbb8d598330a9f70d982c4c79e4203634085cd347ce518fe7d803cdad \
+                    size    12992298
 github.tarball_from archive
 supported_archs     noarch
 
