@@ -1,0 +1,21 @@
+--- CMakeLists.txt.orig	2026-08-15 00:07:35.000000000 -0600
++++ CMakeLists.txt	2026-08-15 00:07:20.000000000 -0600
+@@ -155,6 +155,18 @@
+             # Set LIBDEFLATE_ASSEMBLER_DOES_NOT_SUPPORT_AVX_VNNI if needed.
+             check_assembler_support(AVX_VNNI "{vex} vpdpbusd %ymm0, %ymm0, %ymm0")
+         endif()
++        if(${CMAKE_C_COMPILER_VERSION} VERSION_GREATER_EQUAL 4.9)
++            # Set LIBDEFLATE_ASSEMBLER_DOES_NOT_SUPPORT_AVX2 if needed.
++            check_assembler_support(AVX2 "vpxor %ymm0, %ymm0, %ymm0")
++        endif()
++        if(${CMAKE_C_COMPILER_VERSION} VERSION_GREATER_EQUAL 4.9)
++            # Set LIBDEFLATE_ASSEMBLER_DOES_NOT_SUPPORT_PCLMULQDQ if needed.
++            check_assembler_support(PCLMULQDQ "pclmulqdq $0, %xmm0, %xmm0")
++        endif()
++        if(${CMAKE_C_COMPILER_VERSION} VERSION_GREATER_EQUAL 4.9)
++            # Set LIBDEFLATE_ASSEMBLER_DOES_NOT_SUPPORT_BMI2 if needed.
++            check_assembler_support(BMI2 "shlx %eax, %eax, %eax")
++        endif()
+     elseif(${machine} MATCHES "^aarch64")
+         if(${CMAKE_C_COMPILER_VERSION} VERSION_GREATER_EQUAL 8.1)
+             # Set LIBDEFLATE_ASSEMBLER_DOES_NOT_SUPPORT_DOTPROD if needed.

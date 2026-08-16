@@ -1,0 +1,18 @@
+--- lib/x86/crc32_impl.h.orig	2026-08-14 23:51:25.000000000 -0600
++++ lib/x86/crc32_impl.h	2026-08-14 23:56:10.000000000 -0600
+@@ -48,6 +48,7 @@
+  * PCLMULQDQ implementation.  This targets PCLMULQDQ+SSE4.1, since in practice
+  * all CPUs that support PCLMULQDQ also support SSE4.1.
+  */
++#if !defined(LIBDEFLATE_ASSEMBLER_DOES_NOT_SUPPORT_PCLMULQDQ)
+ #  define crc32_x86_pclmulqdq	crc32_x86_pclmulqdq
+ #  define SUFFIX			 _pclmulqdq
+ #  define ATTRIBUTES		_target_attribute("pclmul,sse4.1")
+@@ -67,6 +68,7 @@
+ #  define USE_AVX512		0
+ #  include "crc32_pclmul_template.h"
+ #endif
++#endif
+ 
+ /*
+  * VPCLMULQDQ/AVX2 implementation.  This is used on CPUs that have AVX2 and
