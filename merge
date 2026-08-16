@@ -30,7 +30,7 @@ find "$tmp/powerpc-ports" -name .git -exec rm -rf {} +
 find "$tmp/powerpc-ports" -name .gitmodules -exec rm -f {} +
 
 # Nuke everything currently in this repo except these files:
-find . -maxdepth 1 ! \( -name . -o -name .git -o -name merge -o -name powerpc-ports-readme.md -o -name macports-ports-readme.md -o -name archive_sites.tcl.patch -o -name mirror_sites.tcl.patch \) -exec rm -rf {} +
+find . -maxdepth 1 ! \( -name . -o -name .git -o -name merge -o -name dev-notes.md -o -name powerpc-ports-readme.md -o -name macports-ports-readme.md -o -name archive_sites.tcl.patch -o -name mirror_sites.tcl.patch \) -exec rm -rf {} +
 
 # Delete any folders that macports-ports and powerpc-ports both have from macports-ports.
 
