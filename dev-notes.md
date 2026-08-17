@@ -53,3 +53,10 @@ build.cmd ${prefix}/bin/gmake
 
 if {${os.platform} eq "darwin" && ${os.major} == 8} {
 }
+
+To test a port after it's been built, you need to uninstall it
+sudo port -d uninstall --follow-dependents <port name>
+
+To update a branch:
+git checkout <name of branch>
+git switch <name of branch>
