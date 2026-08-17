@@ -54,6 +54,10 @@ build.cmd ${prefix}/bin/gmake
 if {${os.platform} eq "darwin" && ${os.major} == 8} {
 }
 
+PortGroup           legacysupport 1.1
+legacysupport.newest_darwin_requires_legacy 8
+
+
 To test a port after it's been built, you need to uninstall it
 sudo port -d uninstall --follow-dependents <port name>
 

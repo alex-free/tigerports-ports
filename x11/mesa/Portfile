@@ -75,14 +75,34 @@ patchfiles-append       patch-gallium_vl_csc_c.diff
 # patchfiles-append       patch-build-with-LLVM-7.diff
 # Disable JIT on ppc, it is anyway broken in LLVM.
 # See also: https://gitlab.freedesktop.org/mesa/mesa/-/work_items/16103
-patchfiles-append       patch-no-jit-on-ppc.diff
+# Only do it if not darwin 8, because on darwin 8 we disable it for both ppc
+# and i386, because of the below error with gcc16:
+# os_misc.c:543:52: error: 'MAP_JIT' undeclared
+# It may be declared on darwin 9 (via llvm?) or newer, so don't disable it on 
+# all i386 platforms until confirmed when it is available.
+if {${os.platform} eq "darwin" && ${os.major} != 8} {
+    patchfiles-append       patch-no-jit-on-ppc.diff
+}
+
+# Expects as to understand _xgetbv:
+# blake3_dispatch.c:55:no such instruction: `xgetbv'
+# Expects as to understand clflushopt gcc builtin's instructions:
+# cache_ops_x86_clflushopt.c {standard input}:105:no such instruction: 
+# `clflushopt (%eax)'
+if {${configure.build_arch} eq "i386"} {
+    patchfiles-append \
+        src_util_blake3_blake3_dispatch.c_i386.diff \
+        meson.build_i386.diff
+}
 
 # MP ticket 66269
 # the sizes of int and GLint are different on 10.4 PPC, at least
 # not sure how many systems this might affect, but all systems on buildbot were OK
 # restrict to Tiger for now, therefore
 platform darwin 8 {
-    patchfiles-append   patch-mesa-apple-cgi-int-differences.diff
+    patchfiles-append \
+        patch-mesa-apple-cgi-int-differences.diff \
+        patch-no-jit-on-tiger.diff
 }
 
 compiler.c_standard     2011
