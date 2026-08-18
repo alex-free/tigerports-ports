@@ -75,14 +75,7 @@ patchfiles-append       patch-gallium_vl_csc_c.diff
 # patchfiles-append       patch-build-with-LLVM-7.diff
 # Disable JIT on ppc, it is anyway broken in LLVM.
 # See also: https://gitlab.freedesktop.org/mesa/mesa/-/work_items/16103
-# Only do it if not darwin 8, because on darwin 8 we disable it for both ppc
-# and i386, because of the below error with gcc16:
-# os_misc.c:543:52: error: 'MAP_JIT' undeclared
-# It may be declared on darwin 9 (via llvm?) or newer, so don't disable it on 
-# all i386 platforms until confirmed when it is available.
-if {${os.platform} eq "darwin" && ${os.major} != 8} {
-    patchfiles-append       patch-no-jit-on-ppc.diff
-}
+patchfiles-append       patch-no-jit-on-ppc.diff
 
 # Expects as to understand _xgetbv:
 # blake3_dispatch.c:55:no such instruction: `xgetbv'
@@ -99,9 +92,14 @@ if {${configure.build_arch} eq "i386"} {
 # the sizes of int and GLint are different on 10.4 PPC, at least
 # not sure how many systems this might affect, but all systems on buildbot were OK
 # restrict to Tiger for now, therefore
+# On Tiger  we disable jit for ppc and i386, because MAP_JIT is not available:
+# os_misc.c:543:52: error: 'MAP_JIT' undeclared
 platform darwin 8 {
     patchfiles-append \
-        patch-mesa-apple-cgi-int-differences.diff \
+        patch-mesa-apple-cgi-int-differences.diff
+    
+    patchfiles-replace \
+        patch-no-jit-on-ppc.diff \
         patch-no-jit-on-tiger.diff
 }
 
