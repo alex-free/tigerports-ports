@@ -8,6 +8,11 @@ gitlab.instance             https://gitlab.freedesktop.org
 
 name                        fontconfig
 gitlab.setup                ${name} ${name} 2.18.3
+
+distfiles                   ${name}-${version}.tar.xz
+use_xz                      yes
+depends_extract-append      port:xz-bootstrap
+
 revision                    0
 categories                  graphics
 maintainers                 {ryandesign @ryandesign} openmaintainer
@@ -18,9 +23,9 @@ long_description            Fontconfig is a library for configuring \
                             and customizing font access.
 
 homepage                    https://www.freedesktop.org/wiki/Software/fontconfig
-checksums                   rmd160  0a84e9647538eb34f40fba33bb058426ec2a4256 \
-                            sha256  8d28f79d2017cbe1fbb7da84b2502c86421b4f45860234d2f4ab5b35564c8d01 \
-                            size    544066
+checksums                   rmd160  5a05f7ffd0d4794831e720f37cefc3ad11bebbfd \
+                            sha256  4f7b554a38cdf78c033f666c8871f3749e14a094f65a07f630c91ed0b43d35e3 \
+                            size    1172016
 
 set python_version          3.14
 
@@ -52,6 +57,10 @@ configure.args              --disable-silent-rules \
                             --with-libintl-prefix=${prefix} \
                             HASDOCBOOK=no
 configure.python            ${prefix}/bin/python${python_version}
+
+pre-extract {
+    set extract.cmd     ${prefix}/libexec/xz-bootstrap/bin/xz
+}
 
 # We put this into a pre-configure block so it can be evaluated _after_ platform selection.
 pre-configure {

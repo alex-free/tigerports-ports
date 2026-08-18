@@ -60,6 +60,7 @@ platform darwin 8 {
 
 depends_build-append port:gmake
 build.cmd ${prefix}/bin/gmake
+use_xz                      yes
 
 if {${os.platform} eq "darwin" && ${os.major} == 8} {
 }
