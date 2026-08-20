@@ -30,16 +30,23 @@ git push origin <name of branch>
 
 
 do not merge into main
-pull request from feature branch into tigerports
-duplicate branch and use dupe for pullrequest into powerpcports (so if hard reset is needed it doesn"t fuck up github sync):
-git switch <branch name>
-git add .
-git commit -m "<portname>: whatever"
-git push origin
-git switch -c <branch name>-ppcports
-git push origin <branch name>-ppcports
+pull request from feature branch into tigerports and then ppcports
 
-then do whatever on <branch name>-ppcports. dont commit it into main from this dupe branch. wait until it is able to be synced from powerpcports. if needed modify the original branch with changes from dupe and commit that
+If you git reset, this will cause conflicts:
+git remote add upstream https://github.com/macos-powerpc/powerpc-ports.git
+git fetch upstream
+git merge upstream/main
+
+To resolve all conflicts with upstream winning:
+git checkout --theirs .
+git add .
+git commit -m "merge with upstream"
+git push origin tigerports
+
+Specifically for one file:
+git checkout --theirs path/to/conflicted-file
+git add path/to/conflicted-file
+git commit
 
 Common portfile additions:
 

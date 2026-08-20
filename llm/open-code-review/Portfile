@@ -3,8 +3,8 @@
 PortSystem          1.0
 PortGroup           golang 1.0
 
-go.setup            github.com/alibaba/open-code-review 1.9.5 v
-set git-commit      ea1de41
+go.setup            github.com/alibaba/open-code-review 1.9.7 v
+set git-commit      f269d0c
 go.offline_build    no
 go.toolchain_min    1.25.5
 
@@ -20,9 +20,9 @@ long_description    Open Code Review is an AI-powered code review CLI tool. \
                     The agent can read full file contents, search the codebase, inspect other changed files for context, \
                     and produce deep reviews — not just surface-level diff feedback.
 
-checksums           rmd160  b5691baf804a9029dee328cf08f2285b3c4a2850 \
-                    sha256  6bd80ab7e3cb607ab3255608b6d13d9c5a39d04e00b629c53e5ee8a9754a6366 \
-                    size    5058092
+checksums           rmd160  4f6c40f83cdce9a9e4284785099a7e2db55601c4 \
+                    sha256  ef44069f812102545b15404b5dc40a2a8c9c13508ff4ad020e1d4a69c851465c \
+                    size    5106528
 
 build.pre_args      -ldflags '-s -w -X main.Version=v${version} -X main.GitCommit=${git-commit}'
 build.args          ./cmd/opencodereview

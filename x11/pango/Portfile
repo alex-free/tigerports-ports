@@ -69,7 +69,7 @@ configure.cxxflags-append \
 # viewer-render.c:987:49: error: passing argument 3 of 'g_file_get_contents'
 # from incompatible pointer type
 platform darwin 8 {
-    if {[string match "macports-gcc-16" ${configure.compiler}]} {
+    if {[string match "macports-gcc-*" ${configure.compiler}]} {
         configure.cflags-append \
             -Wno-error=incompatible-pointer-types
     }
