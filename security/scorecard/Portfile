@@ -3,35 +3,40 @@
 PortSystem          1.0
 PortGroup           golang 1.0
 
-go.setup            github.com/betterleaks/betterleaks 1.8.1 v
+go.setup            github.com/ossf/scorecard 5.5.0 v
+go.package          github.com/ossf/scorecard/v5
 go.offline_build    no
-go.toolchain_min    1.25.10
+go.toolchain_min    1.25.6
 revision            0
 
-homepage            https://betterleaks.com/
+homepage            https://scorecard.dev
 
 description         \
-    A Better Secrets Scanner built for configurability and speed
+    OpenSSF Scorecard - security health metrics for open source
 
 long_description    \
-    Betterleaks is a tool for detecting secrets like passwords, API keys, and \
-    tokens in git repos, files, and whatever else you wanna throw at it via \
-    stdin.
+    Scorecard assesses open source projects for security risks through a \
+    series of automated checks. It gives maintainers a way to evaluate \
+    whether their dependencies are safe, and awards each check a score that \
+    can be used to identify specific areas to improve in order to strengthen \
+    the security posture of a project.
 
-categories          security
+categories          security devel
 installs_libs       no
-license             MIT
+license             Apache-2
 maintainers         {gmail.com:herby.gillot @herbygillot} \
                     openmaintainer
 
-checksums           rmd160  eaab7299fc7574287e2da92473fa88068d621042 \
-                    sha256  eaaee7fca6342d68fc23d2bc8ebdd5446b4c3d94674bfdbae53110327d1d8591 \
-                    size    1473673
+# Upstream injects version metadata into this package; see
+# scripts/version-ldflags
+set version_pkg     sigs.k8s.io/release-utils/version
 
-build.cmd           make
-build.pre_args-append \
-                    VERSION=${github.tag_prefix}${version}
-build.args          build
+# The package must follow the build flags, so it goes in post_args
+build.args-append   -trimpath \
+                    -tags netgo \
+                    -ldflags \" -X ${version_pkg}.gitVersion=${github.tag_prefix}${version} \
+                                -X ${version_pkg}.gitTreeState=clean \"
+build.post_args     .
 
 post-build {
     system -W ${worksrcpath} "./${name} completion bash > ${name}.bash"
@@ -57,3 +62,7 @@ destroot {
     xinstall -m 0644 ${worksrcpath}/${name}.zsh \
         ${destroot}${prefix}/${zsh_completions_dir}/_${name}
 }
+
+checksums           rmd160  9ed209ef935b7d383f932adb119d72574cd288a4 \
+                    sha256  5b341000131035ef2aac5b8aa329176f5441beae46369e3d46019633ca736b5e \
+                    size    19558320

@@ -101,3 +101,6 @@ sudo port -d uninstall --follow-dependents <port name>
 To update a branch:
 git checkout <name of branch>
 git switch <name of branch>
+
+Putting multiple patches into one:
+cat *.diff > ~/Desktop/additional_binutils_checks_i386.diff
