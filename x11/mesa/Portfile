@@ -10,7 +10,7 @@ PortGroup               muniversal 1.1
 legacysupport.newest_darwin_requires_legacy 17
 
 name                    mesa
-version                 26.2.0
+version                 26.2.1
 revision                0
 epoch                   1
 categories              x11 graphics devel
@@ -25,9 +25,9 @@ conflicts               gl-headers
 homepage                https://www.mesa3d.org
 master_sites            https://archive.mesa3d.org
 use_xz                  yes
-checksums               rmd160  88cdfe5d9acbf2bf72a25c9f2baaa9abb986707b \
-                        sha256  efd4bb08cdb7c365a812cd4e6c9202ab55b2f22cdcd13c7d6c4f9647b799a4ef \
-                        size    68461648
+checksums               rmd160  f6a9de1552ec3918729e9c702a5fa60b928babfc \
+                        sha256  c47e81bddc4760360a41ac3c5acec38acb81f9d750ecef47e7f3adc7021a4442 \
+                        size    68500756
 
 # Disable unexpected download of subprojects
 meson.wrap_mode         nodownload
@@ -74,9 +74,6 @@ patchfiles-append       patch-build-with-LLVM-7-${version}.diff
 # https://gitlab.freedesktop.org/mesa/mesa/-/work_items/16103
 patchfiles-append       patch-no-MAP_JIT.diff
 
-# Incorrect usage of macros in 26.2.0:
-patchfiles-append       patch-fix-silly-macros-bug.diff
-
 # Expects as to understand _xgetbv:
 # blake3_dispatch.c:55:no such instruction: `xgetbv'
 # Expects as to understand clflushopt gcc builtin's instructions:
@@ -88,19 +85,15 @@ if {${configure.build_arch} eq "i386"} {
         meson.build_i386.diff
 }
 
+# Incorrect usage of macros in 26.2.0:
+patchfiles-append       patch-fix-silly-macros-bug.diff
+
 # MP ticket 66269
 # the sizes of int and GLint are different on 10.4 PPC, at least
 # not sure how many systems this might affect, but all systems on buildbot were OK
 # restrict to Tiger for now, therefore
-# On Tiger  we disable jit for ppc and i386, because MAP_JIT is not available:
-# os_misc.c:543:52: error: 'MAP_JIT' undeclared
 platform darwin 8 {
-    patchfiles-append \
-        patch-mesa-apple-cgi-int-differences.diff
-    
-    patchfiles-replace \
-        patch-no-jit-on-ppc.diff \
-        patch-no-jit-on-tiger.diff
+    patchfiles-append   patch-mesa-apple-cgi-int-differences.diff
 }
 
 compiler.c_standard     2011
@@ -193,19 +186,22 @@ variant wayland requires egl description "Enable the Wayland EGL platform" {
                             -Dplatforms=macos,x11,wayland
 }
 
+# llvm variant has been fixed now, but will require constant rebasing...
+# Discussion: https://github.com/iains/LLVM-7-branch/issues/10
+if {${os.platform} ne "darwin" || ${os.major} >= 9} {
+    default_variants        +llvm
+}
+
+if {${os.platform} ne "darwin" || ${os.major} >= 10} {
+    default_variants        +wayland
+}
+
 if {![variant_isset wayland]} {
     conflicts_build-append  epoll-shim
 }
 
-# TODO: enable for Darwin?
-# llvm variant has been fixed now, but will require constant rebasing...
-# Discussion: https://github.com/iains/LLVM-7-branch/issues/10
-if {${os.platform} ne "darwin"} {
-    default_variants        +llvm
-}
-
 # Build without EGL and friends:
-if {![variant_isset egl]} {
+if {![variant_isset egl] && ![variant_isset wayland]} {
     configure.args-append \
                     -Degl=disabled \
                     -Dgles1=disabled \

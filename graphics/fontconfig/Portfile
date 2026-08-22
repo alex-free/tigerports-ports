@@ -8,11 +8,6 @@ gitlab.instance             https://gitlab.freedesktop.org
 
 name                        fontconfig
 gitlab.setup                ${name} ${name} 2.18.3
-
-distfiles                   ${name}-${version}.tar.xz
-use_xz                      yes
-depends_extract-append      port:xz-bootstrap
-
 revision                    0
 categories                  graphics
 maintainers                 {ryandesign @ryandesign} openmaintainer
@@ -62,10 +57,6 @@ configure.args              --disable-silent-rules \
                             --with-libintl-prefix=${prefix} \
                             HASDOCBOOK=no
 configure.python            ${prefix}/bin/python${python_version}
-
-pre-extract {
-    set extract.cmd     ${prefix}/libexec/xz-bootstrap/bin/xz
-}
 
 # We put this into a pre-configure block so it can be evaluated _after_ platform selection.
 pre-configure {

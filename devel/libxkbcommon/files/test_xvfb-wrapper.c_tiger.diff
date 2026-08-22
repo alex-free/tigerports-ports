@@ -5,9 +5,9 @@
  
  #include <stdio.h>
 -#include <spawn.h>
-+#if defined __APPLE__
++#if defined(__APPLE__)
 +    #include "AvailabilityMacros.h"
-+    #if MAC_OS_X_VERSION_MIN_REQUIRED > 1040 
++    #if MAC_OS_X_VERSION_MIN_REQUIRED > 1040
 +        #include <spawn.h>
 +    #endif
 +#else
@@ -20,7 +20,7 @@
  int
  xvfb_wrapper(int (*test_func)(char* display))
  {
-+#if defined(__APPLE__) && MAC_OS_X_VERSION_MIN_REQUIRED == 1040
++#if defined(__APPLE__) && MAC_OS_X_VERSION_MIN_REQUIRED < 1050
 +    return 0;
 +#else
      int ret = 0;

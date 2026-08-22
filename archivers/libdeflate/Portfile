@@ -40,11 +40,7 @@ compiler.blacklist-append   *gcc-4.* {clang < 800} {macports-clang-3.[0-8]}
 # to more instructions (AVX2, PCLMULQDQ, BMI2) for i386 to work.
 # See https://github.com/ebiggers/libdeflate/issues/433.
 if {${configure.build_arch} eq "i386"} {
-    patchfiles-append \
-        cmakelists.txt_i386.diff \
-        lib_x86_adler32_impl.h_i386.diff \
-        lib_x86_crc32_impl.h_i386.diff \
-        lib_x86_decompress_impl.h_i386.diff
+    patchfiles-append    additional_binutils_checks_i386.diff
 }
 
 configure.args-append \

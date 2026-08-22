@@ -1,32 +1,30 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
 
-PortSystem      1.0
-PortGroup       cmake 1.1
-PortGroup       github 1.0
+PortSystem              1.0
+PortGroup               cmake 1.1
+PortGroup               github 1.0
 
-github.setup    aous72 OpenJPH 0.31.0
-github.tarball_from archive
+github.setup            aous72 OpenJPH 0.31.0
+revision                0
+categories              graphics
+license                 BSD
+maintainers             {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
 
-categories      graphics
-license         BSD
-maintainers     nomaintainer
-description     Open-source implementation of JPEG2000 Part-15
-long_description \
-    Open source implementation of High-throughput JPEG2000 (HTJ2K), \
-    also known as JPH, JPEG2000 Part 15, ISO/IEC 15444-15, and ITU-T \
-    T.814. Here, we are interested in implementing the HTJ2K only, \
-    supporting features that are defined in JPEG2000 Part 1 (for \
-    example, for wavelet transform, only reversible 5/3 and \
-    irreversible 9/7 are supported).
+description             Open-source implementation of High-throughput JPEG2000 (HTJ2K)
+long_description        {*}${description}
+checksums               rmd160  9e7a99147b6885dd228ea0c2fca82ca6185e14e8 \
+                        sha256  fe169dbbaae71a169a0a6a68dccb346616193252c1ca044217afa0d5d1dc436f \
+                        size    534814
+github.tarball_from     archive
 
-checksums       rmd160  9e7a99147b6885dd228ea0c2fca82ca6185e14e8 \
-                sha256  fe169dbbaae71a169a0a6a68dccb346616193252c1ca044217afa0d5d1dc436f \
-                size    534814
+depends_lib-append      port:tiff
 
-depends_lib     port:tiff
+configure.args-append   -DBUILD_SHARED_LIBS=ON \
+                        -DOJPH_BUILD_EXECUTABLES=ON \
+                        -DOJPH_BUILD_TESTS=OFF \
+                        -DOJPH_DISABLE_SIMD=ON \
+                        -DOJPH_ENABLE_TIFF_SUPPORT=ON
 
-compiler.c_standard 2011
-compiler.cxx_standard 2011
-# Wants compiler support for various Intel SIMD instructions
-# https://trac.macports.org/ticket/73736
-compiler.blacklist  {clang < 1100}
+compiler.c_standard     2011
+compiler.cxx_standard   2014
+compiler.blacklist-append   {clang < 1100}
