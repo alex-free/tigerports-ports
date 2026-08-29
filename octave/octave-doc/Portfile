@@ -3,7 +3,7 @@
 PortSystem          1.0
 PortGroup           octave 1.0
 
-octave.setup        github gnu-octave pkg-octave-doc 0.7.5 release-
+octave.setup        github gnu-octave pkg-octave-doc 0.7.7 release-
 octave.module       doc
 github.tarball_from releases
 revision            0
@@ -21,9 +21,9 @@ long_description    {*}${description} The generated pages follow the template of
 supported_archs     noarch
 platforms           {darwin any}
 
-checksums           rmd160  73d5a1af4cd09e0fe9e6c817841ca03819e51766 \
-                    sha256  149e119233c832ab6630838c2d58f1265cd4eca57b9d11f21e3c797595f81f76 \
-                    size    134069
+checksums           rmd160  7e02509569387d91b7df7d476f3f29a6a4ff8196 \
+                    sha256  d31d244ae5fc019acb831282619a789f73ca561a37af44cb0b987023037a2d8e \
+                    size    155010
 
 depends_lib         port:git \
                     port:texi2html

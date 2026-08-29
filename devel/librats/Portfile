@@ -4,22 +4,24 @@ PortSystem          1.0
 PortGroup           cmake 1.1
 PortGroup           github 1.0
 
-github.setup        librats librats 2.1.3
-revision            0
+github.setup        librats librats 2.2.0
+revision            1
 categories          devel net p2p
-maintainers         nomaintainer
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
 license             MIT
 description         P2P native library for big networks
 long_description    High-performance, light-weight {*}${description}.
-checksums           rmd160  5f15a4e6a60e2e95dfe8769815da4013a955f98f \
-                    sha256  332e535c75d0da7c25b39fe93e189b82729a25117d0742e7463e80f61560fce4 \
-                    size    1257714
+checksums           rmd160  162c6bd3b37a7b91596b527d54085779df468653 \
+                    sha256  8a24b1b6e655a78aa1c2f54fc279db1bee4091be9adc311c56b142a960a657ed \
+                    size    1312185
 github.tarball_from archive
 
 compiler.cxx_standard   2017
 
-# FIXME: enabling dynamic lib disables static:
+patch.pre_args-replace  -p0 -p1
+
 # https://github.com/librats/librats/issues/27
+patchfiles-append       librats-static-shared.patch
 
 configure.args-append   -DRATS_BINDINGS=ON \
                         -DRATS_BUILD_EXAMPLES=ON \
@@ -27,7 +29,7 @@ configure.args-append   -DRATS_BINDINGS=ON \
                         -DRATS_SEARCH_FEATURES=ON \
                         -DRATS_SHARED_LIBRARY=ON \
                         -DRATS_STATIC_LIBRARY=ON \
-                        -DRATS_STORAGE=OFF
+                        -DRATS_STORAGE=ON
 
 post-destroot {
     xinstall -m 755 ${cmake.build_dir}/bin/rats-client ${destroot}${prefix}/bin/
