@@ -17,9 +17,16 @@ long_description    Unix-style tun and tap virtual network interfaces for Mac \
 
 homepage            http://tuntaposx.sourceforge.net
 
+if {${os.major} == 8} {
+# Last version to build on tiger as per developer site.
+    version         20080804
+    revision        1
+    checksums       rmd160  b4fa7d3241d4b1ea97f3ca1db73f5669bc3d33ea \
+                    sha256  2cf027fb976dab6221071e9b8a85ef40cb867b065405e35bc823fdd9dba6fcc0 \
+                    size    33796
+} elseif {${os.major} == 9} {
 # TODO: verify that a newer version works correctly on 10.6,
 # otherwise change the fallback threshold here.
-if {${os.major} < 10} {
     version         20111101
     revision        1
     checksums       rmd160  d7ec7fbea29d05de3a1532737b74970d9bbcc2ed \
@@ -44,12 +51,29 @@ distname            tuntap_${version}_src
 
 worksrcdir          tuntap
 
-post-patch {
-    foreach {d} {tun tap} {
-        set f ${worksrcpath}/src/${d}/Makefile
-        reinplace "s|@CC@|${configure.cc}|g" ${f}
-        reinplace "s|@CXX@|${configure.cxx}|g" ${f}
-        reinplace "s|@ARCHFLAGS@|[get_canonical_archflags cc]|" ${f}
+# For 20080804 it does not use @CC@/@CXX@/@ARCHFLAGS@, so no need to match it.
+# In fact, since we use Xcode compilers, we can leave it.
+if {${os.major} < 8} {
+    post-patch {
+        foreach {d} {tun tap} {
+            set f ${worksrcpath}/src/${d}/Makefile
+            reinplace "s|@CC@|${configure.cc}|g" ${f}
+            reinplace "s|@CXX@|${configure.cxx}|g" ${f}
+            reinplace "s|@ARCHFLAGS@|[get_canonical_archflags cc]|" ${f}
+        }
+    }
+}
+
+platform darwin 8 {
+    # Use Xcode 2.5 GCC 4.0
+    # Since we don't have @ARCHFLAGS@. By default it builds universal.
+    post-patch {
+        foreach {d} {tun tap} {
+            set f ${worksrcpath}/src/${d}/Makefile
+            reinplace "s|-arch ppc -arch i386|-arch ${configure.build_arch}|g" ${f}
+            reinplace "s|gcc|/usr/bin/gcc-4.0|g" ${f}
+            reinplace "s|g++|/usr/bin/g++-4.0|g" ${f}
+        }
     }
 }
 
@@ -67,7 +91,7 @@ if {${os.major} >= 18} {
     }
 }
 
-if {${os.major} <= 9} {
+platform darwin 9 {
     patchfiles-append   patch-leopard.diff
 }
 
