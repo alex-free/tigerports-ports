@@ -105,6 +105,18 @@ depends_run-append \
 compiler.c_standard 1999
 configure.cflags-append -std=gnu99
 
+# matching_tag_mask.h:15:23: error: immintrin.h: No such file or directory
+if {${configure.build_arch} eq "i386"} {
+    compiler.blacklist *gcc-4.*
+}
+
+# When linking macports libiconv:
+# gdevopvp.c:1685:39: error: passing argument 2 of 'libiconv' from incompatible
+# pointer type [-Wincompatible-pointer-types] 
+if {[string match "macports-gcc-*" ${configure.compiler}]} {
+    configure.cflags-append "-Wno-error=incompatible-pointer-types"
+}
+
 use_autoreconf      yes
 autoreconf.args     -fv
 configure.checks.implicit_function_declaration.whitelist-append strchr
