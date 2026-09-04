@@ -38,6 +38,9 @@ platform darwin 8 {
     patchfiles-append \
         orc_orccompiler.c_tiger.diff
 
+    # Header not introduced until leopard.
+    # orcprogram-x86.c:16:11: fatal error: libkern/OSCacheControl.h: No such
+    # file or directory
     if {${configure.build_arch} eq "i386"} {
         patchfiles-append \
             orc_orcprogram-x86.c_tiger.diff
@@ -45,6 +48,19 @@ platform darwin 8 {
 }
 
 if {${configure.build_arch} eq "i386"} {
+    # It is not enough to disable the optimizations as it still tries to use
+    # instructions too new to identify them when detecting anything intel.
+    # orccpu-x86.c {standard input}:15:no such instruction: `xgetbv'
     patchfiles-append \
         orc_orccpu-x86.c_i386.diff
+} elseif {${configure.build_arch} eq "ppc"} {
+    # Disables SSE/AVX/MMX/everything when on PPC.
+    configure.args-append \
+        -Dorc-target=
+}
+
+variant g4 {
+    configure.args-replace \
+        -Dorc-target= \
+        -Dorc-target=altivec
 }
