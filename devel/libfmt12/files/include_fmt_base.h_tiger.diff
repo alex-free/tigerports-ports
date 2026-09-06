@@ -1,0 +1,14 @@
+--- include/fmt/base.h.orig	2026-09-05 21:44:55.000000000 -0600
++++ include/fmt/base.h	2026-09-05 21:47:44.000000000 -0600
+@@ -891,6 +891,11 @@
+ #  define FMT_USE_LOCALE (FMT_OPTIMIZE_SIZE <= 1)
+ #endif
+ 
++// Mac OS X 10.4 has name clash: isalpha(c) __istype((c), _CTYPE_A)
++#ifdef isalpha
++#undef isalpha
++#endif
++
+ // A type-erased reference to std::locale to avoid the heavy <locale> include.
+ class locale_ref {
+ #if FMT_USE_LOCALE
