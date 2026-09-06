@@ -67,6 +67,14 @@ if {${os.platform} eq "darwin" && ${os.major} >= 15} {
                     -DMZ_ZLIB=OFF       -DMZ_ZLIB=ON
 }
 
+# Adds support for not having O_NOFOLLOW.
+platform darwin 8 {
+    patchfiles-append \
+        mz_zip_rw.c_tiger.diff \
+        mz_strm_os_posix.c_tiger.diff \
+        mz.h_tiger.diff
+}
+
 variant tests description {Enable tests} {
     # if gtest not found, test/CMakeLists.txt helpfully downloads a copy and builds it regardless of MZ_FETCH_LIBS
     depends_test-append \
