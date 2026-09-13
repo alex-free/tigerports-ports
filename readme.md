@@ -1,11 +1,11 @@
 This is the TigerPorts Ports Tree for http://tigerports.com
 
-Last updated on Sat Sep 12 17:33:56 MDT 2026.
+Last updated on Sun Sep 13 03:17:46 MDT 2026.
 
 This consists of a combination of 2 git repos as upstream:
 
-[https://github.com/macports/macports-ports](https://github.com/macports/macports-ports) at commit: 13ecf24c35a8585e28c396adfa4993842a94a8df.
+[https://github.com/macports/macports-ports](https://github.com/macports/macports-ports) at commit: 9aac3ca2ebb86ca52bd8b9f6eadc0ab54e0e814d.
 
-[https://github.com/alex-free/powerpc-ports/tree/tigerports](https://github.com/alex-free/powerpc-ports/tree/tigerports) at commit: e4795f78308893175d695df7b042a6dfdbde9726.
+[https://github.com/alex-free/powerpc-ports/tree/tigerports](https://github.com/alex-free/powerpc-ports/tree/tigerports) at commit: 96a71bd06764d6a69d6d4ca8cc6d02897f952542.
 
 Suggest improvements, contribute, and open issues at [my fork of powerpc-ports in the tigerports branch](https://github.com/alex-free/powerpc-ports/tree/tigerports).
