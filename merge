@@ -21,7 +21,7 @@ find "$tmp/macports-ports" -name .git -exec rm -rf {} +
 find "$tmp/macports-ports" -name .gitmodules -exec rm -f {} +
 mv $tmp/macports-ports/README.md macports-ports-readme.md
 
-echo "Pulling powerpc-ports"
+echo "Pulling github.com/alex-free/powerpc-ports tigerports branch"
 git clone -b tigerports --recursive https://github.com/alex-free/powerpc-ports $tmp/powerpc-ports
 powerpc_ports_commit="$(git -C $tmp/powerpc-ports rev-parse HEAD)"
 mv $tmp/powerpc-ports/README.md powerpc-ports-readme.md
@@ -30,9 +30,7 @@ find "$tmp/powerpc-ports" -name .git -exec rm -rf {} +
 find "$tmp/powerpc-ports" -name .gitmodules -exec rm -f {} +
 
 # Nuke everything currently in this repo except these files:
-find . -maxdepth 1 ! \( -name . -o -name .git -o -name merge -o -name dev-notes.md -o -name powerpc-ports-readme.md -o -name macports-ports-readme.md -o -name archive_sites.tcl.patch -o -name mirror_sites.tcl.patch \) -exec rm -rf {} +
-
-# Delete any folders that macports-ports and powerpc-ports both have from macports-ports.
+find . -maxdepth 1 ! \( -name . -o -name .git -o -name merge -o -name powerpc-ports-readme.md -o -name macports-ports-readme.md -o -name archive_sites.tcl.patch -o -name mirror_sites.tcl.patch \) -exec rm -rf {} +
 
 # Dump it into this repo.
 mv $tmp/macports-ports/* .
