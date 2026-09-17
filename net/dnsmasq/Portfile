@@ -3,7 +3,7 @@
 PortSystem          1.0
 
 name                dnsmasq
-version             2.91
+version             2.93
 categories          net
 license             GPL
 maintainers         {snc @nerdling} openmaintainer
@@ -11,21 +11,31 @@ description         lightweight DNS forwarder and DHCP server
 long_description    Dnsmasq is lightweight, easy to configure DNS \
                     forwarder and DHCP server. It is designed to provide \
                     DNS and, optionally, DHCP, to a small network. It can \
-                    serve the names of local machines which are not in \
-                    the global DNS. The DHCP server integrates with the DNS \
+                    serve the names of local machines which are not in the \
+                    global DNS. The DHCP server integrates with the DNS \
                     server and allows machines with DHCP-allocated \
                     addresses to appear in the DNS with names configured \
                     either in each host or in a central configuration \
                     file. Dnsmasq supports static and dynamic DHCP leases \
                     and BOOTP for network booting of diskless machines.
-master_sites        http://www.thekelleys.org.uk/dnsmasq/
-homepage            ${master_sites}doc.html
-use_xz              yes
-checksums           rmd160  1c7d834aebe1e9acae65c8b4d166be05c1cc5741 \
-                    sha256  f622682848b33677adb2b6ad08264618a2ae0a01da486a93fd8cd91186b3d153 \
-                    size    576820
+homepage            http://www.thekelleys.org.uk/dnsmasq/doc.html
 
-patchfiles          patch-src-config.h.diff \
+notes               "A startup item has been generated that will aid in\
+                    starting ${name} with launchd. You must specify the\
+                    path to resolv.conf. For your protection, this script\
+                    is disabled by default. Execute the following command\
+                    to start it, and to cause it to launch at startup:\
+                    \n\nsudo port load ${name}"
+
+master_sites        http://www.thekelleys.org.uk/dnsmasq/
+use_xz              yes
+
+checksums           rmd160  53aa9b04d5983f44ccfa36372652c377d1ded600 \
+                    sha256  0c00d4e5c97c8306e5fb932b348b34269c9c29a0e7df0e8e82958b407092bc19 \
+                    size    642764
+
+patchfiles          0000-underflow.diff \
+                    patch-src-config.h.diff \
                     patch-src-network.c.diff
 post-patch {
     reinplace "s|#define SMALLDNAME 50|#define SMALLDNAME 255|g" ${worksrcpath}/src/config.h
@@ -49,23 +59,21 @@ livecheck.regex     LATEST_IS_(\\d\\.\\d+)
 
 default_variants    +dhcp +tftp +ipv6
 
-variant dhcp description { Provide built-in DHCP server } {}
-variant tftp description { Provide built-in TFTP server } {}
-variant ipv6 description { Provide IPV6 support } {}
-
 set COPTS {}
-if {![variant_isset dhcp]} {
+
+variant dhcp description { Provide built-in DHCP server } {
     lappend COPTS -DNO_DHCP
 }
-if {![variant_isset tftp]} {
+variant tftp description { Provide built-in TFTP server } {
     lappend COPTS -DNO_TFTP
 }
-if {![variant_isset ipv6]} {
+variant ipv6 description { Provide IPV6 support } {
     lappend COPTS -DNO_IPV6
 }
+
 if {[llength $COPTS] > 0} {
     set mycopts [join $COPTS " "]
-    build.args-append COPTS="$mycopts"
+    build.args-append COPTS="${mycopts}"
 }
 
 post-destroot {
@@ -102,6 +110,10 @@ post-destroot {
     puts ${plist} "    <array>"
     puts ${plist} "      <string>${prefix}/sbin/dnsmasq</string>"
     puts ${plist} "      <string>-k</string>"
+    puts ${plist} "      <string>-a</string>"
+    puts ${plist} "      <string>127.0.0.1</string>"
+    puts ${plist} "      <string>-7</string>"
+    puts ${plist} "      <string>${prefix}/etc/dnsmasq.d</string>"
     puts ${plist} "    </array>"
     puts ${plist} "    <key>RunAtLoad</key>"
     puts ${plist} "    <true/>"
@@ -123,10 +135,3 @@ post-activate {
             ${prefix}/etc/dnsmasq.conf
     }
 }
-
-notes       "A startup item has been generated that will aid in\
-            starting ${name} with launchd. You must specify the\
-            path to resolv.conf. For your protection, this script\
-            is disabled by default. Execute the following command\
-            to start it, and to cause it to launch at startup:\
-            \n\nsudo port load ${name}"
