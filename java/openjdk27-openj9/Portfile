@@ -1,11 +1,8 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
 
 PortSystem       1.0
-PortGroup        deprecated 1.0
 
-deprecated.eol_version yes
-
-set feature 26
+set feature 27
 name             openjdk${feature}-openj9
 categories       java devel
 maintainers      {breun @breun} openmaintainer
@@ -23,10 +20,10 @@ universal_variant no
 # https://developer.ibm.com/languages/java/semeru-runtimes/downloads?os=macOS
 supported_archs  x86_64 arm64
 
-version      ${feature}.0.2.10
+version      ${feature}.0.0.0
 revision     0
 
-description  IBM Semeru with Eclipse OpenJ9 VM distribution, based on OpenJDK ${feature} (Short Term Support until September 2026)
+description  IBM Semeru with Eclipse OpenJ9 VM distribution, based on OpenJDK ${feature} (Short Term Support until March 2027)
 long_description The IBM Semeru Runtimes are free production-ready open source binaries to run your Java applications\
                  built with the OpenJDK class libraries and the Eclipse OpenJ9 JVM.
 
@@ -34,14 +31,14 @@ master_sites https://github.com/ibmruntimes/semeru${feature}-binaries/releases/d
 
 if {${configure.build_arch} eq "x86_64"} {
     set arch_classifier x64
-    checksums    rmd160  b9aa587b68098000c3f6bd7487fa4357ffcdb269 \
-                 sha256  e13fb0aa11eec03d9dd7d6aaf5cde07b46a7bea45ea803c1c18fd33c38a4703b \
-                 size    244743800
+    checksums    rmd160  bdf48b738076641384d8e5defe7aea54eb7a7b3d \
+                 sha256  055fd3ac860571f81c482860fcdaabfadf9cf7d9d72e34a1930d08060c186178 \
+                 size    243979267
 } elseif {${configure.build_arch} eq "arm64"} {
     set arch_classifier aarch64
-    checksums    rmd160  70c6868ef06f8756ec858cfe75f093f6a997343b \
-                 sha256  4d3df73a0f79c3e2db4dc36c93ebfbb9c1f9de72ec635a07d8d20451aba8098e \
-                 size    238618653
+    checksums    rmd160  5affc310a0e398ab56d8fa41baaf303151071c05 \
+                 sha256  7af920cd775828cd6af7b8f970c01e3c0f665bf8f1e779f1ea7935069417f971 \
+                 size    237866460
 } else {
     set arch_classifier unsupported_arch
 }
