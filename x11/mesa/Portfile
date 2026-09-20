@@ -10,8 +10,8 @@ PortGroup               muniversal 1.1
 legacysupport.newest_darwin_requires_legacy 17
 
 name                    mesa
-version                 26.2.2
-revision                0
+version                 26.2.3
+revision                1
 epoch                   1
 categories              x11 graphics devel
 maintainers             {jeremyhu @jeremyhu} \
@@ -25,9 +25,9 @@ conflicts               gl-headers
 homepage                https://www.mesa3d.org
 master_sites            https://archive.mesa3d.org
 use_xz                  yes
-checksums               rmd160  a38759cd1402ef8e7cda1861a313bd039124f657 \
-                        sha256  eeb29ca7e56cfaa8e8a79538dcf834e3b18e501c31bef5145e959ea437cc4216 \
-                        size    68533264
+checksums               rmd160  22afddb5195318e34fdcc5382babe4b565ca3faa \
+                        sha256  1628058a8d2c0615975de5a15ab7bbb9638c50000b5bed9456ff423ea034a81f \
+                        size    68561540
 
 # Disable unexpected download of subprojects
 meson.wrap_mode         nodownload
@@ -57,8 +57,7 @@ depends_lib-append      port:expat \
                         port:zlib \
                         port:zstd
 
-patchfiles              patch-pre-10.8-scandir.diff \
-                        patch-fix-linking.diff
+patchfiles              patch-pre-10.8-scandir.diff
 
 # https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/32658
 patchfiles-append       patch-fix-32-bit.diff
@@ -132,24 +131,19 @@ if {[string match *gcc* ${configure.compiler}]} {
     configure.cxxflags-append   -fpermissive
 }
 
-# https://github.com/macos-powerpc/powerpc-ports/issues/88
-platform darwin {
-    post-destroot {
-        system -W ${destroot} "install_name_tool -change @rpath/libgallium-${version}.dylib ${prefix}/lib/libgallium-${version}.dylib ./${prefix}/lib/libGL.dylib"
-    }
-}
-
 # Choose at runtime: GALLIUM_DRIVER=llvmpipe
 # Default is Apple GL, which can also be set explicitly: MESA_LOADER_DRIVER_OVERRIDE=applegl
 
+if {${configure.build_arch} in [list ppc ppc64]} {
+    set llvm_ver            7.1.1
+} else {
+    set llvm_ver            22
+}
+
 variant llvm description "Enable the llvmpipe driver" {
-    # See: https://github.com/iains/LLVM-7-branch/issues/10
-    # Unusable on PowerPC unless fixed.
     if {${configure.build_arch} in [list ppc ppc64]} {
-        set llvm_ver        7.1.1
         depends_lib-append  port:llvm-powerpc
     } else {
-        set llvm_ver        22
         depends_lib-append  port:llvm-${llvm_ver}
     }
     meson.native.binaries-append \
@@ -215,6 +209,20 @@ variant tests description "Build tests" {
     # mesa uses its own internal gtest version and fails with newer
     conflicts_build-append  gtest
     configure.args-replace  -Dbuild-tests=false -Dbuild-tests=true
+}
+
+# https://github.com/macos-powerpc/powerpc-ports/issues/88
+platform darwin {
+    post-destroot {
+        system -W ${destroot} "install_name_tool -change @rpath/libgallium-${version}.dylib ${prefix}/lib/libgallium-${version}.dylib ./${prefix}/lib/libGL.dylib"
+    }
+
+    # FIXME: MacPorts llvm also uses rpaths like @rpath/libLLVM.dylib, but with llvm-22 libgallium gets proper path.
+    if {[variant_isset llvm] && ${configure.build_arch} in [list ppc ppc64]} {
+        post-destroot {
+            system -W ${destroot} "install_name_tool -change @rpath/libLLVM.dylib ${prefix}/libexec/llvm-${llvm_ver}/lib/libLLVM.dylib ./${prefix}/lib/libgallium-${version}.dylib"
+        }
+    }
 }
 
 test.run                yes

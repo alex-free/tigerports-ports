@@ -1,42 +1,157 @@
---- src/library/grDevices/src/devQuartz.c.orig	2023-04-04 06:15:01.000000000 +0800
-+++ src/library/grDevices/src/devQuartz.c	2023-04-25 17:15:03.000000000 +0800
-@@ -38,6 +38,7 @@
+--- src/library/grDevices/src/devQuartz.c.orig
++++ src/library/grDevices/src/devQuartz.c
+@@ -38,6 +38,13 @@
  #include "grDevices.h"
  
  #include <CoreFoundation/CoreFoundation.h>
 +#include <AvailabilityMacros.h>
++
++#if MAC_OS_X_VERSION_MAX_ALLOWED < 1060
++/* Declared as available since 10.2 by the 10.6+ SDKs, but missing from the
++   10.5 SDK headers. */
++extern CGPathRef CGContextCopyPath(CGContextRef context);
++#endif
  
  #define DEVQUARTZ_VERSION 1 /* first public Quartz API version */
  
-@@ -2984,6 +2985,14 @@
-     return capabilities; 
+@@ -3095,6 +3102,7 @@
+     }
  }
  
-+
-+/* This is an implementation of CTFontDrawGlyphs for < 10.7. */
-+static void legacy_CTFontDrawGlyphs(CTFontRef, const CGGlyph glyphs[], const CGPoint points[],
-+                                       size_t count, CGContextRef cg)
++#if MAC_OS_X_VERSION_MAX_ALLOWED >= 1060
+ static CTFontDescriptorRef applyFontVar(CTFontRef ctFont,
+                                         CTFontDescriptorRef ctFontDescriptor,
+                                         SEXP font,
+@@ -3147,6 +3155,47 @@
+     }
+     return newFontDescriptor;
+ }
++#else
++/* 10.5 counterpart of applyFontVar(): CTFontManager is not available, so the
++   font is loaded as a CGFont and the variations are applied to that with
++   CGFontCreateCopyWithVariations(). The axis dictionaries returned by
++   CGFontCopyVariationAxes() carry the same (localized) axis names that
++   axisNameMatch() expects. Consumes cgFont and returns the font to use. */
++static CGFontRef legacy_applyFontVar(CGFontRef cgFont, SEXP font, int numVar)
 +{
-+    CGContextShowGlyphsAtPositions(cg, glyphs, points, count);
++    int i, j;
++    CFArrayRef cgFontVariationAxes = CGFontCopyVariationAxes(cgFont);
++    if (!cgFontVariationAxes)
++        return cgFont;
++    CFMutableDictionaryRef variations =
++        CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks,
++                                  &kCFTypeDictionaryValueCallBacks);
++    CFIndex numAxes = CFArrayGetCount(cgFontVariationAxes);
++    for (i = 0; i < numVar; i++) {
++        const char* axisName = R_GE_glyphFontVarAxis(font, i);
++        for (j = 0; j < numAxes; j++) {
++            CFDictionaryRef axisDict =
++                CFArrayGetValueAtIndex(cgFontVariationAxes, j);
++            CFStringRef axisDictName =
++                CFDictionaryGetValue(axisDict, kCGFontVariationAxisName);
++            if (axisDictName && axisNameMatch(axisName, axisDictName)) {
++                double axisValue = R_GE_glyphFontVarValue(font, i);
++                CFNumberRef axisNumber =
++                    CFNumberCreate(NULL, kCFNumberDoubleType, &axisValue);
++                CFDictionarySetValue(variations, axisDictName, axisNumber);
++                CFRelease(axisNumber);
++            }
++        }
++    }
++    CGFontRef varFont = CGFontCreateCopyWithVariations(cgFont, variations);
++    CFRelease(variations);
++    CFRelease(cgFontVariationAxes);
++    if (!varFont)
++        return cgFont;
++    CGFontRelease(cgFont);
++    return varFont;
 +}
-+
++#endif
+ 
  void RQuartz_glyph(int n, int *glyphs, double *x, double *y, 
                     SEXP font, double size,
-                    int colour, double rot, pDevDesc dd)
-@@ -3032,7 +3041,16 @@
+@@ -3170,6 +3219,28 @@
+     CFURLRef cfFontURL = CFURLCreateFromFileSystemRepresentation(NULL, (const UInt8*)path, strlen(path), false);
+     if (!cfFontURL)
+         error(_("Invalid font path: \"%s\""), path);
++    /* NOTE: that the font needs an inversion (in y) matrix
++       because the device has an inversion in user space 
++       (for bitmap devices anyway) */
++    CGContextSetTextMatrix(ctx, CGAffineTransformIdentity);
++    CGAffineTransform trans = CGAffineTransformMakeScale(1.0, -1.0);
++    if (rot != 0.0) trans = CGAffineTransformRotate(trans, rot/180.*M_PI);
++#if MAC_OS_X_VERSION_MAX_ALLOWED < 1060
++    /* CTFontManagerCreateFontDescriptorsFromURL() needs 10.6: load the font
++       file through CoreGraphics instead and wrap the CGFont in a CTFont. */
++    CGDataProviderRef cgFontProvider = CGDataProviderCreateWithURL(cfFontURL);
++    CGFontRef cgFont =
++        cgFontProvider ? CGFontCreateWithDataProvider(cgFontProvider) : NULL;
++    if (cgFontProvider) CGDataProviderRelease(cgFontProvider);
++    CFRelease(cfFontURL);
++    if (cgFont) {
++        /* Apply font variations, if any */
++        int numVar = R_GE_glyphFontNumVar(font);
++        if (numVar > 0)
++            cgFont = legacy_applyFontVar(cgFont, font, numVar);
++        CTFontRef ctFont = CTFontCreateWithGraphicsFont(cgFont, size, &trans, NULL);
++        CGFontRelease(cgFont);
++#else
+     CFArrayRef cfFontDescriptors = 
+         CTFontManagerCreateFontDescriptorsFromURL(cfFontURL);
+     CFRelease(cfFontURL);
+@@ -3177,12 +3248,6 @@
+         CTFontDescriptorRef ctFontDescriptor;
+         ctFontDescriptor = 
+             (CTFontDescriptorRef) CFArrayGetValueAtIndex(cfFontDescriptors, 0);
+-        /* NOTE: that the font needs an inversion (in y) matrix
+-           because the device has an inversion in user space 
+-           (for bitmap devices anyway) */
+-        CGContextSetTextMatrix(ctx, CGAffineTransformIdentity);
+-        CGAffineTransform trans = CGAffineTransformMakeScale(1.0, -1.0);
+-        if (rot != 0.0) trans = CGAffineTransformRotate(trans, rot/180.*M_PI);
+         CTFontRef ctFont = 
+             CTFontCreateWithFontDescriptor(ctFontDescriptor, size, &trans);
+ 
+@@ -3195,6 +3260,7 @@
+             ctFont = CTFontCreateWithFontDescriptor(ctFontDescriptor, 
+                                                     size, &trans);
+         }
++#endif
+ 
+         CGColorSpaceRef cs = CGColorSpaceCreateWithName(kCGColorSpaceSRGB);
+         CGFloat fillColor[] = { R_RED(colour)/255.0, 
+@@ -3204,14 +3270,34 @@
+         CGColorRef fillColorRef = CGColorCreate(cs, fillColor);
+         CGContextSetFillColorWithColor(ctx, fillColorRef);
+         int i;
++#if MAC_OS_X_VERSION_MAX_ALLOWED < 1070
++        /* CTFontDrawGlyphs() needs 10.7. It sets the context's font, size
++           and text matrix from the CTFont and draws the glyphs at user-space
++           positions, which is exactly what CGContextShowGlyphsAtPositions()
++           (10.5+) does once the graphics state is set up the same way.
++           CGContextSetFont() takes a CGFontRef, so derive one from the CTFont. */
++        CGFontRef cgDrawFont = CTFontCopyGraphicsFont(ctFont, NULL);
++        CGContextSetFont(ctx, cgDrawFont);
++        CGContextSetFontSize(ctx, CTFontGetSize(ctFont));
++        CGContextSetTextMatrix(ctx, CTFontGetMatrix(ctFont));
++#endif
          for (i=0; i<n; i++) {
-             CGGlyph glyph = glyphs[i];
+             CGGlyph glyph = (CGGlyph) glyphs[i];
              CGPoint loc = CGPointMake(x[i], y[i]);
-+#if MAC_OS_X_VERSION_MAX_ALLOWED > 1060
++#if MAC_OS_X_VERSION_MAX_ALLOWED < 1070
++            CGContextShowGlyphsAtPositions(ctx, &glyph, &loc, 1);
++#else
              CTFontDrawGlyphs(ctFont, &glyph, &loc, 1, ctx);
-+#else /* Fallback code for legacy systems */
-+            /* CTFontDrawGlyphs will apply the font, font size and font matrix to the CGContext. */
-+            /* Our 'fake' one does not, so set up the CGContext here. */
-+            CGContextSetFont(ctx, ctFont);
-+            CGContextSetFontSize(ctx, CTFontGetSize(ctFont));
-+            CGContextSetTextMatrix(ctx, CTFontGetMatrix(ctFont));
-+            legacy_CTFontDrawGlyphs(ctFont, &glyph, &loc, 1, ctx);
 +#endif
          }
++#if MAC_OS_X_VERSION_MAX_ALLOWED < 1070
++        CGFontRelease(cgDrawFont);
++#endif
          CGColorRelease(fillColorRef);
          CFRelease(ctFont);
++#if MAC_OS_X_VERSION_MAX_ALLOWED >= 1060
+         CFRelease(cfFontDescriptors);
++#endif
+     } else {
+         warning(_("Failed to load font"));
+     }

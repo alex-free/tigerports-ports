@@ -1,0 +1,13 @@
+--- src/pulsecore/protocol-native.c.orig	2026-09-19 15:59:54.000000000 -0600
++++ src/pulsecore/protocol-native.c	2026-09-19 16:00:50.000000000 -0600
+@@ -910,8 +910,8 @@
+ 
+     /* FIXME: This is actually larger than necessary, since not all of
+      * the sink latency is actually rewritable. */
+-    if (tlength_usec < s->configured_sink_latency + 2*minreq_usec)
+-        tlength_usec = s->configured_sink_latency + 2*minreq_usec;
++    if (tlength_usec < 2*minreq_usec)
++        tlength_usec = 2*minreq_usec;
+ 
+     if (pa_usec_to_bytes_round_up(orig_tlength_usec, &s->sink_input->sample_spec) !=
+         pa_usec_to_bytes_round_up(tlength_usec, &s->sink_input->sample_spec))

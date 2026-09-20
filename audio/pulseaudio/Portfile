@@ -10,7 +10,7 @@ PortGroup           perl5 1.0
 
 name                pulseaudio
 version             17.0
-revision            6
+revision            7
 license             {BSD LGPL-2.1+ MIT}
 categories          audio
 maintainers         {ionic @Ionic} openmaintainer
@@ -73,11 +73,17 @@ platform darwin {
 # All work has or will be sent upstream.
 # C.f. https://bugs.freedesktop.org/show_bug.cgi?id=62987
 # and posts on the mailing list.
+
+# src_pulsecore_protocol-native.c_sink-latency.diff: do not factor in fixed
+# configured sink latency (250ms default) into tlength_usec value.
+# TODO: perhaps detect actual core audio latency and factor it in rather
+# then having nothing.
 patchfiles-append   patch-src_modules_macosx_module_coreaudio_device.c-respect-PA_NAME_MAX.diff \
                     patch-src_daemon_default.pa.in-skip-consolekit-and-systemdlogin.diff \
                     patch-src_pulsecore_shm.c_Static_assert.diff \
                     patch-fix-modules.diff \
-                    patch-fix-coreaudio-crash.diff
+                    patch-fix-coreaudio-crash.diff \
+                    src_pulsecore_protocol-native.c_sink-latency.diff
 
 platform darwin 8 {
     patchfiles-append   patch-src_modules_macosx_module_coreaudio_device.c-tiger-compat.diff
