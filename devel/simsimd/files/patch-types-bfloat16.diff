@@ -1,4 +1,4 @@
---- include/simsimd/types.h.orig
+--- include/simsimd/types.h
 +++ include/simsimd/types.h
 @@ -356,7 +356,7 @@
  #undef SIMSIMD_NATIVE_BF16

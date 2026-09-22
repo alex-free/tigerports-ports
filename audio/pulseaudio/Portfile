@@ -83,7 +83,9 @@ patchfiles-append   patch-src_modules_macosx_module_coreaudio_device.c-respect-P
 
 # AudioDevice*IOProcID to AudioDevice*IOProc.
 # MacMemory.h:1585:83: error: implicit declaration of function 'bzero'
+# Rev bump due to previous -Wno-implicit-function-declaration.
 platform darwin 8 {
+    incr revision
     patchfiles-append \
         patch-src_modules_macosx_module_coreaudio_device.c-tiger-compat.diff \
         src_pulsecore_core-rtclock.c-tiger.diff
