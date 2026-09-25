@@ -68,6 +68,6 @@ if {${os.platform} eq "darwin" && ${os.major} <= 12} {
 variable archive_sigtype
 set archive_sigtype(macports_archives) rmd160
 variable archive_pubkey
-set archive_pubkey(macports_archives) /opt/local/share/macports/keys/archives/macports-archives-2025.pub
+set archive_pubkey(macports_archives) /opt/local/share/macports/keys/archives/tigerports-archives-2026.pub
 
 }
