@@ -30,28 +30,11 @@ find "$tmp/powerpc-ports" -name .git -exec rm -rf {} +
 find "$tmp/powerpc-ports" -name .gitmodules -exec rm -f {} +
 
 # Nuke everything currently in this repo except these files:
-find . -maxdepth 1 ! \( -name . -o -name .git -o -name merge -o -name powerpc-ports-readme.md -o -name macports-ports-readme.md -o -name archive_sites.tcl.patch -o -name mirror_sites.tcl.patch \) -exec rm -rf {} +
+find . -maxdepth 1 ! \( -name . -o -name .git -o -name merge -o -name powerpc-ports-readme.md -o -name macports-ports-readme.md\) -exec rm -rf {} +
 
 # Dump it into this repo.
 mv $tmp/macports-ports/* .
 cp -r $tmp/powerpc-ports/* .
-
-# Create patch for archive_sites.tcl.
-# cp _resources/port1.0/fetch/archive_sites.tcl _resources/port1.0/fetch/archive_sites.tcl.orig
-# open -e _resources/port1.0/fetch/archive_sites.tcl
-# diff -u _resources/port1.0/fetch/archive_sites.tcl.orig _resources/port1.0/fetch/archive_sites.tcl > archive_sites.tcl.patch
-
-# Create patch for mirror_sites.tcl.
-# cp _resources/port1.0/fetch/mirror_sites.tcl _resources/port1.0/fetch/mirror_sites.tcl.orig
-# open -e _resources/port1.0/fetch/mirror_sites.tcl
-# diff -u _resources/port1.0/fetch/mirror_sites.tcl.orig _resources/port1.0/fetch/mirror_sites.tcl > mirror_sites.tcl.patch
-
-
-echo "Patching _resources/port1.0/fetch/archive_sites.tcl to use tigerports.com binary archives..."
-patch _resources/port1.0/fetch/archive_sites.tcl < archive_sites.tcl.patch
-
-echo "Patching _resources/port1.0/fetch/mirror_sites.tcl  to use tigerports.com distfiles..."
-patch _resources/port1.0/fetch/mirror_sites.tcl < mirror_sites.tcl.patch
 
 # Gen readme.md
 echo -e "This is the TigerPorts Ports Tree for http://tigerports.com\n\nLast updated on $(date).\n\nThis consists of a combination of 2 git repos as upstream:\n\n[https://github.com/macports/macports-ports](https://github.com/macports/macports-ports) at commit: $macports_ports_commit.\n\n[https://github.com/alex-free/powerpc-ports/tree/tigerports](https://github.com/alex-free/powerpc-ports/tree/tigerports) at commit: $powerpc_ports_commit.\n\nSuggest improvements, contribute, and open issues at [my fork of powerpc-ports in the tigerports branch](https://github.com/alex-free/powerpc-ports/tree/tigerports)." > readme.md
