@@ -1,18 +1,18 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:filetype=tcl:et:sw=4:ts=4:sts=4
 
 PortSystem          1.0
-PortGroup           active_variants 1.1
-PortGroup           debug 1.0
-PortGroup           legacysupport 1.1
-PortGroup           meson 1.0
 PortGroup           muniversal 1.0
 PortGroup           xcodeversion 1.0
+PortGroup           active_variants 1.1
+PortGroup           legacysupport 1.1
+PortGroup           meson 1.0
+PortGroup           debug 1.0
 
 name                gtk3-devel
 conflicts           gtk3
 set my_name         gtk3
-version             3.24.51
-revision            0
+version             3.24.52
+revision            2
 epoch               0
 
 categories          gnome x11
@@ -24,7 +24,7 @@ long_description    GTK+ is a highly usable, feature-rich toolkit for creating g
                     interfaces, which boasts cross-platform compatibility and an easy-to-use \
                     API. GTK+ is written in C, but has bindings to many other popular \
                     programming languages, such as C++, Python and C#, among others.
-homepage            https://www.gtk.org
+homepage            http://www.gtk.org/
 
 set proj_name       gtk
 set branch          [join [lrange [split ${version} .] 0 1] .]
@@ -33,9 +33,9 @@ dist_subdir         ${my_name}
 use_xz              yes
 master_sites        gnome:sources/${proj_name}/${branch}/
 
-checksums           rmd160  711e6202631dc088c56ffc684cd6eca3ba8e3b70 \
-                    sha256  0013877c6bd23c2dbe42ad7c70a053d0e449be66736574e37867c49c5f905a4f \
-                    size    13483636
+checksums           rmd160  3bae1f5944c429db20fee810c9ea9ad3db74b83a \
+                    sha256  80931fa472a77b9a164f6740e3c0b444fac6770054632d35a7ff9d679e5e7b9f \
+                    size    13578032
 
 # Disable unexpected download of subprojects
 meson.wrap_mode     nodownload
@@ -48,7 +48,8 @@ depends_build-append \
                     port:gtk-doc \
                     path:bin/pkg-config:pkgconfig
 
-depends_lib-append  port:atk \
+depends_lib-append \
+                    port:atk \
                     path:lib/pkgconfig/gdk-pixbuf-2.0.pc:gdk-pixbuf2 \
                     path:lib/pkgconfig/glib-2.0.pc:glib2 \
                     path:lib/pkgconfig/gobject-introspection-1.0.pc:gobject-introspection \
@@ -57,7 +58,8 @@ depends_lib-append  port:atk \
                     port:libepoxy \
                     path:lib/pkgconfig/pango.pc:pango
 
-depends_run-append  port:hicolor-icon-theme \
+depends_run-append \
+                    port:hicolor-icon-theme \
                     port:shared-mime-info
 
 compiler.cxx_standard 2011
@@ -66,7 +68,8 @@ compiler.cxx_standard 2011
 legacysupport.newest_darwin_requires_legacy 10
 
 # Quartz patch to fix QuartzCore linking and compiling with 10.11
-# Upstream merge request: https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/4298
+# Upstreamed merge request: https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/4298
+# Needed due to: https://gitlab.gnome.org/GNOME/gtk/-/commit/df94d0168d1ee7494cd4349eb426abf0c5e03fc7
 patchfiles-append   patch-quartz-calayer-contentsformat.diff
 
 # Quartz patch to make CoreGraphics optional; not available for 10.7 and earlier
@@ -79,14 +82,11 @@ patchfiles-append   patch-tests-gdkgears.diff
 # https://github.com/mesonbuild/meson/issues/7652
 patchfiles-append   patch-sincos.diff
 
-# When removing menu items, this prevents dereferencing a null pointer (from lukaso)
-# https://gitlab.gnome.org/GNOME/gtk/-/issues/6304
-# *NOT* merged merge request: https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/8136
-patchfiles-append   patch-gtk-menu-crash.diff
-
-# Upstream patch
-# https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/8342
-patchfiles-append   patch-gtk-menu-scale.diff
+# Upstream patch (fixes lack of focus)
+# https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/9951
+patchfiles-append   patch-focus.patch
+# https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/10037
+patchfiles-append   patch-focus-2.patch
 
 # gtk3 +quartz uses instancetype which is not available
 # before approximately Xcode 4.6 (#49391)
@@ -141,16 +141,6 @@ configure.cppflags-append \
 
 configure.cflags-append \
                     -fstrict-aliasing
-
-# gdkglcontext-x11.c:107:43: error: passing argument 3 of 'epoxy_glXGetSyncValuesOML'
-# from incompatible pointer type [-Wincompatible-pointer-types]
-# https://trac.macports.org/ticket/72374
-platform darwin {
-    if {[string match *gcc* ${configure.compiler}]} {
-        configure.cflags-append \
-                    -Wno-error=incompatible-pointer-types
-    }
-}
 
 configure.args-append \
                     -Dtests=false \
@@ -351,7 +341,8 @@ post-activate {
 }
 
 livecheck.type      gnome
-livecheck.name      gtk+
+# versions 3.24.48+ are not stored on historic gtk+ dir anymore
+livecheck.name      ${proj_name}
 # versions 3.89.1+ are snapshots of unstable development leading to GTK+ 4
 # and are not compatible with gtk3
 livecheck.regex     "LATEST-IS-(${port_ver_major}\\.\[0-7\]\[02468\](?:\\.\\d+)*)"

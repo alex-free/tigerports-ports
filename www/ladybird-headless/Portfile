@@ -1,0 +1,175 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           ffmpeg 1.0
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+PortGroup           openssl 1.0
+
+# clock_gettime, arc4random_buf, openat etc.
+legacysupport.newest_darwin_requires_legacy 15
+legacysupport.redirect_bins Ladybird js wasm WebDriver
+
+# Branch ppc of the fork: upstream 22e8e99d4c (2026-03-19), the last commit that builds
+# without Rust (ENABLE_RUST=OFF), plus upstream fixes picked on top and the portability
+# changes for 32-bit big-endian PowerPC and Mac OS X 10.5/10.6.
+github.setup        barracuda156 ladybird 20260319.4 ppc-
+revision            0
+name                ladybird-headless
+categories          www
+license             BSD
+maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
+
+description         Ladybird web engine with a toolkit-free frontend (headless modes and WebDriver)
+long_description    The Ladybird browser engine (LibWeb, LibJS and the WebContent, \
+                    RequestServer, ImageDecoder and WebWorker helper processes) built \
+                    with a frontend that opens no window: the Ladybird binary offers \
+                    --headless=screenshot|layout-tree|text|manual and WebDriver sessions. \
+                    Snapshot of upstream from before the Rust migration, with later \
+                    upstream fixes and portability changes for 32-bit big-endian PowerPC \
+                    and older Darwin toolchains.
+
+homepage            https://ladybird.org
+github.tarball_from archive
+
+# The build generates the public-suffix table from this list; pin one revision
+# so the build is reproducible and configure needs no network access.
+set psl_commit      a179a48c465e818cfd8d626691cb317985da87fb
+master_sites-append https://raw.githubusercontent.com/publicsuffix/list/${psl_commit}:psl
+distfiles-append    public_suffix_list.dat:psl
+extract.only        ${distname}${extract.suffix}
+
+checksums           ${distname}${extract.suffix} \
+                    rmd160  b6dac1daa87d9839c1f211432acecd58d7556515 \
+                    sha256  92a726a5a032cad9c31943404490dbc342117076e7f03198a2e6a90774e330d8 \
+                    size    35062374 \
+                    public_suffix_list.dat \
+                    rmd160  a364c63d6ade504390ea32107ba66a99e86a6b2c \
+                    sha256  7333192f818588d9d0044d27d67210c782acd6d87cf71f54a00dfa20a561cfc9 \
+                    size    334697
+
+worksrcdir          ${name}
+
+post-extract {
+    # extract.rename has named the directory after the distfile.
+    move ${workpath}/${distname} ${worksrcpath}
+    xinstall -d ${workpath}/caches/PublicSuffix
+    copy ${distpath}/public_suffix_list.dat ${workpath}/caches/PublicSuffix/
+}
+
+# This is required:
+cmake.generator     Ninja
+
+compiler.cxx_standard   2023
+compiler.blacklist-append {clang < 1900}
+
+ffmpeg.version      8
+
+set libfmt_v        12
+cmake.prefix_path-append \
+                    ${prefix}/lib/libfmt${libfmt_v}/cmake
+
+set py_ver          3.14
+set py_ver_nodot    [string map {. {}} ${py_ver}]
+configure.python    ${prefix}/bin/python${py_ver}
+
+post-patch {
+    fs-traverse f ${worksrcpath} {
+        if {[string match *.py ${f}]} {
+            reinplace -q "s|/usr/bin/env python3|${configure.python}|" ${f}
+            reinplace -q "s|/usr/bin/env python|${configure.python}|" ${f}
+        }
+    }
+}
+
+depends_build-append \
+                    path:bin/pkg-config:pkgconfig \
+                    port:python${py_ver_nodot}
+
+depends_lib-append  port:angle \
+                    port:brotli \
+                    port:curl \
+                    port:fast-float \
+                    path:lib/pkgconfig/fontconfig.pc:fontconfig \
+                    path:lib/pkgconfig/freetype2.pc:freetype \
+                    path:lib/pkgconfig/harfbuzz.pc:harfbuzz \
+                    port:highway \
+                    path:lib/pkgconfig/icu-uc.pc:icu \
+                    port:libavif \
+                    port:libfmt${libfmt_v} \
+                    path:include/turbojpeg.h:libjpeg-turbo \
+                    port:libjxl \
+                    port:libpng \
+                    port:libpsl \
+                    port:libtommath \
+                    port:libxml2 \
+                    port:SDL3 \
+                    port:simdjson \
+                    port:simdutf \
+                    path:lib/pkgconfig/skia.pc:skia \
+                    port:sqlite3 \
+                    port:webp \
+                    path:lib/pkgconfig/libwoff2dec.pc:woff2 \
+                    port:zlib \
+                    port:zstd
+
+configure.args-append \
+                    -DBUILD_TESTING=OFF \
+                    -DCMAKE_INSTALL_INCLUDEDIR:PATH=include/ladybird \
+                    -DENABLE_CLANG_PLUGINS=OFF \
+                    -DENABLE_GUI_TARGETS=ON \
+                    -DENABLE_HEADLESS_UI=ON \
+                    -DENABLE_INSTALL_FREEDESKTOP_FILES=OFF \
+                    -DENABLE_INSTALL_HEADERS=ON \
+                    -DENABLE_LAGOM_CCACHE=OFF \
+                    -DENABLE_LTO_FOR_RELEASE=OFF \
+                    -DENABLE_NETWORK_DOWNLOADS=OFF \
+                    -DENABLE_QT=OFF \
+                    -DENABLE_RUST=OFF \
+                    -Dfmt_DIR=${prefix}/lib/libfmt${libfmt_v}/cmake/fmt \
+                    -DLADYBIRD_CACHE_DIR=${workpath}/caches \
+                    -DLADYBIRD_DEFAULT_OPTIMIZATION_FLAGS=OFF \
+                    -DLADYBIRD_ENABLE_CPPTRACE=OFF \
+                    -DLADYBIRD_LEGACY_MACOS=ON \
+                    -DLADYBIRD_WARNINGS_AS_ERRORS=OFF \
+                    -DLagom_INSTALL_CMAKEDIR:PATH=lib/cmake/Lagom \
+                    -DPython3_EXECUTABLE=${prefix}/bin/python${py_ver}
+
+# The project's own -O3/-g flags are off (LADYBIRD_DEFAULT_OPTIMIZATION_FLAGS=OFF) so that
+# the flags below are the only ones: a few of the generated LibWeb binding units need well
+# over a gigabyte with GCC at -O3, which does not fit a 32-bit address space. -O2, no
+# debug info, and a lower GCC garbage-collection threshold keep the peak down at some
+# cost in compile time (tune ggc-min-expand/ggc-min-heapsize if a unit still fails).
+configure.optflags          -O2
+
+if {${configure.build_arch} eq "ppc"} {
+    configure.cflags-append     -ffp-contract=off \
+                                --param ggc-min-expand=20 --param ggc-min-heapsize=32768
+    configure.cxxflags-append   -ffp-contract=off \
+                                --param ggc-min-expand=20 --param ggc-min-heapsize=32768
+}
+
+# The install tree is the Unix layout: bin/Ladybird, bin/ladybird-{js,wasm,webdriver},
+# libexec/{WebContent,WebWorker,RequestServer,ImageDecoder}, lib/liblagom-*.dylib,
+# share/Lagom (resources), include/ladybird and lib/cmake/Lagom.
+post-destroot {
+    foreach {tool installed} {js ladybird-js wasm ladybird-wasm WebDriver ladybird-webdriver} {
+        move ${destroot}${prefix}/bin/${tool} ${destroot}${prefix}/bin/${installed}
+        if {[file exists ${destroot}${prefix}/bin/${tool}-orig]} {
+            move ${destroot}${prefix}/bin/${tool}-orig ${destroot}${prefix}/bin/${installed}-orig
+        }
+    }
+    delete ${destroot}${prefix}/COMMIT
+    xinstall -d ${destroot}${prefix}/share/doc/${name}
+    xinstall -m 0644 ${worksrcpath}/README.md ${worksrcpath}/LICENSE \
+        ${destroot}${prefix}/share/doc/${name}
+}
+
+notes "
+Run ${prefix}/bin/Ladybird --headless=text https://example.org/ (or =layout-tree,\
+ =manual, or =screenshot with --screenshot-delay SECONDS). There is no browser\
+ window in this port. WebDriver: ${prefix}/bin/ladybird-webdriver.
+"
+
+livecheck.type      none
