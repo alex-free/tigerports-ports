@@ -14,9 +14,9 @@ openssl.branch      3
 # Branch ppc of the fork, the same tree ladybird-headless builds: upstream 22e8e99d4c
 # (2026-03-19) with the portability changes, plus upstream's UI/Gtk and our adaptations.
 # The version is the date of upstream's GTK frontend, not the tag: revbump with every tag.
-github.setup        barracuda156 ladybird 20260319.3 ppc-
+github.setup        barracuda156 ladybird 20260319.6 ppc-
 version             20260417
-revision            1
+revision            2
 name                ladybird-gtk
 categories          www gnome
 license             BSD
@@ -34,9 +34,9 @@ long_description    A browser window for the Ladybird engine of ladybird-headles
 
 homepage            https://ladybird.org
 
-checksums           rmd160  9c045517a5d471a87b6193f9fa3f48b8be99be60 \
-                    sha256  def0869d18958ff5c87604e59ed5933e3df2f2b19cd94896cd21266f9c295e02 \
-                    size    35013665
+checksums           rmd160  79aa995a12abbdabee005f03d0cccc329ca9fb5c \
+                    sha256  04840a93003f05f9b9d707347c9477e6fa43f50c33926fb44db24e41f27d9167 \
+                    size    35084826
 github.tarball_from archive
 
 # Only the frontend is used; the engine headers and libraries come from ladybird-headless.

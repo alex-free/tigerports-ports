@@ -1,0 +1,22 @@
+--- src/libANGLE/renderer/gl/formatutilsgl.cpp
++++ src/libANGLE/renderer/gl/formatutilsgl.cpp
+@@ -528,6 +528,19 @@
+             ASSERT(features.emulateRGB10.enabled);
+             result = GL_RGB10_A2;
+         }
++
++        if (internalFormat.sizedInternalFormat == GL_DEPTH_COMPONENT16 &&
++            !functions->isAtLeastGL(gl::Version(3, 0)) &&
++            !functions->hasGLExtension("GL_ARB_framebuffer_object"))
++        {
++            // Drivers that have framebuffer objects only through GL_EXT_framebuffer_object
++            // (GeForce 6 and 7 series on Mac OS X 10.5 and 10.6) refuse a 16-bit depth
++            // renderbuffer with GL_INVALID_ENUM and do not combine a 16-bit depth texture with a
++            // 32-bit color buffer, while WebGL requires a framebuffer of an RGBA texture and a
++            // DEPTH_COMPONENT16 renderbuffer to be complete. More depth bits than asked for are
++            // allowed.
++            result = GL_DEPTH_COMPONENT24;
++        }
+     }
+     else if (functions->isAtLeastGLES(gl::Version(3, 0)))
+     {
