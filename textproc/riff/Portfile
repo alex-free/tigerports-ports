@@ -5,26 +5,23 @@ PortGroup           cargo   1.0
 PortGroup           github  1.0
 
 github.setup        walles riff 3.6.2
-github.tarball_from archive
 revision            0
-
-description         A diff filter highlighting which line parts have changed
-
-long_description    \
-    Riff is a wrapper around diff that highlights which parts of lines have changed.
-
 categories          textproc
 installs_libs       no
 license             MIT
 maintainers         {gmail.com:herby.gillot @herbygillot} \
                     openmaintainer
+description         A diff filter highlighting which line parts have changed
+long_description    \
+    Riff is a wrapper around diff that highlights which parts of lines have changed.
 
 checksums           ${distname}${extract.suffix} \
                     rmd160  8bc84201f6d872a2f0d39bd30433126e483ad066 \
                     sha256  2d84d005f33444143eb8f68eb72024cd7eb9addd0b933665aaf44de7e071c175 \
                     size    2201000
+github.tarball_from archive
 
-patchfiles          patch-src-main-rs-moar-pager.diff
+patchfiles-append   patch-src-main-rs-moar-pager.diff
 
 destroot {
     xinstall -m 0755 \
@@ -120,7 +117,7 @@ cargo.crates \
     url                              2.5.4  32f8b686cadd1473f4bd0117a5d28d36b1ade384ea9b5069a1c40aefed7fda60 \
     utf8_iter                        1.0.4  b6c140620e7ffbb22c2dee59cafe6084a59b5ffc27a8859a5f0d494b5d52b6be \
     utf8parse                        0.2.1  711b9620af191e0cdc7468a8d14e709c3dcdb115b36f838e601583af800a370a \
-    wasip2                         1.0.2+wasi-0.2.9  9517f9239f02c069db75e65f174b3da828fe5f5b945c4dd26bd25d89c03ebcf5 \
+    wasip2                1.0.2+wasi-0.2.9  9517f9239f02c069db75e65f174b3da828fe5f5b945c4dd26bd25d89c03ebcf5 \
     winapi                           0.3.9  5c839a674fcd7a98952e593242ea400abe93992746761e38641405d28b00f419 \
     winapi-i686-pc-windows-gnu       0.4.0  ac3b87c63620426dd9b991e5ce0329eff545bccbbb34f3be09ff6fb6ab51b7b6 \
     winapi-x86_64-pc-windows-gnu     0.4.0  712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f \

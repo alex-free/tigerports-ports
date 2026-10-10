@@ -3,7 +3,7 @@
 PortSystem          1.0
 
 name                claude-code
-version             2.1.287
+version             2.1.296
 revision            0
 
 categories          llm
@@ -26,14 +26,14 @@ platforms           {darwin >= 22}
 
 if {${configure.build_arch} eq "x86_64"} {
     set arch_classifier x64
-    checksums    rmd160  a99fdd81778567fe2f792d4f062f41a02f65bb74 \
-                 sha256  f1863213e4f55aaadc2e6ee617f934ada29930e5de4c5e5f8f9e34a0d594fdd7 \
-                 size    236282368
+    checksums    rmd160  5347b86ef29ea8c10ed799e0e5fb81135e75754d \
+                 sha256  a6bf4f30be241053a923f3820ad23c5991d2f5ac2935b3a8dd64da218d9cc603 \
+                 size    249194752
 } elseif {${configure.build_arch} eq "arm64"} {
     set arch_classifier arm64
-    checksums    rmd160  213ee62b55f31fd0741e56b11f7ad6166d12bbeb \
-                 sha256  6eab8333fe2121553100d8f40bfada384a3e989b94f947e18ba6677a6fcb41ea \
-                 size    227827120
+    checksums    rmd160  f9ff16739111a54481ad412466b05d58f40d3c1e \
+                 sha256  c9b5341637becbd423ddffc5b254afb645682a3868cb708bbc6cc0e7bb419937 \
+                 size    240664432
 } else {
     set arch_classifier unsupported_arch
     distfiles

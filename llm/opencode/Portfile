@@ -4,12 +4,14 @@ PortSystem          1.0
 PortGroup           npm 1.0
 
 name                opencode
-version             2.0.21
+version             2.0.26
 revision            0
 
 categories          llm
 platforms           {darwin any >= 19}
-maintainers         {@oakimov} openmaintainer
+maintainers         @oakimov \
+                    {breun @breun} \
+                    openmaintainer
 license             MIT
 supported_archs     x86_64 arm64
 
@@ -29,9 +31,9 @@ homepage            https://opencode.ai/v2/docs
 npm.rootname        @opencode/cli
 distname            cli-${version}
 
-checksums           rmd160  15799b8a051f6d507be9b724dc15a3aac0de899e \
-                    sha256  fd3a1e7e9828a28f8b9c4d558a06c1fab012a03b0b0e73c6992ddde595ce5ea9 \
-                    size    2414
+checksums           rmd160  185c4306adb8974e9a495aa433b4bd50043e2194 \
+                    sha256  01321763a9917f75ab7b0810d00dcb2c51e691380074da11a521e713f5d56e80 \
+                    size    2554
 
 conflicts           opencode1
 

@@ -5,27 +5,23 @@ PortGroup           cargo   1.0
 PortGroup           github  1.0
 
 github.setup        yamafaktory jql 9.0.3 jql-v
-github.tarball_from archive
 revision            0
-
-homepage            https://crates.io/crates/jql
-
-description         A JSON Query Language CLI tool
-
-long_description    \
-    jql is a JSON Query Language tool built with Rust. Pronounce it as \
-    \"jackal\".
-
 categories          textproc
 installs_libs       no
 license             {Apache-2 MIT}
 maintainers         {gmail.com:herby.gillot @herbygillot} \
                     openmaintainer
+homepage            https://crates.io/crates/jql
+description         A JSON Query Language CLI tool
+long_description    \
+    jql is a JSON Query Language tool built with Rust. Pronounce it as \
+    \"jackal\".
 
 checksums           ${distname}${extract.suffix} \
                     rmd160  a1b0ccf1efa1b7ffb68dc9c6b6b5720ef04b0c45 \
                     sha256  271d340c39fb328eb22d3a1dd5151be99f1c38c2169ea28d5f9ebbdd40e4eb82 \
                     size    526439
+github.tarball_from archive
 
 destroot {
     xinstall -m 0755 \

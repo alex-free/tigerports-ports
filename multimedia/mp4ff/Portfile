@@ -3,9 +3,9 @@
 PortSystem          1.0
 PortGroup           golang 1.0
 
-go.setup            github.com/Eyevinn/mp4ff 0.56.0 v
+go.setup            github.com/Eyevinn/mp4ff 0.59.0 v
 go.offline_build    no
-go.toolchain_min    1.19
+go.toolchain_min    1.23
 revision            0
 
 description         \
@@ -26,13 +26,11 @@ license             MIT
 maintainers         {gmail.com:herby.gillot @herbygillot} \
                     openmaintainer
 
-patchfiles          patch-Makefile.diff
-
 build.cmd           make
 build.target        build
 
 post-patch {
-    reinplace -E "s|@@VERSION@@|${github.tag_prefix}${version}|g" \
+    reinplace -E "s|\\\$\\\$\\\(git describe --tags HEAD\\\)|${github.tag_prefix}${version}|g" \
         ${worksrcpath}/Makefile
 }
 
@@ -42,8 +40,7 @@ destroot {
     }
 }
 
-checksums           ${distname}${extract.suffix} \
-                        rmd160  640800ba84c1325722981c6d28219f922d2d5a50 \
-                        sha256  431a057ca003c2fcca81a9495792a833457e06c79fbc73c2aa6400b94d9f5008 \
-                        size    4762501
+checksums           rmd160  3a29e67840d38118a6966812b37e27dda7116a8a \
+                    sha256  7e0c697a658e243a27131756775ea53d2c7c57e3ed771fc24d3e21dea55c0b3d \
+                    size    4927947
 
