@@ -424,8 +424,17 @@ proc rust::old_macos_compatibility {cname cversion} {
                 # `xcrun --show-sdk-version` is only supported on 10.8 or above
                 # if `xcrun` fails, cc sets MACOSX_DEPLOYMENT_TARGET to a hardcoded value
                 # cc may remove `xcrun` in the future (see https://github.com/rust-lang/cc-rs/pull/1009)
-                reinplace "s|let default = \"10.7\";|let default = \"[option macosx_deployment_target]\";|g" \
-                    ${cargo.home}/macports/${cname}-${cversion}/src/lib.rs
+                # The same fallback applies when cc runs inside a program (e.g. tree-sitter-loader compiling
+                # grammars) where MACOSX_DEPLOYMENT_TARGET is usually unset.
+                # The hardcoded value is `let default = "10.7";` up to 1.0.100 and
+                # `let default: Arc<str> = Arc::from("10.7");` from 1.0.101 on (checked through 1.7.0).
+                if {[vercmp ${cversion} >= 1.0.101]} {
+                    reinplace "s|Arc::from(\"10.7\")|Arc::from(\"[option macosx_deployment_target]\")|g" \
+                        ${cargo.home}/macports/${cname}-${cversion}/src/lib.rs
+                } else {
+                    reinplace "s|let default = \"10.7\";|let default = \"[option macosx_deployment_target]\";|g" \
+                        ${cargo.home}/macports/${cname}-${cversion}/src/lib.rs
+                }
             }
         }
         "crossbeam-utils" {
@@ -483,6 +492,16 @@ proc rust::old_macos_compatibility {cname cversion} {
                 # ABI. Make the probe fail so the bundled libgit2 is built.
                 reinplace "s|.probe(\"libgit2\")|.probe(\"libgit2-abi-mismatch\")|" \
                     ${cargo.home}/macports/${cname}-${cversion}/build.rs
+            }
+            # Bundled libgit2: 32-bit Darwin has a `size_t` of `unsigned long` with SIZE_MAX == UINT_MAX, so
+            # integer.h picks the `unsigned int *` overflow builtins, an error since GCC 14
+            # (-Wincompatible-pointer-types). The type-generic builtins exist wherever that branch is compiled.
+            foreach f {libgit2/src/integer.h libgit2/src/util/integer.h} {
+                set f ${cargo.home}/macports/${cname}-${cversion}/${f}
+                if {[file exists ${f}]} {
+                    reinplace "s|__builtin_uadd_overflow(one, two, out)|__builtin_add_overflow(one, two, out)|" ${f}
+                    reinplace "s|__builtin_umul_overflow(one, two, out)|__builtin_mul_overflow(one, two, out)|" ${f}
+                }
             }
         }
     }
