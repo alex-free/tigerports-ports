@@ -4,7 +4,7 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-soupsieve
-version             3.0.1
+version             3.0.3
 revision            0
 
 license             MIT
@@ -20,11 +20,11 @@ homepage            https://github.com/facelessuser/soupsieve
 supported_archs     noarch
 platforms           {darwin any}
 
-checksums           rmd160  5836de161f09c08dbefdc4e5962abe283f771cfe \
-                    sha256  713d5c69f90ef84deffec0b9c6244796575e3c9fc9081cefb96091ce1200a308 \
-                    size    115438
+checksums           rmd160  d8e1d3c4fed14d7048dbbb2b442bac7e3a66f2c4 \
+                    sha256  7dcf6022eed0399eb9934a75e020148f7a2024c37b7dfcd3cf2c5505d69c364e \
+                    size    115923
 
-python.versions     310 311 312 313 314
+python.versions     310 311 312 313 314 315
 
 python.pep517_backend \
                     hatch
