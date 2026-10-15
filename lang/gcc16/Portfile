@@ -77,9 +77,14 @@ depends_lib-append  port:cctools \
 # Without a working flex the build fails, and activating flex port to resume it
 # will not help. If you face a flex-related error, make sure to install the right flex,
 # then run port clean and build again.
-platform darwin 10 powerpc {
+# Tiger requires a newer flex than the system one. Make life easier, just use modern flex
+# on all macOS < 10.7.
+if {${os.platform} eq "darwin" && ${os.major} < 11} {
     depends_build-append \
                     port:flex
+} else {
+    depends_build-append \
+                    bin:flex:flex
 }
 
 # gcc10 does not build on recent macOS atm: https://github.com/iains/gcc-10-branch/issues/12
@@ -258,8 +263,6 @@ platform darwin {
 
 # Keep Tiger stuff isolated
 platform darwin 8 {
-    depends_build-append port:flex
-
     # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=117834
     patchfiles-append   darwin8-define-PTHREAD_RWLOCK_INITIALIZER.patch
     # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=117857
@@ -271,16 +274,14 @@ platform darwin 8 {
     patchfiles-append   darwin8-core-count.patch
     # surpress some incompatible-pointer-type errors where needed
     patchfiles-append   darwin8-pointer-types.patch
-}
 
-if {${os.platform} eq "darwin" && ${os.major} < 10} {
     # Since ld64-97.17 on Tiger supports -no_compact_unwind unlike the default linker, it can be enabled in order to disable
-    # the usage of compact unwind. Compact unwind can not be used when building gcc16 due to it's complexity, so fall back to
-    # DWARF. GCC fixed this in their PR41260 workaround, but made it require 10.6+ minimum as the default Tiger and Leopard
-    # linkers did not support it. Changes it to no minimum, as even tiger requires a newer linker that does support the flag.
-    # Fixes error: ld: 24-bit pointer diff out of range in unwind info in unwind info from a681 and for other executables
-    # on Intel. For PowerPC when building through Rosetta or on a G5, this prevents freezing during linking.
-    patchfiles-append    no_compact_unwind.patch
+    # the usage of compact unwind. Compact unwind can not be used when build gcc16 due to it's complexity, so fall back to 
+    # DWARF. GCC fixed this in their PR41260 workaround, but made it require 10.6+ minimum. Changes it to no minimum.
+    # Fixes error: ld: 24-bit pointer diff out of range in unwind info in unwind info from a681 and for other executables.
+    if {${configure.build_arch} eq "i386"} {
+        patchfiles-append   darwin8-no_compact_unwind.patch
+    }
 }
 
 configure.env-append \
@@ -336,21 +337,17 @@ pre-configure {
 set libcxx_incpath ${prefix}/libexec/${name}/libc++/include/c++/v1
 
 subport ${libcxxname} {
-    if {${configure.build_arch} ni [list ppc ppc64]} {
+    if {${os.platform} eq "darwin" && ${os.major} > 10} {
         PortGroup compilers     1.0
 
         compilers.choose        cxx
         compilers.setup         -gcc -fortran -clangdevel -clang34 -clang35 -clang36 \
                                 -clang37 -clang50 -clang60 -clang70 -clang80 -clang90
         if {![clang_variant_isset]} {
-            if {${os.platform} eq "darwin" && ${os.major} < 11} {
-                default_variants-append     +clang11
+            if {${os.major} < 24} {
+                default_variants-append +clang18
             } else {
-                if {${os.major} < 24} {
-                    default_variants-append +clang18
-                } else {
-                    default_variants-append +clang19
-                }
+                default_variants-append +clang19
             }
         }
 
