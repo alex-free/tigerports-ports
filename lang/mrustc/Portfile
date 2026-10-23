@@ -10,7 +10,7 @@ PortGroup           legacysupport 1.1
 # powerpc-apple-darwin, powerpc-apple-darwin10.8.0, powerpc-apple-macosx10.6.0 were tried and failed identically.
 # It is unclear why this is broken, and therefore how to fix it.
 
-github.setup        thepowersgang mrustc a822472b9ee744e58d8b1a79bdd8080f7a7b008f
+github.setup        thepowersgang mrustc d85e86b199e2522d74bee19efa6ebf3af596270f
 
 # When updated, please also update rustc_target_ver in cargo PG:
 set rust_version    1.90.0
@@ -18,8 +18,8 @@ set rust_version_major [join [lrange [split ${rust_version} .-] 0 1] .]
 set rust_version_major_underscore [join [lrange [split ${rust_version} .-] 0 1] _]
 
 # Subport mrustc-rust has its own versioning
-version             ${rust_version_major}-20260928
-revision            12
+version             ${rust_version_major}-20261013
+revision            5
 epoch               1
 
 categories          lang devel
@@ -50,9 +50,9 @@ distfiles-append    rustc-${rust_version}-src.tar.gz:rust \
                     compiler-rt-${llvm_rt_distver}.src.tar.xz:compiler-rt
 
 checksums           mrustc-${github.version}.tar.gz \
-                    rmd160  5c130f3370049c690ff590c45d9782dc7892636a \
-                    sha256  882764e9f8c6718247bef858c8de5a3c6ef59432c036173b55134b7cfb9c90a6 \
-                    size    1458035 \
+                    rmd160  7392c42687385dbaa2979f5cb52de4d4dbc71ad6 \
+                    sha256  79714c97f88153772ff35ba42a38bfa00ea13e43e7dfe5580f02cca0909ad0e5 \
+                    size    1458376 \
                     rustc-${rust_version}-src.tar.gz \
                     rmd160  29d3e6fddeee2c21fcfac1a54db722a14964cdee \
                     sha256  799a9f9cba4ed5351e071048bcf6b5560755d9009648def33a407dd4961f9b7e \
@@ -137,7 +137,7 @@ pre-patch {
     # https://github.com/thepowersgang/mrustc/issues/367
     # Notice, we do not set correct arch targets for LLVM at all, since it is not being built.
     system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/mrustc-minicargo.mk-use-external-llvm.patch]"
-    # Extra fixes for powerpc and generally for mrustc:
+    # Extra fixes for powerpc and generally for mrustc. (A few omitted patch numbers are intended.)
     system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0001-expand-fix-.-precision-cursor-wasn-t-advanced-past-t.patch]"
     system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0002-hir-mir-accept-diverging-operands-of.patch]"
     system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0003-trans-handle-the-renamed-assert_mem_uninitialized_va.patch]"
@@ -177,7 +177,6 @@ pre-patch {
     system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0037-hir_conv-don-t-abort-when-eager-constant-evaluation-.patch]"
     system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0038-hir_expand-keep-the-enclosing-function-s-types-on-co.patch]"
     system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0039-hir_conv-implement-ptr_offset_from-ptr_offset_from_u.patch]"
-    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0040-expand-pass-link-kind-framework-libraries-as-framewo.patch]"
     system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0041-resolve-accept-re-exported-primitive-types-as-path-p.patch]"
     system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0042-resolve-rewrite-relative-paths-that-start-with-an-im.patch]"
     system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0043-codegen_c-pass-newtypes-and-nullable-pointer-enums-a.patch]"
@@ -230,7 +229,6 @@ pre-patch {
     system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0090-minicargo-infer-binaries-from-src-bin-as-cargo-does.patch]"
     system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0091-hir_typeck-pick-a-lone-Sized-coercion-target-once-al.patch]"
     system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0092-parse-a-numeric-brace-pattern-with-.-is-a-tuple-patt.patch]"
-    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0093-trans-on-macOS-look-for-lib-name-.dylib-before-lib-n.patch]"
     system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0094-mir-escape-string-match-values-when-printing-a-Switc.patch]"
     system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0095-hir_conv-const-eval-bitreverse-shifted-the-result-on.patch]"
     system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0096-hir_conv-const-eval-rotates-read-a-u32-shift-and-rot.patch]"
@@ -371,6 +369,133 @@ pre-patch {
     system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0231-hir-braced-literals-of-tuple-structs-S-and-S-.base.patch]"
     system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0232-debug-raise-the-trace-depth-guard-to-3000-for-long-m.patch]"
     system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0233-hir_expand-lifetime-inference-pass-limit-scales-with.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0234-trans-a-vtable-entry-whose-method-bounds-fail-for-th.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0235-resolve-a-glob-import-only-sees-items-visible-from-i.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0236-expand-format_args-skips-whitespace-before-a-fragmen.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0237-hir_typeck-an-inherent-impl-matched-through-a-projec.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0238-libproc_macro-Span-start-end-line-column-and-file-st.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0239-trans-enumerate-the-dyn-method-shims-receiver-types-.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0240-expand-proc-macro-impl-tokens-carry-associated-types.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0241-hir_typeck-Index-waits-while-a-fuzzy-impl-s-bound-is.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0242-hir_typeck-method-lookup-prefers-stable-methods-over.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0243-mir-an-operand-that-diverges-leaves-the-rest-of-the-.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0244-mir-call-arguments-are-moved-into-the-call-only-once.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0245-lex-an-empty-source-file-is-an-empty-token-stream-no.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0246-trans-MakeDst-reads-the-vtable-out-of-a-DynMetadata-.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0247-parse-a-method-call-turbofish-may-start-with-a-negat.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0248-expand-evaluate-cfg_attr-on-variants-and-fields-befo.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0249-hir_typeck-N-as-const-T-takes-the-element-type-from-.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0250-hir_typeck-no-deref-target-offer-when-_-coerces-to-d.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0251-macro_rules-an-e-expr-fragment-holding-a-literal-mat.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0252-resolve-a-named-import-shadows-the-extern-prelude-in.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0253-macro_rules-a-token-negative-literal-const-argument-.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0254-parse-a-path-fragment-or-a-path-shaped-ty-fragment-n.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0255-minicargo-export-CARGO_PKG_VERSION_PRE-and-CARGO_MAN.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0256-expand-a-proc-macro-gets-fn-f-without-the-the-source.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0257-hir-an-associated-type-bound-nested-in-an-associated.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0258-parse-an-extern-block-takes-an-item-item-fragment-fr.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0259-macro_rules-trans-a-body-block-fn-body-inside-item-i.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0260-hir_expand-a-lifted-const-block-keeps-one-slot-for-a.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0261-hir_typeck-two-associated-type-rules-on-the-same-pro.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0262-hir_typeck-a-pattern-s-omitted-generics-in-a-functio.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0263-mir-a-let-of-type-that-gets-a-value-ends-its-path-as.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0264-lex-proc_macro-a-byte-literal-stays-a-byte-literal-b.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0265-trans-a-generic-promoted-static-s-body-is-enumerated.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0266-trans-rotate_left-rotate_right-reduce-the-shift-modu.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0267-macro_rules-a-pat-fragment-takes-a-top-level-or-patt.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0268-hir_conv-the-constant-evaluator-switches-on-signed-i.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0269-trans-mangle-item-names-with-non-ASCII-characters.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0270-trans-a-library-crate-defines-the-items-named-by-its.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0271-macro_rules-a-captured-pattern-is-one-alternative-of.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0272-trans-a-cdylib-carries-the-runtime-glue-exports-only.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0273-minicargo-requested-dep-feature-features-turn-on-the.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0274-minicargo-build-cdylib-libraries-lib-crate-type-link.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0275-minicargo-emit-graph-file-writes-the-resolved-packag.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0276-minicargo-enable-features-and-optional-dependencies-.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0277-trans-auto-Clone-for-arrays-of-more-than-6-elements-.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0278-hir_typeck-a-deref-coercion-may-end-at-an-integer-fl.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0279-hir_conv-defer-a-static-whose-path-names-const-gener.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0280-hir-brace-literals-of-unit-and-tuple-enum-variants-E.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0281-mir-codegen_c-i128-u128-matches-values-outside-64-bi.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0282-enums-repr-u128-repr-i128-and-the-enum-cast-fold-s-3.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0283-parse-outer-attributes-on-a-self-parameter.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0284-trans-align_of-of-an-empty-enum-or-is-1-not-0.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0285-mir-match-against-T-constants-for-any-T-not-only-u8.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0286-codegen_c-exported-functions-named-after-C-keywords-.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0287-hir_expand-statics-made-while-evaluating-lifted-stat.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0288-static-don-t-resolve-a-specialised-trait-item-while-.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0289-resolve-a-renamed-use-of-a-macro_rules-macro-records.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0290-macro_rules-a-loop-at-the-end-of-a-repetition-body-s.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0291-statics-no_mangle-export_name-definitions-get-their-.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0292-hir_typeck-trait-object-to-trait-object-coercions-eq.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0293-parse-a-block-match-arm-followed-by-.-or-continues-a.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0294-codegen_c-each-caller_location-gets-its-own-block.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0295-hir_conv-type-alias-const-parameter-defaults.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0296-hir_conv-struct-enum-const-parameter-defaults-are-mo.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0297-hir_conv-types-written-in-bodies-take-omitted-parame.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0298-expand-an-attribute-proc-macro-s-input-leaves-out-it.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0299-ast-dump-match-arm-and-body-item-attributes-reach-at.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0300-ast-print-every-super-of-a-path.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0301-resolve-every-super-skips-the-anonymous-modules-in-i.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0302-hir_conv-an-alias-parameter-inferred-at-a-value-path.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0303-expand-a-repr-written-after-a-proc-macro-derive-is-s.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0304-expand-stringify-of-a-forwarded-fragment-prints-Rust.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0305-hir_conv-a-pattern-constant-from-a-generic-trait-tak.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0306-ast-dump-attributes-on-call-arguments-and-tuple-arra.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0307-hir_conv-a-struct-like-enum-variant-literal-infers-i.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0308-resolve-a-use-of-another-crate-s-tuple-struct-leaves.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0309-proc_macro-C-string-literals-cross-the-proc-macro-br.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0310-lex-a-C-string-s-x-escape-is-one-byte-c-xff-is-0xFF-.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0311-parse-a-trait-bound-may-be-in-parentheses-F-FnOnce-C.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0312-hir-comparing-a-const-argument-whose-expression-is-b.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0313-hir_conv-a-const-argument-that-names-no-generic-capt.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0314-macro_rules-two-optional-repetitions-that-read-the-s.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0315-expand-include_str-include_bytes-are-relative-to-the.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0316-lex-raw-C-string-literals-cr-a-cr-a.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0317-hir_typeck-a-projection-whose-only-unknown-is-a-cons.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0318-hir_typeck-a-cast-to-a-fn-pointer-from-a-type-not-kn.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0319-hir_typeck-an-associated-type-found-in-a-supertrait-.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0321-proc_macro-method-receivers-reach-proc-macros-as-wri.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0322-parse-a-return-break-continue-statement-keeps-its-at.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0323-hir_conv-the-types-inside-a-expr-const-generic-argum.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0324-resolve_ufcs-an-inherent-item-whose-impl-bounds-fail.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0325-proc_macro-a-derive-on-a-union-reaches-the-proc-macr.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0326-hir_typeck-a-literal-s-pointee-through-mut-n-as-mut-.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0327-minicargo-set-CARGO_BIN_NAME-for-binaries-CARGO_CRAT.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0328-hir_conv-a-generic-promoted-static-is-evaluated-per-.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0329-minicargo-a-build-script-s-OUT_DIR-follows-cargo-s-l.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0330-hir_typeck-of-several-inherent-impls-matching-a-type.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0331-hir_typeck-a-higher-ranked-lifetime-under-a-nested-f.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0332-parse-a-closure-with-an-explicit-return-type-takes-o.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0333-hir_typeck-a-deref-coercion-waits-when-the-source-it.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0334-minicargo-a-build-script-sees-each-cfg-once-its-valu.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0335-hir_typeck-an-inherent-function-not-visible-from-the.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0336-minicargo-a-non-weak-dep-feature-also-activates-the-.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0337-hir_typeck-a-method-found-in-a-parent-of-an-in-scope.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0338-expand-stringify-of-a-forwarded-fragment-prints-no-b.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0339-macro_rules-an-expr-fragment-can-start-with-a-label-.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0340-minicargo-git-dependencies-resolve-from-the-vendor-d.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0341-expand-panic-with-an-argument-that-starts-with-a-str.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0342-resolve-from-2018-the-implicit-extern-crate-std-core.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0343-macro_rules-a-macro-defined-in-a-proc-macro-s-output.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0344-proc_macro-one-child-per-proc-macro-executable-serve.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0345-expand-macros-in-the-generic-arguments-of-struct-lit.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0346-macro_rules-a-doc-comment-in-a-matcher-is-skipped-as.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0347-hir_typeck-the-operand-of-a-unary-takes-the-result-t.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0348-trans-an-index-read-of-an-empty-array-gets-a-dummy-o.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0349-parse-super-may-follow-self-in-use-expression-and-ty.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0350-minicargo-a-patch-entry-s-version-features-and-defau.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0351-hir_typeck-the-unary-operand-rule-of-0347-applies-to.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0352-macro_rules-a-macro-loaded-from-another-crate-s-rlib.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0353-hir_typeck-an-ivar-that-has-to-be-Sized-never-takes-.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0354-resolve-a-re-import-of-a-restricted-visibility-item-.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0355-parse-path-modules-of-a-crate-root-given-as-a-bare-f.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0356-hir-an-erased-type-s-origin-path-compares-with-ivars.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0357-hir_typeck-the-operand-of-a-unary-takes-the-expected.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0358-trans-minicargo-a-staticlib-carries-the-static-nativ.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0359-trans-hir_expand-vtable-static-types-list-the-associ.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0360-hir_typeck-type_is_clone-waits-on-an-unresolved-proj.patch]"
+    system -W ${workpath}/${name}-${github.version} "patch -p1 < [shellescape ${filespath}/0361-expand-cfg_select-expression-arms-pred-expr.patch]"
     # Patch the Rust source code with the patch included with mrustc:
     system -W ${workpath}/rustc-${rust_version}-src "patch -p0 < [shellescape ${worksrcpath}/rustc-${rust_version}-src.patch]"
 

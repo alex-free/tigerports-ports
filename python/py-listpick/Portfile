@@ -7,7 +7,7 @@ name                py-listpick
 version             0.1.18.1
 revision            0
 categories-append   devel
-platforms           any
+platforms           {darwin any}
 license             MIT
 maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
 
@@ -19,7 +19,7 @@ checksums           rmd160  02864f5babba7d9612e1b607a9dd89008bd4ae63 \
                     size    96191
 supported_archs     noarch
 
-python.versions     310 311 312 313 314
+python.versions     310 311 312 313 314 315
 
 if {${subport} ne ${name}} {
     depends_lib-append \

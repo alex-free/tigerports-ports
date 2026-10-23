@@ -7,7 +7,7 @@ name                py-ffmpeg-python
 version             0.2.0
 revision            0
 categories-append   multimedia
-platforms           any
+platforms           {darwin any}
 license             Apache-2
 maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
 description         Python bindings for FFmpeg
@@ -18,7 +18,7 @@ checksums           rmd160  bc77c81b8b6711d343525ca349e6b963b7fdc953 \
                     size    21543
 supported_archs     noarch
 
-python.versions     310 311 312 313 314
+python.versions     310 311 312 313 314 315
 
 if {${subport} ne ${name}} {
     # It is a mess…

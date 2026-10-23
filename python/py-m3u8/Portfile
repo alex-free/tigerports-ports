@@ -6,7 +6,7 @@ PortGroup           python 1.0
 name                py-m3u8
 version             6.0.0
 revision            0
-platforms           any
+platforms           {darwin any}
 license             MIT
 maintainers         nomaintainer
 description         Python m3u8 parser
@@ -17,4 +17,4 @@ checksums           rmd160  7cea05624adfc0c7b79b63b37a3d77772c8bb374 \
                     size    42720
 supported_archs     noarch
 
-python.versions     311 312 313 314
+python.versions     311 312 313 314 315

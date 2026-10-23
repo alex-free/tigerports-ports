@@ -4,7 +4,7 @@ PortSystem          1.0
 PortGroup           github 1.0
 PortGroup           makefile 1.0
 
-github.setup        crystal-lang crystal 1.21.1
+github.setup        crystal-lang crystal 1.22.1
 github.tarball_from archive
 revision            0
 categories          lang
@@ -53,13 +53,13 @@ master_sites-append https://github.com/crystal-lang/${name}/releases/download/${
 distfiles-append    ${name}-${cr_full_ver}-${os.platform}-universal${extract.suffix}:bootstrap
 
 checksums           ${distname}${extract.suffix} \
-                    rmd160  7fccae0ee23c3d72b4f35cda555c8320e870f249 \
-                    sha256  174ad41131a155d0407fb9f66fac4e4baabc5b5d7d030fef9c631a43f553e112 \
-                    size    4229673 \
+                    rmd160  bf1235672a9915562a5cac590945b033fc3289b3 \
+                    sha256  134da23412c2493ec34ae2dda2d5dc10310d8e0c83ba7463bdc4a4269b392002 \
+                    size    4369415 \
                     ${name}-${cr_full_ver}-${os.platform}-universal${extract.suffix} \
-                    rmd160  dead8a1a24394c196e47fc71d6f2fc5b7abbc208 \
-                    sha256  ba34fa7fb8bc8b951f12d17e12f69c9d7ccce38900caa4b8a17f1b4f29d37605 \
-                    size    59333512
+                    rmd160  056b1cfdd4302b3172ca8fa3080f68d9301238f3 \
+                    sha256  8f2dc1ba8219bb2606a2390b11f903f70be346cfeae869557b7c927f37ed9023 \
+                    size    59782867
 
 patchfiles          patch-static.diff
 

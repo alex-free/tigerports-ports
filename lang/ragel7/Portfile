@@ -1,0 +1,83 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+
+name                ragel7
+github.setup        adrian-thurston colm-suite 7.1.0 ragel-
+revision            0
+conflicts           ragel ragel-devel
+categories          lang devel
+# From the Ragel web site:
+# Note: Part of the Ragel output is copied from Ragel source, covered
+# by the MIT [...] license. As an exception, you may use the parts of
+# Ragel output copied from Ragel source without restriction. The
+# remainder of Ragel output is derived from the input and inherits
+# the copyright and license of the input file. Use of Ragel makes
+# absolutely no requirement about the license of generated code.
+license             MIT
+maintainers         nomaintainer
+
+description         Ragel is a state machine compiler
+long_description    Ragel compiles executable finite state machines from \
+                    regular languages. Ragel targets C, C++ and ASM. Ragel \
+                    state machines can not only recognize byte sequences \
+                    as regular expression machines do, but can also execute \
+                    code at arbitrary points in the recognition of a regular \
+                    language.
+
+homepage            http://www.colm.net/open-source/ragel
+dist_subdir         ragel
+
+checksums           rmd160  8c9a67b55a768ad0c764c94f86493dee3c632288 \
+                    sha256  7ab7079f3b0cbd277e2a665214e74e7c847a4e2a6eee7ad6c2513982dd6d78bc \
+                    size    2211074
+github.tarball_from archive
+
+depends_lib-append  port:colm
+
+depends_test        port:gsed
+
+# We are patching configure.ac.
+use_autoconf        yes
+autoconf.cmd        ./autogen.sh
+
+depends_build-append \
+                    port:autoconf \
+                    port:automake \
+                    port:libtool \
+                    path:bin/pkg-config:pkgconfig
+
+configure.args-append \
+                    --disable-install-colm \
+                    --disable-manual \
+                    --enable-program \
+                    --with-colm=${prefix}
+
+test.run            yes
+test.dir            ${worksrcpath}/test
+test.env            PATH=${prefix}/libexec/gnubin:$env(PATH)
+test.cmd            ./runtests
+test.target
+
+post-destroot {
+    # The build by design disrespects its own option:
+    # https://github.com/adrian-thurston/colm-suite/blob/79e64b8f59ec830c526188ed6f1b4b4cebf0661f/configure.ac#L180-L182
+    # So we delete duplicate components by hand:
+    delete -f ${destroot}${prefix}/include/aapl
+    delete -f ${destroot}${prefix}/share/colm-suite/runtests
+    foreach f {libcolm-* libcolm.*} {
+        delete -f {*}[glob ${destroot}${prefix}/lib/${f}]
+    }
+
+    set docdir ${prefix}/share/doc/ragel
+    xinstall -d -m 0755 ${destroot}${docdir}
+    xinstall -m 0644 -W ${worksrcpath} COPYING CREDITS TODO-aapl TODO \
+        ${destroot}${docdir}
+}
+
+if {${os.arch} eq "i386" && ${configure.build_arch} eq "ppc"} {
+    # Rosetta gets it wrong otherwise
+    configure.args-append \
+                    --build=powerpc-apple-darwin${os.major}
+}

@@ -7,7 +7,7 @@ name                py-npyscreen
 version             5.0.4
 revision            0
 categories-append   devel
-platforms           any
+platforms           {darwin any}
 license             BSD
 maintainers         nomaintainer
 description         Writing user interfaces without all that ugly mucking about in hyperspace
@@ -18,4 +18,4 @@ checksums           rmd160  13c0b41f399b7ec1bd3b681a62436825378c0841 \
                     size    82342
 supported_archs     noarch
 
-python.versions     310 311 312 313 314
+python.versions     310 311 312 313 314 315

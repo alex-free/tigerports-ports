@@ -7,7 +7,7 @@ name                py-gevent-websocket
 version             0.10.1
 revision            0
 categories-append   devel net
-platforms           any
+platforms           {darwin any}
 license             MIT
 maintainers         nomaintainer
 description         WebSocket library for gevent networking library
@@ -18,7 +18,7 @@ checksums           rmd160  99ea547011169d06b03e3bcc9ccac6726567c8bb \
                     size    18366
 supported_archs     noarch
 
-python.versions     310 311 312 313 314
+python.versions     310 311 312 313 314 315
 
 if {${subport} ne ${name}} {
     depends_lib-append \

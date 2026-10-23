@@ -8,7 +8,7 @@ python.rootname     typing_inspect
 version             0.9.0
 revision            0
 categories-append   devel
-platforms           any
+platforms           {darwin any}
 license             MIT
 maintainers         nomaintainer
 description         Runtime inspection utilities for typing module
@@ -19,7 +19,7 @@ checksums           rmd160  c7b0e4410994cc858c5a73b13d1162b392814d78 \
                     size    13825
 supported_archs     noarch
 
-python.versions     310 311 312 313 314
+python.versions     310 311 312 313 314 315
 
 if {${subport} ne ${name}} {
     depends_lib-append \

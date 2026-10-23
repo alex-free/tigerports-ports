@@ -8,7 +8,7 @@ python.rootname     simple_websocket
 version             1.1.0
 revision            0
 categories-append   devel www
-platforms           any
+platforms           {darwin any}
 license             MIT
 maintainers         nomaintainer
 description         Simple WebSocket server and client for Python
@@ -19,7 +19,7 @@ checksums           rmd160  705372b409e98246024bfd7a4932add491fe9826 \
                     size    17300
 supported_archs     noarch
 
-python.versions     310 311 312 313 314
+python.versions     310 311 312 313 314 315
 
 if {${subport} ne ${name}} {
     depends_lib-append \

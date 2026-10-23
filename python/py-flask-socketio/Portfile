@@ -8,7 +8,7 @@ python.rootname     flask_socketio
 version             5.6.1
 revision            0
 categories-append   devel www
-platforms           any
+platforms           {darwin any}
 license             MIT
 maintainers         nomaintainer
 description         Socket.IO integration for Flask applications
@@ -19,7 +19,7 @@ checksums           rmd160  454fa80b0147f3ee3b6bf2019cbbaa99cd27c142 \
                     size    37857
 supported_archs     noarch
 
-python.versions     310 311 312 313 314
+python.versions     310 311 312 313 314 315
 
 if {${subport} ne ${name}} {
     depends_lib-append \

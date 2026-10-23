@@ -3,7 +3,7 @@
 PortSystem          1.0
 PortGroup           golang 1.0
 
-go.setup            github.com/ollama/ollama 0.35.0 v
+go.setup            github.com/ollama/ollama 0.40.9 v
 github.tarball_from archive
 revision            0
 
@@ -17,9 +17,9 @@ description         ${name} runs and manages LLMs
 long_description    Get up and running with large language models easily
 homepage            https://ollama.com
 
-checksums           rmd160  a049bae13533067061dba6fbbeea422d6d422811 \
-                    sha256  2d24c59fe4aec09fa68994816cd24e233dff4d57cbc31ee9b46973fb0b3f55e7 \
-                    size    26420689
+checksums           rmd160  12f1bd9c4472cdcc732bedb9d431f8f8e1eb7e8b \
+                    sha256  9e99fd4c86ebb5ff948a7f22a667b0c0a5d80a14b86aaf232f282c092e0d6ca7 \
+                    size    26787389
 
 depends_run-append  port:llama.cpp
 
@@ -99,9 +99,6 @@ variant completion description "Install bash completion for ${name}" {
 variant mlx description "Support acceleration with Apple's MLX library" {
     depends_lib-append \
                     port:mlx-c
-
-    patchfiles-append \
-                    patch-mlx-c-0.6-ollama-0.34.4.diff
 
     build.post_args-append \
                     -tags=mlx

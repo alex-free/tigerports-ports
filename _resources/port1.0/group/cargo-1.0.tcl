@@ -20,17 +20,17 @@ global os.arch
 # On powerpc mrustc is used, since the full rustc is still broken:
 # https://github.com/thepowersgang/mrustc/issues/300
 if {${os.arch} eq "powerpc"} {
+    # (also sets rustc_target_ver, the Rust version of the mrustc port)
     PortGroup                   mrustc 1.0
-
-    # Rustc version used by mrustc port:
-    set rustc_target_ver        1.90
 
     default universal_variant   no
 
     default build.cmd           {MRUSTC_TARGET_VER=${rustc_target_ver} ${cargo.bin} \.}
     default build.target        {}
-    default build.pre_args      {-L ${mrustc_root}/lib/ -j${build.jobs}}
-    default build.args          {--vendor-dir ${cargo.home}/macports/ --output-dir ${worksrcpath}/target/[cargo.rust_platform]/release}
+    # Keep the vendor and output directories out of build.args: a Portfile that sets `build.args --features=..` (websocat)
+    # instead of appending would otherwise drop them (minicargo then finds no crate at all)
+    default build.pre_args      {-L ${mrustc_root}/lib/ -j${build.jobs} --vendor-dir ${cargo.home}/macports/ --output-dir ${worksrcpath}/target/[cargo.rust_platform]/release}
+    default build.args          {}
 } else {
     PortGroup                   rust 1.0
 

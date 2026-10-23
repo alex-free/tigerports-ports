@@ -4,15 +4,15 @@ PortSystem          1.0
 PortGroup           npm 1.0
 
 name                pi-coding-agent
-version             1.2.0
+version             1.4.0
 revision            0
 
 npm.rootname        @earendil-works/pi-coding-agent
 distname            ${name}-${version}
 
-checksums           rmd160  4102c5549b84cfd1da5f73177daf2f68e5258e7e \
-                    sha256  1dfed308f46a69aec06bf9dc20700ddc6fe2370b1898f01334b7898397541e66 \
-                    size    7568475
+checksums           rmd160  9064f11d8a9d8c5e41747d34d1d63422cc16fa7b \
+                    sha256  d155c16ef6fa00960fbf58b2911536e80b05f33700e0b14fbd08967ede0c7428 \
+                    size    7612554
 
 categories          llm
 license             MIT

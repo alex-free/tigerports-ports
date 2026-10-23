@@ -7,7 +7,7 @@ name                py-joserfc
 version             1.6.3
 revision            0
 categories-append   devel
-platforms           any
+platforms           {darwin any}
 license             BSD
 maintainers         {@barracuda156 macos-powerpc.org:barracuda} openmaintainer
 description         Python library for JOSE RFCs, including JWS, JWE, JWK, JWA, JWT
@@ -18,7 +18,7 @@ checksums           rmd160  c80796e0b305f5a7085f76062399d78483b51a6d \
                     size    229090
 supported_archs     noarch
 
-python.versions     310 311 312 313 314
+python.versions     310 311 312 313 314 315
 
 if {${subport} ne ${name}} {
     depends_lib-append \

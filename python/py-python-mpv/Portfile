@@ -8,7 +8,7 @@ python.rootname     python_mpv
 version             1.0.8
 revision            0
 categories-append   multimedia
-platforms           any
+platforms           {darwin any}
 license             {GPL-2+ LGPL-2+}
 maintainers         nomaintainer
 description         A python interface to the mpv media player
@@ -19,4 +19,4 @@ checksums           rmd160  4e6ebd5e3f0812508548bce8c101a0f11bddd2f9 \
                     size    52680
 supported_archs     noarch
 
-python.versions     310 311 312 313 314
+python.versions     310 311 312 313 314 315

@@ -1,0 +1,77 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+
+# clock_gettime
+legacysupport.newest_darwin_requires_legacy 15
+
+github.setup        SFML SFML 3.1.0
+name                sfml
+revision            0
+
+categories          devel multimedia
+maintainers         gmail.com:rkitover openmaintainer
+license             zlib
+
+description         SFML is the Simple and Fast Multimedia Library
+long_description    {*}${description}. It provides a simple interface to the various \
+                    components of your computer, to ease the development of games and \
+                    multimedia applications. It is composed of five modules: system, \
+                    window, graphics, audio and network.
+
+homepage            https://www.sfml-dev.org
+
+checksums           rmd160  11e98b9afadb8c044e683e24d5149a0c7cefec7b \
+                    sha256  91209a112c2bd0bc6f4ce0d5f3e413cfb48b57c0de59f5507dc81f71b1ad7a5c \
+                    size    6355710
+github.tarball_from archive
+
+patchfiles          patch-network-bundled-mbedtls.diff
+
+if {${os.platform} eq "darwin" && ${os.major} < 11} {
+    patchfiles-append \
+                    patch-macos-gcc.diff \
+                    patch-macos-10.6-sdk.diff
+}
+
+compiler.cxx_standard   2017
+
+depends_lib-append  port:flac \
+                    path:lib/pkgconfig/freetype2.pc:freetype \
+                    path:lib/pkgconfig/harfbuzz.pc:harfbuzz \
+                    path:include/turbojpeg.h:libjpeg-turbo \
+                    port:libvorbis
+
+configure.args-append \
+                    -DBUILD_SHARED_LIBS=ON \
+                    -DCMAKE_CXX_STANDARD=17 \
+                    -DSFML_BUILD_DOC=OFF \
+                    -DSFML_USE_SYSTEM_DEPS=ON
+
+configure.cppflags-replace \
+                    -I${prefix}/include \
+                    -isystem${prefix}/include
+
+# SFML bundles its own mbedtls (with MBEDTLS_THREADING_ALT and a custom
+# threading implementation) and libssh2, statically linking them into
+# sfml-network. Their headers, libs, and configs get installed into the
+# prefix — remove them to avoid collisions with the standalone ports.
+post-destroot {
+    foreach d {MbedTLS libssh2} {
+        file delete -force ${destroot}${prefix}/lib/cmake/${d}
+    }
+    foreach f {mbedcrypto.pc mbedx509.pc mbedtls.pc libssh2.pc} {
+        file delete -force ${destroot}${prefix}/lib/pkgconfig/${f}
+    }
+    foreach f {libmbedcrypto.a libmbedx509.a libmbedtls.a libssh2.a} {
+        file delete -force ${destroot}${prefix}/lib/${f}
+    }
+    file delete -force ${destroot}${prefix}/include/mbedtls
+    file delete -force ${destroot}${prefix}/include/psa
+    foreach f [glob -nocomplain ${destroot}${prefix}/include/libssh2*.h] {
+        file delete -force ${f}
+    }
+}

@@ -7,7 +7,7 @@ name                py-blurhash
 version             1.1.4
 revision            0
 categories-append   devel crypto
-platforms           any
+platforms           {darwin any}
 license             MIT
 maintainers         nomaintainer
 description         Pure-Python implementation of the blurhash algorithm
@@ -18,4 +18,4 @@ checksums           rmd160  86b25009f4aaba52c43a7f0b97adf50b134fb55a \
                     size    4738
 supported_archs     noarch
 
-python.versions     310 311 312 313 314
+python.versions     310 311 312 313 314 315

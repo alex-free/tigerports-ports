@@ -4,7 +4,7 @@ PortSystem          1.0
 PortGroup           github 1.0
 PortGroup           zig_toolchain 1.0
 
-github.setup        simoarpe ziggity 0.49.0 v
+github.setup        simoarpe ziggity 0.54.0 v
 github.tarball_from archive
 revision            0
 
@@ -58,9 +58,9 @@ distfiles-append    ${vaxis_commit}.tar.gz:vaxis \
                     ${uucode_commit}.tar.gz:uucode
 
 checksums           ${distname}${extract.suffix} \
-                    rmd160  729fc18f87cc456955cfd7103f6a55c94f8dece7 \
-                    sha256  00aeb8cf7dcc348c92ade4aeb073d131b820d4595cf5553a5a5d668d08123572 \
-                    size    35487625 \
+                    rmd160  383211ff955b89d057a862a6badf08355b3286b2 \
+                    sha256  5533033ae4bc6a7ba166a999ebd00e3ddf0833d4e78194e3cc7c5d67348ee15b \
+                    size    35500103 \
                     ${vaxis_commit}.tar.gz \
                     rmd160  7cdcde94fd03345e17327425780a3bb967bf0861 \
                     sha256  cbd2b2fc802bd25591f513279af0d812889222288b4fe36ddac03445bd06b150 \

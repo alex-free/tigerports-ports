@@ -8,7 +8,7 @@ python.rootname     gyp_next
 version             0.21.1
 revision            0
 categories-append   devel
-platforms           any
+platforms           {darwin any}
 license             BSD
 maintainers         nomaintainer
 description         A fork of the GYP build system
@@ -19,7 +19,7 @@ checksums           rmd160  97ebffc2dfc74e60f50c3d824c85a52669440543 \
                     size    319972
 supported_archs     noarch
 
-python.versions     310 311 312 313 314
+python.versions     310 311 312 313 314 315
 if {${subport} ne ${name}} {
     depends_lib-append  port:py${python.version}-packaging
 }

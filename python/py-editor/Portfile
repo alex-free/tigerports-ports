@@ -7,7 +7,7 @@ name                py-editor
 version             1.7.0
 revision            0
 categories-append   sysutils
-platforms           any
+platforms           {darwin any}
 license             MIT
 maintainers         nomaintainer
 description         Open the default text editor
@@ -18,7 +18,7 @@ checksums           rmd160  1e638a17210348e83a5e0bfbe59c3bf099b0b04a \
                     size    2355
 supported_archs     noarch
 
-python.versions         310 311 312 313 314
+python.versions         310 311 312 313 314 315
 python.pep517_backend   poetry
 
 if {${subport} ne ${name}} {

@@ -7,7 +7,7 @@ name                py-drissionpage
 version             4.1.1.2
 revision            0
 categories-append   www
-platforms           any
+platforms           {darwin any}
 license             BSD
 maintainers         nomaintainer
 description         Python based web automation tool
@@ -18,7 +18,7 @@ checksums           rmd160  55807058e4382e16f637bed5370edf2f79a527fe \
                     size    208034
 supported_archs     noarch
 
-python.versions     310 311 312 313 314
+python.versions     310 311 312 313 314 315
 
 if {${subport} ne ${name}} {
     depends_lib-append \

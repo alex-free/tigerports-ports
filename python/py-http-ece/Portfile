@@ -8,7 +8,7 @@ python.rootname     http_ece
 version             1.2.1
 revision            0
 categories-append   devel crypto
-platforms           any
+platforms           {darwin any}
 license             MIT
 maintainers         nomaintainer
 description         Encrypted Content Encoding for HTTP
@@ -19,7 +19,7 @@ checksums           rmd160  12f53f61cc98d06e7e9341efedfe3a82a7c933e5 \
                     size    8830
 supported_archs     noarch
 
-python.versions     310 311 312 313 314
+python.versions     310 311 312 313 314 315
 
 if {${subport} ne ${name}} {
     depends_lib-append \

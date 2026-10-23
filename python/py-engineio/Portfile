@@ -8,7 +8,7 @@ python.rootname     python_engineio
 version             4.13.1
 revision            0
 categories-append   devel
-platforms           any
+platforms           {darwin any}
 license             MIT
 maintainers         nomaintainer
 description         Engine.IO server and client for Python
@@ -19,7 +19,7 @@ checksums           rmd160  f3f5ef2565a03ee89ece3ced8abc85686a349a9c \
                     size    92348
 supported_archs     noarch
 
-python.versions     310 311 312 313 314
+python.versions     310 311 312 313 314 315
 
 if {${subport} ne ${name}} {
     depends_lib-append \

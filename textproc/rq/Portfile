@@ -5,31 +5,28 @@ PortGroup           cargo   1.0
 PortGroup           github  1.0
 
 github.setup        dflemstr rq 1.0.4 v
-github.tarball_from archive
 revision            0
-
-description         Record Query - A tool for doing record analysis and \
-                    transformation
-
-long_description    \
-    ${name} is a tool that's used for performing queries on streams of \
-    records in various formats.  The goal is to make ad-hoc exploration of \
-    data sets easy without having to use more heavy-weight tools like \
-    SQL/MapReduce/custom programs. ${name} fills a similar niche as tools \
-    like awk or sed, but works with structured (record) data instead of text. \
-    ${name} supports Apache Avro, CBOR, JSON, MessagePack, Google ProtoBuf, \
-    YAML, TOML, CSV, & plain text.
-
 categories          textproc
 installs_libs       no
 license             MIT
 maintainers         {gmail.com:herby.gillot @herbygillot} \
                     openmaintainer
+description         Record Query - a tool for doing record analysis and \
+                    transformation
+long_description    \
+    ${name} is a tool that's used for performing queries on streams of \
+    records in various formats. The goal is to make ad-hoc exploration of \
+    data sets easy without having to use more heavy-weight tools like \
+    SQL/MapReduce/custom programs. ${name} fills a similar niche as tools \
+    like awk or sed, but works with structured (record) data instead of text. \
+    ${name} supports Apache Avro, CBOR, JSON, MessagePack, Google ProtoBuf, \
+    YAML, TOML, CSV & plain text.
 
 checksums           ${distname}${extract.suffix} \
                     rmd160  d1eb2e3d2fc6741931b2d690c03ede113f61af09 \
                     sha256  4c3fc4427d02271c93a2cf4a784887982e97f9aba4946900aad1a35b142f9a47 \
                     size    59467
+github.tarball_from archive
 
 destroot {
     xinstall -m 0755 \

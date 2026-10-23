@@ -4,14 +4,13 @@ PortSystem          1.0
 PortGroup           github 1.0
 PortGroup           muniversal 1.1
 
-github.setup        rurban safeclib 3.14 v
+github.setup        rurban safeclib 3.16 v
 
 revision            0
 
 categories          devel
 license             MIT
-maintainers         {makr @mohd-akram} \
-                    openmaintainer
+maintainers         {makr @mohd-akram} openmaintainer
 
 description         Safe C Library
 
@@ -19,15 +18,16 @@ long_description    This library implements the secure C11 Annex K functions \
                     on top of most libc implementations, which are missing \
                     from them.
 
-checksums           rmd160  3bc2cef174eb4eb7866f1ba8d2eb2773ca02baa3 \
-                    sha256  3c0a2e34f69b1a9ac2cddeea23f221f3623410843fd375983c55657a9db453e4 \
-                    size    1328955
+checksums           rmd160  256bbe79857f6ffd99a6802e84d17b4e85c980c0 \
+                    sha256  86b8d4320a04e6fcea2808a6e5921d97b244061a4d01b0e6465d960cf441b889 \
+                    size    1399113
 
 compiler.c_standard 1999
 # safe_mem_constraint.c: error: thread-local storage not supported for this target
 compiler.thread_local_storage   yes
 
-configure.args      --disable-hardening
+configure.args      --disable-hardening \
+                    --disable-silent-rules
 
 if {${build_arch} eq "ppc" || ${build_arch} eq "ppc64"} {
     configure.cflags-append -std=c99
