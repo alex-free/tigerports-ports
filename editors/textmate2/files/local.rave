@@ -1,5 +1,0 @@
-add FLAGS    "-I@@PREFIX@@/include"
-add LN_FLAGS "-L@@PREFIX@@/lib"
-
-# Do not set --options runtime, because the MacPorts-compiled version won't start in the hardened runtime
-set CS_FLAGS "--force"

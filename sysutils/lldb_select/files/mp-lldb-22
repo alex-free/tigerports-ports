@@ -1,7 +1,0 @@
-bin/darwin-debug-mp-22
-bin/lldb-argdumper-mp-22
-bin/lldb-instr-mp-22
-bin/lldb-mp-22
-bin/lldb-server-mp-22
--
-bin/lldb-dap-mp-22

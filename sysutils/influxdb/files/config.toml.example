@@ -1,2 +1,0 @@
-bolt-path = "@DATA_DIR@/influxd.bolt"
-engine-path = "@DATA_DIR@/engine"

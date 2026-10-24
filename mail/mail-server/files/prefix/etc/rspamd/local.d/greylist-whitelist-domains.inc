@@ -1,2 +1,0 @@
-@domain@.@tld@
-mit.edu

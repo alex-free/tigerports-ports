@@ -1,2 +1,0 @@
-bin/kubectl@@BASE_VERSION@@
-share/@@PORT_NAME@@/completion/kubectl.bash
