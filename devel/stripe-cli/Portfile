@@ -1,0 +1,40 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           golang 1.0
+
+go.setup            github.com/stripe/stripe-cli 1.55.1 v
+go.toolchain_min    1.26.5
+go.offline_build    no
+revision            0
+
+homepage            https://stripe.com/docs/stripe-cli
+
+description         A command-line tool for Stripe
+
+long_description    \
+    The Stripe CLI helps you build, test, and manage your Stripe integration \
+    right from the terminal. With the CLI, you can: securely test webhooks \
+    without relying on 3rd party software, trigger webhook events or resend \
+    events for easy testing, tail your API request logs in real-time, and \
+    create, retrieve, update, or delete API objects.
+
+categories          devel
+installs_libs       no
+license             Apache-2
+maintainers         {gmail.com:herby.gillot @herbygillot} \
+                    openmaintainer
+
+checksums           rmd160  366e7e6e888662d48e8a91a681337b5b8d00c981 \
+                    sha256  ce12c100dc8a95f17f5e759cdd0b0fdcb281308fda6d8a3aaf698c17678bc780 \
+                    size    3670428
+
+# disable stripe telemetry which is otherwise enabled by default
+patchfiles          patch-disable-telemetry.diff
+
+build.cmd           make
+build.target        build
+
+destroot {
+    xinstall -m 0755 ${worksrcpath}/stripe ${destroot}${prefix}/bin/
+}

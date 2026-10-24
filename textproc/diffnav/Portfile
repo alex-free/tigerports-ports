@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           golang 1.0
+
+go.setup            github.com/dlvhdr/diffnav 0.13.0 v
+go.offline_build    no
+go.toolchain_min    1.26
+revision            0
+
+description         A git diff pager based on delta but with a file tree, à \
+                    la GitHub.
+
+long_description    {*}${description}
+
+categories          textproc devel
+installs_libs       no
+license             MIT
+maintainers         {gmail.com:herby.gillot @herbygillot} \
+                    openmaintainer
+
+checksums           rmd160  579b2af034a2e3b9ae9445916bebf83dab3979e4 \
+                    sha256  c0915b7960db053479cbdd2dd9745e5822531ea17f3c8228da7a77842be92d97 \
+                    size    679760
+
+build.pre_args-append \
+    -ldflags \"-X ${go.package}/pkg/version.Version=v${version}\"
+
+destroot {
+    xinstall -m 0755 ${worksrcpath}/${name} ${destroot}${prefix}/bin/
+}

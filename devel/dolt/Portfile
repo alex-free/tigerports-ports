@@ -1,0 +1,36 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           golang 1.0
+
+go.setup            github.com/dolthub/dolt 2.5.0 v
+go.toolchain_min    1.26.2
+go.offline_build    no
+
+description         \
+    Dolt is Git for Data - It's like Git and MySQL had a baby!
+
+long_description    \
+    Dolt is a SQL database that you can fork, clone, branch, merge, push and \
+    pull just like a git repository. Connect to Dolt just like any MySQL \
+    database to run queries or update the data using SQL commands. Use the \
+    command line interface to import CSV files, commit your changes, push \
+    them to a remote, or merge your teammate's changes.
+
+categories          devel databases
+installs_libs       no
+license             Apache-2
+maintainers         {gmail.com:herby.gillot @herbygillot} \
+                    openmaintainer
+
+checksums           rmd160  a6ee3cf3b65fb43cc342a5df04b464112eae6dab \
+                    sha256  cdd3096b116d27ef43523430d3c13461f0dc92f8f756e40d0b4709689aa3ace3 \
+                    size    12504916
+
+build.dir           ${worksrcpath}/go
+build.target        ./cmd/dolt
+depends_lib-append  path:lib/pkgconfig/icu-uc.pc:icu
+
+destroot {
+    xinstall -m 0755 ${worksrcpath}/go/${name} ${destroot}${prefix}/bin/
+}
