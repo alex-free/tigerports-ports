@@ -5,6 +5,7 @@ PortGroup               github 1.0
 PortGroup               meson 1.0
 
 github.setup            cisco openh264 2.7.0 v
+revision                0
 categories              multimedia
 license                 BSD
 maintainers             nomaintainer

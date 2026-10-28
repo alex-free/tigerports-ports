@@ -5,13 +5,12 @@ PortGroup           python 1.0
 
 name                py-xmlsec
 version             1.3.17
-revision            4
+revision            5
 
 categories-append   security textproc
 platforms           darwin
 license             MIT
 maintainers         {mps @Schamschula} openmaintainer
-
 description         A set of Python bindings for the XML Security Library.
 long_description    {*}${description}
 
@@ -34,4 +33,8 @@ if {${name} ne ${subport}} {
                     port:xmlsec
 
     patchfiles      patch-pyproject.toml.diff
+    
+    # xmlsec 1.3.13 compatibility, remove after next release
+    patchfiles-append \
+                    435.diff
 }
