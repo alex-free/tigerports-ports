@@ -8,7 +8,6 @@ revision            0
 categories          www security net
 license             GPL-2
 maintainers         {ieee.org:s.t.smith @essandess} openmaintainer
-supported_archs     arm64 x86_64
 
 description         Advanced filtering web proxy
 
@@ -21,7 +20,7 @@ long_description    Privoxy is a web proxy with advanced filtering \
                     Privoxy has application for both stand-alone systems and \
                     multi-user networks.
 
-homepage            https://www.privoxy.org/
+homepage            https://www.privoxy.org
 
 set tls_ca_dir      ${prefix}/etc/${name}/ca.macports
 set privoxy_ca_dir  ${prefix}/etc/${name}/CA
@@ -41,19 +40,22 @@ pre-configure {
     } elseif {${os.platform} eq "darwin" \
         && [existsuser ${privoxyUser}] != -1 \
         && [existsgroup ${privoxyGroup}] != -1} {
-        set dscl [findBinary dscl $portutil::autoconf::dscl_path]
-        set privoxyUser_gid [strsed [exec -ignorestderr $dscl . -read /Users/${privoxyUser} PrimaryGroupID] {g|^PrimaryGroupID: ||}]
-        if {${privoxyUser_gid} ne [existsgroup ${privoxyGroup}]} {
-            exec -ignorestderr $dscl . -change /Users/${privoxyUser} PrimaryGroupID ${privoxyUser_gid} [existsgroup ${privoxyGroup}]
+        # portutil::autoconf::dscl_path is gone in newer MacPorts base
+        set dscl [findBinary dscl /usr/bin/dscl]
+        set privoxyGroup_gid [existsgroup ${privoxyGroup}]
+        if {[catch {exec -ignorestderr $dscl . -read /Users/${privoxyUser}} privoxyUser_record]} {
+            ui_warn "Could not read user '${privoxyUser}' from the local directory: ${privoxyUser_record}"
+        } else {
+            set privoxyUser_gid ""
+            regexp -line {^PrimaryGroupID:\s*(\S+)} ${privoxyUser_record} -> privoxyUser_gid
+            if {${privoxyUser_gid} ne ${privoxyGroup_gid}} {
+                # -change must be given the exact old value and fails on 10.6;
+                # -create sets the value unconditionally
+                if {[catch {exec -ignorestderr $dscl . -create /Users/${privoxyUser} PrimaryGroupID ${privoxyGroup_gid}} err]} {
+                    ui_warn "Could not set the PrimaryGroupID of '${privoxyUser}' to ${privoxyGroup_gid}: ${err}"
+                }
+            }
         }
-    }
-}
-
-proc plutil_startup {plcmds label} {
-    global prefix startupitem.location
-    foreach cmd ${plcmds} {
-        system -W ${prefix}/etc/${startupitem.location}/${label} \
-            "/usr/bin/plutil ${cmd} ${label}.plist"
     }
 }
 
@@ -71,7 +73,7 @@ if {${name} eq ${subport}} {
     PortGroup       gpg_verify 1.0
     PortGroup       perl5 1.0
 
-    master_sites    ${homepage}sf-download-mirror/Sources/${version}%20%28stable%29
+    master_sites    ${homepage}/sf-download-mirror/Sources/${version}%20%28stable%29
     distname        ${name}-${version}-stable-src
     distfiles       ${distname}${extract.suffix}
     extract.only    ${distname}${extract.suffix}
@@ -129,11 +131,14 @@ if {${name} eq ${subport}} {
                     ${worksrcpath}/config
     }
 
+    # Do not pass --with-group: configure rejects it unless `groups privoxy`
+    # lists the group, which fails for a pre-existing user whose primary group
+    # differs. It only sets install ownership, and GNUmakefile already falls
+    # back to a group named after the user.
     pre-configure {
-        if {[existsuser ${privoxyUser}] != 0 && [existsgroup ${privoxyGroup}] != 0} {
+        if {[existsuser ${privoxyUser}] != -1} {
             configure.args-append \
-                    --with-user=${privoxyUser} \
-                    --with-group=${privoxyGroup}
+                    --with-user=${privoxyUser}
         }
         system -W ${worksrcpath} "autoheader"
     }
@@ -193,7 +198,7 @@ if {${name} eq ${subport}} {
             system -W ${destroot}${prefix}/etc/rc.d "patch -p0 < ${filespath}/patch-privoxy_sh.diff"
             reinplace "s|@PREFIX@|${prefix}|g" \
                     ${destroot}${prefix}/etc/rc.d/${name}.sh
-            if {[existsuser ${privoxyUser}] != 0} {
+            if {[existsuser ${privoxyUser}] != -1} {
                 reinplace "s|@PRIVOXY_USER@|${privoxyUser}|g" \
                     ${destroot}${prefix}/etc/rc.d/${name}.sh
             } else {
@@ -220,7 +225,7 @@ if {${name} eq ${subport}} {
         # multi-linked files (the one in ${prefix} and the one in
         # ${prefix}/var/db/dports/software/...)
         file delete {*}[glob ${destroot}${prefix}/var/log/${name}/*]
-        if {[existsuser ${privoxyUser}] != 0 && [existsgroup ${privoxyGroup}] != 0} {
+        if {[existsuser ${privoxyUser}] != -1 && [existsgroup ${privoxyGroup}] != -1} {
             # Make sure log directory owned by privoxy user/group
             file attributes ${destroot}${prefix}/var/log/${name} \
                     -group ${privoxyGroup} -owner ${privoxyUser}
@@ -241,7 +246,7 @@ if {${name} eq ${subport}} {
         # Make sure initial log files are present and setup correctly
         foreach privoxyLog {jarfile logfile} {
             touch ${prefix}/var/log/${name}/${privoxyLog}
-            if {[existsuser ${privoxyUser}] != 0 && [existsgroup ${privoxyGroup}] != 0} {
+            if {[existsuser ${privoxyUser}] != -1 && [existsgroup ${privoxyGroup}] != -1} {
                 file attributes ${prefix}/var/log/${name}/${privoxyLog} \
                     -group ${privoxyGroup} -owner ${privoxyUser} \
                     -permissions 0660
@@ -257,7 +262,7 @@ if {${name} eq ${subport}} {
                     file copy ${prefix}/etc/${name}/${privoxyConf}.new \
                         ${prefix}/etc/${name}/${privoxyConf}
                 }
-                if {[existsuser ${privoxyUser}] != 0 && [existsgroup ${privoxyGroup}] != 0} {
+                if {[existsuser ${privoxyUser}] != -1 && [existsgroup ${privoxyGroup}] != -1} {
                     file attributes ${prefix}/etc/${name}/${privoxyConf} \
                         -group ${privoxyGroup} -owner ${privoxyUser} \
                         -permissions 0660
@@ -318,7 +323,7 @@ if {${name} eq ${subport}} {
                 ${destroot}${prefix}/var/${name} \
                 ${destroot}${prefix}/var/${name}/certs
 
-            if {[existsuser ${privoxyUser}] != 0 && [existsgroup ${privoxyGroup}] != 0} {
+            if {[existsuser ${privoxyUser}] != -1 && [existsgroup ${privoxyGroup}] != -1} {
                 file attributes ${destroot}${privoxy_ca_dir} \
                     -group ${privoxyGroup} -owner ${privoxyUser}
                 file attributes ${destroot}${prefix}/var/${name} \
@@ -426,7 +431,7 @@ TLS_PRIVOXY_ROOT_CA
                 xinstall -m 0664 \
                     ${tls_ca_dir}/certs/privoxy.p12 \
                     ${privoxy_ca_dir}
-                if {[existsuser ${privoxyUser}] != 0 && [existsgroup ${privoxyGroup}] != 0} {
+                if {[existsuser ${privoxyUser}] != -1 && [existsgroup ${privoxyGroup}] != -1} {
                     file attributes ${privoxy_ca_dir}/privoxy.cert.pem \
                         -group ${privoxyGroup} -owner ${privoxyUser} \
                         -permissions 0664
@@ -553,29 +558,37 @@ TLS_PRIVOXY_ROOT_CA
                     /bin/bash \
             pidfile none
 
-        post-activate {
+        post-destroot {
             # bruteforce expiration launchd daemon
             # Privoxy certs are issued for 30 days; delete every week
-            plutil_startup [list \
-                "-insert Program -string /bin/bash" \
-                "-replace ProgramArguments \
-                    -xml '<array> \
-                      <string>/bin/bash</string> \
-                      <string>-c</string> \
-                      <string>for c in ${prefix}/var/${name}/certs/*.crt; do if ! openssl x509 -checkend 0 -noout -in &quot;\${c}&quot; 1&gt; /dev/null 2&gt;&amp;1; then rm -f &quot;\${c}&quot; &quot;\${c%.crt}.pem&quot;; fi; done</string> \
-                    </array>'" \
-                "-remove KeepAlive" \
-                "-insert StartCalendarInterval \
-                    -xml '<dict> \
-                      <key>Weekday</key> \
-                      <integer>7</integer> \
-                      <key>Hour</key> \
-                      <integer>0</integer> \
-                      <key>Minute</key> \
-                      <integer>30</integer> \
-                    </dict>'" \
-                ] \
-                org.macports.Privoxy.delete-expired-certs
+            # Overwrite the generated plist (created at the start of destroot)
+            # instead of editing it after activation: old plutil has no
+            # -insert/-replace. Use our openssl, not the ancient system one.
+            set certs_item  org.macports.Privoxy.delete-expired-certs
+            set certs_plist [open ${destroot}${prefix}/etc/${startupitem.location}/${certs_item}/${certs_item}.plist w 0644]
+            puts ${certs_plist} "<?xml version='1.0' encoding='UTF-8'?>"
+            puts ${certs_plist} "<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\""
+            puts ${certs_plist} "\"http://www.apple.com/DTDs/PropertyList-1.0.dtd\" >"
+            puts ${certs_plist} "<plist version='1.0'>"
+            puts ${certs_plist} "<dict>"
+            puts ${certs_plist} "<key>Label</key><string>${certs_item}</string>"
+            puts ${certs_plist} "<key>Program</key><string>/bin/bash</string>"
+            puts ${certs_plist} "<key>ProgramArguments</key>"
+            puts ${certs_plist} "<array>"
+            puts ${certs_plist} "\t<string>/bin/bash</string>"
+            puts ${certs_plist} "\t<string>-c</string>"
+            puts ${certs_plist} "\t<string>for c in ${prefix}/var/${name}/certs/*.crt; do if ! ${prefix}/bin/openssl x509 -checkend 0 -noout -in &quot;\${c}&quot; 1&gt; /dev/null 2&gt;&amp;1; then rm -f &quot;\${c}&quot; &quot;\${c%.crt}.pem&quot;; fi; done</string>"
+            puts ${certs_plist} "</array>"
+            puts ${certs_plist} "<key>Disabled</key><true/>"
+            puts ${certs_plist} "<key>StartCalendarInterval</key>"
+            puts ${certs_plist} "<dict>"
+            puts ${certs_plist} "\t<key>Weekday</key><integer>7</integer>"
+            puts ${certs_plist} "\t<key>Hour</key><integer>0</integer>"
+            puts ${certs_plist} "\t<key>Minute</key><integer>30</integer>"
+            puts ${certs_plist} "</dict>"
+            puts ${certs_plist} "</dict>"
+            puts ${certs_plist} "</plist>"
+            close ${certs_plist}
         }
     }
 
@@ -621,7 +634,7 @@ subport ${name}-pki-bundle {
     destroot {
         xinstall -d ${destroot}${privoxy_ca_dir}
 
-        if {[existsuser ${privoxyUser}] != 0 && [existsgroup ${privoxyGroup}] != 0} {
+        if {[existsuser ${privoxyUser}] != -1 && [existsgroup ${privoxyGroup}] != -1} {
             file attributes ${destroot}${privoxy_ca_dir} \
                     -group ${privoxyGroup} -owner ${privoxyUser}
         }
@@ -651,7 +664,7 @@ subport ${name}-pki-bundle {
         }
         delete      ${destroot}${privoxy_ca_dir}/trustedCAs.pem-temp
 
-        if {[existsuser ${privoxyUser}] != 0 && [existsgroup ${privoxyGroup}] != 0} {
+        if {[existsuser ${privoxyUser}] != -1 && [existsgroup ${privoxyGroup}] != -1} {
             file attributes \
                 ${destroot}${privoxy_ca_dir}/trustedCAs.pem \
                     -group ${privoxyGroup} -owner ${privoxyUser} \

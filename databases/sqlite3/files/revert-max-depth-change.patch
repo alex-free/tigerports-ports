@@ -1,6 +1,6 @@
 https://sqlite.org/src/info/845190e3f2ede1f6
 
---- sqlite3.c.orig	2026-10-26 13:42:10
+--- sqlite3.c
 +++ sqlite3.c	2026-10-26 13:45:47
 @@ -155448,14 +155448,6 @@ static int resolveFromTermToCte(
      }
