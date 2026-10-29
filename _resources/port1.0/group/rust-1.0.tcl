@@ -13,20 +13,8 @@
 # shadows in the overlay.
 #
 
-global os.arch
-
-if {${os.arch} eq "powerpc"} {
-    # This port's build system runs cargo: the mrustc PortGroup gives it the stand-ins (mrustc.cargo_shim)
-    namespace eval rust {
-        variable runs_cargo yes
-    }
-    PortGroup                   mrustc 1.0
-} else {
-    namespace eval rust {
-        variable default_portgroup [getdefaultportresourcepath port1.0/group/rust-1.0.tcl]
-    }
-    if {[file normalize ${::rust::default_portgroup}] eq [file normalize [info script]]} {
-        return -code error "rust-1.0.tcl: the default ports tree in sources.conf is this overlay, so MacPorts' rust PortGroup cannot be found"
-    }
-    source ${::rust::default_portgroup}
+# This port's build system runs cargo: the mrustc PortGroup gives it the stand-ins (mrustc.cargo_shim)
+namespace eval rust {
+    variable runs_cargo yes
 }
+PortGroup                   mrustc 1.0
