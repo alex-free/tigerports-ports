@@ -5,31 +5,25 @@ PortGroup           cargo   1.0
 PortGroup           github  1.0
 
 github.setup        01mf02 jaq 3.1.2 v
-github.tarball_from archive
 revision            0
-
-description         A jq clone focussed on correctness, speed, and simplicity
-
-long_description    \
-    ${name} is a clone of the JSON data processing tool jq. ${name} aims to \
-    support a large subset of jq's syntax and operations. ${name} focuses on \
-    three goals: Correctness, Performance, and Simplicity
-
 categories          textproc sysutils
 installs_libs       no
 license             MIT
 maintainers         {gmail.com:herby.gillot @herbygillot} \
                     openmaintainer
-
-depends_lib-append  port:jq
+description         A jq clone focussed on correctness, speed and simplicity
+long_description    \
+    ${name} is a clone of the JSON data processing tool jq. ${name} aims to \
+    support a large subset of jq's syntax and operations. ${name} focuses on \
+    three goals: Correctness, Performance and Simplicity
 
 checksums           ${distname}${extract.suffix} \
                     rmd160  b814019a6deede089ffcfa0ccb4438094b87b06a \
                     sha256  54ac66fac30a1d28c54f19716215cf4256877c69964c1c0150c3976bde618b93 \
                     size    234184
+github.tarball_from archive
 
-github.livecheck.regex \
-                    {([0-9.]+)}
+depends_lib-append  port:jq
 
 destroot {
     xinstall -m 0755 \
@@ -156,3 +150,6 @@ cargo.crates \
     wit-bindgen-rt                  0.39.0  6f42320e61fe2cfd34354ecb597f86f413484a798ba44a8ca1165c58d42da6c1 \
     xmlparser                       0.13.6  66fee0b777b0f5ac1c69bb06d361268faafa61cd4682ae064a171c16c433e9e4 \
     zmij                            1.0.23  29666d0abbfad1e3dc4dcf6144730dd3a3ab225bbbdac83319345b1b44ccfc1b
+
+github.livecheck.regex \
+                    {([0-9.]+)}
