@@ -26,6 +26,10 @@ checksums       rmd160  eb916191b89856a26286d5395ced0649fc3e716e \
 
 patchfiles      fy_skip_size32.patch
 
+# Fix for x86:
+patchfiles-append \
+                patch-blake3_backend.c.diff
+
 # https://github.com/macos-powerpc/powerpc-ports/issues/178
 if {${os.platform} eq "darwin" && ${os.major} < 10} {
     patchfiles-append \
@@ -35,8 +39,10 @@ if {${os.platform} eq "darwin" && ${os.major} < 10} {
 configure.args-append \
                 -DBUILD_TESTING=OFF
 
-if { ${configure.build_arch} eq "i386" } {
-    configure.args-append -DENABLE_PORTABLE_TARGET=ON
+if {${configure.build_arch} eq "i386" || (${os.platform} eq "darwin" \
+    && ${os.major} < 11 && ${configure.build_arch} eq "x86_64")} {
+    configure.args-append \
+                -DENABLE_PORTABLE_TARGET=ON
 }
 
 # __c11_atomic_load from Apple Clang 9.1.0 and earlier rejects const pointers
