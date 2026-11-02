@@ -54,7 +54,7 @@ set archive_frameworks_dir(macports_archives) /opt/local/Library/Frameworks
 variable archive_applications_dir
 set archive_applications_dir(macports_archives) /Applications/MacPorts
 variable archive_cxx_stdlib
-if {${os.platform} eq "darwin" && ${os.major} >= 10} {
+if {${os.platform} eq "darwin" && ${os.major} > 10} {
     set archive_cxx_stdlib(macports_archives) libc++
 } else {
     set archive_cxx_stdlib(macports_archives) libstdc++
