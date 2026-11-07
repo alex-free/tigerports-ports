@@ -60,8 +60,7 @@ configure.args      --disable-openssl \
 # ghash-set-key-2.s:70:no such instruction: `pclmullqhqdq %xmm0, %xmm4'
 if {${os.platform} eq "darwin" && ${os.major} < 11 && \
 ${configure.build_arch} in [list i386 x86_64]} {
-    configure.args-delete --enable-fat
-    configure.args-append --disable-fat
+    configure.args-replace --enable-fat --disable-fat
 }
 
 # aes-decrypt-internal.s:73:2: error: unrecognized instruction mnemonic

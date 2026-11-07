@@ -1,11 +1,14 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
 
 PortSystem          1.0
-PortGroup           github 1.0
 PortGroup           cmake 1.1
+PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+
+# clock_gettime
+legacysupport.newest_darwin_requires_legacy 15
 
 github.setup        shader-slang slang 2026.21 v
-github.tarball_from archive
 name                shader-slang
 revision            0
 
@@ -21,8 +24,7 @@ long_description    Slang is a shading language and compiler for building \
                     and C++ targets from a single Slang source.
 
 homepage            https://shader-slang.com
-
-worksrcdir          ${github.project}-${version}
+github.tarball_from archive
 
 # Submodules with no MacPorts port; the Khronos and lz4 ones come from ports
 set submodules {
@@ -62,6 +64,8 @@ checksums           slang-2026.21.tar.gz \
                     sha256  16188ed4804a670f6b00637a53e135190668dddc12b10f5233e20b403b9df9e2 \
                     size    900659
 
+worksrcdir          ${github.project}-${version}
+
 post-extract {
     foreach {sub_author sub_project sub_commit sub_dir} ${submodules} {
         delete ${worksrcpath}/external/${sub_dir}
@@ -70,8 +74,18 @@ post-extract {
 }
 
 # S-Lang (slang, slang2) owns include/slang.h; skip the ~24k-file docs tree
-patchfiles         patch-install-dirs.diff \
+patchfiles          patch-install-dirs.diff \
                     macports-smoke-test.patch
+
+# Fix broken targets
+patchfiles-append   patch-fix-spirv.diff
+
+# Fix code bugs:
+patchfiles-append   patch-cinttypes.diff \
+                    patch-environ.diff \
+                    patch-big-endian-val-operand.diff
+
+cmake.build_type    Release
 
 depends_build-append \
                     path:bin/pkg-config:pkgconfig \
@@ -82,9 +96,7 @@ depends_lib-append  port:glslang \
                     port:lz4 \
                     port:spirv-tools
 
-compiler.cxx_standard 2020
-
-cmake.build_type    Release
+compiler.cxx_standard   2020
 
 configure.args-append \
                     -DCMAKE_INSTALL_INCLUDEDIR=include/${name} \

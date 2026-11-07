@@ -7,14 +7,21 @@
 #
 # PortGroup     rust 1.0
 #
-# On powerpc this is the mrustc PortGroup: it vendors cargo.crates the same way,
+# With rust.compiler mrustc (see the rust_compiler PortGroup; the default on
+# powerpc) this is the mrustc PortGroup: it vendors cargo.crates the same way,
 # and its cargo and rustc stand-ins (mrustc.cargo_shim) build with minicargo.
-# Elsewhere it is the rust PortGroup of the default ports tree, which this file
-# shadows in the overlay.
+# With rustc it is the rust PortGroup of the default ports tree, which this
+# file shadows in the overlay.
 #
 
-# This port's build system runs cargo: the mrustc PortGroup gives it the stand-ins (mrustc.cargo_shim)
-namespace eval rust {
-    variable runs_cargo yes
+PortGroup                       rust_compiler 1.0
+
+if {${rust.compiler} eq "mrustc"} {
+    # This port's build system runs cargo: the mrustc PortGroup gives it the stand-ins (mrustc.cargo_shim)
+    namespace eval rust {
+        variable runs_cargo yes
+    }
+    PortGroup                   mrustc 1.0
+} else {
+    rust_compiler::source_default_portgroup rust
 }
-PortGroup                   mrustc 1.0
