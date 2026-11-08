@@ -1,15 +1,17 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
 
 PortSystem          1.0
-PortGroup           github  1.0
 PortGroup           cargo   1.0
+PortGroup           github  1.0
 
 github.setup        chmln sd 1.1.0 v
-github.tarball_from archive
 revision            0
-
+categories          textproc
+installs_libs       no
+license             MIT
+maintainers         {gmail.com:herby.gillot @herbygillot} \
+                    openmaintainer
 description         Intuitive find & replace CLI (sed alternative)
-
 long_description    {*}${description}. sd uses regex syntax that you already \
                     know from JavaScript and Python. Forget about dealing \
                     with quirks of sed or awk - get productive immediately.
@@ -18,12 +20,7 @@ checksums           ${distname}${extract.suffix} \
                     rmd160  664f8c53187f63ff3cb140fc8e5bf453f69c613f \
                     sha256  defdce484f8c92f265e1282490572575028967c2c55d356111d1e49a3ea9a88e \
                     size    37137
-
-categories          textproc
-installs_libs       no
-license             MIT
-maintainers         {gmail.com:herby.gillot @herbygillot} \
-                    openmaintainer
+github.tarball_from archive
 
 destroot {
     xinstall -m 0755 \

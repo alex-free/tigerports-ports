@@ -5,28 +5,25 @@ PortGroup           cargo   1.0
 PortGroup           github  1.0
 
 github.setup        AmrDeveloper gql 0.43.0
-github.tarball_from archive
 revision            0
-
-homepage            https://amrdeveloper.github.io/GQL/
-
-description         \
-    Git Query language is an SQL-like language to perform queries on .git files
-
-long_description    \
-    {*}${description} which supports most SQL features such as grouping, \
-    ordering and aggregation functions.
-
 categories          devel databases
 installs_libs       no
 license             MIT
 maintainers         {gmail.com:herby.gillot @herbygillot} \
                     openmaintainer
+homepage            https://amrdeveloper.github.io/GQL
+
+description         \
+    Git Query language is an SQL-like language to perform queries on .git files
+long_description    \
+    {*}${description} which supports most SQL features such as grouping, \
+    ordering and aggregation functions.
 
 checksums           ${distname}${extract.suffix} \
                     rmd160  c303e28e6b4c48638d91552fb5180828d86943a6 \
                     sha256  29744a565ff8a46d0713a077202d3b72a2b32f29ff253c98ec0aa226559fd7fd \
                     size    335544
+github.tarball_from archive
 
 set bin_name        gitql
 
