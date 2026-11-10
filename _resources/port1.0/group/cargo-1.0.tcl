@@ -19,7 +19,7 @@
 
 PortGroup                       rust_compiler 1.0
 
-if {${rust.compiler} eq "mrustc"} {
+#if {${rust.compiler} eq "mrustc"} {
     # (also sets rustc_target_ver, the Rust version of the mrustc port)
     PortGroup                   mrustc 1.0
 
@@ -45,6 +45,6 @@ if {${rust.compiler} eq "mrustc"} {
         ui_msg "Please check if there are additional files (configuration, documentation etc.) that need to be installed."
         error "destroot phase not implemented"
     }
-} else {
-    rust_compiler::source_default_portgroup cargo
-}
+#} else {
+#    rust_compiler::source_default_portgroup cargo
+#}
