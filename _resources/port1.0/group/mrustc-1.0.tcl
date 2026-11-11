@@ -43,6 +43,10 @@
 #
 # cargo.crate_patch_dirs-append ${filespath}/crate_patches
 #
+# The `pregenerated` directory there holds files that build scripts would make
+# with tools ppc lacks, such as nettle-sys's bindgen bindings (see
+# rust::nettle_sys_bindings).
+#
 # Ports whose own build system runs cargo (PortGroup rust 1.0) get cargo and
 # rustc stand-ins in ${cargo.home}/bin that build with minicargo, see
 # mrustc.cargo_shim. By default this is on for
@@ -156,6 +160,14 @@ default     rust.rt_static_libs     {[rust::get_static_rutime_libraries]}
 # force compiler runtime library to be included in link flags
 options     rust.add_compiler_runtime
 default     rust.add_compiler_runtime   {no}
+
+# The libc crate requests `-liconv` on Apple targets, which resolves to ${prefix}/lib/libiconv.dylib
+#     (std's -L${prefix}/lib, LIBRARY_PATH), so by default port:libiconv is added to depends_lib.
+# Set to `yes` to link the system libiconv instead and drop that dependency
+#     only works if no C code built by the port uses iconv (e.g. vendored libgit2 via libgit2-sys);
+#     such code is compiled against MacPorts iconv.h and needs its `libiconv_*` symbols
+options     rust.system_libiconv
+default     rust.system_libiconv        {no}
 
 # The distfiles of the main port will also be stored in this directory,
 # but this is the only way to allow reusing the same crates across multiple ports.
@@ -302,6 +314,42 @@ proc rust::configure_ldflags_proc {option action args} {
     }
 }
 option_proc configure.ldflags rust::configure_ldflags_proc
+
+# Holds only a link to the system libiconv. minicargo passes it to mrustc with -L after the standard
+# library, so mrustc links libc's `iconv` from it by its full path, or (a .tbd) with this
+# directory ahead of std's -L${prefix}/lib.
+proc rust::system_libiconv_dir {} {
+    return [option workpath]/rust-system-libiconv
+}
+
+proc rust::system_libiconv_file {} {
+    foreach dir [list [option configure.sdkroot]/usr/lib /usr/lib] {
+        foreach lib {libiconv.tbd libiconv.dylib} {
+            if {[file exists ${dir}/${lib}]} {
+                return ${dir}/${lib}
+            }
+        }
+    }
+    return ""
+}
+
+# Library directories for minicargo's -L, after ${mrustc_root}/lib (minicargo hands its first -L to
+# build scripts as MRUSTC_LIBDIR): the cargo PortGroup's build.pre_args and the cargo stand-in
+proc rust::minicargo_lib_dirs {} {
+    set dirs [list]
+    if {[option os.platform] eq "darwin" && [option rust.system_libiconv]} {
+        lappend dirs [rust::system_libiconv_dir]
+    }
+    return ${dirs}
+}
+
+proc rust::minicargo_lib_args {} {
+    set args [list]
+    foreach dir [rust::minicargo_lib_dirs] {
+        lappend args -L ${dir}
+    }
+    return ${args}
+}
 
 # Based on portextract::disttagclean from portextract.tcl
 proc rust::disttagclean {list} {
@@ -706,6 +754,46 @@ proc rust::crate_patches {cname cversion exact_only} {
     return ${patches}
 }
 
+# A file for a build script from the `pregenerated` directory of the first cargo.crate_patch_dirs entry that has it
+proc rust::pregenerated_file {name} {
+    foreach dir [option cargo.crate_patch_dirs] {
+        if {[file isfile ${dir}/pregenerated/${name}]} {
+            return ${dir}/pregenerated/${name}
+        }
+    }
+    return ""
+}
+
+# nettle-sys runs bindgen, which needs libclang, unless NETTLE_PREGENERATED_BINDINGS names a bindings file:
+# pregenerated/nettle-<version>-<triple>.rs, or nettle-<major>.<minor>-<triple>.rs, for the installed Nettle
+# (bindgen-gcc's recipes/nettle-sys.sh makes them from the Nettle headers with the port's GCC)
+proc rust::nettle_sys_bindings {} {
+    set pc [option prefix]/lib/pkgconfig/nettle.pc
+    set version ""
+    if {![catch {open ${pc} r} fd]} {
+        while {[gets ${fd} line] >= 0} {
+            regexp {^Version:\s*(\S+)} ${line} -> version
+        }
+        close ${fd}
+    }
+    if {${version} eq ""} {
+        return -code error "mrustc PG: no Nettle version in ${pc}"
+    }
+    set triple [cargo.rust_platform]
+    foreach v [lsort -unique [list ${version} [join [lrange [split ${version} .] 0 1] .]]] {
+        set f [rust::pregenerated_file nettle-${v}-${triple}.rs]
+        if {${f} ne ""} {
+            return ${f}
+        }
+    }
+    set msg "no pregenerated/nettle-${version}-${triple}.rs in cargo.crate_patch_dirs"
+    if {[option configure.build_arch] in {ppc ppc64}} {
+        return -code error "mrustc PG: ${msg}: nettle-sys would run bindgen, which needs libclang"
+    }
+    ui_debug "mrustc PG: ${msg}, nettle-sys runs bindgen"
+    return ""
+}
+
 proc rust::apply_crate_patches {cname cversion cdirname exact_only} {
     set patchbin [findBinary patch ${portutil::autoconf::patch_path}]
     foreach patchfile [rust::crate_patches ${cname} ${cversion} ${exact_only}] {
@@ -925,6 +1013,7 @@ proc rust::write_cargo_shim {} {
         MRUSTC_SHIM_MINICARGO   [option cargo.bin] \
         MRUSTC_SHIM_MRUSTC      ${mrustc_root}/bin/mrustc \
         MRUSTC_SHIM_LIBDIR      ${mrustc_root}/lib \
+        MRUSTC_SHIM_LINK_DIRS   [join [rust::minicargo_lib_dirs] :] \
         MRUSTC_SHIM_VENDOR_DIR  [option cargo.home]/macports \
         MRUSTC_SHIM_JOBS        [option build.jobs] \
         MRUSTC_SHIM_HOST        [cargo.rust_platform] \
@@ -979,6 +1068,14 @@ proc rust::set_environment {} {
         compiler.cpath-prepend              ${prefix}/libexec/openssl${openssl_ver}/include
         compiler.library_path-prepend       ${prefix}/libexec/openssl${openssl_ver}/lib
         configure.pkg_config_path-prepend   ${prefix}/libexec/openssl${openssl_ver}/lib/pkgconfig
+    }
+
+    # libsqlite3-sys (not `bundled`) asks pkg-config for sqlite3 >= 3.34.1 and otherwise links a
+    # bare `-l sqlite3`: /usr/lib/libsqlite3.dylib (3.6.12 on 10.6) unless sqlite3 is active.
+    # With SQLITE3_LIB_DIR it links ${prefix}/lib with or without pkg-config (arti, tor-dirmgr).
+    if {[rust::uses_crate libsqlite3-sys]} {
+        rust::append_envs               SQLITE3_LIB_DIR=${prefix}/lib         {build destroot}
+        rust::append_envs               SQLITE3_INCLUDE_DIR=${prefix}/include {build destroot}
     }
 
     # Propagate pkgconfig path to build and destroot phases as well.
@@ -1086,6 +1183,23 @@ proc rust::rust_pg_callback {} {
 
         depends_build-delete            port:mrustc
         depends_build-append            port:mrustc
+
+        if {[option os.platform] eq "darwin"} {
+            if {[option rust.system_libiconv]} {
+                post-extract {
+                    set lib [rust::system_libiconv_file]
+                    if {${lib} ne ""} {
+                        file mkdir [rust::system_libiconv_dir]
+                        ln -sf ${lib} [rust::system_libiconv_dir]/[file tail ${lib}]
+                    } else {
+                        ui_debug "mrustc PG: no system libiconv found; -liconv will resolve normally"
+                    }
+                }
+            } else {
+                depends_lib-delete      port:libiconv
+                depends_lib-append      port:libiconv
+            }
+        }
     }
 
     if {[option openssl.branch] ne ""} {
@@ -1103,6 +1217,27 @@ proc rust::rust_pg_callback {} {
     if {[rust::uses_crate curl-sys]} {
         depends_lib-delete              port:curl
         depends_lib-append              port:curl
+    }
+
+    # See SQLITE3_LIB_DIR in rust::set_environment (a port with rusqlite/bundled may delete it)
+    if {[rust::uses_crate libsqlite3-sys]} {
+        depends_lib-delete              port:sqlite3
+        depends_lib-append              port:sqlite3
+    }
+
+    # nettle-sys links Nettle and GMP, found by pkg-config, and needs its bindings (rust::nettle_sys_bindings)
+    if {[rust::uses_crate nettle-sys]} {
+        depends_lib-delete              port:nettle port:gmp
+        depends_lib-append              port:nettle port:gmp
+        depends_build-delete            path:bin/pkg-config:pkgconfig
+        depends_build-append            path:bin/pkg-config:pkgconfig
+        pre-build {
+            set bindings [rust::nettle_sys_bindings]
+            if {${bindings} ne ""} {
+                ui_info "nettle-sys: bindings from ${bindings}"
+                build.env-append        NETTLE_PREGENERATED_BINDINGS=${bindings}
+            }
+        }
     }
 
     # Use PEM from ports:

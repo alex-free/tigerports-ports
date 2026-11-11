@@ -57,19 +57,10 @@ platform darwin 8 {
     }
 }
 
-if {${configure.build_arch} in [list i386 x86_64]} {
+if {${os.platform} eq "darwin" && ${os.major} < 11 && \
+${configure.build_arch} in [list i386 x86_64]} {
     # It is not enough to disable the optimizations as it still tries to use
     # instructions too new to identify them when detecting anything intel.
     # orccpu-x86.c {standard input}:15:no such instruction: `xgetbv'
-    patchfiles-append orc_orccpu-x86.c-early-intel.diff 
-} elseif {${configure.build_arch} eq "ppc"} {
-    # Disables SSE/AVX/MMX/everything when on PPC.
-    configure.args-append \
-        -Dorc-target=
-}
-
-variant g4 {
-    configure.args-replace \
-        -Dorc-target= \
-        -Dorc-target=altivec
+    patchfiles-append orc_orccpu-x86.c-early-intel.diff
 }
