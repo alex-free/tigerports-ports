@@ -3,8 +3,8 @@
 PortSystem          1.0
 PortGroup           golang 1.0
 
-go.setup            github.com/prometheus/node_exporter 1.12.1 v
-go.toolchain_min    1.25.0
+go.setup            github.com/prometheus/node_exporter 1.13.1 v
+go.toolchain_min    1.26.0
 revision            0
 
 homepage            https://prometheus.io/docs/guides/node-exporter
@@ -22,9 +22,9 @@ license             Apache-2
 maintainers         {gmail.com:herby.gillot @herbygillot} \
                     openmaintainer
 
-checksums           rmd160  c77e0f4f1a2dc27af81d56c7f9ba018d13bd9427 \
-                    sha256  a90f1df0fde58d216d4a7d342e64831d2e3257db8084deadbe69754d34b15142 \
-                    size    415688
+checksums           rmd160  12987586d1f556c12f9291a926abc452071a22da \
+                    sha256  329f02a71a0bb007e7e700f12ff724b019415730fb60bdf724bf2b28f3d5f223 \
+                    size    439467
 
 set svc_name        prometheus-node-exporter
 set prom_user       prometheus

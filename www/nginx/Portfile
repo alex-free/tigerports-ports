@@ -3,7 +3,7 @@
 PortSystem          1.0
 
 name                nginx
-version             1.30.6
+version             1.30.8
 revision            0
 
 categories          www mail
@@ -22,9 +22,9 @@ master_sites        https://nginx.org/download:nginx
 
 distfiles           ${name}-${version}${extract.suffix}:nginx
 checksums           ${name}-${version}${extract.suffix} \
-                    rmd160  72174f7f968a51fe43866cbcc667fb417cbd698e \
-                    sha256  3cf46f5ed7504d460125866b7bea99fb357f31d887e2e63b35503310e9b8b6c8 \
-                    size    1331698
+                    rmd160  3f26b026312aabf7253160eeb5c723275baab845 \
+                    sha256  f867314ada32e717b949930859656c48a72dc6657aec598db58af2f98a40e1c1 \
+                    size    1333387
 
 depends_lib         port:pcre2 \
                     port:zlib

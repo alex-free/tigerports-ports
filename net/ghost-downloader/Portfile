@@ -6,7 +6,7 @@ PortGroup           active_variants 1.1
 PortGroup           app 1.1
 PortGroup           qt6 1.0
 
-github.setup        XiaoYouChR Ghost-Downloader-3 4.5.4 v
+github.setup        XiaoYouChR Ghost-Downloader-3 4.5.11 v
 github.tarball_from archive
 revision            0
 name                [string tolower [join [lrange [split ${github.project} -] 0 1] -]]
@@ -20,9 +20,9 @@ long_description    ${name} aims to be [string tolower ${description}]. It emplo
                     and intelligent load balancing, supports HTTP(S), QUIC, BitTorrent, eD2k, M3U8,\
                     common video sites, media sniffing, browser integration, and more.
 
-checksums           rmd160  2bd86d5deae025cf23a66829cc56c93735cf8c74 \
-                    sha256  930a25a4fa8938bba597efaf70860fcf5cea1d7e5975f4d0a2f78d931665ce42 \
-                    size    11441643
+checksums           rmd160  979b8fba5a048cf82043278dfd74bc5a83ae7d89 \
+                    sha256  c8f9613daf91bb835fde8e053db0357152bea53abeb957ff889e2176a68fd3a3 \
+                    size    13113178
 
 set python_version  314
 set python_branch   [string index ${python_version} 0].[string range ${python_version} 1 end]
@@ -61,10 +61,6 @@ patchfiles-append   patch-928.diff
 patchfiles-append   patch-934.diff
 # https://github.com/XiaoYouChR/Ghost-Downloader-3/pull/933 - bilibili multi-file task naming
 patchfiles-append   patch-933.diff
-# https://github.com/XiaoYouChR/Ghost-Downloader-3/pull/1059 - i18n
-patchfiles-append   patch-1059.diff
-# segfault on quit; possible bug in PySide6 6.11.2
-patchfiles-append   patch-ghost-downloader-quit.diff
 patch.args          -p1
 
 post-patch {
@@ -73,11 +69,11 @@ post-patch {
     # change default kelpie directory
     reinplace "s|{APP_DATA_DIR}/kelpie|${prefix}/libexec/kelpie|g" ${worksrcpath}/features/ed2k_pack/config.py
     # change hardcoded prefix
-    reinplace "s|/usr/local/bin/ghd|${prefix}/bin/ghd|g" ${worksrcpath}/app/platform/cli_install.py
+    reinplace "s|/usr/local|${prefix}|g" ${worksrcpath}/app/platform/cli_install.py
 }
 
 # Project does not have a typical Python project structure (pyproject.toml not usable for installation).
-# deploy.py compiles standalone bundle and packs everything with nuitka into one app bundle - 
+# scripts/deploy.py compiles standalone bundle and packs everything with nuitka into one app bundle - 
 # avoid that, make our own bundle. We compile the main script and the `app` package only.
 use_configure       no
 post-configure {
@@ -108,15 +104,15 @@ set dest_app ${destroot}${applications_dir}/${app.name}.app
 set dest_app_bin_dir ${dest_app}/Contents/MacOS/
 set dest_app_res_dir ${dest_app}/Contents/Resources/
 set dest_app_info_plist ${dest_app}/Contents/Info.plist
-# see MACOS_DOCUMENT_TYPES in deploy.py for supported file types
+# see MACOS_DOCUMENT_TYPES in scripts/deploy.py for supported file types
 set document_types [list \
     [list "Torrent File"   "torrent.icns" "Viewer" "Alternate" [list "torrent"]] \
     [list "M3U8 Playlist"  "m3u8.icns"    "Viewer" "Alternate" [list "m3u8" "m3u"]] \
     [list "DASH List"      "m3u8.icns"    "Viewer" "Alternate" [list "mpd"]] \
 ]
-# see deploy.py for supported URL schemes
+# see scripts/deploy.py for supported URL schemes
 set url_types [list \
-    [list "${app.identifier}" [list "ghostdownloader" "magnet" "ed2k" "ftp" "ftps"]] \
+    [list "${app.identifier}" [list "ghostdownloader" "magnet" "ed2k" "ftp" "ftps" "thunder" "flashget" "qqdl"]] \
 ]
 
 destroot {
@@ -124,7 +120,7 @@ destroot {
     # --include-data-files ignored in non-standalone build, copy resource file manually
     xinstall -d ${dest_app_bin_dir}/app/assets/
     xinstall -m 0644 ${worksrcpath}/app/assets/resources.rcc ${dest_app_bin_dir}/app/assets/
-    # see EXCLUDED_PACKS in deploy.py
+    # see EXCLUDED_PACKS in scripts/deploy.py
     set feature_pack_blacklist {jack_yao}
     foreach pack ${feature_pack_blacklist} {
         delete ${dest_app_bin_dir}/features/${pack}
@@ -143,13 +139,6 @@ destroot {
 
     # command-line interface
     ln -s "${applications_dir}/${app.name}.app/Contents/MacOS/${app.name}" ${destroot}${prefix}/bin/ghd
-
-    # dependencies
-    if {[variant_isset media]} {
-        xinstall -d ${dest_app_bin_dir}/deps/YtDlp
-        ln -s ${prefix}/bin/qjs ${dest_app_bin_dir}/deps/YtDlp
-        ln -s ${prefix}/Library/Frameworks/Python.framework/Versions/${python_branch}/lib/python${python_branch}/site-packages/yt_dlp/ ${dest_app_bin_dir}/deps/YtDlp
-    }
 }
 
 post-destroot {
@@ -207,7 +196,7 @@ post-destroot {
     exec ${plistbuddy} -c "Add :NSDownloadsFolderUsageDescription string ${dl_access_request}" ${dest_app_info_plist}
 
     # copyright string
-    set copyright "Copyright(C) [clock format [clock seconds] -format %Y] ${github.author}, MacPorts port by [lindex [split [lindex ${maintainers} 0] " "] 0]"
+    set copyright "Copyright(C) [clock format ${source_date_epoch} -format %Y] ${github.author}, MacPorts port by [lindex [split [lindex ${maintainers} 0] " "] 0]"
     exec ${plistbuddy} -c "Add :NSHumanReadableCopyright string ${copyright}" ${dest_app_info_plist}
 
     # no auto update marker
@@ -225,14 +214,77 @@ variant media description {enable and install dependencies for media downloading
                     port:yt-dlp \
                     port:quickjs-ng
 
+    app.signing_args-append \
+                    --force
+
+    # declare in global namespace
+    set ::youtube_runtime_folder \
+                    "deps/YtDlp/"
+
     post-patch {
         # change default ffmpeg directory
         reinplace "s|{APP_DATA_DIR}/FFmpeg|${prefix}/bin|g" ${worksrcpath}/features/ffmpeg_pack/config.py
         # change default n-m3u8dl-re directory
         reinplace "s|{APP_DATA_DIR}/M3U8DL|${prefix}/bin|g" ${worksrcpath}/features/m3u8_pack/config.py
         # change default youtube support runtime (yt-dlp source & qjs binary) directory
-        reinplace "s|f\"{APP_DATA_DIR}/YtDlp\"|str(Path(sys.argv\[0\]).resolve().parent / \"deps/YtDlp\")|g" ${worksrcpath}/features/yt_dlp_pack/config.py
+        reinplace "s|f\"{APP_DATA_DIR}/YtDlp\"|str(Path(sys.argv\[0\]).resolve().parent / \"${youtube_runtime_folder}\")|g" ${worksrcpath}/features/yt_dlp_pack/config.py
     }
+
+    post-destroot {
+        # youtube support runtime symlinks
+        xinstall -d ${dest_app_bin_dir}/${youtube_runtime_folder}
+        ln -s ${prefix}/bin/qjs ${dest_app_bin_dir}/${youtube_runtime_folder}
+        ln -s ${prefix}/Library/Frameworks/Python.framework/Versions/${python_branch}/lib/python${python_branch}/site-packages/yt_dlp/ ${dest_app_bin_dir}/${youtube_runtime_folder}
+        app::sign
+    }
+}
+
+variant debug description {Enable runtime checks and preserve debugging artifacts} {
+    patchfiles-append patch-debug-logging.diff
+
+    build.args-append \
+                    --debug \
+                    --no-debug-c-warnings \
+                    --no-debug-immortal-assumptions \
+                    --lto=no \
+                    --report=${worksrcpath}/compilation-report.xml
+
+    post-build {
+        system -W ${worksrcpath} \
+            "/usr/bin/xcrun dsymutil [shellescape ${app.executable}] \
+            -o [shellescape ${worksrcpath}/${name}.dSYM]"
+    }
+
+    post-destroot {
+        set debug_dir ${prefix}/libexec/${name}/debug/${version}_${revision}
+        xinstall -d ${destroot}${debug_dir}/sources
+        copy ${worksrcpath}/${name}.dSYM ${destroot}${debug_dir}
+        xinstall -m 0755 ${app.executable} ${destroot}${debug_dir}/${github.project}.bin
+        xinstall -m 0644 ${worksrcpath}/compilation-report.xml ${destroot}${debug_dir}
+        foreach source [glob -nocomplain \
+                -directory ${worksrcpath}/${github.project}.build *.c *.h] {
+            xinstall -m 0644 ${source} ${destroot}${debug_dir}/sources
+        }
+
+        xinstall -m 0755 ${filespath}/ghost-downloader-debug \
+            ${destroot}${prefix}/bin/ghost-downloader-debug
+        reinplace "s|@APP_EXECUTABLE@|${applications_dir}/${app.name}.app/Contents/MacOS/${app.name}|g" \
+            ${destroot}${prefix}/bin/ghost-downloader-debug
+        reinplace "s|@DEBUG_DIR@|${debug_dir}|g" \
+            ${destroot}${prefix}/bin/ghost-downloader-debug
+        reinplace "s|@BUILD_DIR@|${worksrcpath}/${github.project}.build|g" \
+            ${destroot}${prefix}/bin/ghost-downloader-debug
+    }
+
+    notes-append "The ghost-downloader-debug command launches the GUI under LLDB.\n\
+        Quit any existing instance first and keep the terminal open.\n\
+        Add --core to save a full core dump on a crash; this can take minutes,\n\
+        use gigabytes, and include credentials.\n\
+        Diagnostics: ~/Library/Logs/GhostDownloader/Debug\n\
+        The matching executable, debug symbols, generated C sources, and compilation\n\
+        report are installed in ${prefix}/libexec/${name}/debug/${version}_${revision}.\n\
+        Archive these before upgrading. Apple's Command Line Tools or Xcode\n\
+        are required to run the debugger."
 }
 
 default_variants    +media

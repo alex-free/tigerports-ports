@@ -42,7 +42,7 @@ variable tigerports.com http
 
 # Keep the primary packages server first in the list
 set sites(macports_archives) [lsearch -all -glob -inline -not "
-    ${tigerports.com}://tigerports.com/macports/packages/:nosubdir
+    ${tigerports.su}://tigerports.su/macports/packages/:nosubdir
 " {:*}]
 
 variable archive_type

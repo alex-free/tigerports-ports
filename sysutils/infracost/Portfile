@@ -3,7 +3,7 @@
 PortSystem          1.0
 PortGroup           golang 1.0
 
-go.setup            github.com/infracost/infracost 0.10.46 v
+go.setup            github.com/infracost/infracost 0.10.50 v
 go.offline_build    no
 go.toolchain_min    1.26.0
 revision            0
@@ -23,9 +23,9 @@ license             Apache-2
 maintainers         {gmail.com:herby.gillot @herbygillot} \
                     openmaintainer
 
-checksums           rmd160  d48437de09edd082f67f829d1fdd03aefd538eb0 \
-                    sha256  d182674008b72da1e374a63d3a9e0b6bcdb6c43ccaaa947ca73b31b2eca39aad \
-                    size    5338326
+checksums           rmd160  36ece653fdc6fb6b9f592506052ae4be3987756a \
+                    sha256  7f165f7a3d1de79ef60ce809c11880426298f8aba6c80301f7f69aeb3c96e095 \
+                    size    5340870
 
 build.cmd           make
 build.pre_args      VERSION=v${version}

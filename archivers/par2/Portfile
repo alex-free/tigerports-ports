@@ -1,10 +1,11 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
 
 PortSystem        1.0
+PortGroup         cmake 1.1
 PortGroup         github 1.0
 
 name              par2
-github.setup      Parchive par2cmdline 1.1.0 v
+github.setup      Parchive par2cmdline 2.0.0 v
 revision          0
 description       Parchive: Parity Archive Volume Set for data recovery
 
@@ -19,30 +20,19 @@ license           GPL-2
 categories        archivers
 maintainers       nomaintainer
 
-checksums         rmd160  f3ef17a45b64d007a652417a008b1b41551ee266 \
-                  sha256  4d3c588ce67ed6174557b221a520be6ea3cb74e32c88684a6cc2cd70977546f0 \
-                  size    3737587
-
-github.tarball_from releases
-
-installs_libs     no
-
-configure.args    --mandir=${prefix}/share/man
+checksums         rmd160  451d4a6f050bed172e6332f1a2d95ff65e3791e8 \
+                  sha256  c8d69d535bc9e96bdd73229af61858948861226ea2daf86a29adf9614f9d7cc7 \
+                  size    3077830
 
 test.run          yes
-test.target       check
+test.cmd          ctest
+test.target
 
-# macports-clang-3.4 fails
-# macports-clang-3.5 works
-# Assuming > 600 works
-compiler.cxx_standard 2011
-compiler.blacklist-append macports-clang-3.3 macports-clang-3.4 {clang < 600}
+compiler.cxx_standard 2014
 
 post-destroot {
     set docdir ${prefix}/share/doc/${name}-${version}
     xinstall -d ${destroot}${docdir}
-    xinstall -m 0644 -W ${worksrcpath} AUTHORS COPYING README.md ROADMAP \
+    xinstall -m 0644 -W ${worksrcpath} AUTHORS COPYING README.md \
         ${destroot}${docdir}
 }
-
-livecheck.distname  par2cmdline

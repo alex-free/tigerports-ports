@@ -4,7 +4,7 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                google-cloud-sdk
-version             593.0.0
+version             594.0.1
 revision            0
 categories          devel python
 license             Apache-2
@@ -21,19 +21,19 @@ supported_archs     i386 x86_64 arm64
 
 if { ${configure.build_arch} eq "i386" } {
     set arch_classifier x86
-    checksums       rmd160  8c8fcae9ec760739808e4a902acc8c5c68b0c612 \
-                    sha256  98018faecafba779620ad4e5b2fc7f7365313aa7d4c0ca0b3fd1623136b12127 \
-                    size    53234960
+    checksums       rmd160  54ace9dba75ec2be7b9452d0c7602bdb7341390c \
+                    sha256  c3f5200b551b4ab6c3260289ed0da24b7e5c3df10c1460b3dd7ba89def9d7537 \
+                    size    53337813
 } elseif { ${configure.build_arch} eq "x86_64" } {
     set arch_classifier x86_64
-    checksums       rmd160  7e81570c9002590158dadc96e3d7e47b7228a5c7 \
-                    sha256  49d3325ac25bc71209104d382cdfaa2904cf52822f63a3f283825d4e988f30a8 \
-                    size    54882890
+    checksums       rmd160  c1742eb471a60aa11da3d2ca8998a74cbf302237 \
+                    sha256  45e6030663f88c0fc39efed6123bf78a0f00d35fdd1f0d630e2a4df9e538bc2f \
+                    size    54981285
 } elseif { ${configure.build_arch} eq "arm64" } {
     set arch_classifier arm
-    checksums       rmd160  dda7972bfe444b587cbc2b9d9794f1371aef4ca6 \
-                    sha256  71d6aa2b2b21494ad5538d0e5104ff3bb123d55f5a2ff0da6c58f87459a6b6af \
-                    size    54790650
+    checksums       rmd160  4e1bb34e96e1aca3046ed204ad18f6d95915cccb \
+                    sha256  59946bbb55612b3c77f1facabda2173fcd7b48fe9131e8a111a77702215e8fc2 \
+                    size    54888757
 } else {
     set arch_classifier invalid
 }
@@ -65,6 +65,7 @@ variant app_engine_python_extras description {Add gcloud app Python Extensions (
 variant appctl description {Add Appctl} { dict set variant_to_component appctl appctl }
 variant beta description {Add gcloud CLI Beta Commands } { dict set variant_to_component beta beta }
 variant bigtable description {Add Cloud Bigtable Emulator} { dict set variant_to_component bigtable bigtable }
+variant bqms description {Add BigQuery Migration Service CLI} { dict set variant_to_component bqms bqms }
 variant cbt description {Add Cloud Bigtable Command Line Tool} { dict set variant_to_component cbt cbt }
 variant cloud_datastore_emulator description {Add Cloud Datastore Emulator} { dict set variant_to_component cloud_datastore_emulator cloud-datastore-emulator }
 variant cloud_firestore_emulator description {Add Cloud Firestore Emulator} { dict set variant_to_component cloud_firestore_emulator cloud-firestore-emulator }
@@ -92,6 +93,7 @@ variant spanner_cli description {Add Spanner CLI} { dict set variant_to_componen
 variant spanner_migration_tool description {Add Spanner migration tool} { dict set variant_to_component spanner_migration_tool spanner-migration-tool }
 variant skaffold description {Add Skaffold} { dict set variant_to_component skaffold skaffold }
 variant terraform_tools description {Add Terraform Tools} { dict set variant_to_component terraform_tools terraform-tools }
+variant universal_maker description {Add universal-maker} { dict set variant_to_component universal_maker universal-maker }
 
 use_configure       no
 build {
