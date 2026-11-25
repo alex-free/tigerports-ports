@@ -38,7 +38,7 @@ variable vie.at      ${letsencrypt_https_or_http}
 variable ykf.ca      http
 variable fcix.net    http
 variable sjtu.edu.cn ${letsencrypt_https_only}
-variable tigerports.com http
+variable tigerports.su http
 
 # Keep the primary packages server first in the list
 set sites(macports_archives) [lsearch -all -glob -inline -not "
